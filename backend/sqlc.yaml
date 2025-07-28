@@ -1,0 +1,34 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    queries: "internal/repo/persistent/query"
+    schema: "migrations"
+    gen:
+      go:
+        package: "sqlc"
+        out: "pkg/sqlc"
+        sql_package: "pgx/v5"
+        overrides:
+          - db_type: "date"
+            go_type:
+              import: "cloud.google.com/go/civil"
+              type: "Date"
+          - db_type: "pg_catalog.timestamptz"
+            go_type:
+              import: "time"
+              type: "Time"
+          - db_type: "pg_catalog.timestamp"
+            nullable: true
+            go_type:
+              import: "github.com/guregu/null/v6"
+              type: "Time"
+          - db_type: "pg_catalog.int4"
+            nullable: true
+            go_type:
+              import: "github.com/guregu/null/v6"
+              type: "Int32"
+          - db_type: "pg_catalog.varchar"
+            nullable: true
+            go_type:
+              import: "github.com/guregu/null/v6"
+              type: "String"

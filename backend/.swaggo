@@ -1,0 +1,3 @@
+replace null.Int32 integer
+replace null.String string
+replace civil.Date time.Time

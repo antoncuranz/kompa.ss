@@ -1,0 +1,76 @@
+"use client"
+
+import {Button} from "@/components/ui/button.tsx";
+import {Collapsible} from "@/components/ui/collapsible.tsx";
+import {ChevronDown, ChevronUp} from "lucide-react";
+import {CollapsibleContent, CollapsibleTrigger} from "@radix-ui/react-collapsible";
+import {cn} from "@/lib/utils.ts";
+import {Flight, FlightLeg} from "@/types.ts";
+import {durationString, registerMomentSerde} from "@/components/util.ts";
+import {useState} from "react";
+
+registerMomentSerde()
+
+export default function FlightEntry({
+  flight, flightLeg, className
+}: {
+  flight: Flight,
+  flightLeg: FlightLeg,
+  className?: string
+}){
+  const [open, setOpen] = useState<boolean>(false)
+
+  const iata = flightLeg.flightNumber.substring(0, 2)
+
+  return (
+    <Collapsible
+      open={open}
+      onOpenChange={setOpen}
+      className={cn("rounded-lg border ml-6 mr-6 p-2 pl-4 pr-4 grid bg-white dark:bg-black z-10 relative", className)}
+    >
+      <CollapsibleTrigger asChild>
+        <div className="grid cursor-pointer" style={{gridTemplateColumns: "1.5rem 1fr", columnGap: "0.5rem"}}>
+          <span className="mt-0 m-auto">✈️</span>
+          <span>
+            {open ?
+              <>
+                Flight from {flightLeg.origin.municipality} to {flightLeg.destination.municipality}
+                <ChevronUp className="float-right text-muted-foreground"/>
+              </>
+            :
+              <>
+                {flightLeg.departureTime.format("H:mm")}-{flightLeg.arrivalTime.format("H:mm")} Flight {flightLeg.flightNumber} from {flightLeg.origin.municipality} to {flightLeg.destination.municipality}
+                <ChevronDown className="float-right text-muted-foreground"/>
+              </>
+            }
+          </span>
+        </div>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div className="grid mt-1" style={{gridTemplateColumns: "1.5rem 1fr", columnGap: "0.5rem"}}>
+          <div className="mt-0 m-auto flex flex-col items-center relative top-2">
+            <div className="w-1.5 h-1.5 rounded-lg bg-gray-300"/>
+            <div className="h-10 w-0.5 bg-gray-300"/>
+            <div className="w-1.5 h-1.5 rounded-lg bg-gray-300"/>
+          </div>
+          <div>
+            <p>{flightLeg.departureTime.format("H:mm")} {flightLeg.origin.name} ({flightLeg.origin.iata})</p>
+            <p className="text-sm text-muted-foreground">Duration: {durationString(flightLeg.arrivalTime, flightLeg.departureTime)}</p>
+            <p>{flightLeg.arrivalTime.format("H:mm")} {flightLeg.destination.name} ({flightLeg.destination.iata})</p>
+          </div>
+          <img src={"https://seats.aero/static/carriersng/" + iata + ".png"} className="h-4 mt-0 m-auto relative top-1" alt="LH"/>
+          <div>
+            <span className="text-sm text-muted-foreground">{flightLeg.airline} - {flightLeg.flightNumber} - {flightLeg.aircraft}</span>
+            <div className="float-right">
+              {flight.pnrs.map(pnr =>
+                <Button key={pnr.id} variant="secondary" className="ml-2 p-2 h-6">
+                  {pnr.airline} {pnr.pnr}
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+ )
+}

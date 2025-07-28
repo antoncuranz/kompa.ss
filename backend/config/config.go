@@ -1,0 +1,54 @@
+package config
+
+import (
+	"fmt"
+
+	"github.com/caarlos0/env/v11"
+)
+
+type (
+	Config struct {
+		HTTP    HTTP
+		Auth    Auth
+		Log     Log
+		PG      PG
+		Metrics Metrics
+		Swagger Swagger
+	}
+
+	HTTP struct {
+		Port           string `env:"HTTP_PORT" envDefault:"8080"`
+		UsePreforkMode bool   `env:"HTTP_USE_PREFORK_MODE" envDefault:"false"`
+	}
+
+	Auth struct {
+		AuthHeader         string `env:"AUTH_HEADER" envDefault:"X-Auth-Request-Preferred-Username"`
+		AuthHeaderOverride string `env:"AUTH_HEADER_OVERRIDE"`
+	}
+
+	Log struct {
+		Level string `env:"LOG_LEVEL" envDefault:"debug"`
+	}
+
+	PG struct {
+		PoolMax int    `env:"PG_POOL_MAX" envDefault:"2"`
+		URL     string `env:"PG_URL,required"`
+	}
+
+	Metrics struct {
+		Enabled bool `env:"METRICS_ENABLED" envDefault:"true"`
+	}
+
+	Swagger struct {
+		Enabled bool `env:"SWAGGER_ENABLED" envDefault:"false"`
+	}
+)
+
+func NewConfig() (*Config, error) {
+	cfg := &Config{}
+	if err := env.Parse(cfg); err != nil {
+		return nil, fmt.Errorf("config error: %w", err)
+	}
+
+	return cfg, nil
+}

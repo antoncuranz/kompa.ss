@@ -1,0 +1,334 @@
+basePath: /api/v1
+definitions:
+  entity.Accommodation:
+    properties:
+      arrivalDate:
+        type: string
+      departureDate:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      location:
+        type: string
+      name:
+        type: string
+      price:
+        type: integer
+      tripId:
+        type: integer
+    type: object
+  entity.Activity:
+    properties:
+      date:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      tripId:
+        type: integer
+    type: object
+  entity.Airport:
+    properties:
+      iata:
+        type: string
+      location:
+        type: string
+      municipality:
+        type: string
+      name:
+        type: string
+    type: object
+  entity.Flight:
+    properties:
+      id:
+        type: integer
+      legs:
+        items:
+          $ref: '#/definitions/entity.FlightLeg'
+        type: array
+      pnrs:
+        items:
+          $ref: '#/definitions/entity.PNR'
+        type: array
+      price:
+        type: integer
+      tripId:
+        type: integer
+    type: object
+  entity.FlightLeg:
+    properties:
+      aircraft:
+        type: string
+      airline:
+        type: string
+      arrivalTime:
+        type: string
+      departureTime:
+        type: string
+      destination:
+        $ref: '#/definitions/entity.Airport'
+      flightNumber:
+        type: string
+      id:
+        type: integer
+      origin:
+        $ref: '#/definitions/entity.Airport'
+    type: object
+  entity.PNR:
+    properties:
+      airline:
+        type: string
+      id:
+        type: integer
+      pnr:
+        type: string
+    type: object
+  entity.Trip:
+    properties:
+      description:
+        type: string
+      endDate:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      startDate:
+        type: string
+    type: object
+  entity.User:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  response.Error:
+    properties:
+      error:
+        example: message
+        type: string
+    type: object
+host: 127.0.0.1:8080
+info:
+  contact: {}
+  description: Using a translation service as an example
+  title: Backplate API
+  version: "1.0"
+paths:
+  /accommodation:
+    get:
+      operationId: getAllAccommodation
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.Accommodation'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Get all accommodation
+      tags:
+      - accommodation
+  /accommodation/{accommodation_id}:
+    get:
+      operationId: getAccommodationByID
+      parameters:
+      - description: Accommodation ID
+        in: path
+        name: accommodation_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Accommodation'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Get accommodation by ID
+      tags:
+      - accommodation
+  /activities:
+    get:
+      operationId: getActivities
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.Activity'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Get all activities
+      tags:
+      - activities
+  /activities/{activity_id}:
+    get:
+      operationId: getActivity
+      parameters:
+      - description: Activity ID
+        in: path
+        name: activity_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Activity'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Get activity by ID
+      tags:
+      - activities
+  /flights:
+    get:
+      operationId: getFlights
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.Flight'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Get all flights
+      tags:
+      - flights
+  /flights/{flight_id}:
+    get:
+      operationId: getFlight
+      parameters:
+      - description: Flight ID
+        in: path
+        name: flight_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Flight'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Get flight by ID
+      tags:
+      - flights
+  /trips:
+    get:
+      operationId: getTrips
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.Trip'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Get all trips
+      tags:
+      - trips
+  /trips/{trip_id}:
+    get:
+      operationId: getTrip
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Trip'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Get trip by ID
+      tags:
+      - trips
+  /users:
+    get:
+      operationId: getUsers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.User'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Get all users
+      tags:
+      - users
+  /users/{user_id}:
+    get:
+      operationId: getUser
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.User'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Get user by ID
+      tags:
+      - users
+swagger: "2.0"
