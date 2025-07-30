@@ -37,7 +37,7 @@ func (uc *UseCase) CreateFlight(ctx context.Context, flight request.Flight) (ent
 	return uc.repo.SaveFlight(ctx, entity.Flight{
 		TripID: 1,
 		Legs:   flightLegs,
-		PNRs:   nil,
+		PNRs:   flight.PNRs,
 		Price:  null.Int32{},
 	})
 }

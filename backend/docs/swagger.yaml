@@ -82,10 +82,12 @@ definitions:
   entity.PNR:
     properties:
       airline:
+        example: LH
         type: string
       id:
         type: integer
       pnr:
+        example: "123456"
         type: string
     type: object
   entity.Trip:
@@ -116,7 +118,7 @@ definitions:
         type: array
       pnrs:
         items:
-          $ref: '#/definitions/request.PNR'
+          $ref: '#/definitions/entity.PNR'
         type: array
       price:
         type: integer
@@ -142,18 +144,6 @@ definitions:
     required:
     - date
     - flightNumber
-    type: object
-  request.PNR:
-    properties:
-      airline:
-        example: "123456"
-        type: string
-      pnr:
-        example: LH
-        type: string
-    required:
-    - airline
-    - pnr
     type: object
   response.Error:
     properties:

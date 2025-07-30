@@ -113,6 +113,17 @@ func (r *FlightsRepo) SaveFlight(ctx context.Context, flight entity.Flight) (ent
 		}
 	}
 
+	for _, pnr := range flight.PNRs {
+		_, err := qtx.InsertPNR(ctx, sqlc.InsertPNRParams{
+			FlightID: flightId,
+			Airline:  pnr.Airline,
+			Pnr:      pnr.PNR,
+		})
+		if err != nil {
+			return entity.Flight{}, err
+		}
+	}
+
 	err = tx.Commit(ctx)
 	if err != nil {
 		return entity.Flight{}, err

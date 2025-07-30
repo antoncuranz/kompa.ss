@@ -26,8 +26,8 @@ type FlightLeg struct {
 
 type PNR struct {
 	ID      int32  `json:"id"`
-	Airline string `json:"airline"`
-	PNR     string `json:"pnr"`
+	Airline string `json:"airline" example:"LH"`
+	PNR     string `json:"pnr"     example:"123456"`
 }
 
 type Flight struct {

@@ -500,13 +500,15 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "airline": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "LH"
                 },
                 "id": {
                     "type": "integer"
                 },
                 "pnr": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "123456"
                 }
             }
         },
@@ -558,7 +560,7 @@ const docTemplate = `{
                 "pnrs": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/request.PNR"
+                        "$ref": "#/definitions/entity.PNR"
                     }
                 },
                 "price": {
@@ -588,23 +590,6 @@ const docTemplate = `{
                 "originAirport": {
                     "type": "string",
                     "example": "SYD"
-                }
-            }
-        },
-        "request.PNR": {
-            "type": "object",
-            "required": [
-                "airline",
-                "pnr"
-            ],
-            "properties": {
-                "airline": {
-                    "type": "string",
-                    "example": "123456"
-                },
-                "pnr": {
-                    "type": "string",
-                    "example": "LH"
                 }
             }
         },
