@@ -7,6 +7,8 @@ package sqlc
 
 import (
 	"context"
+
+	null "github.com/guregu/null/v6"
 )
 
 const getFlightByID = `-- name: GetFlightByID :one
@@ -42,7 +44,7 @@ func (q *Queries) GetFlightLegsByFlightID(ctx context.Context, flightID int32) (
 		return nil, err
 	}
 	defer rows.Close()
-	var items []GetFlightLegsByFlightIDRow
+	items := []GetFlightLegsByFlightIDRow{}
 	for rows.Next() {
 		var i GetFlightLegsByFlightIDRow
 		if err := rows.Scan(
@@ -85,7 +87,7 @@ func (q *Queries) GetFlights(ctx context.Context) ([]Flight, error) {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Flight
+	items := []Flight{}
 	for rows.Next() {
 		var i Flight
 		if err := rows.Scan(&i.ID, &i.TripID, &i.Price); err != nil {
@@ -111,7 +113,7 @@ func (q *Queries) GetPnrsByFlightID(ctx context.Context, flightID int32) ([]Pnr,
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Pnr
+	items := []Pnr{}
 	for rows.Next() {
 		var i Pnr
 		if err := rows.Scan(
@@ -128,4 +130,109 @@ func (q *Queries) GetPnrsByFlightID(ctx context.Context, flightID int32) ([]Pnr,
 		return nil, err
 	}
 	return items, nil
+}
+
+const insertAirport = `-- name: InsertAirport :exec
+INSERT INTO airport (
+    iata, name, municipality, location
+) VALUES (
+    $1, $2, $3, $4
+)
+ON CONFLICT DO NOTHING
+`
+
+type InsertAirportParams struct {
+	Iata         string
+	Name         string
+	Municipality string
+	Location     null.String
+}
+
+func (q *Queries) InsertAirport(ctx context.Context, arg InsertAirportParams) error {
+	_, err := q.db.Exec(ctx, insertAirport,
+		arg.Iata,
+		arg.Name,
+		arg.Municipality,
+		arg.Location,
+	)
+	return err
+}
+
+const insertFlight = `-- name: InsertFlight :one
+INSERT INTO flight (
+    trip_id, price
+) VALUES (
+    $1, $2
+ )
+RETURNING id
+`
+
+type InsertFlightParams struct {
+	TripID int32
+	Price  null.Int32
+}
+
+func (q *Queries) InsertFlight(ctx context.Context, arg InsertFlightParams) (int32, error) {
+	row := q.db.QueryRow(ctx, insertFlight, arg.TripID, arg.Price)
+	var id int32
+	err := row.Scan(&id)
+	return id, err
+}
+
+const insertFlightLeg = `-- name: InsertFlightLeg :one
+INSERT INTO flight_leg (
+    flight_id, origin, destination, airline, flight_number, departure_time, arrival_time, aircraft
+) VALUES (
+    $1, $2, $3, $4, $5, $6, $7, $8
+)
+RETURNING id
+`
+
+type InsertFlightLegParams struct {
+	FlightID      int32
+	Origin        string
+	Destination   string
+	Airline       string
+	FlightNumber  string
+	DepartureTime string
+	ArrivalTime   string
+	Aircraft      null.String
+}
+
+func (q *Queries) InsertFlightLeg(ctx context.Context, arg InsertFlightLegParams) (int32, error) {
+	row := q.db.QueryRow(ctx, insertFlightLeg,
+		arg.FlightID,
+		arg.Origin,
+		arg.Destination,
+		arg.Airline,
+		arg.FlightNumber,
+		arg.DepartureTime,
+		arg.ArrivalTime,
+		arg.Aircraft,
+	)
+	var id int32
+	err := row.Scan(&id)
+	return id, err
+}
+
+const insertPNR = `-- name: InsertPNR :one
+INSERT INTO pnr (
+    flight_id, airline, pnr
+) VALUES (
+    $1, $2, $3
+)
+RETURNING id
+`
+
+type InsertPNRParams struct {
+	FlightID int32
+	Airline  string
+	Pnr      string
+}
+
+func (q *Queries) InsertPNR(ctx context.Context, arg InsertPNRParams) (int32, error) {
+	row := q.db.QueryRow(ctx, insertPNR, arg.FlightID, arg.Airline, arg.Pnr)
+	var id int32
+	err := row.Scan(&id)
+	return id, err
 }

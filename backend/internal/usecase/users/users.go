@@ -1,9 +1,9 @@
 package users
 
 import (
-	"backplate/internal/entity"
-	"backplate/internal/repo"
 	"context"
+	"travel-planner/internal/entity"
+	"travel-planner/internal/repo"
 )
 
 type UseCase struct {

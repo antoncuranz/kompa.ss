@@ -170,6 +170,44 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "flights"
+                ],
+                "summary": "Add flight",
+                "operationId": "postFlight",
+                "parameters": [
+                    {
+                        "description": "flight",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.Flight"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Flight"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    }
+                }
             }
         },
         "/flights/{flight_id}": {
@@ -503,6 +541,73 @@ const docTemplate = `{
                 }
             }
         },
+        "request.Flight": {
+            "type": "object",
+            "required": [
+                "legs",
+                "pnrs",
+                "tripId"
+            ],
+            "properties": {
+                "legs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/request.FlightLeg"
+                    }
+                },
+                "pnrs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/request.PNR"
+                    }
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "tripId": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "request.FlightLeg": {
+            "type": "object",
+            "required": [
+                "date",
+                "flightNumber"
+            ],
+            "properties": {
+                "date": {
+                    "type": "string",
+                    "example": "2026-01-30"
+                },
+                "flightNumber": {
+                    "type": "string",
+                    "example": "EK412"
+                },
+                "originAirport": {
+                    "type": "string",
+                    "example": "SYD"
+                }
+            }
+        },
+        "request.PNR": {
+            "type": "object",
+            "required": [
+                "airline",
+                "pnr"
+            ],
+            "properties": {
+                "airline": {
+                    "type": "string",
+                    "example": "123456"
+                },
+                "pnr": {
+                    "type": "string",
+                    "example": "LH"
+                }
+            }
+        },
         "response.Error": {
             "type": "object",
             "properties": {
@@ -521,7 +626,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "127.0.0.1:8080",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "Backplate API",
+	Title:            "TravelPlanner API",
 	Description:      "Using a translation service as an example",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

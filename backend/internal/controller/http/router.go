@@ -2,22 +2,22 @@
 package http
 
 import (
-	"backplate/internal/usecase"
 	"net/http"
+	"travel-planner/internal/usecase"
 
-	"backplate/config"
-	_ "backplate/docs" // Swagger docs.
-	"backplate/internal/controller/http/middleware"
-	v1 "backplate/internal/controller/http/v1"
-	"backplate/pkg/logger"
 	"github.com/ansrivas/fiberprometheus/v2"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"
+	"travel-planner/config"
+	_ "travel-planner/docs" // Swagger docs.
+	"travel-planner/internal/controller/http/middleware"
+	v1 "travel-planner/internal/controller/http/v1"
+	"travel-planner/pkg/logger"
 )
 
 // NewRouter -.
 // Swagger spec:
-// @title       Backplate API
+// @title       TravelPlanner API
 // @description Using a translation service as an example
 // @version     1.0
 // @host        127.0.0.1:8080

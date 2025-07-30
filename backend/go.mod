@@ -1,4 +1,4 @@
-module backplate
+module travel-planner
 
 go 1.24
 

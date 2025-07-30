@@ -1,12 +1,12 @@
 package v1
 
 import (
-	"backplate/internal/usecase"
-	"backplate/pkg/logger"
 	"fmt"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"net/http"
+	"travel-planner/internal/usecase"
+	"travel-planner/pkg/logger"
 )
 
 type ActivitiesV1 struct {

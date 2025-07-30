@@ -1,10 +1,10 @@
 package persistent
 
 import (
-	"backplate/internal/entity"
-	"backplate/pkg/postgres"
-	"backplate/pkg/sqlc"
 	"context"
+	"travel-planner/internal/entity"
+	"travel-planner/pkg/postgres"
+	"travel-planner/pkg/sqlc"
 )
 
 type UserRepo struct {
@@ -34,7 +34,7 @@ func (r *UserRepo) GetUserByID(ctx context.Context, id int32) (entity.User, erro
 }
 
 func mapUsers(users []sqlc.User) []entity.User {
-	var result []entity.User
+	result := []entity.User{}
 	for _, user := range users {
 		result = append(result, mapUser(user))
 	}

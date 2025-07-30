@@ -39,7 +39,7 @@ func (q *Queries) GetTrips(ctx context.Context) ([]Trip, error) {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Trip
+	items := []Trip{}
 	for rows.Next() {
 		var i Trip
 		if err := rows.Scan(

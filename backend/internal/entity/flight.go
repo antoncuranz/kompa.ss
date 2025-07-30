@@ -4,7 +4,6 @@ package entity
 
 import (
 	"github.com/guregu/null/v6"
-	"time"
 )
 
 type Airport struct {
@@ -20,8 +19,8 @@ type FlightLeg struct {
 	Destination   Airport     `json:"destination"`
 	Airline       string      `json:"airline"`
 	FlightNumber  string      `json:"flightNumber"`
-	DepartureTime time.Time   `json:"departureTime"`
-	ArrivalTime   time.Time   `json:"arrivalTime"`
+	DepartureTime string      `json:"departureTime"`
+	ArrivalTime   string      `json:"arrivalTime"`
 	Aircraft      null.String `json:"aircraft"`
 }
 

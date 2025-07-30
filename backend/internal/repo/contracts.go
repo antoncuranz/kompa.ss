@@ -2,8 +2,8 @@
 package repo
 
 import (
-	"backplate/internal/entity"
 	"context"
+	"travel-planner/internal/entity"
 )
 
 //go:generate mockgen -source=contracts.go -destination=../usecase/mocks_repo_test.go -package=usecase_test
@@ -22,6 +22,7 @@ type (
 	FlightsRepo interface {
 		GetFlights(ctx context.Context) ([]entity.Flight, error)
 		GetFlightByID(ctx context.Context, id int32) (entity.Flight, error)
+		SaveFlight(ctx context.Context, flight entity.Flight) (entity.Flight, error)
 	}
 
 	ActivitiesRepo interface {
@@ -32,5 +33,9 @@ type (
 	AccommodationRepo interface {
 		GetAllAccommodation(ctx context.Context) ([]entity.Accommodation, error)
 		GetAccommodationByID(ctx context.Context, id int32) (entity.Accommodation, error)
+	}
+
+	AerodataboxWebAPI interface {
+		RetrieveFlightLeg(ctx context.Context, date string, flightNumber string, origin string) (entity.FlightLeg, error)
 	}
 )

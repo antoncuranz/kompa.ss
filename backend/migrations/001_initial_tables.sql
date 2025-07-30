@@ -61,8 +61,8 @@ create table flight_leg
     destination    varchar(3) not null references airport,
     airline        varchar(255) not null,
     flight_number  varchar(255) not null,
-    departure_time varchar(30) not null,
-    arrival_time   varchar(30) not null,
+    departure_time varchar(50) not null,
+    arrival_time   varchar(50) not null,
     aircraft       varchar(255)
 );
 

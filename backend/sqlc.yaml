@@ -8,6 +8,7 @@ sql:
         package: "sqlc"
         out: "pkg/sqlc"
         sql_package: "pgx/v5"
+        emit_empty_slices: true
         overrides:
           - db_type: "date"
             go_type:

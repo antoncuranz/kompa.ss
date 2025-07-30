@@ -42,7 +42,7 @@ func (q *Queries) GetAllAccommodation(ctx context.Context) ([]Accommodation, err
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Accommodation
+	items := []Accommodation{}
 	for rows.Next() {
 		var i Accommodation
 		if err := rows.Scan(

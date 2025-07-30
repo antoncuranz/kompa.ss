@@ -14,6 +14,7 @@ type (
 		PG      PG
 		Metrics Metrics
 		Swagger Swagger
+		WebApi  WebApi
 	}
 
 	HTTP struct {
@@ -41,6 +42,10 @@ type (
 
 	Swagger struct {
 		Enabled bool `env:"SWAGGER_ENABLED" envDefault:"false"`
+	}
+
+	WebApi struct {
+		AerodataboxApiKey string `env:"AERODATABOX_API_KEY,required"`
 	}
 )
 

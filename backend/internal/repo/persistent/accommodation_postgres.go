@@ -1,10 +1,10 @@
 package persistent
 
 import (
-	"backplate/internal/entity"
-	"backplate/pkg/postgres"
-	"backplate/pkg/sqlc"
 	"context"
+	"travel-planner/internal/entity"
+	"travel-planner/pkg/postgres"
+	"travel-planner/pkg/sqlc"
 )
 
 type AccommodationRepo struct {
@@ -34,7 +34,7 @@ func (r *AccommodationRepo) GetAccommodationByID(ctx context.Context, id int32) 
 }
 
 func mapAllAccommodation(accommodation []sqlc.Accommodation) []entity.Accommodation {
-	var result []entity.Accommodation
+	result := []entity.Accommodation{}
 	for _, accommodation := range accommodation {
 		result = append(result, mapAccommodation(accommodation))
 	}

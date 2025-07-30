@@ -18,3 +18,35 @@ WHERE flight_id = $1;
 SELECT *
 FROM pnr
 WHERE flight_id = $1;
+
+-- name: InsertFlight :one
+INSERT INTO flight (
+    trip_id, price
+) VALUES (
+    $1, $2
+ )
+RETURNING id;
+
+-- name: InsertFlightLeg :one
+INSERT INTO flight_leg (
+    flight_id, origin, destination, airline, flight_number, departure_time, arrival_time, aircraft
+) VALUES (
+    $1, $2, $3, $4, $5, $6, $7, $8
+)
+RETURNING id;
+
+-- name: InsertAirport :exec
+INSERT INTO airport (
+    iata, name, municipality, location
+) VALUES (
+    $1, $2, $3, $4
+)
+ON CONFLICT DO NOTHING;
+
+-- name: InsertPNR :one
+INSERT INTO pnr (
+    flight_id, airline, pnr
+) VALUES (
+    $1, $2, $3
+)
+RETURNING id;

@@ -1,10 +1,10 @@
 package persistent
 
 import (
-	"backplate/internal/entity"
-	"backplate/pkg/postgres"
-	"backplate/pkg/sqlc"
 	"context"
+	"travel-planner/internal/entity"
+	"travel-planner/pkg/postgres"
+	"travel-planner/pkg/sqlc"
 )
 
 type TripsRepo struct {
@@ -34,7 +34,7 @@ func (r *TripsRepo) GetTripByID(ctx context.Context, id int32) (entity.Trip, err
 }
 
 func mapTrips(trips []sqlc.Trip) []entity.Trip {
-	var result []entity.Trip
+	result := []entity.Trip{}
 	for _, trip := range trips {
 		result = append(result, mapTrip(trip))
 	}

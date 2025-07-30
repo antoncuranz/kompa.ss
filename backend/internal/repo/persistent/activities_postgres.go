@@ -1,10 +1,10 @@
 package persistent
 
 import (
-	"backplate/internal/entity"
-	"backplate/pkg/postgres"
-	"backplate/pkg/sqlc"
 	"context"
+	"travel-planner/internal/entity"
+	"travel-planner/pkg/postgres"
+	"travel-planner/pkg/sqlc"
 )
 
 type ActivitiesRepo struct {
@@ -34,7 +34,7 @@ func (r *ActivitiesRepo) GetActivityByID(ctx context.Context, id int32) (entity.
 }
 
 func mapActivities(activities []sqlc.Activity) []entity.Activity {
-	var result []entity.Activity
+	result := []entity.Activity{}
 	for _, activity := range activities {
 		result = append(result, mapActivity(activity))
 	}

@@ -2,13 +2,6 @@
 package app
 
 import (
-	"backplate/internal/usecase"
-	"backplate/internal/usecase/accommodation"
-	"backplate/internal/usecase/activities"
-	"backplate/internal/usecase/flights"
-	"backplate/internal/usecase/trips"
-	"backplate/internal/usecase/users"
-	"backplate/pkg/postgres"
 	"fmt"
 	"github.com/jackc/pgx/v5/stdlib"
 	_ "github.com/jackc/pgx/v5/stdlib"
@@ -16,12 +9,20 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"travel-planner/internal/repo/webapi"
+	"travel-planner/internal/usecase"
+	"travel-planner/internal/usecase/accommodation"
+	"travel-planner/internal/usecase/activities"
+	"travel-planner/internal/usecase/flights"
+	"travel-planner/internal/usecase/trips"
+	"travel-planner/internal/usecase/users"
+	"travel-planner/pkg/postgres"
 
-	"backplate/config"
-	"backplate/internal/controller/http"
-	"backplate/internal/repo/persistent"
-	"backplate/pkg/httpserver"
-	"backplate/pkg/logger"
+	"travel-planner/config"
+	"travel-planner/internal/controller/http"
+	"travel-planner/internal/repo/persistent"
+	"travel-planner/pkg/httpserver"
+	"travel-planner/pkg/logger"
 )
 
 // Run creates objects via constructors.
@@ -36,7 +37,7 @@ func Run(cfg *config.Config) {
 	defer pg.Close()
 
 	// Use-Case
-	useCases := createUseCases(pg)
+	useCases := createUseCases(cfg, pg)
 
 	// HTTP Server
 	httpServer := httpserver.New(httpserver.Port(cfg.HTTP.Port), httpserver.Prefork(cfg.HTTP.UsePreforkMode))
@@ -61,10 +62,10 @@ func Run(cfg *config.Config) {
 	}
 }
 
-func createUseCases(pg *postgres.Postgres) usecase.UseCases {
+func createUseCases(cfg *config.Config, pg *postgres.Postgres) usecase.UseCases {
 	usersUseCase := users.New(persistent.NewUserRepo(pg))
 	tripsUseCase := trips.New(persistent.NewTripsRepo(pg))
-	flightsUseCase := flights.New(persistent.NewFlightsRepo(pg))
+	flightsUseCase := flights.New(persistent.NewFlightsRepo(pg), webapi.New(cfg.WebApi.AerodataboxApiKey))
 	activitiesUseCase := activities.New(persistent.NewActivitiesRepo(pg))
 	accommodationUseCase := accommodation.New(persistent.NewAccommodationRepo(pg))
 

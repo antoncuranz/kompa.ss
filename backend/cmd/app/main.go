@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"backplate/config"
-	"backplate/internal/app"
+	"travel-planner/config"
+	"travel-planner/internal/app"
 )
 
 func main() {

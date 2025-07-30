@@ -2,8 +2,9 @@
 package usecase
 
 import (
-	"backplate/internal/entity"
 	"context"
+	"travel-planner/internal/controller/http/v1/request"
+	"travel-planner/internal/entity"
 )
 
 //go:generate mockgen -source=contracts.go -destination=./mocks_usecase_test.go -package=usecase_test
@@ -30,6 +31,7 @@ type (
 	Flights interface {
 		GetFlights(ctx context.Context) ([]entity.Flight, error)
 		GetFlightByID(ctx context.Context, id int32) (entity.Flight, error)
+		CreateFlight(ctx context.Context, flight request.Flight) (entity.Flight, error)
 	}
 
 	Activities interface {

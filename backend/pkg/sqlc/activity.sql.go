@@ -20,7 +20,7 @@ func (q *Queries) GetActivities(ctx context.Context) ([]Activity, error) {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Activity
+	items := []Activity{}
 	for rows.Next() {
 		var i Activity
 		if err := rows.Scan(

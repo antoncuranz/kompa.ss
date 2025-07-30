@@ -4,8 +4,8 @@ import (
 	"strconv"
 	"strings"
 
-	"backplate/pkg/logger"
 	"github.com/gofiber/fiber/v2"
+	"travel-planner/pkg/logger"
 )
 
 func buildRequestMessage(ctx *fiber.Ctx) string {
