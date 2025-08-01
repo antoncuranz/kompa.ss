@@ -14,10 +14,18 @@ create table trip
     description    varchar
 );
 
+create table location
+(
+    id             serial primary key,
+    latitude       real not null,
+    longitude      real not null
+);
+
 create table activity
 (
     id             serial primary key,
     trip_id        integer not null references trip on delete cascade,
+    location_id    integer references location,
     name           varchar(255) not null,
     date           date not null,
     time           time,
@@ -28,13 +36,13 @@ create table accommodation
 (
     id             serial primary key,
     trip_id        integer not null references trip on delete cascade,
+    location_id    integer references location,
     name           varchar(255) not null,
     arrival_date   date not null,
     departure_date date not null,
     check_in_time  time,
     check_out_time time,
     description    varchar,
-    location       varchar(255),
     price          integer
 );
 
@@ -53,7 +61,7 @@ create table airport
     iata           varchar(3) primary key,
     name           varchar(255) not null,
     municipality   varchar(255) not null,
-    location       varchar(255)
+    location_id    integer references location
 );
 
 create table flight_leg

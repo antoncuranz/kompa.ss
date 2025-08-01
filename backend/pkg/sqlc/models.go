@@ -11,19 +11,20 @@ import (
 type Accommodation struct {
 	ID            int32
 	TripID        int32
+	LocationID    *int32
 	Name          string
 	ArrivalDate   civil.Date
 	DepartureDate civil.Date
 	CheckInTime   *civil.Time
 	CheckOutTime  *civil.Time
 	Description   *string
-	Location      *string
 	Price         *int32
 }
 
 type Activity struct {
 	ID          int32
 	TripID      int32
+	LocationID  *int32
 	Name        string
 	Date        civil.Date
 	Time        *civil.Time
@@ -34,7 +35,7 @@ type Airport struct {
 	Iata         string
 	Name         string
 	Municipality string
-	Location     *string
+	LocationID   *int32
 }
 
 type Flight struct {
@@ -54,6 +55,12 @@ type FlightLeg struct {
 	ArrivalTime       civil.DateTime
 	DurationInMinutes int32
 	Aircraft          *string
+}
+
+type Location struct {
+	ID        int32
+	Latitude  float32
+	Longitude float32
 }
 
 type Pnr struct {

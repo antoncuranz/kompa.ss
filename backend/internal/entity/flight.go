@@ -7,10 +7,10 @@ import (
 )
 
 type Airport struct {
-	Iata         string  `json:"iata"`
-	Name         string  `json:"name"`
-	Municipality string  `json:"municipality"`
-	Location     *string `json:"location"`
+	Iata         string    `json:"iata"`
+	Name         string    `json:"name"`
+	Municipality string    `json:"municipality"`
+	Location     *Location `json:"location"`
 }
 
 type FlightLeg struct {

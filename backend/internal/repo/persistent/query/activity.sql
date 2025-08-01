@@ -1,8 +1,10 @@
 -- name: GetActivityByID :one
-SELECT *
+SELECT sqlc.embed(activity), location.*
 FROM activity
-WHERE id = $1;
+LEFT JOIN location on activity.location_id = location.id
+WHERE activity.id = $1;
 
 -- name: GetActivities :many
-SELECT *
-FROM activity;
+SELECT sqlc.embed(activity), location.*
+FROM activity
+LEFT JOIN location on activity.location_id = location.id;

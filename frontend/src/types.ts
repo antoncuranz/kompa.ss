@@ -7,6 +7,12 @@ export type Trip = {
   description: string;
 };
 
+export type Location = {
+  id: number;
+  latitude: number;
+  longitude: number;
+}
+
 export type Activity = {
   id: number;
   tripId: number;
@@ -14,7 +20,7 @@ export type Activity = {
   date: Date;
   time: string | null;
   description: string;
-  // location: string | null;
+  // location: Location | null;
   // price: number | null;
 };
 
@@ -27,7 +33,7 @@ export type Accommodation = {
   checkInTime: string | null;
   checkOutTime: string | null;
   description: string;
-  location: string | null;
+  location: Location | null;
   price: number | null;
 };
 
@@ -61,5 +67,5 @@ export type Airport = {
   iata: string;
   name: string;
   municipality: string;
-  location: string | null;
+  location: Location | null;
 }

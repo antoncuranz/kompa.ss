@@ -86,11 +86,19 @@ func (r *FlightsRepo) SaveFlight(ctx context.Context, flight entity.Flight) (ent
 
 	for iata := range airportSet {
 		airport := airportSet[iata]
-		err := qtx.InsertAirport(ctx, sqlc.InsertAirportParams{
+
+		locationId, err := qtx.InsertLocation(ctx, sqlc.InsertLocationParams{
+			Latitude:  airport.Location.Latitude,
+			Longitude: airport.Location.Longitude,
+		})
+		if err != nil {
+			return entity.Flight{}, err
+		}
+		err = qtx.InsertAirport(ctx, sqlc.InsertAirportParams{
 			Iata:         airport.Iata,
 			Name:         airport.Name,
 			Municipality: airport.Municipality,
-			Location:     airport.Location,
+			LocationID:   &locationId,
 		})
 		if err != nil {
 			return entity.Flight{}, err
@@ -156,8 +164,8 @@ func mapFlightLegs(legs []sqlc.GetFlightLegsByFlightIDRow) []entity.FlightLeg {
 func mapFlightLeg(leg sqlc.GetFlightLegsByFlightIDRow) entity.FlightLeg {
 	return entity.FlightLeg{
 		ID:                leg.FlightLeg.ID,
-		Origin:            mapAirport(leg.Airport),
-		Destination:       mapAirport(leg.Airport_2),
+		Origin:            mapAirport(leg.Airport, leg.Location),
+		Destination:       mapAirport(leg.Airport_2, leg.Location_2),
 		Airline:           leg.FlightLeg.Airline,
 		FlightNumber:      leg.FlightLeg.FlightNumber,
 		DepartureDateTime: leg.FlightLeg.DepartureTime,
@@ -167,12 +175,13 @@ func mapFlightLeg(leg sqlc.GetFlightLegsByFlightIDRow) entity.FlightLeg {
 	}
 }
 
-func mapAirport(airport sqlc.Airport) entity.Airport {
+func mapAirport(airport sqlc.Airport, location sqlc.Location) entity.Airport {
+	mappedLocation := mapLocation(location)
 	return entity.Airport{
 		Iata:         airport.Iata,
 		Name:         airport.Name,
 		Municipality: airport.Municipality,
-		Location:     airport.Location,
+		Location:     &mappedLocation,
 	}
 }
 

@@ -1,8 +1,8 @@
 package response
 
 type GeoCoordinatesContract struct {
-	Lat float64 `json:"lat"`
-	Lon float64 `json:"lon"`
+	Lat float32 `json:"lat"`
+	Lon float32 `json:"lon"`
 }
 
 type ListingAirportContract struct {

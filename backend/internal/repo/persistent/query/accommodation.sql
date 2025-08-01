@@ -1,8 +1,10 @@
 -- name: GetAccommodationByID :one
-SELECT *
+SELECT sqlc.embed(accommodation), location.*
 FROM accommodation
-WHERE id = $1;
+LEFT JOIN location on location_id = location.id
+WHERE accommodation.id = $1;
 
 -- name: GetAllAccommodation :many
-SELECT *
-FROM accommodation;
+SELECT sqlc.embed(accommodation), location.*
+FROM accommodation
+LEFT JOIN location on location_id = location.id;

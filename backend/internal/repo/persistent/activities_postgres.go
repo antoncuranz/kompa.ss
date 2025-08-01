@@ -25,23 +25,23 @@ func (r *ActivitiesRepo) GetActivities(ctx context.Context) ([]entity.Activity, 
 }
 
 func (r *ActivitiesRepo) GetActivityByID(ctx context.Context, id int32) (entity.Activity, error) {
-	activity, err := r.Queries.GetActivityByID(ctx, id)
+	row, err := r.Queries.GetActivityByID(ctx, id)
 	if err != nil {
 		return entity.Activity{}, err
 	}
 
-	return mapActivity(activity), nil
+	return mapActivity(row.Activity, mapLocationLeftJoin(row.ID, row.Latitude, row.Longitude)), nil
 }
 
-func mapActivities(activities []sqlc.Activity) []entity.Activity {
+func mapActivities(rows []sqlc.GetActivitiesRow) []entity.Activity {
 	result := []entity.Activity{}
-	for _, activity := range activities {
-		result = append(result, mapActivity(activity))
+	for _, row := range rows {
+		result = append(result, mapActivity(row.Activity, mapLocationLeftJoin(row.ID, row.Latitude, row.Longitude)))
 	}
 	return result
 }
 
-func mapActivity(activity sqlc.Activity) entity.Activity {
+func mapActivity(activity sqlc.Activity, location *entity.Location) entity.Activity {
 	return entity.Activity{
 		ID:          activity.ID,
 		TripID:      activity.TripID,
@@ -49,5 +49,6 @@ func mapActivity(activity sqlc.Activity) entity.Activity {
 		Date:        activity.Date,
 		Time:        activity.Time,
 		Description: activity.Description,
+		Location:    location,
 	}
 }

@@ -25,17 +25,22 @@ func (q *Queries) GetFlightByID(ctx context.Context, id int32) (Flight, error) {
 }
 
 const getFlightLegsByFlightID = `-- name: GetFlightLegsByFlightID :many
-SELECT flight_leg.id, flight_leg.flight_id, flight_leg.origin, flight_leg.destination, flight_leg.airline, flight_leg.flight_number, flight_leg.departure_time, flight_leg.arrival_time, flight_leg.duration_in_minutes, flight_leg.aircraft, origin.iata, origin.name, origin.municipality, origin.location, destination.iata, destination.name, destination.municipality, destination.location
+SELECT flight_leg.id, flight_leg.flight_id, flight_leg.origin, flight_leg.destination, flight_leg.airline, flight_leg.flight_number, flight_leg.departure_time, flight_leg.arrival_time, flight_leg.duration_in_minutes, flight_leg.aircraft, origin.iata, origin.name, origin.municipality, origin.location_id, destination.iata, destination.name, destination.municipality, destination.location_id, origin_location.id, origin_location.latitude, origin_location.longitude, destination_location.id, destination_location.latitude, destination_location.longitude
 FROM flight_leg
 JOIN airport origin on flight_leg.origin = origin.iata
 JOIN airport destination on flight_leg.destination = destination.iata
+JOIN location origin_location on origin.location_id = origin_location.id
+JOIN location destination_location on destination.location_id = destination_location.id
 WHERE flight_id = $1
+ORDER BY departure_time
 `
 
 type GetFlightLegsByFlightIDRow struct {
-	FlightLeg FlightLeg
-	Airport   Airport
-	Airport_2 Airport
+	FlightLeg  FlightLeg
+	Airport    Airport
+	Airport_2  Airport
+	Location   Location
+	Location_2 Location
 }
 
 func (q *Queries) GetFlightLegsByFlightID(ctx context.Context, flightID int32) ([]GetFlightLegsByFlightIDRow, error) {
@@ -61,11 +66,17 @@ func (q *Queries) GetFlightLegsByFlightID(ctx context.Context, flightID int32) (
 			&i.Airport.Iata,
 			&i.Airport.Name,
 			&i.Airport.Municipality,
-			&i.Airport.Location,
+			&i.Airport.LocationID,
 			&i.Airport_2.Iata,
 			&i.Airport_2.Name,
 			&i.Airport_2.Municipality,
-			&i.Airport_2.Location,
+			&i.Airport_2.LocationID,
+			&i.Location.ID,
+			&i.Location.Latitude,
+			&i.Location.Longitude,
+			&i.Location_2.ID,
+			&i.Location_2.Latitude,
+			&i.Location_2.Longitude,
 		); err != nil {
 			return nil, err
 		}
@@ -135,7 +146,7 @@ func (q *Queries) GetPnrsByFlightID(ctx context.Context, flightID int32) ([]Pnr,
 
 const insertAirport = `-- name: InsertAirport :exec
 INSERT INTO airport (
-    iata, name, municipality, location
+    iata, name, municipality, location_id
 ) VALUES (
     $1, $2, $3, $4
 )
@@ -146,7 +157,7 @@ type InsertAirportParams struct {
 	Iata         string
 	Name         string
 	Municipality string
-	Location     *string
+	LocationID   *int32
 }
 
 func (q *Queries) InsertAirport(ctx context.Context, arg InsertAirportParams) error {
@@ -154,7 +165,7 @@ func (q *Queries) InsertAirport(ctx context.Context, arg InsertAirportParams) er
 		arg.Iata,
 		arg.Name,
 		arg.Municipality,
-		arg.Location,
+		arg.LocationID,
 	)
 	return err
 }

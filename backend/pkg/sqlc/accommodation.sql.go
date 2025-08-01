@@ -10,54 +10,76 @@ import (
 )
 
 const getAccommodationByID = `-- name: GetAccommodationByID :one
-SELECT id, trip_id, name, arrival_date, departure_date, check_in_time, check_out_time, description, location, price
+SELECT accommodation.id, accommodation.trip_id, accommodation.location_id, accommodation.name, accommodation.arrival_date, accommodation.departure_date, accommodation.check_in_time, accommodation.check_out_time, accommodation.description, accommodation.price, location.id, location.latitude, location.longitude
 FROM accommodation
-WHERE id = $1
+LEFT JOIN location on location_id = location.id
+WHERE accommodation.id = $1
 `
 
-func (q *Queries) GetAccommodationByID(ctx context.Context, id int32) (Accommodation, error) {
+type GetAccommodationByIDRow struct {
+	Accommodation Accommodation
+	ID            *int32
+	Latitude      *float32
+	Longitude     *float32
+}
+
+func (q *Queries) GetAccommodationByID(ctx context.Context, id int32) (GetAccommodationByIDRow, error) {
 	row := q.db.QueryRow(ctx, getAccommodationByID, id)
-	var i Accommodation
+	var i GetAccommodationByIDRow
 	err := row.Scan(
+		&i.Accommodation.ID,
+		&i.Accommodation.TripID,
+		&i.Accommodation.LocationID,
+		&i.Accommodation.Name,
+		&i.Accommodation.ArrivalDate,
+		&i.Accommodation.DepartureDate,
+		&i.Accommodation.CheckInTime,
+		&i.Accommodation.CheckOutTime,
+		&i.Accommodation.Description,
+		&i.Accommodation.Price,
 		&i.ID,
-		&i.TripID,
-		&i.Name,
-		&i.ArrivalDate,
-		&i.DepartureDate,
-		&i.CheckInTime,
-		&i.CheckOutTime,
-		&i.Description,
-		&i.Location,
-		&i.Price,
+		&i.Latitude,
+		&i.Longitude,
 	)
 	return i, err
 }
 
 const getAllAccommodation = `-- name: GetAllAccommodation :many
-SELECT id, trip_id, name, arrival_date, departure_date, check_in_time, check_out_time, description, location, price
+SELECT accommodation.id, accommodation.trip_id, accommodation.location_id, accommodation.name, accommodation.arrival_date, accommodation.departure_date, accommodation.check_in_time, accommodation.check_out_time, accommodation.description, accommodation.price, location.id, location.latitude, location.longitude
 FROM accommodation
+LEFT JOIN location on location_id = location.id
 `
 
-func (q *Queries) GetAllAccommodation(ctx context.Context) ([]Accommodation, error) {
+type GetAllAccommodationRow struct {
+	Accommodation Accommodation
+	ID            *int32
+	Latitude      *float32
+	Longitude     *float32
+}
+
+func (q *Queries) GetAllAccommodation(ctx context.Context) ([]GetAllAccommodationRow, error) {
 	rows, err := q.db.Query(ctx, getAllAccommodation)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []Accommodation{}
+	items := []GetAllAccommodationRow{}
 	for rows.Next() {
-		var i Accommodation
+		var i GetAllAccommodationRow
 		if err := rows.Scan(
+			&i.Accommodation.ID,
+			&i.Accommodation.TripID,
+			&i.Accommodation.LocationID,
+			&i.Accommodation.Name,
+			&i.Accommodation.ArrivalDate,
+			&i.Accommodation.DepartureDate,
+			&i.Accommodation.CheckInTime,
+			&i.Accommodation.CheckOutTime,
+			&i.Accommodation.Description,
+			&i.Accommodation.Price,
 			&i.ID,
-			&i.TripID,
-			&i.Name,
-			&i.ArrivalDate,
-			&i.DepartureDate,
-			&i.CheckInTime,
-			&i.CheckOutTime,
-			&i.Description,
-			&i.Location,
-			&i.Price,
+			&i.Latitude,
+			&i.Longitude,
 		); err != nil {
 			return nil, err
 		}

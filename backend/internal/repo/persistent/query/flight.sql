@@ -8,11 +8,14 @@ SELECT *
 FROM flight;
 
 -- name: GetFlightLegsByFlightID :many
-SELECT sqlc.embed(flight_leg), sqlc.embed(origin), sqlc.embed(destination)
+SELECT sqlc.embed(flight_leg), sqlc.embed(origin), sqlc.embed(destination), sqlc.embed(origin_location), sqlc.embed(destination_location)
 FROM flight_leg
 JOIN airport origin on flight_leg.origin = origin.iata
 JOIN airport destination on flight_leg.destination = destination.iata
-WHERE flight_id = $1;
+JOIN location origin_location on origin.location_id = origin_location.id
+JOIN location destination_location on destination.location_id = destination_location.id
+WHERE flight_id = $1
+ORDER BY departure_time;
 
 -- name: GetPnrsByFlightID :many
 SELECT *
@@ -37,7 +40,7 @@ RETURNING id;
 
 -- name: InsertAirport :exec
 INSERT INTO airport (
-    iata, name, municipality, location
+    iata, name, municipality, location_id
 ) VALUES (
     $1, $2, $3, $4
 )

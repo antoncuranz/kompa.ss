@@ -10,26 +10,38 @@ import (
 )
 
 const getActivities = `-- name: GetActivities :many
-SELECT id, trip_id, name, date, time, description
+SELECT activity.id, activity.trip_id, activity.location_id, activity.name, activity.date, activity.time, activity.description, location.id, location.latitude, location.longitude
 FROM activity
+LEFT JOIN location on activity.location_id = location.id
 `
 
-func (q *Queries) GetActivities(ctx context.Context) ([]Activity, error) {
+type GetActivitiesRow struct {
+	Activity  Activity
+	ID        *int32
+	Latitude  *float32
+	Longitude *float32
+}
+
+func (q *Queries) GetActivities(ctx context.Context) ([]GetActivitiesRow, error) {
 	rows, err := q.db.Query(ctx, getActivities)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []Activity{}
+	items := []GetActivitiesRow{}
 	for rows.Next() {
-		var i Activity
+		var i GetActivitiesRow
 		if err := rows.Scan(
+			&i.Activity.ID,
+			&i.Activity.TripID,
+			&i.Activity.LocationID,
+			&i.Activity.Name,
+			&i.Activity.Date,
+			&i.Activity.Time,
+			&i.Activity.Description,
 			&i.ID,
-			&i.TripID,
-			&i.Name,
-			&i.Date,
-			&i.Time,
-			&i.Description,
+			&i.Latitude,
+			&i.Longitude,
 		); err != nil {
 			return nil, err
 		}
@@ -42,21 +54,33 @@ func (q *Queries) GetActivities(ctx context.Context) ([]Activity, error) {
 }
 
 const getActivityByID = `-- name: GetActivityByID :one
-SELECT id, trip_id, name, date, time, description
+SELECT activity.id, activity.trip_id, activity.location_id, activity.name, activity.date, activity.time, activity.description, location.id, location.latitude, location.longitude
 FROM activity
-WHERE id = $1
+LEFT JOIN location on activity.location_id = location.id
+WHERE activity.id = $1
 `
 
-func (q *Queries) GetActivityByID(ctx context.Context, id int32) (Activity, error) {
+type GetActivityByIDRow struct {
+	Activity  Activity
+	ID        *int32
+	Latitude  *float32
+	Longitude *float32
+}
+
+func (q *Queries) GetActivityByID(ctx context.Context, id int32) (GetActivityByIDRow, error) {
 	row := q.db.QueryRow(ctx, getActivityByID, id)
-	var i Activity
+	var i GetActivityByIDRow
 	err := row.Scan(
+		&i.Activity.ID,
+		&i.Activity.TripID,
+		&i.Activity.LocationID,
+		&i.Activity.Name,
+		&i.Activity.Date,
+		&i.Activity.Time,
+		&i.Activity.Description,
 		&i.ID,
-		&i.TripID,
-		&i.Name,
-		&i.Date,
-		&i.Time,
-		&i.Description,
+		&i.Latitude,
+		&i.Longitude,
 	)
 	return i, err
 }

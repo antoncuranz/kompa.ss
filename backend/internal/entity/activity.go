@@ -13,4 +13,6 @@ type Activity struct {
 	Date        civil.Date  `json:"date"`
 	Time        *civil.Time `json:"time"`
 	Description *string     `json:"description"`
+	Location    *Location   `json:"location"`
+	Price       *int32      `json:"price"`
 }

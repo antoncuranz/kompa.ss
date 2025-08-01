@@ -16,32 +16,32 @@ func NewAccommodationRepo(pg *postgres.Postgres) *AccommodationRepo {
 }
 
 func (r *AccommodationRepo) GetAllAccommodation(ctx context.Context) ([]entity.Accommodation, error) {
-	accommodation, err := r.Queries.GetAllAccommodation(ctx)
+	rows, err := r.Queries.GetAllAccommodation(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	return mapAllAccommodation(accommodation), nil
+	return mapAllAccommodation(rows), nil
 }
 
 func (r *AccommodationRepo) GetAccommodationByID(ctx context.Context, id int32) (entity.Accommodation, error) {
-	accommodation, err := r.Queries.GetAccommodationByID(ctx, id)
+	row, err := r.Queries.GetAccommodationByID(ctx, id)
 	if err != nil {
 		return entity.Accommodation{}, err
 	}
 
-	return mapAccommodation(accommodation), nil
+	return mapAccommodation(row.Accommodation, mapLocationLeftJoin(row.ID, row.Latitude, row.Longitude)), nil
 }
 
-func mapAllAccommodation(accommodation []sqlc.Accommodation) []entity.Accommodation {
+func mapAllAccommodation(accommodation []sqlc.GetAllAccommodationRow) []entity.Accommodation {
 	result := []entity.Accommodation{}
-	for _, accommodation := range accommodation {
-		result = append(result, mapAccommodation(accommodation))
+	for _, row := range accommodation {
+		result = append(result, mapAccommodation(row.Accommodation, mapLocationLeftJoin(row.ID, row.Latitude, row.Longitude)))
 	}
 	return result
 }
 
-func mapAccommodation(accommodation sqlc.Accommodation) entity.Accommodation {
+func mapAccommodation(accommodation sqlc.Accommodation, location *entity.Location) entity.Accommodation {
 	return entity.Accommodation{
 		ID:            accommodation.ID,
 		TripID:        accommodation.TripID,
@@ -51,7 +51,7 @@ func mapAccommodation(accommodation sqlc.Accommodation) entity.Accommodation {
 		CheckInTime:   accommodation.CheckInTime,
 		CheckOutTime:  accommodation.CheckOutTime,
 		Description:   accommodation.Description,
-		Location:      accommodation.Location,
 		Price:         accommodation.Price,
+		Location:      location,
 	}
 }
