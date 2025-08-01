@@ -29,9 +29,9 @@ RETURNING id;
 
 -- name: InsertFlightLeg :one
 INSERT INTO flight_leg (
-    flight_id, origin, destination, airline, flight_number, departure_time, arrival_time, aircraft
+    flight_id, origin, destination, airline, flight_number, departure_time, arrival_time, duration_in_minutes, aircraft
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8
+    $1, $2, $3, $4, $5, $6, $7, $8, $9
 )
 RETURNING id;
 

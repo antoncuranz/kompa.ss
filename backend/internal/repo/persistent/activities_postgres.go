@@ -46,7 +46,8 @@ func mapActivity(activity sqlc.Activity) entity.Activity {
 		ID:          activity.ID,
 		TripID:      activity.TripID,
 		Name:        activity.Name,
-		Description: activity.Description,
 		Date:        activity.Date,
+		Time:        activity.Time,
+		Description: activity.Description,
 	}
 }

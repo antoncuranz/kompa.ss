@@ -1,11 +1,10 @@
 import {Separator} from "@/components/ui/separator.tsx";
-import {Moment} from "moment";
 import DayLabel from "@/components/itinerary/DayLabel.tsx";
 
 export default function DaySeparator({
   date, accomodation, location
 }: {
-  date: Moment,
+  date: Date,
   accomodation?: string | null,
   location?: string | null
 }){

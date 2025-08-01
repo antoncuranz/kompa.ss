@@ -4,13 +4,12 @@ package entity
 
 import (
 	"cloud.google.com/go/civil"
-	"github.com/guregu/null/v6"
 )
 
 type Trip struct {
-	ID          int32       `json:"id"`
-	Name        string      `json:"name"`
-	Description null.String `json:"description"`
-	StartDate   civil.Date  `json:"startDate"`
-	EndDate     civil.Date  `json:"endDate"`
+	ID          int32      `json:"id"`
+	Name        string     `json:"name"`
+	StartDate   civil.Date `json:"startDate"`
+	EndDate     civil.Date `json:"endDate"`
+	Description *string    `json:"description"`
 }

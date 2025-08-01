@@ -10,7 +10,7 @@ import (
 )
 
 const getTripByID = `-- name: GetTripByID :one
-SELECT id, name, description, start_date, end_date
+SELECT id, name, start_date, end_date, description
 FROM trip
 WHERE id = $1
 `
@@ -21,15 +21,15 @@ func (q *Queries) GetTripByID(ctx context.Context, id int32) (Trip, error) {
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
-		&i.Description,
 		&i.StartDate,
 		&i.EndDate,
+		&i.Description,
 	)
 	return i, err
 }
 
 const getTrips = `-- name: GetTrips :many
-SELECT id, name, description, start_date, end_date
+SELECT id, name, start_date, end_date, description
 FROM trip
 `
 
@@ -45,9 +45,9 @@ func (q *Queries) GetTrips(ctx context.Context) ([]Trip, error) {
 		if err := rows.Scan(
 			&i.ID,
 			&i.Name,
-			&i.Description,
 			&i.StartDate,
 			&i.EndDate,
+			&i.Description,
 		); err != nil {
 			return nil, err
 		}

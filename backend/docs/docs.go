@@ -381,6 +381,12 @@ const docTemplate = `{
                 "arrivalDate": {
                     "type": "string"
                 },
+                "checkInTime": {
+                    "type": "string"
+                },
+                "checkOutTime": {
+                    "type": "string"
+                },
                 "departureDate": {
                     "type": "string"
                 },
@@ -417,6 +423,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "time": {
                     "type": "string"
                 },
                 "tripId": {
@@ -476,14 +485,17 @@ const docTemplate = `{
                 "airline": {
                     "type": "string"
                 },
-                "arrivalTime": {
+                "arrivalDateTime": {
                     "type": "string"
                 },
-                "departureTime": {
+                "departureDateTime": {
                     "type": "string"
                 },
                 "destination": {
                     "$ref": "#/definitions/entity.Airport"
+                },
+                "duration": {
+                    "type": "integer"
                 },
                 "flightNumber": {
                     "type": "string"

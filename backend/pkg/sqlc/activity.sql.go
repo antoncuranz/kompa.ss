@@ -10,7 +10,7 @@ import (
 )
 
 const getActivities = `-- name: GetActivities :many
-SELECT id, trip_id, name, description, date
+SELECT id, trip_id, name, date, time, description
 FROM activity
 `
 
@@ -27,8 +27,9 @@ func (q *Queries) GetActivities(ctx context.Context) ([]Activity, error) {
 			&i.ID,
 			&i.TripID,
 			&i.Name,
-			&i.Description,
 			&i.Date,
+			&i.Time,
+			&i.Description,
 		); err != nil {
 			return nil, err
 		}
@@ -41,7 +42,7 @@ func (q *Queries) GetActivities(ctx context.Context) ([]Activity, error) {
 }
 
 const getActivityByID = `-- name: GetActivityByID :one
-SELECT id, trip_id, name, description, date
+SELECT id, trip_id, name, date, time, description
 FROM activity
 WHERE id = $1
 `
@@ -53,8 +54,9 @@ func (q *Queries) GetActivityByID(ctx context.Context, id int32) (Activity, erro
 		&i.ID,
 		&i.TripID,
 		&i.Name,
-		&i.Description,
 		&i.Date,
+		&i.Time,
+		&i.Description,
 	)
 	return i, err
 }

@@ -5,7 +5,6 @@ import {ThemeProvider} from "@/components/provider/ThemeProvider.tsx";
 import Navigation from "@/components/navigation/Navigation.tsx";
 import {UserProvider} from "@/components/provider/UserProvider.tsx";
 import {getCurrentUser} from "@/requests.ts";
-import {registerMomentSerde} from "@/components/util.ts";
 
 export const metadata: Metadata = {
   title: "travel-planner",
@@ -16,8 +15,6 @@ export const viewport: Viewport = {
   initialScale: 1.0,
   maximumScale: 1.0
 }
-
-registerMomentSerde()
 
 export default async function RootLayout({
   children,

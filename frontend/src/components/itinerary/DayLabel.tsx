@@ -1,15 +1,15 @@
-import {Moment} from "moment";
+import {formatDate} from "@/components/util.ts";
 
 export default function DayLabel({
   date, location
 }: {
-  date: Moment,
+  date: Date,
   location?: string | null
 }){
 
   return (
     <span className="ml-6 mb-2 text-sm text-muted-foreground">
-      {date.format("dddd, D MMMM YY")}{location && ", "}{location}
+      {formatDate(date)}{location && ", "}{location}
     </span>
   )
 }

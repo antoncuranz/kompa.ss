@@ -10,7 +10,7 @@ import (
 )
 
 const getAccommodationByID = `-- name: GetAccommodationByID :one
-SELECT id, trip_id, name, description, arrival_date, departure_date, location, price
+SELECT id, trip_id, name, arrival_date, departure_date, check_in_time, check_out_time, description, location, price
 FROM accommodation
 WHERE id = $1
 `
@@ -22,9 +22,11 @@ func (q *Queries) GetAccommodationByID(ctx context.Context, id int32) (Accommoda
 		&i.ID,
 		&i.TripID,
 		&i.Name,
-		&i.Description,
 		&i.ArrivalDate,
 		&i.DepartureDate,
+		&i.CheckInTime,
+		&i.CheckOutTime,
+		&i.Description,
 		&i.Location,
 		&i.Price,
 	)
@@ -32,7 +34,7 @@ func (q *Queries) GetAccommodationByID(ctx context.Context, id int32) (Accommoda
 }
 
 const getAllAccommodation = `-- name: GetAllAccommodation :many
-SELECT id, trip_id, name, description, arrival_date, departure_date, location, price
+SELECT id, trip_id, name, arrival_date, departure_date, check_in_time, check_out_time, description, location, price
 FROM accommodation
 `
 
@@ -49,9 +51,11 @@ func (q *Queries) GetAllAccommodation(ctx context.Context) ([]Accommodation, err
 			&i.ID,
 			&i.TripID,
 			&i.Name,
-			&i.Description,
 			&i.ArrivalDate,
 			&i.DepartureDate,
+			&i.CheckInTime,
+			&i.CheckOutTime,
+			&i.Description,
 			&i.Location,
 			&i.Price,
 		); err != nil {

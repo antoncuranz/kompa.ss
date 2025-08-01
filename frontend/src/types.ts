@@ -1,43 +1,42 @@
-import {Moment} from "moment";
 
 export type Trip = {
   id: number;
   name: string;
+  startDate: Date;
+  endDate: Date;
   description: string;
-  startDate: Moment;
-  endDate: Moment;
 };
 
 export type Activity = {
   id: number;
+  tripId: number;
   name: string;
+  date: Date;
+  time: string | null;
   description: string;
-  date: Moment;
-  // startTime: Date | null;
-  // endTime: Date | null;
-  // price: number | null;
   // location: string | null;
+  // price: number | null;
 };
 
 export type Accommodation = {
   id: number;
+  tripId: number;
   name: string;
+  arrivalDate: Date;
+  departureDate: Date;
+  checkInTime: string | null;
+  checkOutTime: string | null;
   description: string;
-  arrivalDate: Moment;
-  departureDate: Moment;
-  price: number | null;
   location: string | null;
+  price: number | null;
 };
 
 export type Flight = {
   id: number;
-  type: string;
-  // origin: string; // should be locations for Mapbox!
-  // destination: string;
-  price: number | null;
-  geojson: string | null;
-  pnrs: PNR[];
+  tripId: number;
   legs: FlightLeg[];
+  pnrs: PNR[];
+  price: number | null;
 };
 
 export type PNR = {
@@ -48,17 +47,19 @@ export type PNR = {
 
 export type FlightLeg = {
   id: number;
-  airline: string;
-  flightNumber: string;
   origin: Airport;
   destination: Airport;
-  departureTime: Moment;
-  arrivalTime: Moment;
+  airline: string;
+  flightNumber: string;
+  departureDateTime: Date;
+  arrivalDateTime: Date;
+  durationInMinutes: number;
   aircraft: string | null;
 };
 
 export type Airport = {
-  name: string;
   iata: string;
+  name: string;
   municipality: string;
+  location: string | null;
 }

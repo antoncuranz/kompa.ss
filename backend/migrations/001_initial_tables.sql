@@ -9,9 +9,9 @@ create table trip
 (
     id             serial primary key,
     name           varchar(255) not null,
-    description    varchar,
     start_date     date not null,
-    end_date       date not null
+    end_date       date not null,
+    description    varchar
 );
 
 create table activity
@@ -19,8 +19,9 @@ create table activity
     id             serial primary key,
     trip_id        integer not null references trip on delete cascade,
     name           varchar(255) not null,
-    description    varchar,
-    date           date not null
+    date           date not null,
+    time           time,
+    description    varchar
 );
 
 create table accommodation
@@ -28,9 +29,11 @@ create table accommodation
     id             serial primary key,
     trip_id        integer not null references trip on delete cascade,
     name           varchar(255) not null,
-    description    varchar,
     arrival_date   date not null,
     departure_date date not null,
+    check_in_time  time,
+    check_out_time time,
+    description    varchar,
     location       varchar(255),
     price          integer
 );
@@ -55,15 +58,16 @@ create table airport
 
 create table flight_leg
 (
-    id             serial primary key,
-    flight_id      integer not null references flight on delete cascade,
-    origin         varchar(3) not null references airport,
-    destination    varchar(3) not null references airport,
-    airline        varchar(255) not null,
-    flight_number  varchar(255) not null,
-    departure_time varchar(50) not null,
-    arrival_time   varchar(50) not null,
-    aircraft       varchar(255)
+    id                  serial primary key,
+    flight_id           integer not null references flight on delete cascade,
+    origin              varchar(3) not null references airport,
+    destination         varchar(3) not null references airport,
+    airline             varchar(255) not null,
+    flight_number       varchar(255) not null,
+    departure_time      timestamp not null,
+    arrival_time        timestamp not null,
+    duration_in_minutes integer not null,
+    aircraft            varchar(255)
 );
 
 create table pnr

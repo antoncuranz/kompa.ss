@@ -45,8 +45,8 @@ func mapTrip(trip sqlc.Trip) entity.Trip {
 	return entity.Trip{
 		ID:          trip.ID,
 		Name:        trip.Name,
-		Description: trip.Description,
 		StartDate:   trip.StartDate,
 		EndDate:     trip.EndDate,
+		Description: trip.Description,
 	}
 }

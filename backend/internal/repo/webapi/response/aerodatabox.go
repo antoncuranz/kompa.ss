@@ -6,10 +6,10 @@ type GeoCoordinatesContract struct {
 }
 
 type ListingAirportContract struct {
-	Iata             string                 `json:"iata"`
-	Name             string                 `json:"name"`
-	MunicipalityName string                 `json:"municipalityName"`
-	Location         GeoCoordinatesContract `json:"location"`
+	Name             string                  `json:"name"`
+	Iata             *string                 `json:"iata"`
+	MunicipalityName *string                 `json:"municipalityName"`
+	Location         *GeoCoordinatesContract `json:"location"`
 }
 
 type DateTimeContract struct {
@@ -19,11 +19,11 @@ type DateTimeContract struct {
 
 type FlightAirportMovementContract struct {
 	Airport       ListingAirportContract `json:"airport"`
-	ScheduledTime DateTimeContract       `json:"scheduledTime"`
+	ScheduledTime *DateTimeContract      `json:"scheduledTime"`
 }
 
 type FlightAircraftContract struct {
-	Model string `json:"model"`
+	Model *string `json:"model"`
 }
 
 type FlightAirlineContract struct {
@@ -34,6 +34,6 @@ type FlightContract struct {
 	Number    string                        `json:"number"`
 	Departure FlightAirportMovementContract `json:"departure"`
 	Arrival   FlightAirportMovementContract `json:"arrival"`
-	Aircraft  FlightAircraftContract        `json:"aircraft"`
-	Airline   FlightAirlineContract         `json:"airline"`
+	Aircraft  *FlightAircraftContract       `json:"aircraft"`
+	Airline   *FlightAirlineContract        `json:"airline"`
 }

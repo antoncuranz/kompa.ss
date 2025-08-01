@@ -99,14 +99,15 @@ func (r *FlightsRepo) SaveFlight(ctx context.Context, flight entity.Flight) (ent
 
 	for _, leg := range flight.Legs {
 		_, err := qtx.InsertFlightLeg(ctx, sqlc.InsertFlightLegParams{
-			FlightID:      flightId,
-			Origin:        leg.Origin.Iata,
-			Destination:   leg.Destination.Iata,
-			Airline:       leg.Airline,
-			FlightNumber:  leg.FlightNumber,
-			DepartureTime: leg.DepartureTime,
-			ArrivalTime:   leg.ArrivalTime,
-			Aircraft:      leg.Aircraft,
+			FlightID:          flightId,
+			Origin:            leg.Origin.Iata,
+			Destination:       leg.Destination.Iata,
+			Airline:           leg.Airline,
+			FlightNumber:      leg.FlightNumber,
+			DepartureTime:     leg.DepartureDateTime,
+			ArrivalTime:       leg.ArrivalDateTime,
+			DurationInMinutes: leg.DurationInMinutes,
+			Aircraft:          leg.Aircraft,
 		})
 		if err != nil {
 			return entity.Flight{}, err
@@ -138,9 +139,9 @@ func mapFlight(flight sqlc.Flight, legs []sqlc.GetFlightLegsByFlightIDRow, pnrs 
 	return entity.Flight{
 		ID:     flight.ID,
 		TripID: flight.TripID,
-		Price:  flight.Price,
 		Legs:   mapFlightLegs(legs),
 		PNRs:   mapPnrs(pnrs),
+		Price:  flight.Price,
 	}
 }
 
@@ -153,25 +154,16 @@ func mapFlightLegs(legs []sqlc.GetFlightLegsByFlightIDRow) []entity.FlightLeg {
 }
 
 func mapFlightLeg(leg sqlc.GetFlightLegsByFlightIDRow) entity.FlightLeg {
-	//format := "2006-01-02 15:04-07:00"
-	//departureTime, err := time.Parse(format, leg.FlightLeg.DepartureTime)
-	//if err != nil {
-	//	fmt.Printf("Error parsing timestamp: %s\n", leg.FlightLeg.DepartureTime)
-	//}
-	//arrivalTime, err := time.Parse(format, leg.FlightLeg.ArrivalTime)
-	//if err != nil {
-	//	fmt.Printf("Error parsing timestamp: %s\n", leg.FlightLeg.ArrivalTime)
-	//}
-
 	return entity.FlightLeg{
-		ID:            leg.FlightLeg.ID,
-		Origin:        mapAirport(leg.Airport),
-		Destination:   mapAirport(leg.Airport_2),
-		Airline:       leg.FlightLeg.Airline,
-		FlightNumber:  leg.FlightLeg.FlightNumber,
-		DepartureTime: leg.FlightLeg.DepartureTime,
-		ArrivalTime:   leg.FlightLeg.ArrivalTime,
-		Aircraft:      leg.FlightLeg.Aircraft,
+		ID:                leg.FlightLeg.ID,
+		Origin:            mapAirport(leg.Airport),
+		Destination:       mapAirport(leg.Airport_2),
+		Airline:           leg.FlightLeg.Airline,
+		FlightNumber:      leg.FlightLeg.FlightNumber,
+		DepartureDateTime: leg.FlightLeg.DepartureTime,
+		ArrivalDateTime:   leg.FlightLeg.ArrivalTime,
+		DurationInMinutes: leg.FlightLeg.DurationInMinutes,
+		Aircraft:          leg.FlightLeg.Aircraft,
 	}
 }
 

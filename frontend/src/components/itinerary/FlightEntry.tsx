@@ -6,10 +6,8 @@ import {ChevronDown, ChevronUp} from "lucide-react";
 import {CollapsibleContent, CollapsibleTrigger} from "@radix-ui/react-collapsible";
 import {cn} from "@/lib/utils.ts";
 import {Flight, FlightLeg} from "@/types.ts";
-import {durationString, registerMomentSerde} from "@/components/util.ts";
+import {formatDurationMinutes, formatTime} from "@/components/util.ts";
 import {useState} from "react";
-
-registerMomentSerde()
 
 export default function FlightEntry({
   flight, flightLeg, className
@@ -39,7 +37,7 @@ export default function FlightEntry({
               </>
             :
               <>
-                {flightLeg.departureTime.format("H:mm")}-{flightLeg.arrivalTime.format("H:mm")} Flight {flightLeg.flightNumber} from {flightLeg.origin.municipality} to {flightLeg.destination.municipality}
+                {formatTime(flightLeg.departureDateTime)}-{formatTime(flightLeg.arrivalDateTime)} Flight {flightLeg.flightNumber} from {flightLeg.origin.municipality} to {flightLeg.destination.municipality}
                 <ChevronDown className="float-right text-muted-foreground"/>
               </>
             }
@@ -54,9 +52,9 @@ export default function FlightEntry({
             <div className="w-1.5 h-1.5 rounded-lg bg-gray-300"/>
           </div>
           <div>
-            <p>{flightLeg.departureTime.format("H:mm")} {flightLeg.origin.name} ({flightLeg.origin.iata})</p>
-            <p className="text-sm text-muted-foreground">Duration: {durationString(flightLeg.arrivalTime, flightLeg.departureTime)}</p>
-            <p>{flightLeg.arrivalTime.format("H:mm")} {flightLeg.destination.name} ({flightLeg.destination.iata})</p>
+            <p>{formatTime(flightLeg.departureDateTime)} {flightLeg.origin.name} ({flightLeg.origin.iata})</p>
+            <p className="text-sm text-muted-foreground">Duration: {formatDurationMinutes(flightLeg.durationInMinutes)}</p>
+            <p>{formatTime(flightLeg.arrivalDateTime)} {flightLeg.destination.name} ({flightLeg.destination.iata})</p>
           </div>
           <img src={"https://seats.aero/static/carriersng/" + iata + ".png"} className="h-4 mt-0 m-auto relative top-1" alt="LH"/>
           <div>

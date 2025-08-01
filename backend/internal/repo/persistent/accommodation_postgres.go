@@ -46,9 +46,11 @@ func mapAccommodation(accommodation sqlc.Accommodation) entity.Accommodation {
 		ID:            accommodation.ID,
 		TripID:        accommodation.TripID,
 		Name:          accommodation.Name,
-		Description:   accommodation.Description,
 		ArrivalDate:   accommodation.ArrivalDate,
 		DepartureDate: accommodation.DepartureDate,
+		CheckInTime:   accommodation.CheckInTime,
+		CheckOutTime:  accommodation.CheckOutTime,
+		Description:   accommodation.Description,
 		Location:      accommodation.Location,
 		Price:         accommodation.Price,
 	}

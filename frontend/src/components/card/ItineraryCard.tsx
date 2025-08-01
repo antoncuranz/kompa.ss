@@ -1,14 +1,13 @@
 import FlightEntry from "@/components/itinerary/FlightEntry.tsx";
 import DaySeparator from "@/components/itinerary/DaySeparator.tsx";
 import {Accommodation, Flight, Activity, Trip} from "@/types.ts";
-import moment, {Moment} from "moment";
-import FlightSeparator from "@/components/itinerary/FlightSeparator.tsx";
-import {durationString, getDaysBetween, isSameLocalDay} from "@/components/util.ts";
+import {formatDuration, getDaysBetween, isSameDay} from "@/components/util.ts";
 import DayLabel from "@/components/itinerary/DayLabel.tsx";
 import AddActivityButton from "@/components/itinerary/AddActivityButton.tsx";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card.tsx";
 import React from "react";
 import ActivityEntry from "@/components/itinerary/ActivityEntry.tsx";
+import FlightSeparator from "@/components/itinerary/FlightSeparator.tsx";
 
 export default async function ItineraryCard({
   trip, flights, accomodation, activities
@@ -19,40 +18,41 @@ export default async function ItineraryCard({
   activities: Activity[]
 }) {
 
-  function renderDay(day: Moment) {
+  function renderDay(day: Date) {
     const filteredActivities = activities
-        .filter(act => day.isSame(act.date))
+        .filter(act => isSameDay(day, act.date))
 
     const filteredFlights = flights
       .flatMap(flight => flight.legs.map(leg => ({flight, leg})))
-      .filter(pair => isSameLocalDay(pair.leg.departureTime, day))
+      .filter(pair => isSameDay(pair.leg.departureDateTime, day))
 
     const nightFlight = filteredFlights
-      .find(pair => !isSameLocalDay(pair.leg.arrivalTime, day))
+      .find(pair => !isSameDay(pair.leg.arrivalDateTime, day))
 
     const dayFlights = nightFlight ? filteredFlights.slice(0, -1) : filteredFlights
 
     const todaysAccomodation = accomodation.find(acc =>
-      acc.arrivalDate.isSameOrBefore(day) && acc.departureDate.isAfter(day)
+      acc.arrivalDate <= day && acc.departureDate > day
     )
 
-    const nextDay = moment(day).add(1, "day")
+    const nextDay = new Date(day)
+    nextDay.setDate(nextDay.getDate() + 1)
 
     return (
       <div key={day.toISOString()}>
-        {filteredActivities.map(act => <ActivityEntry key={act.id} name={act.name}/>)}
+        {filteredActivities.map(act => <ActivityEntry key={act.id} activity={act}/>)}
         <AddActivityButton/>
         {dayFlights.map((pair, idx) =>
           <div key={idx}>
-            <FlightEntry flight={pair.flight} flightLeg={pair.leg} data-superjson/>
+            <FlightEntry flight={pair.flight} flightLeg={pair.leg}/>
             {filteredFlights.length > idx + 1 &&
               <span className="ml-6 text-sm text-muted-foreground">
-                {durationString(filteredFlights[idx+1].leg.departureTime, pair.leg.arrivalTime)} Layover
+                {formatDuration(pair.leg.arrivalDateTime, filteredFlights[idx+1].leg.departureDateTime)} Layover
               </span>
             }
           </div>
         )}
-        {!trip.endDate.isSame(day) && (nightFlight ?
+        {!isSameDay(trip.endDate, day) && (nightFlight ?
           <FlightSeparator date={nextDay} flight={nightFlight.flight} flightLeg={nightFlight.leg}/>
         :
           <DaySeparator date={nextDay} accomodation={todaysAccomodation?.name}/>

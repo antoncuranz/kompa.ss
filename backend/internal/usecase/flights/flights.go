@@ -2,7 +2,6 @@ package flights
 
 import (
 	"context"
-	"github.com/guregu/null/v6"
 	"travel-planner/internal/controller/http/v1/request"
 	"travel-planner/internal/entity"
 	"travel-planner/internal/repo"
@@ -38,7 +37,7 @@ func (uc *UseCase) CreateFlight(ctx context.Context, flight request.Flight) (ent
 		TripID: 1,
 		Legs:   flightLegs,
 		PNRs:   flight.PNRs,
-		Price:  null.Int32{},
+		Price:  nil,
 	})
 }
 

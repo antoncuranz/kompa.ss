@@ -6,10 +6,7 @@ const nextConfig = {
             source: "/api/:path*",
             destination: process.env.BACKEND_URL + "/api/:path*",
         },
-    ],
-    experimental: {
-        swcPlugins: [["superjson-next", {router: "APP"}]],
-    }
+    ]
 }
 
 export default nextConfig

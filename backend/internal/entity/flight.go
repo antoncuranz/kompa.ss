@@ -3,25 +3,26 @@
 package entity
 
 import (
-	"github.com/guregu/null/v6"
+	"cloud.google.com/go/civil"
 )
 
 type Airport struct {
-	Iata         string      `json:"iata"`
-	Name         string      `json:"name"`
-	Municipality string      `json:"municipality"`
-	Location     null.String `json:"location"`
+	Iata         string  `json:"iata"`
+	Name         string  `json:"name"`
+	Municipality string  `json:"municipality"`
+	Location     *string `json:"location"`
 }
 
 type FlightLeg struct {
-	ID            int32       `json:"id"`
-	Origin        Airport     `json:"origin"`
-	Destination   Airport     `json:"destination"`
-	Airline       string      `json:"airline"`
-	FlightNumber  string      `json:"flightNumber"`
-	DepartureTime string      `json:"departureTime"`
-	ArrivalTime   string      `json:"arrivalTime"`
-	Aircraft      null.String `json:"aircraft"`
+	ID                int32          `json:"id"`
+	Origin            Airport        `json:"origin"`
+	Destination       Airport        `json:"destination"`
+	Airline           string         `json:"airline"`
+	FlightNumber      string         `json:"flightNumber"`
+	DepartureDateTime civil.DateTime `json:"departureDateTime"`
+	ArrivalDateTime   civil.DateTime `json:"arrivalDateTime"`
+	DurationInMinutes int32          `json:"durationInMinutes"`
+	Aircraft          *string        `json:"aircraft"`
 }
 
 type PNR struct {
@@ -33,7 +34,7 @@ type PNR struct {
 type Flight struct {
 	ID     int32       `json:"id"`
 	TripID int32       `json:"tripId"`
-	Price  null.Int32  `json:"price"`
 	Legs   []FlightLeg `json:"legs"`
 	PNRs   []PNR       `json:"pnrs"`
+	Price  *int32      `json:"price"`
 }

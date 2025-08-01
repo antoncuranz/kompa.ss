@@ -36,6 +36,6 @@ type (
 	}
 
 	AerodataboxWebAPI interface {
-		RetrieveFlightLeg(ctx context.Context, date string, flightNumber string, origin string) (entity.FlightLeg, error)
+		RetrieveFlightLeg(ctx context.Context, date string, flightNumber string, origin *string) (entity.FlightLeg, error)
 	}
 )

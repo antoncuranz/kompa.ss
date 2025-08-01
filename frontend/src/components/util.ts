@@ -1,40 +1,42 @@
-import moment, {Moment} from "moment";
-import SuperJSON from "superjson";
 
-export function getDaysBetween(startDate: Moment, endDate: Moment) {
+export function getDaysBetween(startDate: Date, endDate: Date) {
   const dates = [];
-  const currentDate = moment(startDate);
+  const currentDate = new Date(startDate);
 
   if (endDate < startDate) {
     return [];
   }
 
   while (currentDate <= endDate) {
-    dates.push(moment(currentDate));
-    currentDate.add(1, "day")
+    dates.push(new Date(currentDate));
+    currentDate.setDate(currentDate.getDate() + 1);
   }
 
   return dates;
 }
 
-export function isSameLocalDay(dateA: Moment, dateB: Moment) {
-  return dateA.year() === dateB.year() &&
-    dateA.month() === dateB.month() &&
-    dateA.date() === dateB.date();
+export function isSameDay(dateA: Date, dateB: Date) {
+  return dateA.getFullYear() === dateB.getFullYear() &&
+    dateA.getMonth() === dateB.getMonth() &&
+    dateA.getDate() === dateB.getDate();
 }
 
-export function durationString(dateA: Moment, dateB: Moment) {
-  const durationMinutes = dateA.diff(dateB, "minutes")
-  return Math.floor(durationMinutes / 60) + "h " + durationMinutes % 60 + "min"
+export function formatDuration(dateA: Date, dateB: Date) {
+  const difference = dateB.getTime() - dateA.getTime();
+  return formatDurationMinutes(Math.floor(difference / (1000 * 60)))
 }
 
-export function registerMomentSerde() {
-  SuperJSON.registerCustom<Moment, string>(
-    {
-      isApplicable: (v): v is Moment => moment.isMoment(v),
-      serialize: v => v.toJSON(),
-      deserialize: v => moment(v),
-    },
-    'moment.js'
-  )
+export function formatDurationMinutes(minutes: number) {
+  return Math.floor(minutes / 60) + "h " + minutes % 60 + "min"
+}
+
+export function formatDate(date: Date) {
+  return new Intl.DateTimeFormat(undefined, {
+    dateStyle: "full"
+  }).format(date)
+  // return date.toLocaleDateString("de-DE")
+}
+
+export function formatTime(time: Date) {
+  return time.getHours() + ":" + time.getMinutes()
 }

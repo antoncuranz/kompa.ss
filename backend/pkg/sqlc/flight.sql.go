@@ -8,7 +8,7 @@ package sqlc
 import (
 	"context"
 
-	null "github.com/guregu/null/v6"
+	"cloud.google.com/go/civil"
 )
 
 const getFlightByID = `-- name: GetFlightByID :one
@@ -25,7 +25,7 @@ func (q *Queries) GetFlightByID(ctx context.Context, id int32) (Flight, error) {
 }
 
 const getFlightLegsByFlightID = `-- name: GetFlightLegsByFlightID :many
-SELECT flight_leg.id, flight_leg.flight_id, flight_leg.origin, flight_leg.destination, flight_leg.airline, flight_leg.flight_number, flight_leg.departure_time, flight_leg.arrival_time, flight_leg.aircraft, origin.iata, origin.name, origin.municipality, origin.location, destination.iata, destination.name, destination.municipality, destination.location
+SELECT flight_leg.id, flight_leg.flight_id, flight_leg.origin, flight_leg.destination, flight_leg.airline, flight_leg.flight_number, flight_leg.departure_time, flight_leg.arrival_time, flight_leg.duration_in_minutes, flight_leg.aircraft, origin.iata, origin.name, origin.municipality, origin.location, destination.iata, destination.name, destination.municipality, destination.location
 FROM flight_leg
 JOIN airport origin on flight_leg.origin = origin.iata
 JOIN airport destination on flight_leg.destination = destination.iata
@@ -56,6 +56,7 @@ func (q *Queries) GetFlightLegsByFlightID(ctx context.Context, flightID int32) (
 			&i.FlightLeg.FlightNumber,
 			&i.FlightLeg.DepartureTime,
 			&i.FlightLeg.ArrivalTime,
+			&i.FlightLeg.DurationInMinutes,
 			&i.FlightLeg.Aircraft,
 			&i.Airport.Iata,
 			&i.Airport.Name,
@@ -145,7 +146,7 @@ type InsertAirportParams struct {
 	Iata         string
 	Name         string
 	Municipality string
-	Location     null.String
+	Location     *string
 }
 
 func (q *Queries) InsertAirport(ctx context.Context, arg InsertAirportParams) error {
@@ -169,7 +170,7 @@ RETURNING id
 
 type InsertFlightParams struct {
 	TripID int32
-	Price  null.Int32
+	Price  *int32
 }
 
 func (q *Queries) InsertFlight(ctx context.Context, arg InsertFlightParams) (int32, error) {
@@ -181,22 +182,23 @@ func (q *Queries) InsertFlight(ctx context.Context, arg InsertFlightParams) (int
 
 const insertFlightLeg = `-- name: InsertFlightLeg :one
 INSERT INTO flight_leg (
-    flight_id, origin, destination, airline, flight_number, departure_time, arrival_time, aircraft
+    flight_id, origin, destination, airline, flight_number, departure_time, arrival_time, duration_in_minutes, aircraft
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8
+    $1, $2, $3, $4, $5, $6, $7, $8, $9
 )
 RETURNING id
 `
 
 type InsertFlightLegParams struct {
-	FlightID      int32
-	Origin        string
-	Destination   string
-	Airline       string
-	FlightNumber  string
-	DepartureTime string
-	ArrivalTime   string
-	Aircraft      null.String
+	FlightID          int32
+	Origin            string
+	Destination       string
+	Airline           string
+	FlightNumber      string
+	DepartureTime     civil.DateTime
+	ArrivalTime       civil.DateTime
+	DurationInMinutes int32
+	Aircraft          *string
 }
 
 func (q *Queries) InsertFlightLeg(ctx context.Context, arg InsertFlightLegParams) (int32, error) {
@@ -208,6 +210,7 @@ func (q *Queries) InsertFlightLeg(ctx context.Context, arg InsertFlightLegParams
 		arg.FlightNumber,
 		arg.DepartureTime,
 		arg.ArrivalTime,
+		arg.DurationInMinutes,
 		arg.Aircraft,
 	)
 	var id int32

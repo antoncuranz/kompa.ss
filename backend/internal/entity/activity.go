@@ -4,13 +4,13 @@ package entity
 
 import (
 	"cloud.google.com/go/civil"
-	"github.com/guregu/null/v6"
 )
 
 type Activity struct {
 	ID          int32       `json:"id"`
 	TripID      int32       `json:"tripId"`
 	Name        string      `json:"name"`
-	Description null.String `json:"description"`
 	Date        civil.Date  `json:"date"`
+	Time        *civil.Time `json:"time"`
+	Description *string     `json:"description"`
 }

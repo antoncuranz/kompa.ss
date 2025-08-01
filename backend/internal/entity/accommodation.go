@@ -4,16 +4,17 @@ package entity
 
 import (
 	"cloud.google.com/go/civil"
-	"github.com/guregu/null/v6"
 )
 
 type Accommodation struct {
 	ID            int32       `json:"id"`
 	TripID        int32       `json:"tripId"`
 	Name          string      `json:"name"`
-	Description   null.String `json:"description"`
 	ArrivalDate   civil.Date  `json:"arrivalDate"`
 	DepartureDate civil.Date  `json:"departureDate"`
-	Location      null.String `json:"location"`
-	Price         null.Int32  `json:"price"`
+	CheckInTime   *civil.Time `json:"checkInTime"`
+	CheckOutTime  *civil.Time `json:"checkOutTime"`
+	Description   *string     `json:"description"`
+	Location      *string     `json:"location"`
+	Price         *int32      `json:"price"`
 }

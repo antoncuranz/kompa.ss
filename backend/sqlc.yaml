@@ -14,22 +14,27 @@ sql:
             go_type:
               import: "cloud.google.com/go/civil"
               type: "Date"
-          - db_type: "pg_catalog.timestamptz"
+          - db_type: "time"
             go_type:
-              import: "time"
+              import: "cloud.google.com/go/civil"
               type: "Time"
-          - db_type: "pg_catalog.timestamp"
+          - db_type: "pg_catalog.time"
             nullable: true
             go_type:
-              import: "github.com/guregu/null/v6"
+              import: "cloud.google.com/go/civil"
               type: "Time"
+              pointer: true
+          - db_type: "pg_catalog.timestamp"
+            go_type:
+              import: "cloud.google.com/go/civil"
+              type: "DateTime"
           - db_type: "pg_catalog.int4"
             nullable: true
             go_type:
-              import: "github.com/guregu/null/v6"
-              type: "Int32"
+              type: "int32"
+              pointer: true
           - db_type: "pg_catalog.varchar"
             nullable: true
             go_type:
-              import: "github.com/guregu/null/v6"
-              type: "String"
+              type: "string"
+              pointer: true

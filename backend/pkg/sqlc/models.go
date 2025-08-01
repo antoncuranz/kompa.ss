@@ -6,51 +6,54 @@ package sqlc
 
 import (
 	"cloud.google.com/go/civil"
-	null "github.com/guregu/null/v6"
 )
 
 type Accommodation struct {
 	ID            int32
 	TripID        int32
 	Name          string
-	Description   null.String
 	ArrivalDate   civil.Date
 	DepartureDate civil.Date
-	Location      null.String
-	Price         null.Int32
+	CheckInTime   *civil.Time
+	CheckOutTime  *civil.Time
+	Description   *string
+	Location      *string
+	Price         *int32
 }
 
 type Activity struct {
 	ID          int32
 	TripID      int32
 	Name        string
-	Description null.String
 	Date        civil.Date
+	Time        *civil.Time
+	Description *string
 }
 
 type Airport struct {
 	Iata         string
 	Name         string
 	Municipality string
-	Location     null.String
+	Location     *string
 }
 
 type Flight struct {
 	ID     int32
 	TripID int32
-	Price  null.Int32
+	Price  *int32
 }
 
 type FlightLeg struct {
-	ID            int32
-	FlightID      int32
-	Origin        string
-	Destination   string
-	Airline       string
-	FlightNumber  string
-	DepartureTime string
-	ArrivalTime   string
-	Aircraft      null.String
+	ID                int32
+	FlightID          int32
+	Origin            string
+	Destination       string
+	Airline           string
+	FlightNumber      string
+	DepartureTime     civil.DateTime
+	ArrivalTime       civil.DateTime
+	DurationInMinutes int32
+	Aircraft          *string
 }
 
 type Pnr struct {
@@ -63,9 +66,9 @@ type Pnr struct {
 type Trip struct {
 	ID          int32
 	Name        string
-	Description null.String
 	StartDate   civil.Date
 	EndDate     civil.Date
+	Description *string
 }
 
 type User struct {

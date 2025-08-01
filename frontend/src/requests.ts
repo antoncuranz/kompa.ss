@@ -4,7 +4,6 @@ import {
   Flight, Trip,
 } from "@/types.ts";
 import React from "react";
-import moment from "moment";
 
 class UnauthorizedError extends Error {}
 
@@ -42,8 +41,8 @@ export async function fetchTrip(tripId: number) {
   const trip = await fetchData("/api/v1/trips/" + tripId) as Trip
   return {
     ...trip,
-    startDate: moment(trip.startDate),
-    endDate: moment(trip.endDate),
+    startDate: new Date(trip.startDate),
+    endDate: new Date(trip.endDate),
   }
 }
 
@@ -51,8 +50,8 @@ export async function fetchAccommodation() {
   const accommodation = await fetchData("/api/v1/accommodation") as Accommodation[]
   return accommodation.map(acc => ({
     ...acc,
-    arrivalDate: moment(acc.arrivalDate),
-    departureDate: moment(acc.departureDate)
+    arrivalDate: new Date(acc.arrivalDate),
+    departureDate: new Date(acc.departureDate)
   }))
 }
 
@@ -62,8 +61,8 @@ export async function fetchFlights() {
     ...flight,
     legs: flight.legs.map(leg => ({
       ...leg,
-      departureTime: moment.parseZone(leg.departureTime),
-      arrivalTime: moment.parseZone(leg.arrivalTime)
+      departureDateTime: new Date(leg.departureDateTime),
+      arrivalDateTime: new Date(leg.arrivalDateTime)
     }))
   }))
 }
@@ -72,6 +71,6 @@ export async function fetchActivities() {
   const activities = await fetchData("/api/v1/activities") as Activity[];
   return activities.map(activity => ({
     ...activity,
-    date: moment(activity.date)
+    date: new Date(activity.date)
   }))
 }

@@ -1,3 +1,6 @@
 replace null.Int32 integer
 replace null.String string
 replace civil.Date time.Time
+replace civil.Time time.Time
+replace civil.DateTime time.Time
+replace time.Duration integer
