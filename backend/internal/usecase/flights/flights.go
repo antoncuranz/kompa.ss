@@ -37,7 +37,7 @@ func (uc *UseCase) CreateFlight(ctx context.Context, flight request.Flight) (ent
 		TripID: 1,
 		Legs:   flightLegs,
 		PNRs:   flight.PNRs,
-		Price:  nil,
+		Price:  flight.Price,
 	})
 }
 

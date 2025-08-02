@@ -12,5 +12,5 @@ type Flight struct {
 	TripID int32        `json:"tripId" validate:"required" example:"1"`
 	Legs   []FlightLeg  `json:"legs"   validate:"required"`
 	PNRs   []entity.PNR `json:"pnrs"   validate:"required"`
-	Price  int32        `json:"price"`
+	Price  *int32       `json:"price"`
 }

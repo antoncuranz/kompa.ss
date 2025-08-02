@@ -51,6 +51,11 @@ export type PNR = {
   pnr: string;
 };
 
+export type AddPNR = {
+  airline: string;
+  pnr: string;
+};
+
 export type FlightLeg = {
   id: number;
   origin: Airport;
@@ -61,6 +66,12 @@ export type FlightLeg = {
   arrivalDateTime: Date;
   durationInMinutes: number;
   aircraft: string | null;
+};
+
+export type AddFlightLeg = {
+  date: string;
+  flightNumber: string;
+  originAirport: string | null;
 };
 
 export type Airport = {
