@@ -42,6 +42,44 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accommodation"
+                ],
+                "summary": "Add accommodation",
+                "operationId": "postAccommodation",
+                "parameters": [
+                    {
+                        "description": "accommodation",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.Accommodation"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Accommodation"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    }
+                }
             }
         },
         "/accommodation/{accommodation_id}": {
@@ -97,6 +135,44 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/entity.Activity"
                             }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "activities"
+                ],
+                "summary": "Add activity",
+                "operationId": "postActivity",
+                "parameters": [
+                    {
+                        "description": "activity",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.Activity"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Activity"
                         }
                     },
                     "500": {
@@ -378,6 +454,9 @@ const docTemplate = `{
         "entity.Accommodation": {
             "type": "object",
             "properties": {
+                "address": {
+                    "type": "string"
+                },
                 "arrivalDate": {
                     "type": "string"
                 },
@@ -397,7 +476,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "location": {
-                    "type": "string"
+                    "$ref": "#/definitions/entity.Location"
                 },
                 "name": {
                     "type": "string"
@@ -413,6 +492,9 @@ const docTemplate = `{
         "entity.Activity": {
             "type": "object",
             "properties": {
+                "address": {
+                    "type": "string"
+                },
                 "date": {
                     "type": "string"
                 },
@@ -422,8 +504,14 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "location": {
+                    "$ref": "#/definitions/entity.Location"
+                },
                 "name": {
                     "type": "string"
+                },
+                "price": {
+                    "type": "integer"
                 },
                 "time": {
                     "type": "string"
@@ -440,7 +528,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "location": {
-                    "type": "string"
+                    "$ref": "#/definitions/entity.Location"
                 },
                 "municipality": {
                     "type": "string"
@@ -494,7 +582,7 @@ const docTemplate = `{
                 "destination": {
                     "$ref": "#/definitions/entity.Airport"
                 },
-                "duration": {
+                "durationInMinutes": {
                     "type": "integer"
                 },
                 "flightNumber": {
@@ -505,6 +593,20 @@ const docTemplate = `{
                 },
                 "origin": {
                     "$ref": "#/definitions/entity.Airport"
+                }
+            }
+        },
+        "entity.Location": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
                 }
             }
         },
@@ -552,6 +654,70 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "request.Accommodation": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "arrivalDate": {
+                    "type": "string"
+                },
+                "checkInTime": {
+                    "type": "string"
+                },
+                "checkOutTime": {
+                    "type": "string"
+                },
+                "departureDate": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "location": {
+                    "$ref": "#/definitions/entity.Location"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "tripId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "request.Activity": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "location": {
+                    "$ref": "#/definitions/entity.Location"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "time": {
+                    "type": "string"
+                },
+                "tripId": {
+                    "type": "integer"
                 }
             }
         },

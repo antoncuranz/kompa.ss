@@ -2,17 +2,22 @@ package persistent
 
 import (
 	"context"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"travel-planner/internal/entity"
 	"travel-planner/pkg/postgres"
 	"travel-planner/pkg/sqlc"
 )
 
 type AccommodationRepo struct {
-	*sqlc.Queries
+	Db      *pgxpool.Pool
+	Queries *sqlc.Queries
 }
 
 func NewAccommodationRepo(pg *postgres.Postgres) *AccommodationRepo {
-	return &AccommodationRepo{sqlc.New(pg.Pool)}
+	return &AccommodationRepo{
+		pg.Pool,
+		sqlc.New(pg.Pool),
+	}
 }
 
 func (r *AccommodationRepo) GetAllAccommodation(ctx context.Context) ([]entity.Accommodation, error) {
@@ -31,6 +36,47 @@ func (r *AccommodationRepo) GetAccommodationByID(ctx context.Context, id int32) 
 	}
 
 	return mapAccommodation(row.Accommodation, mapLocationLeftJoin(row.ID, row.Latitude, row.Longitude)), nil
+}
+
+func (r *AccommodationRepo) SaveAccommodation(ctx context.Context, accomodation entity.Accommodation) (entity.Accommodation, error) {
+	tx, err := r.Db.Begin(ctx)
+	if err != nil {
+		return entity.Accommodation{}, err
+	}
+	defer tx.Rollback(ctx)
+	qtx := r.Queries.WithTx(tx)
+
+	var locationId *int32
+	if accomodation.Location != nil {
+		persistedLocationId, err := SaveLocation(ctx, qtx, *accomodation.Location)
+		if err != nil {
+			return entity.Accommodation{}, err
+		}
+		locationId = &persistedLocationId
+	}
+
+	activityId, err := qtx.InsertAccommodation(ctx, sqlc.InsertAccommodationParams{
+		TripID:        accomodation.TripID,
+		LocationID:    locationId,
+		Name:          accomodation.Name,
+		ArrivalDate:   accomodation.ArrivalDate,
+		DepartureDate: accomodation.DepartureDate,
+		CheckInTime:   accomodation.CheckInTime,
+		CheckOutTime:  accomodation.CheckOutTime,
+		Address:       accomodation.Address,
+		Description:   accomodation.Description,
+		Price:         accomodation.Price,
+	})
+	if err != nil {
+		return entity.Accommodation{}, err
+	}
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		return entity.Accommodation{}, err
+	}
+
+	return r.GetAccommodationByID(ctx, activityId)
 }
 
 func mapAllAccommodation(accommodation []sqlc.GetAllAccommodationRow) []entity.Accommodation {

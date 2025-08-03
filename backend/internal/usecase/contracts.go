@@ -37,10 +37,12 @@ type (
 	Activities interface {
 		GetActivities(ctx context.Context) ([]entity.Activity, error)
 		GetActivityByID(ctx context.Context, id int32) (entity.Activity, error)
+		CreateActivity(ctx context.Context, activity request.Activity) (entity.Activity, error)
 	}
 
 	Accommodation interface {
 		GetAllAccommodation(ctx context.Context) ([]entity.Accommodation, error)
 		GetAccommodationByID(ctx context.Context, id int32) (entity.Accommodation, error)
+		CreateAccommodation(ctx context.Context, accommodation request.Accommodation) (entity.Accommodation, error)
 	}
 )

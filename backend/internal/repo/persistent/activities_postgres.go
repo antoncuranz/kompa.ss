@@ -2,17 +2,22 @@ package persistent
 
 import (
 	"context"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"travel-planner/internal/entity"
 	"travel-planner/pkg/postgres"
 	"travel-planner/pkg/sqlc"
 )
 
 type ActivitiesRepo struct {
-	*sqlc.Queries
+	Db      *pgxpool.Pool
+	Queries *sqlc.Queries
 }
 
 func NewActivitiesRepo(pg *postgres.Postgres) *ActivitiesRepo {
-	return &ActivitiesRepo{sqlc.New(pg.Pool)}
+	return &ActivitiesRepo{
+		pg.Pool,
+		sqlc.New(pg.Pool),
+	}
 }
 
 func (r *ActivitiesRepo) GetActivities(ctx context.Context) ([]entity.Activity, error) {
@@ -31,6 +36,45 @@ func (r *ActivitiesRepo) GetActivityByID(ctx context.Context, id int32) (entity.
 	}
 
 	return mapActivity(row.Activity, mapLocationLeftJoin(row.ID, row.Latitude, row.Longitude)), nil
+}
+
+func (r *ActivitiesRepo) SaveActivity(ctx context.Context, activity entity.Activity) (entity.Activity, error) {
+	tx, err := r.Db.Begin(ctx)
+	if err != nil {
+		return entity.Activity{}, err
+	}
+	defer tx.Rollback(ctx)
+	qtx := r.Queries.WithTx(tx)
+
+	var locationId *int32
+	if activity.Location != nil {
+		persistedLocationId, err := SaveLocation(ctx, qtx, *activity.Location)
+		if err != nil {
+			return entity.Activity{}, err
+		}
+		locationId = &persistedLocationId
+	}
+
+	activityId, err := qtx.InsertActivity(ctx, sqlc.InsertActivityParams{
+		TripID:      activity.TripID,
+		LocationID:  locationId,
+		Name:        activity.Name,
+		Date:        activity.Date,
+		Time:        activity.Time,
+		Address:     activity.Address,
+		Description: activity.Description,
+		Price:       activity.Price,
+	})
+	if err != nil {
+		return entity.Activity{}, err
+	}
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		return entity.Activity{}, err
+	}
+
+	return r.GetActivityByID(ctx, activityId)
 }
 
 func mapActivities(rows []sqlc.GetActivitiesRow) []entity.Activity {

@@ -14,7 +14,7 @@ export default function DaySeparator({
     <>
       <div className="ml-6 mt-2 text-sm text-muted-foreground">
         {accomodation ? "🛏️ " + accomodation : "⚠️ missing accomodation"}
-        {collapsedDays && ` (${collapsedDays} day${collapsedDays != 1 ? "s" : ""} collapsed)`}
+        {collapsedDays ? ` (${collapsedDays} day${collapsedDays != 1 ? "s" : ""} collapsed)` : ""}
       </div>
       <Separator/>
       <DayLabel date={date} location={location}/>

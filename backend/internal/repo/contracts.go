@@ -28,11 +28,13 @@ type (
 	ActivitiesRepo interface {
 		GetActivities(ctx context.Context) ([]entity.Activity, error)
 		GetActivityByID(ctx context.Context, id int32) (entity.Activity, error)
+		SaveActivity(ctx context.Context, activity entity.Activity) (entity.Activity, error)
 	}
 
 	AccommodationRepo interface {
 		GetAllAccommodation(ctx context.Context) ([]entity.Accommodation, error)
 		GetAccommodationByID(ctx context.Context, id int32) (entity.Accommodation, error)
+		SaveAccommodation(ctx context.Context, accommodation entity.Accommodation) (entity.Accommodation, error)
 	}
 
 	AerodataboxWebAPI interface {

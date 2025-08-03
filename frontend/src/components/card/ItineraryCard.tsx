@@ -8,6 +8,8 @@ import React from "react";
 import ActivityEntry from "@/components/itinerary/ActivityEntry.tsx";
 import FlightSeparator from "@/components/itinerary/FlightSeparator.tsx";
 import AddFlightButton from "@/components/dialog/AddFlightButton.tsx";
+import AddAccommodationButton from "@/components/dialog/AddAccommodationButton.tsx";
+import AddActivityButton from "@/components/dialog/AddActivityButton.tsx";
 
 export default async function ItineraryCard({
   trip, flights, accomodation, activities
@@ -45,8 +47,11 @@ export default async function ItineraryCard({
           acc.arrivalDate <= day && acc.departureDate > day
       )
 
+      // TODO: also push if day is today!
       if (isSameDay(day, trip.endDate) || grouped.length == 0 || filteredFlights.length != 0 ||
-          filteredActivities.length != 0 || accommodation != grouped[grouped.length-1].accommodation) {
+          filteredActivities.length != 0 || accommodation != grouped[grouped.length-1].accommodation ||
+          grouped[grouped.length-1].flights.find(pair => isSameDay(pair.leg.arrivalDateTime, day))
+      ) {
         grouped.push({
           day: day,
           flights: filteredFlights,
@@ -94,7 +99,11 @@ export default async function ItineraryCard({
       <Card className="overflow-hidden card h-full">
         <CardHeader className="py-5 border-b flex-row justify-between space-y-0">
           <CardTitle className="h-8 text-[1.5rem]">Itinerary</CardTitle>
-          <AddFlightButton trip={trip}/>
+          <div>
+            <AddActivityButton trip={trip}/>
+            <AddAccommodationButton trip={trip}/>
+            <AddFlightButton trip={trip}/>
+          </div>
         </CardHeader>
         <CardContent className="p-0 pb-4 h-full overflow-y-scroll no-scrollbar" style={{height: "calc(100% - 4rem)"}}>
           <DayLabel date={trip.startDate}/>

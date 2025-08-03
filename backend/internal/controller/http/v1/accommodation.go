@@ -5,6 +5,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"net/http"
+	"travel-planner/internal/controller/http/v1/request"
 	"travel-planner/internal/usecase"
 	"travel-planner/pkg/logger"
 )
@@ -52,4 +53,33 @@ func (r *AccommodationV1) getAccommodationByID(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.Status(http.StatusOK).JSON(accommodation)
+}
+
+// @Summary     Add accommodation
+// @ID          postAccommodation
+// @Tags  	    accommodation
+// @Accept      json
+// @Produce     json
+// @Param       request body request.Accommodation true "accommodation"
+// @Success     200 {object} entity.Accommodation
+// @Failure     500 {object} response.Error
+// @Router      /accommodation [post]
+func (r *AccommodationV1) postAccommodation(ctx *fiber.Ctx) error {
+	var body request.Accommodation
+
+	if err := ctx.BodyParser(&body); err != nil {
+		return errorResponse(ctx, http.StatusBadRequest, "invalid request body")
+	}
+
+	if err := r.v.Struct(body); err != nil {
+		fmt.Println(err)
+		return errorResponse(ctx, http.StatusBadRequest, "invalid request body")
+	}
+
+	_, err := r.uc.CreateAccommodation(ctx.UserContext(), body)
+	if err != nil {
+		return err
+	}
+
+	return ctx.SendStatus(http.StatusOK)
 }

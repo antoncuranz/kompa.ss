@@ -7,10 +7,12 @@ package sqlc
 
 import (
 	"context"
+
+	"cloud.google.com/go/civil"
 )
 
 const getAccommodationByID = `-- name: GetAccommodationByID :one
-SELECT accommodation.id, accommodation.trip_id, accommodation.location_id, accommodation.name, accommodation.arrival_date, accommodation.departure_date, accommodation.check_in_time, accommodation.check_out_time, accommodation.description, accommodation.price, location.id, location.latitude, location.longitude
+SELECT accommodation.id, accommodation.trip_id, accommodation.location_id, accommodation.name, accommodation.arrival_date, accommodation.departure_date, accommodation.check_in_time, accommodation.check_out_time, accommodation.description, accommodation.address, accommodation.price, location.id, location.latitude, location.longitude
 FROM accommodation
 LEFT JOIN location on location_id = location.id
 WHERE accommodation.id = $1
@@ -36,6 +38,7 @@ func (q *Queries) GetAccommodationByID(ctx context.Context, id int32) (GetAccomm
 		&i.Accommodation.CheckInTime,
 		&i.Accommodation.CheckOutTime,
 		&i.Accommodation.Description,
+		&i.Accommodation.Address,
 		&i.Accommodation.Price,
 		&i.ID,
 		&i.Latitude,
@@ -45,7 +48,7 @@ func (q *Queries) GetAccommodationByID(ctx context.Context, id int32) (GetAccomm
 }
 
 const getAllAccommodation = `-- name: GetAllAccommodation :many
-SELECT accommodation.id, accommodation.trip_id, accommodation.location_id, accommodation.name, accommodation.arrival_date, accommodation.departure_date, accommodation.check_in_time, accommodation.check_out_time, accommodation.description, accommodation.price, location.id, location.latitude, location.longitude
+SELECT accommodation.id, accommodation.trip_id, accommodation.location_id, accommodation.name, accommodation.arrival_date, accommodation.departure_date, accommodation.check_in_time, accommodation.check_out_time, accommodation.description, accommodation.address, accommodation.price, location.id, location.latitude, location.longitude
 FROM accommodation
 LEFT JOIN location on location_id = location.id
 `
@@ -76,6 +79,7 @@ func (q *Queries) GetAllAccommodation(ctx context.Context) ([]GetAllAccommodatio
 			&i.Accommodation.CheckInTime,
 			&i.Accommodation.CheckOutTime,
 			&i.Accommodation.Description,
+			&i.Accommodation.Address,
 			&i.Accommodation.Price,
 			&i.ID,
 			&i.Latitude,
@@ -89,4 +93,44 @@ func (q *Queries) GetAllAccommodation(ctx context.Context) ([]GetAllAccommodatio
 		return nil, err
 	}
 	return items, nil
+}
+
+const insertAccommodation = `-- name: InsertAccommodation :one
+INSERT INTO accommodation (
+    trip_id, location_id, name, arrival_date, departure_date, check_in_time, check_out_time, description, address, price
+) VALUES (
+    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
+)
+RETURNING id
+`
+
+type InsertAccommodationParams struct {
+	TripID        int32
+	LocationID    *int32
+	Name          string
+	ArrivalDate   civil.Date
+	DepartureDate civil.Date
+	CheckInTime   *civil.Time
+	CheckOutTime  *civil.Time
+	Description   *string
+	Address       *string
+	Price         *int32
+}
+
+func (q *Queries) InsertAccommodation(ctx context.Context, arg InsertAccommodationParams) (int32, error) {
+	row := q.db.QueryRow(ctx, insertAccommodation,
+		arg.TripID,
+		arg.LocationID,
+		arg.Name,
+		arg.ArrivalDate,
+		arg.DepartureDate,
+		arg.CheckInTime,
+		arg.CheckOutTime,
+		arg.Description,
+		arg.Address,
+		arg.Price,
+	)
+	var id int32
+	err := row.Scan(&id)
+	return id, err
 }

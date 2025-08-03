@@ -7,10 +7,12 @@ package sqlc
 
 import (
 	"context"
+
+	"cloud.google.com/go/civil"
 )
 
 const getActivities = `-- name: GetActivities :many
-SELECT activity.id, activity.trip_id, activity.location_id, activity.name, activity.date, activity.time, activity.description, location.id, location.latitude, location.longitude
+SELECT activity.id, activity.trip_id, activity.location_id, activity.name, activity.date, activity.time, activity.description, activity.address, activity.price, location.id, location.latitude, location.longitude
 FROM activity
 LEFT JOIN location on activity.location_id = location.id
 `
@@ -39,6 +41,8 @@ func (q *Queries) GetActivities(ctx context.Context) ([]GetActivitiesRow, error)
 			&i.Activity.Date,
 			&i.Activity.Time,
 			&i.Activity.Description,
+			&i.Activity.Address,
+			&i.Activity.Price,
 			&i.ID,
 			&i.Latitude,
 			&i.Longitude,
@@ -54,7 +58,7 @@ func (q *Queries) GetActivities(ctx context.Context) ([]GetActivitiesRow, error)
 }
 
 const getActivityByID = `-- name: GetActivityByID :one
-SELECT activity.id, activity.trip_id, activity.location_id, activity.name, activity.date, activity.time, activity.description, location.id, location.latitude, location.longitude
+SELECT activity.id, activity.trip_id, activity.location_id, activity.name, activity.date, activity.time, activity.description, activity.address, activity.price, location.id, location.latitude, location.longitude
 FROM activity
 LEFT JOIN location on activity.location_id = location.id
 WHERE activity.id = $1
@@ -78,9 +82,47 @@ func (q *Queries) GetActivityByID(ctx context.Context, id int32) (GetActivityByI
 		&i.Activity.Date,
 		&i.Activity.Time,
 		&i.Activity.Description,
+		&i.Activity.Address,
+		&i.Activity.Price,
 		&i.ID,
 		&i.Latitude,
 		&i.Longitude,
 	)
 	return i, err
+}
+
+const insertActivity = `-- name: InsertActivity :one
+INSERT INTO activity (
+    trip_id, location_id, name, date, time, address, description, price
+) VALUES (
+    $1, $2, $3, $4, $5, $6, $7, $8
+)
+RETURNING id
+`
+
+type InsertActivityParams struct {
+	TripID      int32
+	LocationID  *int32
+	Name        string
+	Date        civil.Date
+	Time        *civil.Time
+	Address     *string
+	Description *string
+	Price       *int32
+}
+
+func (q *Queries) InsertActivity(ctx context.Context, arg InsertActivityParams) (int32, error) {
+	row := q.db.QueryRow(ctx, insertActivity,
+		arg.TripID,
+		arg.LocationID,
+		arg.Name,
+		arg.Date,
+		arg.Time,
+		arg.Address,
+		arg.Description,
+		arg.Price,
+	)
+	var id int32
+	err := row.Scan(&id)
+	return id, err
 }

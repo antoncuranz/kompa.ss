@@ -71,6 +71,7 @@ export async function fetchActivities() {
   const activities = await fetchData("/api/v1/activities") as Activity[];
   return activities.map(activity => ({
     ...activity,
-    date: new Date(activity.date)
+    date: new Date(activity.date),
+    time: activity.time ? new Date(activity.time) : null
   }))
 }

@@ -15,6 +15,7 @@ type Accommodation struct {
 	CheckInTime   *civil.Time `json:"checkInTime"`
 	CheckOutTime  *civil.Time `json:"checkOutTime"`
 	Description   *string     `json:"description"`
+	Address       *string     `json:"address"`
 	Location      *Location   `json:"location"`
 	Price         *int32      `json:"price"`
 }

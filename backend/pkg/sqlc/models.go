@@ -18,6 +18,7 @@ type Accommodation struct {
 	CheckInTime   *civil.Time
 	CheckOutTime  *civil.Time
 	Description   *string
+	Address       *string
 	Price         *int32
 }
 
@@ -29,6 +30,8 @@ type Activity struct {
 	Date        civil.Date
 	Time        *civil.Time
 	Description *string
+	Address     *string
+	Price       *int32
 }
 
 type Airport struct {

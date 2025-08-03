@@ -48,6 +48,7 @@ func NewActivityRoutes(apiV1Group fiber.Router, uc usecase.Activities, log logge
 
 	{
 		activityGroup.Get("", r.getActivities)
+		activityGroup.Post("", r.postActivity)
 		activityGroup.Get("/:activity_id", r.getActivity)
 	}
 }
@@ -59,6 +60,7 @@ func NewAccommodationRoutes(apiV1Group fiber.Router, uc usecase.Accommodation, l
 
 	{
 		accommodationGroup.Get("", r.getAllAccommodation)
+		accommodationGroup.Post("", r.postAccommodation)
 		accommodationGroup.Get("/:accommodation_id", r.getAccommodationByID)
 	}
 }

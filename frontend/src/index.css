@@ -92,6 +92,6 @@ body {
   scrollbar-width: none;
 }
 
-.mapboxgl-ctrl-bottom-left, .mapboxgl-ctrl-bottom-right {
+.mapboxgl-ctrl-bottom-left, .mapboxgl-ctrl-bottom-right, .mapboxgl-popup-tip {
   display: none;
 }

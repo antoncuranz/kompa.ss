@@ -30,15 +30,20 @@ export function formatDurationMinutes(minutes: number) {
   return Math.floor(minutes / 60) + "h " + minutes % 60 + "min"
 }
 
-export function formatDate(date: Date) {
+export function formatDateLong(date: Date) {
   return new Intl.DateTimeFormat(undefined, {
     dateStyle: "full"
   }).format(date)
-  // return date.toLocaleDateString("de-DE")
+}
+
+export function formatDateShort(date: Date) {
+  return new Intl.DateTimeFormat("de-DE", {
+    dateStyle: "short"
+  }).format(date)
 }
 
 export function formatTime(time: Date) {
-  return time.getHours() + ":" + time.getMinutes()
+  return time.getHours() + ":" + time.getMinutes().toString().padStart(2, "0")
 }
 
 export function formatAmount(amount: number|null, decimals = 2): string {
@@ -50,6 +55,13 @@ export function formatAmount(amount: number|null, decimals = 2): string {
   return result
 }
 
-export function titlecase(str: string) {
-  return str[0].toUpperCase() + str.substring(1).toLowerCase()
+export function getDateString(date: Date) {
+  const offset = date.getTimezoneOffset()
+  const offsetDate = new Date(date.getTime() - (offset*60*1000))
+  return offsetDate.toISOString().split('T')[0]
+}
+
+export function nullIfEmpty(value: string) {
+  const trimmedValue = value.trim()
+  return trimmedValue.length != 0 ? trimmedValue : null;
 }

@@ -8,3 +8,11 @@ WHERE activity.id = $1;
 SELECT sqlc.embed(activity), location.*
 FROM activity
 LEFT JOIN location on activity.location_id = location.id;
+
+-- name: InsertActivity :one
+INSERT INTO activity (
+    trip_id, location_id, name, date, time, address, description, price
+) VALUES (
+    $1, $2, $3, $4, $5, $6, $7, $8
+)
+RETURNING id;

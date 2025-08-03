@@ -29,7 +29,9 @@ create table activity
     name           varchar(255) not null,
     date           date not null,
     time           time,
-    description    varchar
+    description    varchar,
+    address        varchar(255),
+    price          integer
 );
 
 create table accommodation
@@ -43,6 +45,7 @@ create table accommodation
     check_in_time  time,
     check_out_time time,
     description    varchar,
+    address        varchar(255),
     price          integer
 );
 

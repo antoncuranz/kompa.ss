@@ -12,6 +12,7 @@ import AmountInput from "@/components/dialog/AmountInput.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {Separator} from "@/components/ui/separator.tsx";
 import {AddFlightLeg, AddPNR, Trip} from "@/types.ts";
+import {getDateString} from "@/components/util.ts";
 
 export default function AddFlightDialog({
   trip, open, onClose
@@ -48,12 +49,6 @@ export default function AddFlightDialog({
       title: "Error adding Flight",
       description: response.statusText
     })
-  }
-
-  function getDateString(date: Date) {
-    const offset = date.getTimezoneOffset()
-    const offsetDate = new Date(date.getTime() - (offset*60*1000))
-    return offsetDate.toISOString().split('T')[0]
   }
 
   function addLeg() {

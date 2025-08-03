@@ -1,4 +1,4 @@
-import {formatDate} from "@/components/util.ts";
+import {formatDateLong} from "@/components/util.ts";
 
 export default function DayLabel({
   date, location
@@ -9,7 +9,7 @@ export default function DayLabel({
 
   return (
     <span className="ml-6 mb-2 text-sm text-muted-foreground">
-      {formatDate(date)}{location && ", "}{location}
+      {formatDateLong(date)}{location && ", "}{location}
     </span>
   )
 }

@@ -2,6 +2,7 @@ package activities
 
 import (
 	"context"
+	"travel-planner/internal/controller/http/v1/request"
 	"travel-planner/internal/entity"
 	"travel-planner/internal/repo"
 )
@@ -22,4 +23,17 @@ func (uc *UseCase) GetActivityByID(ctx context.Context, id int32) (entity.Activi
 
 func (uc *UseCase) GetActivities(ctx context.Context) ([]entity.Activity, error) {
 	return uc.repo.GetActivities(ctx)
+}
+
+func (uc *UseCase) CreateActivity(ctx context.Context, activity request.Activity) (entity.Activity, error) {
+	return uc.repo.SaveActivity(ctx, entity.Activity{
+		TripID:      activity.TripID,
+		Name:        activity.Name,
+		Date:        activity.Date,
+		Time:        activity.Time,
+		Description: activity.Description,
+		Address:     activity.Address,
+		Location:    activity.Location,
+		Price:       activity.Price,
+	})
 }

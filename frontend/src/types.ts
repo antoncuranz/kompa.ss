@@ -18,10 +18,10 @@ export type Activity = {
   tripId: number;
   name: string;
   date: Date;
-  time: string | null;
+  time: Date | null;
   description: string;
-  // location: Location | null;
-  // price: number | null;
+  location: Location | null;
+  price: number | null;
 };
 
 export type Accommodation = {

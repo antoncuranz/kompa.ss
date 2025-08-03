@@ -22,7 +22,7 @@ export default async function Page() {
       </Suspense>
       <Suspense fallback={<SkeletonCard/>}>
         <ErrorBoundary fallback={<SkeletonCard title="Error loading Map"/>}>
-          <MapCard flights={flights}/>
+          <MapCard activities={activities} accommodation={accomodation} flights={flights}/>
         </ErrorBoundary>
       </Suspense>
     </div>
