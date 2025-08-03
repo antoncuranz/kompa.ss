@@ -72,6 +72,6 @@ export async function fetchActivities() {
   return activities.map(activity => ({
     ...activity,
     date: new Date(activity.date),
-    time: activity.time ? new Date(activity.time) : null
+    time: activity.time ? new Date("1970-01-01T" + activity.time) : null
   }))
 }
