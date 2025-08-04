@@ -134,6 +134,7 @@ export default function MapCard({
           config={getConfig()}
           interactiveLayerIds={["activity", "accommodation", "flight"]}
           onMouseEnter={onMouseEnter}
+          onMouseMove={onMouseEnter}
           onMouseLeave={() => setPopupInfo(null)}
       >
         <RenderAfterMap>
