@@ -125,7 +125,7 @@ export default function MapCard({
   }
 
   return (
-    <div className="flex-grow rounded-lg overflow-hidden border shadow-sm">
+    <div className="grow rounded-lg overflow-hidden border shadow-xs">
       <Map
           mapboxAccessToken={mapboxToken}
           mapStyle="mapbox://styles/mapbox/standard"
