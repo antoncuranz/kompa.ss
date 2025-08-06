@@ -91,9 +91,10 @@ export default function AddActivityDialog({
               <PopoverContent className="w-auto p-0">
                 <Calendar
                     mode="single"
+                    fromDate={trip.startDate}
+                    toDate={trip.endDate}
                     selected={date}
                     onSelect={setDate}
-                    disabled={{before: trip.startDate, after: trip.endDate}}
                 />
               </PopoverContent>
             </Popover>
