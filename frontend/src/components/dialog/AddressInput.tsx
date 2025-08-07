@@ -32,13 +32,15 @@ export default function AddressInput({
   }
 
   return (
-      <div className={cn("col-span-3 flex gap-2", className)}>
-        <Input id="address" value={address}
-               onChange={e => updateAddress(e.target.value)}
-               className="col-span-3"/>
-        <Button type="submit" variant="outline" onClick={() => searchForAddressUsingMapbox()}>
-          <Search className="h-3.5 w-3.5"/>
-        </Button>
+      <div className={cn("", className)}>
+        <div className="flex gap-2">
+          <Input id="address" value={address}
+                 onChange={e => updateAddress(e.target.value)}/>
+          <Button type="submit" className="shadow-input bg-gray-50 text-black dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_#262626]" onClick={() => searchForAddressUsingMapbox()}>
+            <Search className="h-4 w-4 text-neutral-800 dark:text-neutral-300"/>
+            {/*<BottomGradient/>*/}
+          </Button>
+        </div>
       </div>
   )
 }

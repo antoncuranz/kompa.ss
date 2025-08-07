@@ -14,7 +14,7 @@ export default async function Page() {
   const flights = await fetchFlights()
 
   return (
-    <div className="flex h-full gap-2">
+    <div className="flex h-full gap-4">
       <Suspense fallback={<SkeletonCard/>}>
         <ErrorBoundary fallback={<SkeletonCard title="Error loading Itinerary"/>}>
           <ItineraryCard trip={trip} activities={activities} accomodation={accomodation} flights={flights}/>

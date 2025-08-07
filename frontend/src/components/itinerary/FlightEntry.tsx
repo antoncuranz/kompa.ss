@@ -7,7 +7,7 @@ import {CollapsibleContent, CollapsibleTrigger} from "@radix-ui/react-collapsibl
 import {cn} from "@/lib/utils.ts";
 import {Flight, FlightLeg} from "@/types.ts";
 import {formatDurationMinutes, formatTime} from "@/components/util.ts";
-import {useState} from "react";
+import React, {useState} from "react";
 
 export default function FlightEntry({
   flight, flightLeg, className
@@ -24,7 +24,7 @@ export default function FlightEntry({
     <Collapsible
       open={open}
       onOpenChange={setOpen}
-      className={cn("rounded-lg border ml-6 mr-6 p-2 pl-4 pr-4 grid bg-white dark:bg-black z-10 relative", className)}
+      className={cn("rounded-lg border mx-3 p-2 pl-4 pr-4 grid bg-white dark:bg-black z-10 relative", className)}
     >
       <CollapsibleTrigger asChild>
         <div className="grid cursor-pointer" style={{gridTemplateColumns: "1.5rem 1fr", columnGap: "0.5rem"}}>

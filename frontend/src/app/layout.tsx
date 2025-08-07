@@ -34,7 +34,7 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <Navigation/>
-          <main id="root" className="w-full bg-muted/40 p-4 sm:px-6 md:gap-2" style={{height: "calc(100vh - 64px)"}}>
+          <main id="root" className="w-full p-4 pt-0 sm:px-6 md:gap-2" style={{height: "calc(100vh - 64px)"}}>
             {children}
           </main>
           <Toaster/>

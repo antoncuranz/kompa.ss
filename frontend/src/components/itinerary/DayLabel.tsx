@@ -8,8 +8,8 @@ export default function DayLabel({
 }){
 
   return (
-    <span className="ml-6 mb-2 text-sm text-muted-foreground">
+    <div className="mx-3 text-sm text-muted-foreground inline-block">
       {formatDateLong(date)}{location && ", "}{location}
-    </span>
+    </div>
   )
 }

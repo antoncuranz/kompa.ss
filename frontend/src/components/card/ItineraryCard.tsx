@@ -3,12 +3,10 @@ import DaySeparator from "@/components/itinerary/DaySeparator.tsx";
 import {Accommodation, Flight, Activity, Trip, FlightLeg} from "@/types.ts";
 import {formatDuration, getDaysBetween, isSameDay} from "@/components/util.ts";
 import DayLabel from "@/components/itinerary/DayLabel.tsx";
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card.tsx";
 import React from "react";
 import ActivityEntry from "@/components/itinerary/ActivityEntry.tsx";
 import FlightSeparator from "@/components/itinerary/FlightSeparator.tsx";
-import AddFlightButton from "@/components/dialog/AddFlightButton.tsx";
-import AddAccommodationButton from "@/components/dialog/AddAccommodationButton.tsx";
+import {GlowContainer} from "@/components/ui/glow-container.tsx";
 import AddActivityButton from "@/components/dialog/AddActivityButton.tsx";
 
 export default async function ItineraryCard({
@@ -74,42 +72,41 @@ export default async function ItineraryCard({
 
     return (
       <div key={dayData.day.toISOString()}>
+        <DayLabel date={dayData.day}/>
+
         {dayData.activities.map(act => <ActivityEntry key={act.id} activity={act}/>)}
         {dayFlights.map((pair, idx) =>
           <div key={idx}>
             <FlightEntry flight={pair.flight} flightLeg={pair.leg}/>
             {dayData.flights.length > idx + 1 &&
-              <span className="ml-6 text-sm text-muted-foreground">
+              <span className="mx-3 text-sm text-muted-foreground">
                 {formatDuration(pair.leg.arrivalDateTime, dayData.flights[idx+1].leg.departureDateTime)} Layover
               </span>
             }
           </div>
         )}
         {nextDay && (nightFlight ?
-          <FlightSeparator date={nextDay} flight={nightFlight.flight} flightLeg={nightFlight.leg}/>
+          <FlightSeparator flight={nightFlight.flight} flightLeg={nightFlight.leg}/>
         :
-          <DaySeparator date={nextDay} accomodation={dayData.accommodation?.name} collapsedDays={collapsedDays}/>
+          <DaySeparator accomodation={dayData.accommodation?.name} collapsedDays={collapsedDays}/>
         )}
       </div>
     )
   }
 
   return (
-    <div className="w-1/2 h-full">
-      <Card className="overflow-hidden card h-full">
-        <CardHeader className="py-5 border-b flex-row justify-between space-y-0">
-          <CardTitle className="h-8 text-[1.5rem]">Itinerary</CardTitle>
-          <div>
-            <AddActivityButton trip={trip}/>
-            <AddAccommodationButton trip={trip}/>
-            <AddFlightButton trip={trip}/>
-          </div>
-        </CardHeader>
-        <CardContent className="p-0 pb-4 h-full overflow-y-scroll no-scrollbar" style={{height: "calc(100% - 4rem)"}}>
-          <DayLabel date={trip.startDate}/>
+    <div className="w-1/2 rounded-3xl shadow-xl shadow-black/[0.1] dark:shadow-white/[0.05]">
+      <GlowContainer className="flex flex-col h-full p-3 rounded-3xl">
+        <div className="flex flex-row p-3 pb-6 border-b">
+          <h3 className="flex-grow font-semibold text-2xl/[1.875rem]">Itinerary</h3>
+          <AddActivityButton trip={trip}/>
+          {/*<AddAccommodationButton trip={trip}/>*/}
+          {/*<AddFlightButton trip={trip}/>*/}
+        </div>
+        <div className="no-scrollbar overflow-hidden overflow-y-scroll ">
           {renderAllDays()}
-        </CardContent>
-      </Card>
+        </div>
+      </GlowContainer>
     </div>
   )
 }
