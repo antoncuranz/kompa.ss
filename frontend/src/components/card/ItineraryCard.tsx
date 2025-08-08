@@ -7,13 +7,13 @@ import React from "react";
 import ActivityEntry from "@/components/itinerary/ActivityEntry.tsx";
 import FlightSeparator from "@/components/itinerary/FlightSeparator.tsx";
 import {GlowContainer} from "@/components/ui/glow-container.tsx";
-import AddActivityButton from "@/components/dialog/AddActivityButton.tsx";
+import AddSomethingDropdown from "@/components/dialog/AddSomethingDropdown.tsx";
 
 export default async function ItineraryCard({
-  trip, flights, accomodation, activities
+  trip, flights, accommodation, activities
 }: {
   trip: Trip,
-  accomodation: Accommodation[],
+  accommodation: Accommodation[],
   flights: Flight[],
   activities: Activity[]
 }) {
@@ -41,20 +41,20 @@ export default async function ItineraryCard({
           .flatMap(flight => flight.legs.map(leg => ({flight, leg})))
           .filter(pair => isSameDay(pair.leg.departureDateTime, day))
 
-      const accommodation = accomodation.find(acc =>
+      const filteredAccommodation = accommodation.find(acc =>
           acc.arrivalDate <= day && acc.departureDate > day
       )
 
       // TODO: also push if day is today!
       if (isSameDay(day, trip.endDate) || grouped.length == 0 || filteredFlights.length != 0 ||
-          filteredActivities.length != 0 || accommodation != grouped[grouped.length-1].accommodation ||
+          filteredActivities.length != 0 || filteredAccommodation != grouped[grouped.length-1].accommodation ||
           grouped[grouped.length-1].flights.find(pair => isSameDay(pair.leg.arrivalDateTime, day))
       ) {
         grouped.push({
           day: day,
           flights: filteredFlights,
           activities: filteredActivities,
-          accommodation: accommodation,
+          accommodation: filteredAccommodation,
         })
       }
     }
@@ -99,9 +99,7 @@ export default async function ItineraryCard({
       <GlowContainer className="flex flex-col h-full p-3 rounded-3xl">
         <div className="flex flex-row p-3 pb-6 border-b">
           <h3 className="flex-grow font-semibold text-2xl/[1.875rem]">Itinerary</h3>
-          <AddActivityButton trip={trip}/>
-          {/*<AddAccommodationButton trip={trip}/>*/}
-          {/*<AddFlightButton trip={trip}/>*/}
+          <AddSomethingDropdown trip={trip}/>
         </div>
         <div className="no-scrollbar overflow-hidden overflow-y-scroll ">
           {renderAllDays()}

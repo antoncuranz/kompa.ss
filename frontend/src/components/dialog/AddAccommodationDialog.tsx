@@ -14,6 +14,7 @@ import {Location, Trip} from "@/types.ts";
 import {Textarea} from "@/components/ui/textarea.tsx";
 import AddressInput from "@/components/dialog/AddressInput.tsx";
 import {getDateString, nullIfEmpty} from "@/components/util.ts";
+import {LabelInputContainer, RowContainer} from "@/components/dialog/DialogUtil.tsx";
 
 export default function AddAccommodationDialog({
   trip, open, onClose
@@ -64,119 +65,112 @@ export default function AddAccommodationDialog({
         <DialogHeader>
           <DialogTitle>Add Accommodation</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4 overflow-y-auto">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="act_name" className="text-right">
-              Name
-            </Label>
-            <Input id="act_name" value={name}
-                   onChange={e => setName(e.target.value)}
-                   placeholder="My new Activity" className="col-span-3"/>
-          </div>
+        <div className="py-4 overflow-y-auto">
+          <RowContainer>
+            <LabelInputContainer>
+              <Label htmlFor="act_name">Name</Label>
+              <Input id="act_name" placeholder="My new Activity" type="text" value={name}
+                     onChange={e => setName(e.target.value)}/>
+            </LabelInputContainer>
+          </RowContainer>
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="arr_date" className="text-right">
-              Arr. Date
-            </Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                    variant="outline"
-                    className={cn(
-                        "col-span-3 justify-start text-left font-normal",
-                        !arrivalDate && "text-muted-foreground"
-                    )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4"/>
-                  {arrivalDate ? format(arrivalDate, "PPP") : <span>Pick a date</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                    mode="single"
-                    fromDate={trip.startDate}
-                    toDate={trip.endDate}
-                    selected={arrivalDate}
-                    onSelect={setArrivalDate}
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
+          <RowContainer>
+            <LabelInputContainer>
+              <Label htmlFor="arrival_date">Arrival Date</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                      variant="secondary"
+                      className={cn(
+                          "col-span-3 justify-start text-left font-normal",
+                          !arrivalDate && "text-muted-foreground"
+                      )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4"/>
+                    {arrivalDate ? format(arrivalDate, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0 rounded-2xl overflow-hidden shadow-lg">
+                  <Calendar
+                      mode="single"
+                      selected={arrivalDate}
+                      onSelect={setArrivalDate}
+                      startMonth={trip.startDate}
+                      endMonth={trip.endDate}
+                      disabled={{before: trip.startDate, after: trip.endDate}}
+                  />
+                </PopoverContent>
+              </Popover>
+            </LabelInputContainer>
+            <LabelInputContainer>
+              <Label htmlFor="departure_date">Departure Date</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                      variant="secondary"
+                      className={cn(
+                          "col-span-3 justify-start text-left font-normal",
+                          !departureDate && "text-muted-foreground"
+                      )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4"/>
+                    {departureDate ? format(departureDate, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0 rounded-2xl overflow-hidden shadow-lg">
+                  <Calendar
+                      mode="single"
+                      selected={departureDate}
+                      onSelect={setDepartureDate}
+                      startMonth={trip.startDate}
+                      endMonth={trip.endDate}
+                      disabled={{before: trip.startDate, after: trip.endDate}}
+                  />
+                </PopoverContent>
+              </Popover>
+            </LabelInputContainer>
+          </RowContainer>
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="dep_date" className="text-right">
-              Dep. Date
-            </Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                    variant="outline"
-                    className={cn(
-                        "col-span-3 justify-start text-left font-normal",
-                        !departureDate && "text-muted-foreground"
-                    )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4"/>
-                  {departureDate ? format(departureDate, "PPP") : <span>Pick a date</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                    mode="single"
-                    fromDate={trip.startDate}
-                    toDate={trip.endDate}
-                    selected={departureDate}
-                    onSelect={setDepartureDate}
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
+          <RowContainer>
+            <LabelInputContainer>
+              <Label htmlFor="description">Description</Label>
+              <Textarea id="description" value={description}
+                        onChange={e => setDescription(e.target.value)}/>
+            </LabelInputContainer>
+          </RowContainer>
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="description" className="text-right">
-              Description
-            </Label>
-            <Textarea id="description" value={description}
-                      onChange={e => setDescription(e.target.value)}
-                      className="col-span-3"/>
-          </div>
+          <RowContainer>
+            <LabelInputContainer>
+              <Label htmlFor="price">Price</Label>
+              <AmountInput
+                  id="price"
+                  amount={price}
+                  updateAmount={setPrice}
+              />
+            </LabelInputContainer>
+          </RowContainer>
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="price" className="text-right">
-              Price
-            </Label>
-            <AmountInput
-                id="price"
-                className="col-span-3"
-                amount={price}
-                updateAmount={setPrice}
-            />
-          </div>
-
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="description" className="text-right">
-              Address
-            </Label>
-            <AddressInput address={address} updateAddress={setAddress} updateLocation={setLocation}/>
-          </div>
-
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="coords" className="text-right">
-              Coordinates
-            </Label>
-            <div className="col-span-3 flex gap-2">
-              <Input id="lat" value={location?.latitude ?? ""}
-                     disabled
-                     className="cl-span-1"/>
-              <Input id="lon" value={location?.longitude ?? ""}
-                     disabled
-                     className="cl-span-1"/>
-            </div>
-          </div>
-
+          <RowContainer>
+            <LabelInputContainer>
+              <Label htmlFor="address">Address</Label>
+              <AddressInput address={address} updateAddress={setAddress} updateLocation={setLocation}/>
+            </LabelInputContainer>
+          </RowContainer>
+          <RowContainer>
+            <LabelInputContainer>
+              <Label htmlFor="lat">Latitude</Label>
+              <Input id="lat" type="text" disabled/>
+            </LabelInputContainer>
+            <LabelInputContainer>
+              <Label htmlFor="lon">Longitude</Label>
+              <Input id="lon" type="text" disabled/>
+            </LabelInputContainer>
+          </RowContainer>
         </div>
         <DialogFooter>
-          <Button type="submit" onClick={onSaveButtonClick}>Save</Button>
+          <Button className="w-full text-base" onClick={onSaveButtonClick}>
+            Save
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

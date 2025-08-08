@@ -17,7 +17,7 @@ export default async function Page() {
     <div className="flex h-full gap-4">
       <Suspense fallback={<SkeletonCard/>}>
         <ErrorBoundary fallback={<SkeletonCard title="Error loading Itinerary"/>}>
-          <ItineraryCard trip={trip} activities={activities} accomodation={accomodation} flights={flights}/>
+          <ItineraryCard trip={trip} activities={activities} accommodation={accomodation} flights={flights}/>
         </ErrorBoundary>
       </Suspense>
       <Suspense fallback={<SkeletonCard/>}>

@@ -54,7 +54,7 @@ export function GlowContainer({
     >
       <div
         className={cn(
-          "group relative w-full overflow-hidden border border-black/10 dark:border-white/20 bg-white dark:bg-black transition duration-300",
+          "group relative w-full overflow-hidden border border-black/10 dark:border-white/20 bg-background transition duration-300",
           "md:hover:border-transparent",
           className
         )}
