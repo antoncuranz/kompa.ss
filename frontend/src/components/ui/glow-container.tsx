@@ -43,7 +43,7 @@ export function GlowContainer({
 
   return (
     <motion.div
-      className="glow-container relative w-full h-full rounded-[16px]"
+      className={cn("relative w-full h-full rounded-[16px]", !isMobile && "glow-container")}
       onMouseMove={handleMouseMove}
       style={
         {
@@ -55,7 +55,6 @@ export function GlowContainer({
       <div
         className={cn(
           "group relative w-full overflow-hidden border border-black/10 dark:border-white/20 bg-background transition duration-300",
-          "md:hover:border-transparent",
           className
         )}
       >
