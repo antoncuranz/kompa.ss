@@ -36,7 +36,7 @@ const AmountInput = ({amount, updateAmount, className, disabled = false, decimal
       updateAmount(newValue)
       setStringAmount(formatAmount(newValue, decimals))
       setWarning(newValue != null && warnPredicate != null && warnPredicate(newValue))
-    } catch (e) {
+    } catch {
       toast({title: "Unable to parse amount"})
       updateAmountInternal()
     }
