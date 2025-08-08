@@ -5,12 +5,12 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import {Layer, Map, Source} from "react-map-gl/mapbox";
 import type {FeatureCollection, Feature} from 'geojson';
 import RenderAfterMap from "@/components/card/RenderAfterMap.tsx";
-import {useTheme} from "next-themes";
 import {Accommodation, Activity, Flight, FlightLeg} from "@/types.ts";
 import {Popup} from "react-map-gl/mapbox";
 import {LngLat, MapMouseEvent} from "mapbox-gl";
 import {formatDateShort, formatTime, isSameDay} from "@/components/util.ts";
 import {GlowContainer} from "@/components/ui/glow-container.tsx";
+import {useTheme} from "next-themes";
 
 export default function MapCard({
   activities, accommodation, flights
@@ -22,21 +22,16 @@ export default function MapCard({
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
   const {resolvedTheme} = useTheme()
-  // const map = useMap()
+
+  function getMapboxTheme() {
+    return resolvedTheme == "dark" ? "night" : "day"
+  }
 
   type PopupInfo = {
     lngLat: LngLat;
     children: React.ReactNode;
   }
   const [popupInfo, setPopupInfo] = useState<PopupInfo|null>(null)
-
-  function getConfig() {
-    // console.log("new theme: ", resolvedTheme)
-    // map.current?.setConfigProperty("basemap", "lightPreset", "dusk");
-    return {
-      "basemap": {"lightPreset": resolvedTheme == "dark" ? "night" : "day"}
-    }
-  }
 
   function getActivityGeoJson(): FeatureCollection {
     const features = activities
@@ -101,8 +96,9 @@ export default function MapCard({
         ]
       },
       properties: {
-        "popupTitle": `✈️ Flight ${leg.flightNumber} from ${leg.origin.municipality} to ${leg.destination.municipality}`,
-        "popupBody": `${formatDateShort(leg.departureDateTime)} ${formatTime(leg.departureDateTime)} - ${formatTime(leg.arrivalDateTime)}` + (!isSameDay(leg.departureDateTime, leg.arrivalDateTime) ? " (+1)" : "")
+        "popupTitle": `✈️ Flight from ${leg.origin.municipality} to ${leg.destination.municipality}`,
+        "popupBody": leg.flightNumber,
+        "popupBodyRight": `${formatDateShort(leg.departureDateTime)} ${formatTime(leg.departureDateTime)} - ${formatTime(leg.arrivalDateTime)}` + (!isSameDay(leg.departureDateTime, leg.arrivalDateTime) ? " (+1)" : "")
       }
     }
   }
@@ -121,7 +117,12 @@ export default function MapCard({
           <div key={idx}>
             <strong>{properties!["popupTitle"]}</strong>
             {properties!["popupBody"] &&
-                <p>{properties!["popupBody"]}</p>
+              <div className="flex">
+                <p className="flex-grow">{properties!["popupBody"]}</p>
+                {properties!["popupBodyRight"] &&
+                  <p className="ml-2">{properties!["popupBodyRight"]}</p>
+                }
+              </div>
             }
           </div>
       )
@@ -137,33 +138,33 @@ export default function MapCard({
               mapStyle="mapbox://styles/mapbox/standard"
               projection="globe"
               initialViewState={{latitude: 52.520007, longitude: 13.404954, zoom: 10}}
-              config={getConfig()}
+              config={{"basemap": {"lightPreset": getMapboxTheme()}}}
               interactiveLayerIds={["activity", "accommodation", "flight"]}
               onMouseEnter={onMouseEnter}
               onMouseMove={onMouseEnter}
               onMouseLeave={() => setPopupInfo(null)}
           >
-            <RenderAfterMap>
+            <RenderAfterMap theme={getMapboxTheme()}>
               <Source type="geojson" data={getAccommodationGeoJson()}>
                 <Layer id="accommodation"
                        type="circle"
-                       paint={{"circle-color": "#f1b216", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3}}
+                       paint={{"circle-color": "#f1b216", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
                 />
               </Source>
               <Source type="geojson" data={getActivityGeoJson()}>
                 <Layer id="activity"
                        type="circle"
-                       paint={{"circle-color": "#36bf00", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3}}
+                       paint={{"circle-color": "#36bf00", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
                 />
               </Source>
               <Source type="geojson" data={getFlightGeoJson()}>
                 <Layer type="line"
-                       paint={{"line-color": "#007cbf", "line-width": 5}}
+                       paint={{"line-color": "#007cbf", "line-width": 5, "line-emissive-strength": 1}}
                        layout={{"line-cap": "round"}}
                 />
                 <Layer id="flight"
                        type="circle"
-                       paint={{"circle-color": "#007cbf", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3}}
+                       paint={{"circle-color": "#007cbf", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
                 />
               </Source>
               {popupInfo && (
@@ -172,7 +173,7 @@ export default function MapCard({
                          closeOnClick={false}
                          longitude={popupInfo.lngLat.lng}
                          latitude={popupInfo.lngLat.lat}
-                         className="shadow-xl"
+                         className="shadow-xl bg-background"
                   >
                     {popupInfo.children}
                   </Popup>

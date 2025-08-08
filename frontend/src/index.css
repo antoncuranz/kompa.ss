@@ -101,6 +101,7 @@ body {
 }
 .mapboxgl-popup-content {
   padding: 1rem !important;
+  background: none !important;
 }
 
 .glow-container:before {
