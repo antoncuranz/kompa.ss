@@ -27,21 +27,22 @@ export default function FlightEntry({
       className={cn("rounded-lg border mx-3 p-2 pl-4 pr-4 grid bg-background z-10 relative", className)}
     >
       <CollapsibleTrigger asChild>
-        <div className="grid cursor-pointer" style={{gridTemplateColumns: "1.5rem 1fr", columnGap: "0.5rem"}}>
+        <div className="grid cursor-pointer w-full" style={{gridTemplateColumns: "1.5rem 1fr", columnGap: "0.5rem"}}>
           <span className="mt-0 m-auto">✈️</span>
-          <span>
+          <div className="flex overflow-hidden whitespace-nowrap w-full">
+            <span className="overflow-hidden text-ellipsis w-full">
+              {open ?
+                `Flight from ${flightLeg.origin.municipality} to ${flightLeg.destination.municipality}`
+              :
+                `${formatTime(flightLeg.departureDateTime)}-${formatTime(flightLeg.arrivalDateTime)} Flight ${flightLeg.flightNumber} from ${flightLeg.origin.municipality} to ${flightLeg.destination.municipality}`
+              }
+            </span>
             {open ?
-              <>
-                Flight from {flightLeg.origin.municipality} to {flightLeg.destination.municipality}
-                <ChevronUp className="float-right text-muted-foreground"/>
-              </>
+              <ChevronUp className="float-right text-muted-foreground"/>
             :
-              <>
-                {formatTime(flightLeg.departureDateTime)}-{formatTime(flightLeg.arrivalDateTime)} Flight {flightLeg.flightNumber} from {flightLeg.origin.municipality} to {flightLeg.destination.municipality}
-                <ChevronDown className="float-right text-muted-foreground"/>
-              </>
+              <ChevronDown className="float-right text-muted-foreground"/>
             }
-          </span>
+          </div>
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent>

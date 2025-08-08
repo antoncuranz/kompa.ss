@@ -130,7 +130,7 @@ export default function MapCard({
   }
 
   return (
-    <div className="flex-grow rounded-3xl shadow-xl shadow-black/[0.1] dark:shadow-white/[0.05] boder border-black/10 dark:border-white/20">
+    <div className="hidden lg:block flex-grow rounded-3xl shadow-xl shadow-black/[0.1] dark:shadow-white/[0.05] boder border-black/10 dark:border-white/20">
       <GlowContainer className="rounded-3xl h-full p-2">
         <div className="rounded-2xl h-full overflow-hidden">
           <Map
