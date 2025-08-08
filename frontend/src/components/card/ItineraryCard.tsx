@@ -95,10 +95,10 @@ export default async function ItineraryCard({
   }
 
   return (
-    <div className="flex-grow lg:max-w-[48rem] rounded-3xl shadow-xl shadow-black/[0.1] dark:shadow-white/[0.05]">
-      <GlowContainer className="flex flex-col h-full p-3 rounded-3xl">
-        <div className="flex flex-row p-3 pb-6 border-b">
-          <h3 className="flex-grow font-semibold text-2xl/[1.875rem]">Itinerary</h3>
+    <div className="flex-grow lg:max-w-[48rem] rounded-2xl sm:rounded-3xl shadow-xl shadow-black/[0.1] dark:shadow-white/[0.05]">
+      <GlowContainer className="flex flex-col h-full sm:p-3 rounded-2xl sm:rounded-3xl">
+        <div className="flex flex-row p-3 sm:pb-6 border-b">
+          <h3 className="flex-grow font-semibold text-xl/[2rem] sm:text-2xl">Itinerary</h3>
           <AddSomethingDropdown trip={trip}/>
         </div>
         <div className="no-scrollbar overflow-hidden overflow-y-scroll ">
