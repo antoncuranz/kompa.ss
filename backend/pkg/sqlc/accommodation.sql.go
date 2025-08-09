@@ -15,8 +15,14 @@ const getAccommodationByID = `-- name: GetAccommodationByID :one
 SELECT accommodation.id, accommodation.trip_id, accommodation.location_id, accommodation.name, accommodation.arrival_date, accommodation.departure_date, accommodation.check_in_time, accommodation.check_out_time, accommodation.description, accommodation.address, accommodation.price, location.id, location.latitude, location.longitude
 FROM accommodation
 LEFT JOIN location on location_id = location.id
-WHERE accommodation.id = $1
+WHERE trip_id = $1
+AND accommodation.id = $2
 `
+
+type GetAccommodationByIDParams struct {
+	TripID int32
+	ID     int32
+}
 
 type GetAccommodationByIDRow struct {
 	Accommodation Accommodation
@@ -25,8 +31,8 @@ type GetAccommodationByIDRow struct {
 	Longitude     *float32
 }
 
-func (q *Queries) GetAccommodationByID(ctx context.Context, id int32) (GetAccommodationByIDRow, error) {
-	row := q.db.QueryRow(ctx, getAccommodationByID, id)
+func (q *Queries) GetAccommodationByID(ctx context.Context, arg GetAccommodationByIDParams) (GetAccommodationByIDRow, error) {
+	row := q.db.QueryRow(ctx, getAccommodationByID, arg.TripID, arg.ID)
 	var i GetAccommodationByIDRow
 	err := row.Scan(
 		&i.Accommodation.ID,
@@ -51,6 +57,7 @@ const getAllAccommodation = `-- name: GetAllAccommodation :many
 SELECT accommodation.id, accommodation.trip_id, accommodation.location_id, accommodation.name, accommodation.arrival_date, accommodation.departure_date, accommodation.check_in_time, accommodation.check_out_time, accommodation.description, accommodation.address, accommodation.price, location.id, location.latitude, location.longitude
 FROM accommodation
 LEFT JOIN location on location_id = location.id
+WHERE accommodation.id = $1
 `
 
 type GetAllAccommodationRow struct {
@@ -60,8 +67,8 @@ type GetAllAccommodationRow struct {
 	Longitude     *float32
 }
 
-func (q *Queries) GetAllAccommodation(ctx context.Context) ([]GetAllAccommodationRow, error) {
-	rows, err := q.db.Query(ctx, getAllAccommodation)
+func (q *Queries) GetAllAccommodation(ctx context.Context, id int32) ([]GetAllAccommodationRow, error) {
+	rows, err := q.db.Query(ctx, getAllAccommodation, id)
 	if err != nil {
 		return nil, err
 	}

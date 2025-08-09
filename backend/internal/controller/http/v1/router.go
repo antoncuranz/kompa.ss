@@ -10,57 +10,59 @@ import (
 func NewUserRoutes(apiV1Group fiber.Router, uc usecase.Users, log logger.Interface) {
 	r := &UsersV1{uc: uc, log: log, v: validator.New(validator.WithRequiredStructEnabled())}
 
-	userGroup := apiV1Group.Group("/users")
+	usersV1Group := apiV1Group.Group("/users")
 
 	{
-		userGroup.Get("", r.getUsers)
-		userGroup.Get("/:user_id", r.getUser)
+		usersV1Group.Get("", r.getUsers)
+		usersV1Group.Get("/:user_id", r.getUser)
 	}
 }
 
-func NewTripRoutes(apiV1Group fiber.Router, uc usecase.Trips, log logger.Interface) {
+func NewTripRoutes(apiV1Group fiber.Router, uc usecase.Trips, log logger.Interface) fiber.Router {
 	r := &TripsV1{uc: uc, log: log, v: validator.New(validator.WithRequiredStructEnabled())}
 
-	tripGroup := apiV1Group.Group("/trips")
+	tripsV1Group := apiV1Group.Group("/trips")
 
 	{
-		tripGroup.Get("", r.getTrips)
-		tripGroup.Get("/:trip_id", r.getTrip)
+		tripsV1Group.Get("", r.getTrips)
+		tripsV1Group.Get("/:trip_id", r.getTrip)
 	}
+
+	return tripsV1Group
 }
 
-func NewFlightRoutes(apiV1Group fiber.Router, uc usecase.Flights, log logger.Interface) {
+func NewFlightRoutes(tripsV1Group fiber.Router, uc usecase.Flights, log logger.Interface) {
 	r := &FlightsV1{uc: uc, log: log, v: validator.New(validator.WithRequiredStructEnabled())}
 
-	flightGroup := apiV1Group.Group("/flights")
+	flightsV1Group := tripsV1Group.Group("/:trip_id/flights")
 
 	{
-		flightGroup.Get("", r.getFlights)
-		flightGroup.Post("", r.postFlight)
-		flightGroup.Get("/:flight_id", r.getFlight)
+		flightsV1Group.Get("", r.getFlights)
+		flightsV1Group.Post("", r.postFlight)
+		flightsV1Group.Get("/:flight_id", r.getFlight)
 	}
 }
 
-func NewActivityRoutes(apiV1Group fiber.Router, uc usecase.Activities, log logger.Interface) {
+func NewActivityRoutes(tripsV1Group fiber.Router, uc usecase.Activities, log logger.Interface) {
 	r := &ActivitiesV1{uc: uc, log: log, v: validator.New(validator.WithRequiredStructEnabled())}
 
-	activityGroup := apiV1Group.Group("/activities")
+	activitiesV1Group := tripsV1Group.Group("/:trip_id/activities")
 
 	{
-		activityGroup.Get("", r.getActivities)
-		activityGroup.Post("", r.postActivity)
-		activityGroup.Get("/:activity_id", r.getActivity)
+		activitiesV1Group.Get("", r.getActivities)
+		activitiesV1Group.Post("", r.postActivity)
+		activitiesV1Group.Get("/:activity_id", r.getActivity)
 	}
 }
 
-func NewAccommodationRoutes(apiV1Group fiber.Router, uc usecase.Accommodation, log logger.Interface) {
+func NewAccommodationRoutes(tripsV1Group fiber.Router, uc usecase.Accommodation, log logger.Interface) {
 	r := &AccommodationV1{uc: uc, log: log, v: validator.New(validator.WithRequiredStructEnabled())}
 
-	accommodationGroup := apiV1Group.Group("/accommodation")
+	accommodationV1Group := tripsV1Group.Group("/:trip_id/accommodation")
 
 	{
-		accommodationGroup.Get("", r.getAllAccommodation)
-		accommodationGroup.Post("", r.postAccommodation)
-		accommodationGroup.Get("/:accommodation_id", r.getAccommodationByID)
+		accommodationV1Group.Get("", r.getAllAccommodation)
+		accommodationV1Group.Post("", r.postAccommodation)
+		accommodationV1Group.Get("/:accommodation_id", r.getAccommodationByID)
 	}
 }

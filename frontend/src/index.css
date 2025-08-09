@@ -110,12 +110,17 @@ body {
   -webkit-user-select:none;
   -moz-user-select:none;
   user-select:none;
-  border-radius:1.5rem;
+  border-radius:1rem;
   opacity:0;
   transition-property:opacity;
   transition-timing-function:cubic-bezier(.4,0,.2,1);
   transition-duration:.3s;
   animation-duration:.3s
+}
+@media (min-width: 640px) {
+  .glow-container:before {
+    border-radius:1.5rem;
+  }
 }
 .glow-container:hover:before {
   opacity:1

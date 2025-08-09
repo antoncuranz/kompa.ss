@@ -2,7 +2,6 @@ import type {Metadata, Viewport} from 'next'
 import '../index.css'
 import {Toaster} from "@/components/ui/toaster.tsx";
 import {ThemeProvider} from "@/components/provider/ThemeProvider.tsx";
-import Navigation from "@/components/navigation/Navigation.tsx";
 import {UserProvider} from "@/components/provider/UserProvider.tsx";
 import {getCurrentUser} from "@/requests.ts";
 
@@ -33,10 +32,7 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navigation/>
-          <main id="root" className="w-full p-2 pt-0 sm:px-6 md:gap-2 relative z-[1]" style={{height: "calc(100dvh - 4rem)"}}>
-            {children}
-          </main>
+          {children}
           <Toaster/>
         </ThemeProvider>
       </UserProvider>

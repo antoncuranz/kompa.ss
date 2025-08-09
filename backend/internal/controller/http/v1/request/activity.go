@@ -6,7 +6,6 @@ import (
 )
 
 type Activity struct {
-	TripID      int32            `json:"tripId"`
 	Name        string           `json:"name"`
 	Date        civil.Date       `json:"date"`
 	Time        *civil.Time      `json:"time"`

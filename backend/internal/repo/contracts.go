@@ -20,20 +20,20 @@ type (
 	}
 
 	FlightsRepo interface {
-		GetFlights(ctx context.Context) ([]entity.Flight, error)
-		GetFlightByID(ctx context.Context, id int32) (entity.Flight, error)
+		GetFlights(ctx context.Context, tripID int32) ([]entity.Flight, error)
+		GetFlightByID(ctx context.Context, tripID int32, id int32) (entity.Flight, error)
 		SaveFlight(ctx context.Context, flight entity.Flight) (entity.Flight, error)
 	}
 
 	ActivitiesRepo interface {
-		GetActivities(ctx context.Context) ([]entity.Activity, error)
-		GetActivityByID(ctx context.Context, id int32) (entity.Activity, error)
+		GetActivities(ctx context.Context, tripID int32) ([]entity.Activity, error)
+		GetActivityByID(ctx context.Context, tripID int32, activityID int32) (entity.Activity, error)
 		SaveActivity(ctx context.Context, activity entity.Activity) (entity.Activity, error)
 	}
 
 	AccommodationRepo interface {
-		GetAllAccommodation(ctx context.Context) ([]entity.Accommodation, error)
-		GetAccommodationByID(ctx context.Context, id int32) (entity.Accommodation, error)
+		GetAllAccommodation(ctx context.Context, tripID int32) ([]entity.Accommodation, error)
+		GetAccommodationByID(ctx context.Context, tripID int32, id int32) (entity.Accommodation, error)
 		SaveAccommodation(ctx context.Context, accommodation entity.Accommodation) (entity.Accommodation, error)
 	}
 

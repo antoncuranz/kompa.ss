@@ -20,8 +20,8 @@ func NewActivitiesRepo(pg *postgres.Postgres) *ActivitiesRepo {
 	}
 }
 
-func (r *ActivitiesRepo) GetActivities(ctx context.Context) ([]entity.Activity, error) {
-	activities, err := r.Queries.GetActivities(ctx)
+func (r *ActivitiesRepo) GetActivities(ctx context.Context, tripID int32) ([]entity.Activity, error) {
+	activities, err := r.Queries.GetActivities(ctx, tripID)
 	if err != nil {
 		return nil, err
 	}
@@ -29,8 +29,8 @@ func (r *ActivitiesRepo) GetActivities(ctx context.Context) ([]entity.Activity, 
 	return mapActivities(activities), nil
 }
 
-func (r *ActivitiesRepo) GetActivityByID(ctx context.Context, id int32) (entity.Activity, error) {
-	row, err := r.Queries.GetActivityByID(ctx, id)
+func (r *ActivitiesRepo) GetActivityByID(ctx context.Context, tripID int32, activityID int32) (entity.Activity, error) {
+	row, err := r.Queries.GetActivityByID(ctx, sqlc.GetActivityByIDParams{TripID: tripID, ID: activityID})
 	if err != nil {
 		return entity.Activity{}, err
 	}
@@ -74,7 +74,7 @@ func (r *ActivitiesRepo) SaveActivity(ctx context.Context, activity entity.Activ
 		return entity.Activity{}, err
 	}
 
-	return r.GetActivityByID(ctx, activityId)
+	return r.GetActivityByID(ctx, activity.TripID, activityId)
 }
 
 func mapActivities(rows []sqlc.GetActivitiesRow) []entity.Activity {

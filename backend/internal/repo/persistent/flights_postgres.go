@@ -20,8 +20,8 @@ func NewFlightsRepo(pg *postgres.Postgres) *FlightsRepo {
 	}
 }
 
-func (r *FlightsRepo) GetFlights(ctx context.Context) ([]entity.Flight, error) {
-	flights, err := r.Queries.GetFlights(ctx)
+func (r *FlightsRepo) GetFlights(ctx context.Context, tripID int32) ([]entity.Flight, error) {
+	flights, err := r.Queries.GetFlights(ctx, tripID)
 	if err != nil {
 		return nil, err
 	}
@@ -42,8 +42,8 @@ func (r *FlightsRepo) GetFlights(ctx context.Context) ([]entity.Flight, error) {
 	return result, nil
 }
 
-func (r *FlightsRepo) GetFlightByID(ctx context.Context, id int32) (entity.Flight, error) {
-	flight, err := r.Queries.GetFlightByID(ctx, id)
+func (r *FlightsRepo) GetFlightByID(ctx context.Context, tripID int32, flightID int32) (entity.Flight, error) {
+	flight, err := r.Queries.GetFlightByID(ctx, sqlc.GetFlightByIDParams{TripID: tripID, ID: flightID})
 	if err != nil {
 		return entity.Flight{}, err
 	}
@@ -138,7 +138,7 @@ func (r *FlightsRepo) SaveFlight(ctx context.Context, flight entity.Flight) (ent
 		return entity.Flight{}, err
 	}
 
-	return r.GetFlightByID(ctx, flightId)
+	return r.GetFlightByID(ctx, flight.TripID, flightId)
 }
 
 // TODO: Move mapping to separate file

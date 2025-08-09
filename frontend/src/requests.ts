@@ -38,6 +38,7 @@ export async function getCurrentUser(): Promise<string> {
 }
 
 export async function fetchTrip(tripId: number) {
+  // await new Promise( resolve => setTimeout(resolve, 5 * 1000) )
   const trip = await fetchData("/api/v1/trips/" + tripId) as Trip
   return {
     ...trip,
@@ -46,8 +47,17 @@ export async function fetchTrip(tripId: number) {
   }
 }
 
-export async function fetchAccommodation() {
-  const accommodation = await fetchData("/api/v1/accommodation") as Accommodation[]
+export async function fetchTrips() {
+  const trips = await fetchData("/api/v1/trips") as Trip[]
+  return trips.map(trip => ({
+    ...trip,
+    startDate: new Date(trip.startDate),
+    endDate: new Date(trip.endDate),
+  }))
+}
+
+export async function fetchAccommodation(tripId: number) {
+  const accommodation = await fetchData("/api/v1/trips/" + tripId + "/accommodation") as Accommodation[]
   return accommodation.map(acc => ({
     ...acc,
     arrivalDate: new Date(acc.arrivalDate),
@@ -55,8 +65,8 @@ export async function fetchAccommodation() {
   }))
 }
 
-export async function fetchFlights() {
-  const flights = await fetchData("/api/v1/flights") as Flight[]
+export async function fetchFlights(tripId: number) {
+  const flights = await fetchData("/api/v1/trips/" + tripId + "/flights") as Flight[]
   return flights.map(flight => ({
     ...flight,
     legs: flight.legs.map(leg => ({
@@ -67,8 +77,8 @@ export async function fetchFlights() {
   }))
 }
 
-export async function fetchActivities() {
-  const activities = await fetchData("/api/v1/activities") as Activity[];
+export async function fetchActivities(tripId: number) {
+  const activities = await fetchData("/api/v1/trips/" + tripId + "/activities") as Activity[];
   return activities.map(activity => ({
     ...activity,
     date: new Date(activity.date),

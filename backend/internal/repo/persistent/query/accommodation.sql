@@ -2,12 +2,14 @@
 SELECT sqlc.embed(accommodation), location.*
 FROM accommodation
 LEFT JOIN location on location_id = location.id
-WHERE accommodation.id = $1;
+WHERE trip_id = $1
+AND accommodation.id = $2;
 
 -- name: GetAllAccommodation :many
 SELECT sqlc.embed(accommodation), location.*
 FROM accommodation
-LEFT JOIN location on location_id = location.id;
+LEFT JOIN location on location_id = location.id
+WHERE accommodation.id = $1;
 
 -- name: InsertAccommodation :one
 INSERT INTO accommodation (

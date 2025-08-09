@@ -1,22 +1,25 @@
 import FlightEntry from "@/components/itinerary/FlightEntry.tsx";
 import DaySeparator from "@/components/itinerary/DaySeparator.tsx";
-import {Accommodation, Flight, Activity, Trip, FlightLeg} from "@/types.ts";
+import {Accommodation, Flight, Activity, FlightLeg} from "@/types.ts";
 import {formatDuration, getDaysBetween, isSameDay} from "@/components/util.ts";
 import DayLabel from "@/components/itinerary/DayLabel.tsx";
 import React from "react";
 import ActivityEntry from "@/components/itinerary/ActivityEntry.tsx";
 import FlightSeparator from "@/components/itinerary/FlightSeparator.tsx";
-import {GlowContainer} from "@/components/ui/glow-container.tsx";
 import AddSomethingDropdown from "@/components/dialog/AddSomethingDropdown.tsx";
+import Card from "@/components/card/Card.tsx";
+import {fetchAccommodation, fetchActivities, fetchFlights, fetchTrip} from "@/requests.ts";
 
 export default async function ItineraryCard({
-  trip, flights, accommodation, activities
+  tripId, className
 }: {
-  trip: Trip,
-  accommodation: Accommodation[],
-  flights: Flight[],
-  activities: Activity[]
+  tripId: number
+  className?: string
 }) {
+  const trip = await fetchTrip(tripId)
+  const activities = await fetchActivities(tripId)
+  const accommodation = await fetchAccommodation(tripId)
+  const flights = await fetchFlights(tripId)
 
   type DayRenderData = {
     day: Date;
@@ -95,16 +98,8 @@ export default async function ItineraryCard({
   }
 
   return (
-    <div className="flex-grow lg:max-w-[48rem] rounded-2xl sm:rounded-3xl shadow-xl shadow-black/[0.1] dark:shadow-white/[0.05]">
-      <GlowContainer className="flex flex-col h-full sm:p-3 rounded-2xl sm:rounded-3xl">
-        <div className="flex flex-row p-3 sm:pb-6 border-b">
-          <h3 className="flex-grow font-semibold text-xl/[2rem] sm:text-2xl">Itinerary</h3>
-          <AddSomethingDropdown trip={trip}/>
-        </div>
-        <div className="no-scrollbar overflow-hidden overflow-y-scroll ">
-          {renderAllDays()}
-        </div>
-      </GlowContainer>
-    </div>
+    <Card title="Itinerary" headerSlot={<AddSomethingDropdown trip={trip}/>} className={className}>
+      {renderAllDays()}
+    </Card>
   )
 }

@@ -1,30 +1,23 @@
-import React, {Suspense} from "react";
-import SkeletonCard from "@/components/card/SkeletonCard.tsx";
-import {ErrorBoundary} from "react-error-boundary";
-import ItineraryCard from "@/components/card/ItineraryCard.tsx";
-import MapCard from "@/components/card/MapCard.tsx";
-import {fetchAccommodation, fetchActivities, fetchFlights, fetchTrip} from "@/requests.ts";
+import React from "react";
+import {fetchTrips} from "@/requests.ts";
+import Card from "@/components/card/Card.tsx";
+import Link from "next/link";
 
 export default async function Page() {
 
-  const tripId = 1
-  const trip = await fetchTrip(tripId)
-  const activities = await fetchActivities()
-  const accomodation = await fetchAccommodation()
-  const flights = await fetchFlights()
+  const trips = await fetchTrips()
 
   return (
     <div className="flex h-full gap-4">
-      <Suspense fallback={<SkeletonCard/>}>
-        <ErrorBoundary fallback={<SkeletonCard title="Error loading Itinerary"/>}>
-          <ItineraryCard trip={trip} activities={activities} accommodation={accomodation} flights={flights}/>
-        </ErrorBoundary>
-      </Suspense>
-      <Suspense fallback={<SkeletonCard/>}>
-        <ErrorBoundary fallback={<SkeletonCard title="Error loading Map"/>}>
-          <MapCard activities={activities} accommodation={accomodation} flights={flights}/>
-        </ErrorBoundary>
-      </Suspense>
+      {trips.map(trip =>
+        <Link key={trip.id} href={"/" + trip.id + "/itinerary"}>
+          <Card title={trip.name}>
+            <div className="m-3">
+              {trip.id}
+            </div>
+          </Card>
+        </Link>
+      )}
     </div>
   )
 }

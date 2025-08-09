@@ -155,8 +155,6 @@ definitions:
         type: string
       price:
         type: integer
-      tripId:
-        type: integer
     type: object
   request.Activity:
     properties:
@@ -174,8 +172,6 @@ definitions:
         type: integer
       time:
         type: string
-      tripId:
-        type: integer
     type: object
   request.Flight:
     properties:
@@ -189,13 +185,9 @@ definitions:
         type: array
       price:
         type: integer
-      tripId:
-        example: 1
-        type: integer
     required:
     - legs
     - pnrs
-    - tripId
     type: object
   request.FlightLeg:
     properties:
@@ -225,207 +217,6 @@ info:
   title: TravelPlanner API
   version: "1.0"
 paths:
-  /accommodation:
-    get:
-      operationId: getAllAccommodation
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/entity.Accommodation'
-            type: array
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
-      summary: Get all accommodation
-      tags:
-      - accommodation
-    post:
-      consumes:
-      - application/json
-      operationId: postAccommodation
-      parameters:
-      - description: accommodation
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/request.Accommodation'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/entity.Accommodation'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
-      summary: Add accommodation
-      tags:
-      - accommodation
-  /accommodation/{accommodation_id}:
-    get:
-      operationId: getAccommodationByID
-      parameters:
-      - description: Accommodation ID
-        in: path
-        name: accommodation_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/entity.Accommodation'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
-      summary: Get accommodation by ID
-      tags:
-      - accommodation
-  /activities:
-    get:
-      operationId: getActivities
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/entity.Activity'
-            type: array
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
-      summary: Get all activities
-      tags:
-      - activities
-    post:
-      consumes:
-      - application/json
-      operationId: postActivity
-      parameters:
-      - description: activity
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/request.Activity'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/entity.Activity'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
-      summary: Add activity
-      tags:
-      - activities
-  /activities/{activity_id}:
-    get:
-      operationId: getActivity
-      parameters:
-      - description: Activity ID
-        in: path
-        name: activity_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/entity.Activity'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
-      summary: Get activity by ID
-      tags:
-      - activities
-  /flights:
-    get:
-      operationId: getFlights
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/entity.Flight'
-            type: array
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
-      summary: Get all flights
-      tags:
-      - flights
-    post:
-      consumes:
-      - application/json
-      operationId: postFlight
-      parameters:
-      - description: flight
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/request.Flight'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/entity.Flight'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
-      summary: Add flight
-      tags:
-      - flights
-  /flights/{flight_id}:
-    get:
-      operationId: getFlight
-      parameters:
-      - description: Flight ID
-        in: path
-        name: flight_id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/entity.Flight'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
-      summary: Get flight by ID
-      tags:
-      - flights
   /trips:
     get:
       operationId: getTrips
@@ -468,6 +259,255 @@ paths:
       summary: Get trip by ID
       tags:
       - trips
+  /trips/{trip_id}/accommodation:
+    get:
+      operationId: getAllAccommodation
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.Accommodation'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Get all accommodation
+      tags:
+      - accommodation
+    post:
+      consumes:
+      - application/json
+      operationId: postAccommodation
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        type: integer
+      - description: accommodation
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.Accommodation'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Accommodation'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Add accommodation
+      tags:
+      - accommodation
+  /trips/{trip_id}/accommodation/{accommodation_id}:
+    get:
+      operationId: getAccommodationByID
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        type: integer
+      - description: Accommodation ID
+        in: path
+        name: accommodation_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Accommodation'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Get accommodation by ID
+      tags:
+      - accommodation
+  /trips/{trip_id}/activities:
+    get:
+      operationId: getActivities
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.Activity'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Get all activities
+      tags:
+      - activities
+    post:
+      consumes:
+      - application/json
+      operationId: postActivity
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        type: integer
+      - description: activity
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.Activity'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Activity'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Add activity
+      tags:
+      - activities
+  /trips/{trip_id}/activities/{activity_id}:
+    get:
+      operationId: getActivity
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        type: integer
+      - description: Activity ID
+        in: path
+        name: activity_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Activity'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Get activity by ID
+      tags:
+      - activities
+  /trips/{trip_id}/flights:
+    get:
+      operationId: getFlights
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.Flight'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Get all flights
+      tags:
+      - flights
+    post:
+      consumes:
+      - application/json
+      operationId: postFlight
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        type: integer
+      - description: flight
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.Flight'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Flight'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Add flight
+      tags:
+      - flights
+  /trips/{trip_id}/flights/{flight_id}:
+    get:
+      operationId: getFlight
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        type: integer
+      - description: Flight ID
+        in: path
+        name: flight_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Flight'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Get flight by ID
+      tags:
+      - flights
   /users:
     get:
       operationId: getUsers

@@ -20,11 +20,17 @@ type AccommodationV1 struct {
 // @ID          getAllAccommodation
 // @Tags  	    accommodation
 // @Produce     json
+// @Param       trip_id path int true "Trip ID"
 // @Success     200 {object} []entity.Accommodation
 // @Failure     500 {object} response.Error
-// @Router      /accommodation [get]
+// @Router      /trips/{trip_id}/accommodation [get]
 func (r *AccommodationV1) getAllAccommodation(ctx *fiber.Ctx) error {
-	accommodation, err := r.uc.GetAllAccommodation(ctx.UserContext())
+	tripID, err := ctx.ParamsInt("trip_id")
+	if err != nil {
+		return errorResponse(ctx, http.StatusBadRequest, "unable to parse trip_id")
+	}
+
+	accommodation, err := r.uc.GetAllAccommodation(ctx.UserContext(), int32(tripID))
 	if err != nil {
 		r.log.Error(err, "http - v1 - getAccommodation")
 		return errorResponse(ctx, http.StatusInternalServerError, "internal server error")
@@ -37,17 +43,22 @@ func (r *AccommodationV1) getAllAccommodation(ctx *fiber.Ctx) error {
 // @ID          getAccommodationByID
 // @Tags  	    accommodation
 // @Produce     json
+// @Param       trip_id path int true "Trip ID"
 // @Param       accommodation_id path string true "Accommodation ID"
 // @Success     200 {object} entity.Accommodation
 // @Failure     500 {object} response.Error
-// @Router      /accommodation/{accommodation_id} [get]
+// @Router      /trips/{trip_id}/accommodation/{accommodation_id} [get]
 func (r *AccommodationV1) getAccommodationByID(ctx *fiber.Ctx) error {
+	tripID, err := ctx.ParamsInt("trip_id")
+	if err != nil {
+		return errorResponse(ctx, http.StatusBadRequest, "unable to parse trip_id")
+	}
 	accommodationID, err := ctx.ParamsInt("accommodation_id")
 	if err != nil {
 		return errorResponse(ctx, http.StatusBadRequest, "unable to parse accommodation_id")
 	}
 
-	accommodation, err := r.uc.GetAccommodationByID(ctx.UserContext(), int32(accommodationID))
+	accommodation, err := r.uc.GetAccommodationByID(ctx.UserContext(), int32(tripID), int32(accommodationID))
 	if err != nil {
 		return errorResponse(ctx, http.StatusNotFound, fmt.Sprintf("unable to find accommodation with id %d", accommodationID))
 	}
@@ -60,11 +71,17 @@ func (r *AccommodationV1) getAccommodationByID(ctx *fiber.Ctx) error {
 // @Tags  	    accommodation
 // @Accept      json
 // @Produce     json
+// @Param       trip_id path int true "Trip ID"
 // @Param       request body request.Accommodation true "accommodation"
 // @Success     200 {object} entity.Accommodation
 // @Failure     500 {object} response.Error
-// @Router      /accommodation [post]
+// @Router      /trips/{trip_id}/accommodation [post]
 func (r *AccommodationV1) postAccommodation(ctx *fiber.Ctx) error {
+	tripID, err := ctx.ParamsInt("trip_id")
+	if err != nil {
+		return errorResponse(ctx, http.StatusBadRequest, "unable to parse trip_id")
+	}
+
 	var body request.Accommodation
 
 	if err := ctx.BodyParser(&body); err != nil {
@@ -76,7 +93,7 @@ func (r *AccommodationV1) postAccommodation(ctx *fiber.Ctx) error {
 		return errorResponse(ctx, http.StatusBadRequest, "invalid request body")
 	}
 
-	_, err := r.uc.CreateAccommodation(ctx.UserContext(), body)
+	_, err = r.uc.CreateAccommodation(ctx.UserContext(), int32(tripID), body)
 	if err != nil {
 		return err
 	}

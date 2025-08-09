@@ -19,22 +19,22 @@ func New(r repo.FlightsRepo, a repo.AerodataboxWebAPI) *UseCase {
 	}
 }
 
-func (uc *UseCase) GetFlightByID(ctx context.Context, id int32) (entity.Flight, error) {
-	return uc.repo.GetFlightByID(ctx, id)
+func (uc *UseCase) GetFlights(ctx context.Context, tripID int32) ([]entity.Flight, error) {
+	return uc.repo.GetFlights(ctx, tripID)
 }
 
-func (uc *UseCase) GetFlights(ctx context.Context) ([]entity.Flight, error) {
-	return uc.repo.GetFlights(ctx)
+func (uc *UseCase) GetFlightByID(ctx context.Context, tripID int32, flightID int32) (entity.Flight, error) {
+	return uc.repo.GetFlightByID(ctx, tripID, flightID)
 }
 
-func (uc *UseCase) CreateFlight(ctx context.Context, flight request.Flight) (entity.Flight, error) {
+func (uc *UseCase) CreateFlight(ctx context.Context, tripID int32, flight request.Flight) (entity.Flight, error) {
 	flightLegs, err := uc.retrieveFlightLegs(ctx, flight)
 	if err != nil {
 		return entity.Flight{}, err
 	}
 
 	return uc.repo.SaveFlight(ctx, entity.Flight{
-		TripID: 1,
+		TripID: tripID,
 		Legs:   flightLegs,
 		PNRs:   flight.PNRs,
 		Price:  flight.Price,

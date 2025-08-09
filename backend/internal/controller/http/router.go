@@ -46,9 +46,12 @@ func NewRouter(app *fiber.App, cfg *config.Config, useCases usecase.UseCases, lo
 	apiV1Group := app.Group("/api/v1")
 	{
 		v1.NewUserRoutes(apiV1Group, useCases.Users, log)
-		v1.NewTripRoutes(apiV1Group, useCases.Trips, log)
-		v1.NewFlightRoutes(apiV1Group, useCases.Flights, log)
-		v1.NewActivityRoutes(apiV1Group, useCases.Activities, log)
-		v1.NewAccommodationRoutes(apiV1Group, useCases.Accommodation, log)
+
+		tripsV1Group := v1.NewTripRoutes(apiV1Group, useCases.Trips, log)
+		{
+			v1.NewFlightRoutes(tripsV1Group, useCases.Flights, log)
+			v1.NewActivityRoutes(tripsV1Group, useCases.Activities, log)
+			v1.NewAccommodationRoutes(tripsV1Group, useCases.Accommodation, log)
+		}
 	}
 }

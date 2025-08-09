@@ -1,40 +1,25 @@
+import {cn} from "@/lib/utils.ts";
+import React from "react";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card.tsx";
-import {Separator} from "@/components/ui/separator.tsx";
 
-export default async function SkeletonCard({
-  title
+export default function SkeletonCard({
+  title,
+  className
 }: {
   title?: string
+  className?: string
 }) {
-  return (
-    <Card className="mb-2 overflow-hidden">
-      <CardHeader className="pb-0">
-        {title ?
-          <CardTitle>{title}</CardTitle>
-        :
-          <Skeleton className="h-6 w-48"/>
-        }
-        <CardDescription/>
-      </CardHeader>
-      <CardContent className="p-0">
-        <Separator className="mt-4"/>
-        <div className="w-full relative">
-          {[0,1,2].map(key =>
-            <div key={key} className="containers tx-row-border">
-              <div className="left">
-                <Skeleton className="date h-6 w-32"/>
-                <Skeleton className="remoteName h-6 w-40"/>
-                <Skeleton className="purpose h-6 w-48"/>
-              </div>
-              <div className="right">
-                <Skeleton className="w-24 h-10"/>
-                <Skeleton className="price text-sm h-6 w-20"/>
-              </div>
+  return(
+    <Skeleton className={cn("w-full rounded-2xl sm:rounded-3xl border", className)}>
+      <div className="flex flex-col h-full sm:p-2 rounded-2xl sm:rounded-3xl">
+        {title &&
+            <div className="flex flex-row p-3 sm:pb-5">
+                <h3 className="flex-grow font-semibold text-xl/[2rem] sm:text-2xl">{title}</h3>
             </div>
-          )}
+        }
+        <div className="h-full rounded-2xl no-scrollbar overflow-hidden overflow-y-scroll">
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </Skeleton>
   )
 }

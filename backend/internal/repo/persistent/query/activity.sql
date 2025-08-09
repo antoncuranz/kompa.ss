@@ -2,12 +2,14 @@
 SELECT sqlc.embed(activity), location.*
 FROM activity
 LEFT JOIN location on activity.location_id = location.id
-WHERE activity.id = $1;
+WHERE trip_id = $1
+AND activity.id = $2;
 
 -- name: GetActivities :many
 SELECT sqlc.embed(activity), location.*
 FROM activity
-LEFT JOIN location on activity.location_id = location.id;
+LEFT JOIN location on activity.location_id = location.id
+WHERE activity.id = $1;
 
 -- name: InsertActivity :one
 INSERT INTO activity (

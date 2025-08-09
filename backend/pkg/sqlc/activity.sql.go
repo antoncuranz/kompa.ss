@@ -15,6 +15,7 @@ const getActivities = `-- name: GetActivities :many
 SELECT activity.id, activity.trip_id, activity.location_id, activity.name, activity.date, activity.time, activity.description, activity.address, activity.price, location.id, location.latitude, location.longitude
 FROM activity
 LEFT JOIN location on activity.location_id = location.id
+WHERE activity.id = $1
 `
 
 type GetActivitiesRow struct {
@@ -24,8 +25,8 @@ type GetActivitiesRow struct {
 	Longitude *float32
 }
 
-func (q *Queries) GetActivities(ctx context.Context) ([]GetActivitiesRow, error) {
-	rows, err := q.db.Query(ctx, getActivities)
+func (q *Queries) GetActivities(ctx context.Context, id int32) ([]GetActivitiesRow, error) {
+	rows, err := q.db.Query(ctx, getActivities, id)
 	if err != nil {
 		return nil, err
 	}
@@ -61,8 +62,14 @@ const getActivityByID = `-- name: GetActivityByID :one
 SELECT activity.id, activity.trip_id, activity.location_id, activity.name, activity.date, activity.time, activity.description, activity.address, activity.price, location.id, location.latitude, location.longitude
 FROM activity
 LEFT JOIN location on activity.location_id = location.id
-WHERE activity.id = $1
+WHERE trip_id = $1
+AND activity.id = $2
 `
+
+type GetActivityByIDParams struct {
+	TripID int32
+	ID     int32
+}
 
 type GetActivityByIDRow struct {
 	Activity  Activity
@@ -71,8 +78,8 @@ type GetActivityByIDRow struct {
 	Longitude *float32
 }
 
-func (q *Queries) GetActivityByID(ctx context.Context, id int32) (GetActivityByIDRow, error) {
-	row := q.db.QueryRow(ctx, getActivityByID, id)
+func (q *Queries) GetActivityByID(ctx context.Context, arg GetActivityByIDParams) (GetActivityByIDRow, error) {
+	row := q.db.QueryRow(ctx, getActivityByID, arg.TripID, arg.ID)
 	var i GetActivityByIDRow
 	err := row.Scan(
 		&i.Activity.ID,

@@ -17,17 +17,17 @@ func New(r repo.ActivitiesRepo) *UseCase {
 	}
 }
 
-func (uc *UseCase) GetActivityByID(ctx context.Context, id int32) (entity.Activity, error) {
-	return uc.repo.GetActivityByID(ctx, id)
+func (uc *UseCase) GetActivities(ctx context.Context, tripID int32) ([]entity.Activity, error) {
+	return uc.repo.GetActivities(ctx, tripID)
 }
 
-func (uc *UseCase) GetActivities(ctx context.Context) ([]entity.Activity, error) {
-	return uc.repo.GetActivities(ctx)
+func (uc *UseCase) GetActivityByID(ctx context.Context, tripID int32, id int32) (entity.Activity, error) {
+	return uc.repo.GetActivityByID(ctx, tripID, id)
 }
 
-func (uc *UseCase) CreateActivity(ctx context.Context, activity request.Activity) (entity.Activity, error) {
+func (uc *UseCase) CreateActivity(ctx context.Context, tripID int32, activity request.Activity) (entity.Activity, error) {
 	return uc.repo.SaveActivity(ctx, entity.Activity{
-		TripID:      activity.TripID,
+		TripID:      tripID,
 		Name:        activity.Name,
 		Date:        activity.Date,
 		Time:        activity.Time,

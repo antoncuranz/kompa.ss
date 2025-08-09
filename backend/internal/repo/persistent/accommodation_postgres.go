@@ -20,8 +20,8 @@ func NewAccommodationRepo(pg *postgres.Postgres) *AccommodationRepo {
 	}
 }
 
-func (r *AccommodationRepo) GetAllAccommodation(ctx context.Context) ([]entity.Accommodation, error) {
-	rows, err := r.Queries.GetAllAccommodation(ctx)
+func (r *AccommodationRepo) GetAllAccommodation(ctx context.Context, tripID int32) ([]entity.Accommodation, error) {
+	rows, err := r.Queries.GetAllAccommodation(ctx, tripID)
 	if err != nil {
 		return nil, err
 	}
@@ -29,8 +29,8 @@ func (r *AccommodationRepo) GetAllAccommodation(ctx context.Context) ([]entity.A
 	return mapAllAccommodation(rows), nil
 }
 
-func (r *AccommodationRepo) GetAccommodationByID(ctx context.Context, id int32) (entity.Accommodation, error) {
-	row, err := r.Queries.GetAccommodationByID(ctx, id)
+func (r *AccommodationRepo) GetAccommodationByID(ctx context.Context, tripID int32, accommodationID int32) (entity.Accommodation, error) {
+	row, err := r.Queries.GetAccommodationByID(ctx, sqlc.GetAccommodationByIDParams{TripID: tripID, ID: accommodationID})
 	if err != nil {
 		return entity.Accommodation{}, err
 	}
@@ -38,7 +38,7 @@ func (r *AccommodationRepo) GetAccommodationByID(ctx context.Context, id int32) 
 	return mapAccommodation(row.Accommodation, mapLocationLeftJoin(row.ID, row.Latitude, row.Longitude)), nil
 }
 
-func (r *AccommodationRepo) SaveAccommodation(ctx context.Context, accomodation entity.Accommodation) (entity.Accommodation, error) {
+func (r *AccommodationRepo) SaveAccommodation(ctx context.Context, accommodation entity.Accommodation) (entity.Accommodation, error) {
 	tx, err := r.Db.Begin(ctx)
 	if err != nil {
 		return entity.Accommodation{}, err
@@ -47,25 +47,25 @@ func (r *AccommodationRepo) SaveAccommodation(ctx context.Context, accomodation 
 	qtx := r.Queries.WithTx(tx)
 
 	var locationId *int32
-	if accomodation.Location != nil {
-		persistedLocationId, err := SaveLocation(ctx, qtx, *accomodation.Location)
+	if accommodation.Location != nil {
+		persistedLocationId, err := SaveLocation(ctx, qtx, *accommodation.Location)
 		if err != nil {
 			return entity.Accommodation{}, err
 		}
 		locationId = &persistedLocationId
 	}
 
-	activityId, err := qtx.InsertAccommodation(ctx, sqlc.InsertAccommodationParams{
-		TripID:        accomodation.TripID,
+	accommodationID, err := qtx.InsertAccommodation(ctx, sqlc.InsertAccommodationParams{
+		TripID:        accommodation.TripID,
 		LocationID:    locationId,
-		Name:          accomodation.Name,
-		ArrivalDate:   accomodation.ArrivalDate,
-		DepartureDate: accomodation.DepartureDate,
-		CheckInTime:   accomodation.CheckInTime,
-		CheckOutTime:  accomodation.CheckOutTime,
-		Address:       accomodation.Address,
-		Description:   accomodation.Description,
-		Price:         accomodation.Price,
+		Name:          accommodation.Name,
+		ArrivalDate:   accommodation.ArrivalDate,
+		DepartureDate: accommodation.DepartureDate,
+		CheckInTime:   accommodation.CheckInTime,
+		CheckOutTime:  accommodation.CheckOutTime,
+		Address:       accommodation.Address,
+		Description:   accommodation.Description,
+		Price:         accommodation.Price,
 	})
 	if err != nil {
 		return entity.Accommodation{}, err
@@ -76,7 +76,7 @@ func (r *AccommodationRepo) SaveAccommodation(ctx context.Context, accomodation 
 		return entity.Accommodation{}, err
 	}
 
-	return r.GetAccommodationByID(ctx, activityId)
+	return r.GetAccommodationByID(ctx, accommodation.ID, accommodationID)
 }
 
 func mapAllAccommodation(accommodation []sqlc.GetAllAccommodationRow) []entity.Accommodation {

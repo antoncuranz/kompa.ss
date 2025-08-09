@@ -1,11 +1,13 @@
 -- name: GetFlightByID :one
 SELECT *
 FROM flight f
-WHERE id = $1;
+WHERE trip_id = $1
+AND id = $2;
 
 -- name: GetFlights :many
 SELECT *
-FROM flight;
+FROM flight
+WHERE trip_id = $1;
 
 -- name: GetFlightLegsByFlightID :many
 SELECT sqlc.embed(flight_leg), sqlc.embed(origin), sqlc.embed(destination), sqlc.embed(origin_location), sqlc.embed(destination_location)

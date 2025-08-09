@@ -6,7 +6,6 @@ import (
 )
 
 type Accommodation struct {
-	TripID        int32            `json:"tripId"`
 	Name          string           `json:"name"`
 	ArrivalDate   civil.Date       `json:"arrivalDate"`
 	DepartureDate civil.Date       `json:"departureDate"`

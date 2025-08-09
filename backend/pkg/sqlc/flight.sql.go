@@ -14,11 +14,17 @@ import (
 const getFlightByID = `-- name: GetFlightByID :one
 SELECT id, trip_id, price
 FROM flight f
-WHERE id = $1
+WHERE trip_id = $1
+AND id = $2
 `
 
-func (q *Queries) GetFlightByID(ctx context.Context, id int32) (Flight, error) {
-	row := q.db.QueryRow(ctx, getFlightByID, id)
+type GetFlightByIDParams struct {
+	TripID int32
+	ID     int32
+}
+
+func (q *Queries) GetFlightByID(ctx context.Context, arg GetFlightByIDParams) (Flight, error) {
+	row := q.db.QueryRow(ctx, getFlightByID, arg.TripID, arg.ID)
 	var i Flight
 	err := row.Scan(&i.ID, &i.TripID, &i.Price)
 	return i, err
@@ -91,10 +97,11 @@ func (q *Queries) GetFlightLegsByFlightID(ctx context.Context, flightID int32) (
 const getFlights = `-- name: GetFlights :many
 SELECT id, trip_id, price
 FROM flight
+WHERE trip_id = $1
 `
 
-func (q *Queries) GetFlights(ctx context.Context) ([]Flight, error) {
-	rows, err := q.db.Query(ctx, getFlights)
+func (q *Queries) GetFlights(ctx context.Context, tripID int32) ([]Flight, error) {
+	rows, err := q.db.Query(ctx, getFlights, tripID)
 	if err != nil {
 		return nil, err
 	}
