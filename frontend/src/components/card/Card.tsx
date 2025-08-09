@@ -8,8 +8,8 @@ export default function Card({
   headerSlot,
   className,
 }: {
-  title?: string | null,
-  children: React.ReactNode,
+  title?: string
+  children: React.ReactNode
   headerSlot?: React.ReactNode
   className?: string
 }) {

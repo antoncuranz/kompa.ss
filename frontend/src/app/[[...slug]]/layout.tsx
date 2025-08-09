@@ -9,7 +9,7 @@ export default async function RootLayout({
   return (
     <>
       <Navigation/>
-      <main id="root" className="w-full p-2 pt-0 sm:px-6 md:gap-2 relative z-[1]" style={{height: "calc(100dvh - 4rem)"}}>
+      <main id="root" className="w-full relative z-[1]" style={{height: "calc(100dvh - 4rem)"}}>
         {children}
       </main>
     </>
