@@ -12,7 +12,8 @@ const buttonVariants = cva(
         default: "rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]",
         secondary: "shadow-input rounded-md bg-gray-50 px-4 font-medium dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_#262626]",
         oldDefault: "bg-primary text-primary-foreground hover:bg-primary/90",
-        destructive:
+        destructive: "text-destructive hover:text-destructive-foreground hover:bg-destructive shadow-input rounded-md bg-gray-50 px-4 font-medium dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_#262626]",
+        oldDestructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
           "border border-input bg-background hover:bg-accent hover:text-accent-foreground",

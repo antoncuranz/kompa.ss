@@ -9,13 +9,14 @@ interface Props {
   updateAmount: (newAmount: number|null) => void,
   className?: string,
   disabled?: boolean,
+  readOnly?: boolean,
   decimals?: number,
   id?: string,
   placeholder?: string,
   warnPredicate?: (value: number|null) => boolean
 }
 
-const AmountInput = ({amount, updateAmount, className, disabled = false, decimals = 2, id, placeholder, warnPredicate}: Props) => {
+const AmountInput = ({amount, updateAmount, className, disabled = false, readOnly = false, decimals = 2, id, placeholder, warnPredicate}: Props) => {
   const [stringAmount, setStringAmount] = useState("")
   const [warning, setWarning] = useState(false)
   const { toast } = useToast();
@@ -61,7 +62,7 @@ const AmountInput = ({amount, updateAmount, className, disabled = false, decimal
 
   return (
     <Input id={id} value={stringAmount} placeholder={placeholder} onChange={e => setStringAmount(e.target.value)}
-           onBlur={onBlur} className={cn(className, "text-right", warning && "text-yellow-600")} disabled={disabled}/>
+           onBlur={onBlur} className={cn(className, "text-right", warning && "text-yellow-600")} disabled={disabled} readOnly={readOnly}/>
   )
 }
 

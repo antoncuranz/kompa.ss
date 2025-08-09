@@ -57,7 +57,7 @@ const getAllAccommodation = `-- name: GetAllAccommodation :many
 SELECT accommodation.id, accommodation.trip_id, accommodation.location_id, accommodation.name, accommodation.arrival_date, accommodation.departure_date, accommodation.check_in_time, accommodation.check_out_time, accommodation.description, accommodation.address, accommodation.price, location.id, location.latitude, location.longitude
 FROM accommodation
 LEFT JOIN location on location_id = location.id
-WHERE accommodation.id = $1
+WHERE trip_id = $1
 `
 
 type GetAllAccommodationRow struct {
@@ -67,8 +67,8 @@ type GetAllAccommodationRow struct {
 	Longitude     *float32
 }
 
-func (q *Queries) GetAllAccommodation(ctx context.Context, id int32) ([]GetAllAccommodationRow, error) {
-	rows, err := q.db.Query(ctx, getAllAccommodation, id)
+func (q *Queries) GetAllAccommodation(ctx context.Context, tripID int32) ([]GetAllAccommodationRow, error) {
+	rows, err := q.db.Query(ctx, getAllAccommodation, tripID)
 	if err != nil {
 		return nil, err
 	}

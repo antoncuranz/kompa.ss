@@ -3,12 +3,12 @@
 import React, {useState} from "react";
 import {useRouter} from "next/navigation";
 import {Trip} from "@/types.ts";
-import AddActivityDialog from "@/components/dialog/AddActivityDialog.tsx";
+import ActivityDialog from "@/components/dialog/ActivityDialog.tsx";
 import {DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigger} from "@/components/ui/dropdown-menu.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {PlaneTakeoff} from "lucide-react";
-import AddAccommodationDialog from "@/components/dialog/AddAccommodationDialog.tsx";
-import AddFlightDialog from "@/components/dialog/AddFlightDialog.tsx";
+import AccommodationDialog from "@/components/dialog/AccommodationDialog.tsx";
+import FlightDialog from "@/components/dialog/FlightDialog.tsx";
 
 export default function AddSomethingDropdown({trip}: {trip: Trip}) {
   const [activityDialogOpen, setActivityDialogOpen] = useState(false)
@@ -18,7 +18,6 @@ export default function AddSomethingDropdown({trip}: {trip: Trip}) {
   const router = useRouter()
 
   function onActivityDialogClose(needsUpdate: boolean) {
-    console.log("closing activity dialog")
     setActivityDialogOpen(false)
     if (needsUpdate)
       router.refresh()
@@ -59,9 +58,9 @@ export default function AddSomethingDropdown({trip}: {trip: Trip}) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <AddActivityDialog trip={trip} open={activityDialogOpen} onClose={onActivityDialogClose}/>
-      <AddAccommodationDialog trip={trip} open={accommodationDialogOpen} onClose={onAccommodationDialogClose}/>
-      <AddFlightDialog trip={trip} open={flightDialogOpen} onClose={onFlightDialogClose}/>
+      <ActivityDialog key={"act-" + activityDialogOpen} trip={trip} open={activityDialogOpen} onClose={onActivityDialogClose}/>
+      <AccommodationDialog key={"acc-" + accommodationDialogOpen} trip={trip} open={accommodationDialogOpen} onClose={onAccommodationDialogClose}/>
+      <FlightDialog key={"flight-" + flightDialogOpen} trip={trip} open={flightDialogOpen} onClose={onFlightDialogClose}/>
     </div>
   )
 }

@@ -15,7 +15,7 @@ const getActivities = `-- name: GetActivities :many
 SELECT activity.id, activity.trip_id, activity.location_id, activity.name, activity.date, activity.time, activity.description, activity.address, activity.price, location.id, location.latitude, location.longitude
 FROM activity
 LEFT JOIN location on activity.location_id = location.id
-WHERE activity.id = $1
+WHERE trip_id = $1
 `
 
 type GetActivitiesRow struct {
@@ -25,8 +25,8 @@ type GetActivitiesRow struct {
 	Longitude *float32
 }
 
-func (q *Queries) GetActivities(ctx context.Context, id int32) ([]GetActivitiesRow, error) {
-	rows, err := q.db.Query(ctx, getActivities, id)
+func (q *Queries) GetActivities(ctx context.Context, tripID int32) ([]GetActivitiesRow, error) {
+	rows, err := q.db.Query(ctx, getActivities, tripID)
 	if err != nil {
 		return nil, err
 	}

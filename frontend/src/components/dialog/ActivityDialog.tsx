@@ -1,39 +1,38 @@
 import {Button} from "@/components/ui/button.tsx";
 import {Dialog, DialogFooter, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog.tsx";
 import {Label} from "@/components/ui/label.tsx";
-import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
-import {Calendar} from "@/components/ui/calendar.tsx";
-import {CalendarIcon} from "lucide-react";
 import {useState} from "react";
-import {format} from "date-fns"
-import {cn} from "@/lib/utils"
 import {useToast} from "@/components/ui/use-toast.ts";
 import AmountInput from "@/components/dialog/AmountInput.tsx";
 import {Input} from "@/components/ui/input.tsx";
-import {Location, Trip} from "@/types.ts";
+import {Activity, Location, Trip} from "@/types.ts";
 import {Textarea} from "@/components/ui/textarea.tsx";
 import AddressInput from "@/components/dialog/AddressInput.tsx";
 import {getDateString, nullIfEmpty} from "@/components/util.ts";
 import {LabelInputContainer, RowContainer } from "./DialogUtil";
+import DateInput from "@/components/dialog/DateInput.tsx";
 
-export default function AddActivityDialog({
-  trip, open, onClose
+export default function ActivityDialog({
+  trip, open, onClose, activity
 }: {
-  trip: Trip,
-  open: boolean,
-  onClose: (needsUpdate: boolean) => void,
+  trip: Trip
+  open: boolean
+  onClose: (needsUpdate: boolean) => void
+  activity?: Activity | null
 }) {
-  const [name, setName] = useState<string>("")
-  const [description, setDescription] = useState<string>("")
-  const [date, setDate] = useState<Date>()
-  const [price, setPrice] = useState<number|null>(null)
-  const [address, setAddress] = useState<string>("")
-  const [location, setLocation] = useState<Location|null>(null)
+  const [edit, setEdit] = useState<boolean>(activity == null)
+
+  const [name, setName] = useState<string>(activity?.name ?? "")
+  const [description, setDescription] = useState<string>(activity?.description ?? "")
+  const [date, setDate] = useState<Date|null>(activity?.date ?? null)
+  const [price, setPrice] = useState<number|null>(activity?.price ?? null)
+  const [address, setAddress] = useState<string>(activity?.address ?? "")
+  const [location, setLocation] = useState<Location|null>(activity?.location ?? null)
 
   const { toast } = useToast();
 
   async function onSaveButtonClick() {
-    const response = await fetch("/api/v1/activities", {
+    const response = await fetch("/api/v1/trips/" + trip.id + "/activities", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({
@@ -60,50 +59,31 @@ export default function AddActivityDialog({
     <Dialog open={open} onOpenChange={open => !open ? onClose(false) : {}}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add Activity</DialogTitle>
+          <DialogTitle>
+            {edit ? (activity != null ? "Edit" : "New") : "View"} Activity
+          </DialogTitle>
         </DialogHeader>
         <div className="py-4 overflow-y-auto">
           <RowContainer>
             <LabelInputContainer>
               <Label htmlFor="act_name">Name</Label>
               <Input id="act_name" placeholder="My new Activity" type="text" value={name}
-                     onChange={e => setName(e.target.value)}/>
+                     onChange={e => setName(e.target.value)}
+                     readOnly={!edit}/>
             </LabelInputContainer>
           </RowContainer>
           <RowContainer>
             <LabelInputContainer>
               <Label htmlFor="description">Description</Label>
               <Textarea id="description" value={description}
-                        onChange={e => setDescription(e.target.value)}/>
+                        onChange={e => setDescription(e.target.value)}
+                        readOnly={!edit}/>
             </LabelInputContainer>
           </RowContainer>
           <RowContainer>
             <LabelInputContainer>
               <Label htmlFor="date">Date</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                      variant="secondary"
-                      className={cn(
-                          "col-span-3 justify-start text-left font-normal",
-                          !date && "text-muted-foreground"
-                      )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4"/>
-                    {date ? format(date, "PPP") : <span>Pick a date</span>}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0 rounded-2xl overflow-hidden shadow-lg">
-                  <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      startMonth={trip.startDate}
-                      endMonth={trip.endDate}
-                      disabled={{before: trip.startDate, after: trip.endDate}}
-                  />
-                </PopoverContent>
-              </Popover>
+              <DateInput date={date} updateDate={setDate} startDate={trip.startDate} endDate={trip.endDate} readOnly={!edit}/>
             </LabelInputContainer>
             <LabelInputContainer>
               <Label htmlFor="price">Price</Label>
@@ -111,30 +91,42 @@ export default function AddActivityDialog({
                   id="price"
                   amount={price}
                   updateAmount={setPrice}
+                  readOnly={!edit}
               />
             </LabelInputContainer>
           </RowContainer>
           <RowContainer>
             <LabelInputContainer>
               <Label htmlFor="address">Address</Label>
-              <AddressInput address={address} updateAddress={setAddress} updateLocation={setLocation}/>
+              <AddressInput address={address} updateAddress={setAddress} updateLocation={setLocation} readOnly={!edit}/>
             </LabelInputContainer>
           </RowContainer>
           <RowContainer>
             <LabelInputContainer>
               <Label htmlFor="lat">Latitude</Label>
-              <Input id="lat" type="text" disabled/>
+              <Input id="lat" type="text" value={location?.latitude ?? ""} readOnly/>
             </LabelInputContainer>
             <LabelInputContainer>
               <Label htmlFor="lon">Longitude</Label>
-              <Input id="lon" type="text" disabled/>
+              <Input id="lon" type="text" value={location?.longitude ?? ""} readOnly/>
             </LabelInputContainer>
           </RowContainer>
         </div>
         <DialogFooter>
-          <Button className="w-full text-base" onClick={onSaveButtonClick}>
-            Save
-          </Button>
+          {edit ?
+            <Button className="w-full text-base" onClick={onSaveButtonClick}>
+              Save
+            </Button>
+          :
+            <>
+              <Button variant="destructive" className="w-full text-base">
+                Delete
+              </Button>
+              <Button variant="secondary" className="w-full text-base" onClick={() => setEdit(true)}>
+                Edit
+              </Button>
+            </>
+          }
         </DialogFooter>
       </DialogContent>
     </Dialog>

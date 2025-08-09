@@ -93,6 +93,8 @@ func mapActivity(activity sqlc.Activity, location *entity.Location) entity.Activ
 		Date:        activity.Date,
 		Time:        activity.Time,
 		Description: activity.Description,
+		Address:     activity.Address,
 		Location:    location,
+		Price:       activity.Price,
 	}
 }

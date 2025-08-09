@@ -96,6 +96,7 @@ func mapAccommodation(accommodation sqlc.Accommodation, location *entity.Locatio
 		DepartureDate: accommodation.DepartureDate,
 		CheckInTime:   accommodation.CheckInTime,
 		CheckOutTime:  accommodation.CheckOutTime,
+		Address:       accommodation.Address,
 		Description:   accommodation.Description,
 		Price:         accommodation.Price,
 		Location:      location,

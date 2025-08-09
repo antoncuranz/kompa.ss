@@ -20,6 +20,7 @@ export type Activity = {
   date: Date;
   time: Date | null;
   description: string;
+  address: string | null;
   location: Location | null;
   price: number | null;
 };
@@ -33,6 +34,7 @@ export type Accommodation = {
   checkInTime: string | null;
   checkOutTime: string | null;
   description: string;
+  address: string | null;
   location: Location | null;
   price: number | null;
 };
@@ -80,3 +82,10 @@ export type Airport = {
   municipality: string;
   location: Location | null;
 }
+
+export type DayRenderData = {
+  day: Date;
+  flights: {flight: Flight; leg: FlightLeg}[];
+  activities: Activity[];
+  accommodation: Accommodation | undefined;
+};

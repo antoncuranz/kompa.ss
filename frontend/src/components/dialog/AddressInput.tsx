@@ -6,12 +6,13 @@ import {Location} from "@/types.ts";
 import {cn} from "@/lib/utils.ts";
 
 export default function AddressInput({
-  address, updateAddress, updateLocation, className
+  address, updateAddress, updateLocation, className, readOnly
 }: {
   address: string,
   updateAddress: (newAddress: string) => void,
   updateLocation: (newAddress: Location|null) => void,
   className?: string,
+  readOnly?: boolean,
 }) {
   const { toast } = useToast();
 
@@ -35,10 +36,13 @@ export default function AddressInput({
       <div className={cn("", className)}>
         <div className="flex gap-2">
           <Input id="address" value={address}
-                 onChange={e => updateAddress(e.target.value)}/>
-          <Button variant="secondary" onClick={() => searchForAddressUsingMapbox()}>
-            <Search className="h-4 w-4"/>
-          </Button>
+                 onChange={e => updateAddress(e.target.value)}
+                 readOnly={readOnly}/>
+          {!readOnly &&
+            <Button variant="secondary" onClick={() => searchForAddressUsingMapbox()}>
+              <Search className="h-4 w-4"/>
+            </Button>
+          }
         </div>
       </div>
   )

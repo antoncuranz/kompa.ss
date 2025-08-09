@@ -2,19 +2,20 @@
 
 import {Button} from "@/components/ui/button.tsx";
 import {Collapsible} from "@/components/ui/collapsible.tsx";
-import {ChevronDown, ChevronUp} from "lucide-react";
+import {ChevronDown, ChevronUp, SquarePen} from "lucide-react";
 import {CollapsibleContent, CollapsibleTrigger} from "@radix-ui/react-collapsible";
 import {cn} from "@/lib/utils.ts";
 import {Flight, FlightLeg} from "@/types.ts";
 import {formatDurationMinutes, formatTime} from "@/components/util.ts";
-import React, {useState} from "react";
+import React, {MouseEventHandler, useState} from "react";
 
 export default function FlightEntry({
-  flight, flightLeg, className
+  flight, flightLeg, className, onInfoBtnClick
 }: {
   flight: Flight,
   flightLeg: FlightLeg,
   className?: string
+  onInfoBtnClick?: MouseEventHandler<HTMLButtonElement> | undefined
 }){
   const [open, setOpen] = useState<boolean>(false)
 
@@ -60,12 +61,15 @@ export default function FlightEntry({
           <img src={"https://seats.aero/static/carriersng/" + iata + ".png"} className="h-4 mt-0 m-auto relative top-1" alt="LH"/>
           <div>
             <span className="text-sm text-muted-foreground">{flightLeg.airline} - {flightLeg.flightNumber} - {flightLeg.aircraft}</span>
-            <div className="float-right">
+            <div className="flex float-right">
               {flight.pnrs.map(pnr =>
                 <Button key={pnr.id} variant="secondary" className="ml-2 p-2 h-6">
                   {pnr.airline} {pnr.pnr}
                 </Button>
               )}
+              <Button variant="secondary" className="ml-2 p-2 h-6" onClick={onInfoBtnClick}>
+                <SquarePen className="w-3.5 h-3.5"/>
+              </Button>
             </div>
           </div>
         </div>

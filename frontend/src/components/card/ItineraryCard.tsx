@@ -1,14 +1,10 @@
-import FlightEntry from "@/components/itinerary/FlightEntry.tsx";
-import DaySeparator from "@/components/itinerary/DaySeparator.tsx";
-import {Accommodation, Flight, Activity, FlightLeg} from "@/types.ts";
-import {formatDuration, getDaysBetween, isSameDay} from "@/components/util.ts";
-import DayLabel from "@/components/itinerary/DayLabel.tsx";
+import {DayRenderData} from "@/types.ts";
+import {getDaysBetween, isSameDay} from "@/components/util.ts";
 import React from "react";
-import ActivityEntry from "@/components/itinerary/ActivityEntry.tsx";
-import FlightSeparator from "@/components/itinerary/FlightSeparator.tsx";
 import AddSomethingDropdown from "@/components/dialog/AddSomethingDropdown.tsx";
 import Card from "@/components/card/Card.tsx";
 import {fetchAccommodation, fetchActivities, fetchFlights, fetchTrip} from "@/requests.ts";
+import Itinerary from "@/components/itinerary/Itinerary.tsx";
 
 export default async function ItineraryCard({
   tripId, className
@@ -20,18 +16,6 @@ export default async function ItineraryCard({
   const activities = await fetchActivities(tripId)
   const accommodation = await fetchAccommodation(tripId)
   const flights = await fetchFlights(tripId)
-
-  type DayRenderData = {
-    day: Date;
-    flights: {flight: Flight; leg: FlightLeg}[];
-    activities: Activity[];
-    accommodation: Accommodation | undefined;
-  };
-
-  function renderAllDays() {
-    const dataByDays = processDataAndGroupByDays()
-    return dataByDays.map((dayData, idx) => renderDay(dayData, dataByDays[idx+1]?.day))
-  }
 
   function processDataAndGroupByDays() {
     const grouped: DayRenderData[] = []
@@ -65,41 +49,9 @@ export default async function ItineraryCard({
     return grouped
   }
 
-  function renderDay(dayData: DayRenderData, nextDay: Date) {
-    const collapsedDays = nextDay ? getDaysBetween(dayData.day, nextDay).length-2 : 0
-
-    const nightFlight = dayData.flights
-      .find(pair => !isSameDay(pair.leg.arrivalDateTime, dayData.day))
-
-    const dayFlights = nightFlight ? dayData.flights.slice(0, -1) : dayData.flights
-
-    return (
-      <div key={dayData.day.toISOString()}>
-        <DayLabel date={dayData.day}/>
-
-        {dayData.activities.map(act => <ActivityEntry key={act.id} activity={act}/>)}
-        {dayFlights.map((pair, idx) =>
-          <div key={idx}>
-            <FlightEntry flight={pair.flight} flightLeg={pair.leg}/>
-            {dayData.flights.length > idx + 1 &&
-              <span className="mx-3 text-sm text-muted-foreground">
-                {formatDuration(pair.leg.arrivalDateTime, dayData.flights[idx+1].leg.departureDateTime)} Layover
-              </span>
-            }
-          </div>
-        )}
-        {nextDay && (nightFlight ?
-          <FlightSeparator flight={nightFlight.flight} flightLeg={nightFlight.leg}/>
-        :
-          <DaySeparator accomodation={dayData.accommodation?.name} collapsedDays={collapsedDays}/>
-        )}
-      </div>
-    )
-  }
-
   return (
     <Card title="Itinerary" headerSlot={<AddSomethingDropdown trip={trip}/>} className={className}>
-      {renderAllDays()}
+      <Itinerary trip={trip} dataByDays={processDataAndGroupByDays()}/>
     </Card>
   )
 }
