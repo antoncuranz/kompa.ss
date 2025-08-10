@@ -8,7 +8,7 @@ import {Input} from "@/components/ui/input.tsx";
 import {Accommodation, Location, Trip} from "@/types.ts";
 import {Textarea} from "@/components/ui/textarea.tsx";
 import AddressInput from "@/components/dialog/AddressInput.tsx";
-import {getDateString, nullIfEmpty} from "@/components/util.ts";
+import {nullIfEmpty} from "@/components/util.ts";
 import {LabelInputContainer, RowContainer} from "@/components/dialog/DialogUtil.tsx";
 import DateInput from "@/components/dialog/DateInput.tsx";
 
@@ -24,8 +24,8 @@ export default function AccommodationDialog({
 
   const [name, setName] = useState<string>(accommodation?.name ?? "")
   const [description, setDescription] = useState<string>(accommodation?.description ?? "")
-  const [arrivalDate, setArrivalDate] = useState<Date|null>(accommodation?.arrivalDate ?? null)
-  const [departureDate, setDepartureDate] = useState<Date|null>(accommodation?.departureDate ?? null)
+  const [arrivalDate, setArrivalDate] = useState<string|null>(accommodation?.arrivalDate ?? null)
+  const [departureDate, setDepartureDate] = useState<string|null>(accommodation?.departureDate ?? null)
   const [price, setPrice] = useState<number|null>(accommodation?.price ?? null)
   const [address, setAddress] = useState<string>(accommodation?.address ?? "")
   const [location, setLocation] = useState<Location|null>(accommodation?.location ?? null)
@@ -36,8 +36,8 @@ export default function AccommodationDialog({
     const body = JSON.stringify({
       tripId: trip.id,
       name: name,
-      arrivalDate: arrivalDate ? getDateString(arrivalDate) : null,
-      departureDate: departureDate ? getDateString(departureDate) : null,
+      arrivalDate: arrivalDate ?? null,
+      departureDate: departureDate ?? null,
       checkInTime: null,
       checkOutTime: null,
       description: nullIfEmpty(description),
@@ -104,7 +104,7 @@ export default function AccommodationDialog({
             </LabelInputContainer>
             <LabelInputContainer>
               <Label htmlFor="departure_date">Departure Date</Label>
-              <DateInput date={departureDate} updateDate={setDepartureDate} startDate={arrivalDate ?? trip.startDate} endDate={trip.endDate} readOnly={!edit}/>
+              <DateInput date={departureDate} updateDate={setDepartureDate} startDate={arrivalDate ?? trip.startDate} excludeStartDate={true} endDate={trip.endDate} readOnly={!edit}/>
             </LabelInputContainer>
           </RowContainer>
 

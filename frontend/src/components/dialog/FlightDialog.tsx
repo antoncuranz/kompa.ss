@@ -7,7 +7,6 @@ import {useToast} from "@/components/ui/use-toast.ts";
 import AmountInput from "@/components/dialog/AmountInput.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {AddFlightLeg, AddPNR, Flight, FlightLeg, Trip} from "@/types.ts";
-import {getDateString} from "@/components/util.ts";
 import {LabelInputContainer, RowContainer} from "@/components/dialog/DialogUtil.tsx";
 import DateInput from "@/components/dialog/DateInput.tsx";
 
@@ -27,14 +26,14 @@ export default function FlightDialog({
   function mapLegsOrDefault(flightLegs: FlightLeg[]|undefined): AddFlightLeg[] {
     if (flightLegs != null) {
       return flightLegs.map(leg => ({
-        date: getDateString(trip.startDate),
+        date: trip.startDate,
         flightNumber: leg.flightNumber,
         originAirport: leg.origin.iata
       }))
     }
 
     return [{
-      date: getDateString(trip.startDate),
+      date: trip.startDate,
       flightNumber: "",
       originAirport: null
     }]
@@ -170,7 +169,7 @@ export default function FlightDialog({
                     <Label htmlFor={"date" + idx}>
                       Date {flightLegs.length > 1 ? (idx+1) : ""}
                     </Label>
-                    <DateInput date={new Date(leg.date)} updateDate={date => updateFlightLeg(idx, leg => leg.date = getDateString(date!))}
+                    <DateInput date={leg.date} updateDate={date => updateFlightLeg(idx, leg => leg.date = date)}
                                startDate={trip.startDate} endDate={trip.endDate} readOnly={!edit}/>
                   </LabelInputContainer>
                   <LabelInputContainer>

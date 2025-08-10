@@ -61,7 +61,7 @@ export default function Itinerary({
   return (
     <>
       {dataByDays.map((dayData, idx) =>
-        <Day key={dayData.day.toISOString()} dayData={dayData} nextDay={dataByDays[idx+1]?.day}
+        <Day key={dayData.day} dayData={dayData} nextDay={dataByDays[idx+1]?.day}
              onActivityClick={onActivityClick}
              onAccommodationClick={onAccommodationClick}
              onFlightClick={onFlightClick}

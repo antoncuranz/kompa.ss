@@ -2,8 +2,8 @@
 export type Trip = {
   id: number;
   name: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   description: string;
   imageUrl: string;
 };
@@ -18,8 +18,8 @@ export type Activity = {
   id: number;
   tripId: number;
   name: string;
-  date: Date;
-  time: Date | null;
+  date: string;
+  time: string | null;
   description: string;
   address: string | null;
   location: Location | null;
@@ -30,8 +30,8 @@ export type Accommodation = {
   id: number;
   tripId: number;
   name: string;
-  arrivalDate: Date;
-  departureDate: Date;
+  arrivalDate: string;
+  departureDate: string;
   checkInTime: string | null;
   checkOutTime: string | null;
   description: string;
@@ -65,8 +65,8 @@ export type FlightLeg = {
   destination: Airport;
   airline: string;
   flightNumber: string;
-  departureDateTime: Date;
-  arrivalDateTime: Date;
+  departureDateTime: string;
+  arrivalDateTime: string;
   durationInMinutes: number;
   aircraft: string | null;
 };
@@ -85,7 +85,7 @@ export type Airport = {
 }
 
 export type DayRenderData = {
-  day: Date;
+  day: string;
   flights: {flight: Flight; leg: FlightLeg}[];
   activities: Activity[];
   accommodation: Accommodation | undefined;

@@ -5,26 +5,38 @@ import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.t
 import {format} from "date-fns";
 import {Calendar} from "@/components/ui/calendar.tsx";
 import {Matcher} from "react-day-picker";
+import {dateFromString, dateToString, getNextDay} from "@/components/util.ts";
 
 export default function DateInput({
-  date, updateDate, startDate, endDate, readOnly
+  date, updateDate, startDate, excludeStartDate, endDate, readOnly
 }: {
-  date: Date | null
-  updateDate: (newDate: Date) => void
-  startDate?: Date | null
-  endDate?: Date | null
+  date: string | null
+  updateDate: (newDate: string) => void
+  startDate?: string | null
+  excludeStartDate?: boolean | null
+  endDate?: string | null
   readOnly?: boolean
 }) {
 
   function getMatcher(): Matcher | undefined {
-    if (startDate && endDate) {
-      return {before: startDate, after: endDate}
-    } else if (startDate) {
-      return {before: startDate}
+    const adjustedStartDate = getAdjustedStartDate()
+
+    if (adjustedStartDate && endDate) {
+      return {before: dateFromString(adjustedStartDate), after: dateFromString(endDate)}
+    } else if (adjustedStartDate) {
+      return {before: dateFromString(adjustedStartDate)}
     } else if (endDate) {
-      return {after: endDate}
+      return {after: dateFromString(endDate)}
     }
     return undefined
+  }
+
+  function getAdjustedStartDate() {
+    if (!startDate) {
+      return null
+    }
+
+    return excludeStartDate ? getNextDay(startDate) : startDate
   }
 
   return (
@@ -45,10 +57,10 @@ export default function DateInput({
       <PopoverContent className="w-auto p-0 rounded-2xl overflow-hidden shadow-lg">
         <Calendar
             mode="single"
-            selected={date ?? undefined}
-            onSelect={updateDate}
-            startMonth={startDate ?? undefined}
-            endMonth={endDate ?? undefined}
+            selected={date ? dateFromString(date) : undefined}
+            onSelect={date => updateDate(dateToString(date))}
+            startMonth={startDate ? dateFromString(getAdjustedStartDate()!) : undefined}
+            endMonth={endDate ? dateFromString(endDate) : undefined}
             disabled={getMatcher()}
             required={true}
         />

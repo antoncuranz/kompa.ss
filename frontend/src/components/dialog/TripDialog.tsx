@@ -6,7 +6,7 @@ import {useToast} from "@/components/ui/use-toast.ts";
 import {Input} from "@/components/ui/input.tsx";
 import {Trip} from "@/types.ts";
 import {Textarea} from "@/components/ui/textarea.tsx";
-import {getDateString, nullIfEmpty} from "@/components/util.ts";
+import {nullIfEmpty} from "@/components/util.ts";
 import {LabelInputContainer, RowContainer} from "@/components/dialog/DialogUtil.tsx";
 import DateInput from "@/components/dialog/DateInput.tsx";
 
@@ -20,8 +20,8 @@ export default function TripDialog({
   const [edit, setEdit] = useState<boolean>(trip == null)
 
   const [name, setName] = useState<string>(trip?.name ?? "")
-  const [startDate, setStartDate] = useState<Date|null>(trip?.startDate ?? null)
-  const [endDate, setEndDate] = useState<Date|null>(trip?.endDate ?? null)
+  const [startDate, setStartDate] = useState<string|null>(trip?.startDate ?? null)
+  const [endDate, setEndDate] = useState<string|null>(trip?.endDate ?? null)
   const [description, setDescription] = useState<string>(trip?.description ?? "")
   const [imageUrl, setImageUrl] = useState<string>(trip?.imageUrl ?? "")
 
@@ -30,8 +30,8 @@ export default function TripDialog({
   async function onSaveButtonClick() {
     const body = JSON.stringify({
       name: name,
-      startDate: startDate ? getDateString(startDate) : null,
-      endDate: endDate ? getDateString(endDate) : null,
+      startDate: startDate ?? null,
+      endDate: endDate ?? null,
       description: nullIfEmpty(description),
       imageUrl: nullIfEmpty(imageUrl)
     })

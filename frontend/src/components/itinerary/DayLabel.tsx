@@ -3,7 +3,7 @@ import {formatDateLong} from "@/components/util.ts";
 export default function DayLabel({
   date, location
 }: {
-  date: Date,
+  date: string,
   location?: string | null
 }){
 

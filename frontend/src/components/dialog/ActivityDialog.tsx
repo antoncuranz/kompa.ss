@@ -8,7 +8,7 @@ import {Input} from "@/components/ui/input.tsx";
 import {Activity, Location, Trip} from "@/types.ts";
 import {Textarea} from "@/components/ui/textarea.tsx";
 import AddressInput from "@/components/dialog/AddressInput.tsx";
-import {getDateString, nullIfEmpty} from "@/components/util.ts";
+import {nullIfEmpty} from "@/components/util.ts";
 import {LabelInputContainer, RowContainer } from "./DialogUtil";
 import DateInput from "@/components/dialog/DateInput.tsx";
 
@@ -24,7 +24,7 @@ export default function ActivityDialog({
 
   const [name, setName] = useState<string>(activity?.name ?? "")
   const [description, setDescription] = useState<string>(activity?.description ?? "")
-  const [date, setDate] = useState<Date|null>(activity?.date ?? null)
+  const [date, setDate] = useState<string|null>(activity?.date ?? null)
   const [price, setPrice] = useState<number|null>(activity?.price ?? null)
   const [address, setAddress] = useState<string>(activity?.address ?? "")
   const [location, setLocation] = useState<Location|null>(activity?.location ?? null)
@@ -35,7 +35,7 @@ export default function ActivityDialog({
     const body = JSON.stringify({
       tripId: trip.id,
       name: name,
-      date: date ? getDateString(date) : null,
+      date: date ?? null,
       time: null,
       description: nullIfEmpty(description),
       address: nullIfEmpty(address),

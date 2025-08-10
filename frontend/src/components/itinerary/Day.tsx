@@ -15,7 +15,7 @@ export default function Day({
   onFlightClick = () => {}
 }: {
   dayData: DayRenderData
-  nextDay: Date
+  nextDay: string
   onActivityClick?: (activity: Activity) => void;
   onAccommodationClick?: (accommodation: Accommodation | undefined) => void;
   onFlightClick?: (flight: Flight) => void;
