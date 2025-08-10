@@ -45,21 +45,43 @@ export default function FlightDialog({
   const { toast } = useToast();
 
   async function onSaveButtonClick() {
-    const response = await fetch("/api/v1/trips/" + trip.id + "/flights", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({
-        tripId: trip.id,
-        legs: flightLegs,
-        pnrs: pnrs,
-        price: price,
-      })
+    const body = JSON.stringify({
+      tripId: trip.id,
+      legs: flightLegs,
+      pnrs: pnrs,
+      price: price,
     })
+
+    let response
+    if (flight != null) {
+      response = await fetch("/api/v1/trips/" + trip.id + "/flights/" + flight?.id, {
+        method: "PUT",
+        headers: {"Content-Type": "application/json"},
+        body: body
+      })
+    } else {
+      response = await fetch("/api/v1/trips/" + trip.id + "/flights", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: body
+      })
+    }
 
     if (response.ok)
       onClose(true)
     else toast({
-      title: "Error adding Flight",
+      title: "Error upserting Flight",
+      description: response.statusText
+    })
+  }
+
+  async function onDeleteButtonClick() {
+    const response = await fetch("/api/v1/trips/" + trip.id + "/flights/" + flight!.id, {method: "DELETE"})
+
+    if (response.ok)
+      onClose(true)
+    else toast({
+      title: "Error deleting Flight",
       description: response.statusText
     })
   }
@@ -106,7 +128,9 @@ export default function FlightDialog({
     <Dialog open={open} onOpenChange={open => !open ? onClose(false) : {}}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add Flight</DialogTitle>
+          <DialogTitle>
+            {edit ? (flight != null ? "Edit" : "New") : "View"} Flight
+          </DialogTitle>
         </DialogHeader>
         <div className="py-4 overflow-y-auto">
           <RowContainer>
@@ -210,7 +234,7 @@ export default function FlightDialog({
             </Button>
           :
             <>
-              <Button variant="destructive" className="w-full text-base">
+              <Button variant="destructive" className="w-full text-base" onClick={onDeleteButtonClick}>
                 Delete
               </Button>
               <Button variant="secondary" className="w-full text-base" disabled onClick={() => setEdit(true)}>
