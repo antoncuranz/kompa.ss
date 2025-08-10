@@ -33,27 +33,49 @@ export default function AccommodationDialog({
   const { toast } = useToast();
 
   async function onSaveButtonClick() {
-    const response = await fetch("/api/v1/trips/" + trip.id + "/accommodation", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({
-        tripId: trip.id,
-        name: name,
-        arrivalDate: arrivalDate ? getDateString(arrivalDate) : null,
-        departureDate: departureDate ? getDateString(departureDate) : null,
-        checkInTime: null,
-        checkOutTime: null,
-        description: nullIfEmpty(description),
-        address: nullIfEmpty(address),
-        location: location,
-        price: price,
-      })
+    const body = JSON.stringify({
+      tripId: trip.id,
+      name: name,
+      arrivalDate: arrivalDate ? getDateString(arrivalDate) : null,
+      departureDate: departureDate ? getDateString(departureDate) : null,
+      checkInTime: null,
+      checkOutTime: null,
+      description: nullIfEmpty(description),
+      address: nullIfEmpty(address),
+      location: location,
+      price: price,
     })
+
+    let response
+    if (accommodation != null) {
+      response = await fetch("/api/v1/trips/" + trip.id + "/accommodation/" + accommodation?.id, {
+        method: "PUT",
+        headers: {"Content-Type": "application/json"},
+        body: body
+      })
+    } else {
+      response = await fetch("/api/v1/trips/" + trip.id + "/accommodation", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: body
+      })
+    }
 
     if (response.ok)
       onClose(true)
     else toast({
-      title: "Error adding Activity",
+      title: "Error upserting Activity",
+      description: response.statusText
+    })
+  }
+
+  async function onDeleteButtonClick() {
+    const response = await fetch("/api/v1/trips/" + trip.id + "/accommodation/" + accommodation!.id, {method: "DELETE"})
+
+    if (response.ok)
+      onClose(true)
+    else toast({
+      title: "Error deleting Accommodation",
       description: response.statusText
     })
   }
@@ -131,7 +153,7 @@ export default function AccommodationDialog({
             </Button>
           :
             <>
-              <Button variant="destructive" className="w-full text-base">
+              <Button variant="destructive" className="w-full text-base" onClick={onDeleteButtonClick}>
                 Delete
               </Button>
               <Button variant="secondary" className="w-full text-base" onClick={() => setEdit(true)}>

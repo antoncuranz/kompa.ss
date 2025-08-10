@@ -213,7 +213,7 @@ export default function FlightDialog({
               <Button variant="destructive" className="w-full text-base">
                 Delete
               </Button>
-              <Button variant="secondary" className="w-full text-base" onClick={() => setEdit(true)}>
+              <Button variant="secondary" className="w-full text-base" disabled onClick={() => setEdit(true)}>
                 Edit
               </Button>
             </>

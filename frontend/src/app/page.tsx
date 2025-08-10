@@ -3,6 +3,7 @@ import {fetchTrips} from "@/requests.ts";
 import {Carousel} from "@/components/ui/cards-carousel.tsx";
 import Link from "next/link";
 import Card from "@/components/card/Card.tsx";
+import Navigation from "@/components/navigation/Navigation.tsx";
 
 export default async function Page() {
 
@@ -25,13 +26,18 @@ export default async function Page() {
   ));
 
   return (
-    <div className="flex h-full gap-4">
-      <div className="w-full h-full py-6">
-        <h2 className="max-w-7xl pl-4 mx-auto text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
-          Hello! Let's manage your trips
-        </h2>
-        <Carousel items={cards} />
-      </div>
-    </div>
+    <>
+      <Navigation/>
+      <main id="root" className="w-full relative z-[1]" style={{height: "calc(100dvh - 4rem)"}}>
+        <div className="flex h-full gap-4">
+          <div className="w-full h-full py-6">
+            <h2 className="max-w-7xl pl-4 mx-auto text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
+              Hello! Let's manage your trips
+            </h2>
+            <Carousel items={cards} />
+          </div>
+        </div>
+      </main>
+    </>
   )
 }

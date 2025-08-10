@@ -33,7 +33,7 @@ func (r *AccommodationRepo) GetAllAccommodation(ctx context.Context, tripID int3
 func (r *AccommodationRepo) GetAccommodationByID(ctx context.Context, tripID int32, accommodationID int32) (entity.Accommodation, error) {
 	row, err := r.Queries.GetAccommodationByID(ctx, sqlc.GetAccommodationByIDParams{TripID: tripID, ID: accommodationID})
 	if err != nil {
-		return entity.Accommodation{}, err
+		return entity.Accommodation{}, fmt.Errorf("get accommodation [accommodationID=%d]: %w", accommodationID, err)
 	}
 
 	return mapAccommodation(row.Accommodation, mapLocationLeftJoin(row.ID, row.Latitude, row.Longitude)), nil
@@ -77,7 +77,7 @@ func (r *AccommodationRepo) SaveAccommodation(ctx context.Context, accommodation
 		return entity.Accommodation{}, fmt.Errorf("commit tx: %w", err)
 	}
 
-	return r.GetAccommodationByID(ctx, accommodation.ID, accommodationID)
+	return r.GetAccommodationByID(ctx, accommodation.TripID, accommodationID)
 }
 
 func (r *AccommodationRepo) UpdateAccommodation(ctx context.Context, accommodation entity.Accommodation) error {

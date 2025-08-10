@@ -95,7 +95,7 @@ func (r *AccommodationV1) postAccommodation(ctx *fiber.Ctx) error {
 
 	_, err = r.uc.CreateAccommodation(ctx.UserContext(), int32(tripID), body)
 	if err != nil {
-		return err
+		return errorResponseFromError(ctx, fmt.Errorf("create accommodation: %w", err))
 	}
 
 	return ctx.SendStatus(http.StatusNoContent)
