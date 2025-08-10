@@ -26,7 +26,7 @@ func (r *UsersV1) getUsers(ctx *fiber.Ctx) error {
 	users, err := r.uc.GetUsers(ctx.UserContext())
 	if err != nil {
 		r.log.Error(err, "http - v1 - getUsers")
-		return errorResponse(ctx, http.StatusInternalServerError, "internal server error")
+		return errorResponseDeprecated(ctx, http.StatusInternalServerError, "internal server error")
 	}
 
 	return ctx.Status(http.StatusOK).JSON(users)
@@ -43,12 +43,12 @@ func (r *UsersV1) getUsers(ctx *fiber.Ctx) error {
 func (r *UsersV1) getUser(ctx *fiber.Ctx) error {
 	userID, err := ctx.ParamsInt("user_id")
 	if err != nil {
-		return errorResponse(ctx, http.StatusBadRequest, "unable to parse user_id")
+		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse user_id")
 	}
 
 	user, err := r.uc.GetUserByID(ctx.UserContext(), int32(userID))
 	if err != nil {
-		return errorResponse(ctx, http.StatusNotFound, fmt.Sprintf("unable to find user with id %d", userID))
+		return errorResponseDeprecated(ctx, http.StatusNotFound, fmt.Sprintf("unable to find user with id %d", userID))
 	}
 
 	return ctx.Status(http.StatusOK).JSON(user)

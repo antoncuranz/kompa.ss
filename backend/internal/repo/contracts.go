@@ -17,6 +17,9 @@ type (
 	TripsRepo interface {
 		GetTrips(ctx context.Context) ([]entity.Trip, error)
 		GetTripByID(ctx context.Context, id int32) (entity.Trip, error)
+		CreateTrip(ctx context.Context, trip entity.Trip) (entity.Trip, error)
+		UpdateTrip(ctx context.Context, trip entity.Trip) error
+		DeleteTrip(ctx context.Context, tripID int32) error
 	}
 
 	FlightsRepo interface {

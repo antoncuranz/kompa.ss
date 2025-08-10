@@ -79,6 +79,7 @@ type Trip struct {
 	StartDate   civil.Date
 	EndDate     civil.Date
 	Description *string
+	ImageUrl    *string
 }
 
 type User struct {

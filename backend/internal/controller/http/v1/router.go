@@ -25,7 +25,10 @@ func NewTripRoutes(apiV1Group fiber.Router, uc usecase.Trips, log logger.Interfa
 
 	{
 		tripsV1Group.Get("", r.getTrips)
+		tripsV1Group.Post("", r.postTrip)
 		tripsV1Group.Get("/:trip_id", r.getTrip)
+		tripsV1Group.Put("/:trip_id", r.putTrip)
+		tripsV1Group.Delete("/:trip_id", r.deleteTrip)
 	}
 
 	return tripsV1Group

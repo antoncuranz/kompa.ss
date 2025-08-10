@@ -11,7 +11,8 @@ create table trip
     name           varchar(255) not null,
     start_date     date not null,
     end_date       date not null,
-    description    varchar
+    description    varchar,
+    image_url      varchar
 );
 
 create table location
@@ -85,8 +86,8 @@ create table pnr
 (
     id             serial primary key,
     flight_id      integer not null references flight on delete cascade,
-    airline        varchar(10) not null,
-    pnr            varchar(10) not null
+    airline        varchar(255) not null,
+    pnr            varchar(255) not null
 );
 
 -- +goose Down

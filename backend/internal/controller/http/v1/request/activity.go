@@ -6,8 +6,8 @@ import (
 )
 
 type Activity struct {
-	Name        string           `json:"name"`
-	Date        civil.Date       `json:"date"`
+	Name        string           `json:"name"        validate:"required"`
+	Date        civil.Date       `json:"date"        validate:"required"`
 	Time        *civil.Time      `json:"time"`
 	Description *string          `json:"description"`
 	Address     *string          `json:"address"`

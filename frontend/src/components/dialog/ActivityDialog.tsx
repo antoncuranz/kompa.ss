@@ -62,7 +62,7 @@ export default function ActivityDialog({
       onClose(true)
     else toast({
       title: "Error upserting Activity",
-      description: response.statusText
+      description: await response.text()
     })
   }
 
@@ -73,7 +73,7 @@ export default function ActivityDialog({
       onClose(true)
     else toast({
       title: "Error deleting Activity",
-      description: response.statusText
+      description: await response.text()
     })
   }
 

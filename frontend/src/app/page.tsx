@@ -4,26 +4,35 @@ import {Carousel} from "@/components/ui/cards-carousel.tsx";
 import Link from "next/link";
 import Card from "@/components/card/Card.tsx";
 import Navigation from "@/components/navigation/Navigation.tsx";
+import NewTripCard from "@/components/card/NewTripCard.tsx";
 
 export default async function Page() {
 
-  const cards = (await fetchTrips()).map(trip => (
+  const fallbackColors = ["#0081A7", "#00AFB9", "#FED9B7", "#F07167"]
+
+  const cards = (await fetchTrips()).map((trip, idx) => (
       <Link key={trip.id} href={"/" + trip.id + "/itinerary"}>
         <Card className="h-80 w-56 md:h-[40rem] md:w-96">
           <div className="relative h-full w-full">
-            <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-full bg-gradient-to-b from-black/50 via-transparent to-transparent" />
+            {trip.imageUrl &&
+              <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-full bg-gradient-to-b from-black/50 via-transparent to-transparent" />
+            }
             <div className="relative z-40 p-8">
               <div className="mt-2 max-w-xs text-left font-sans text-xl font-semibold [text-wrap:balance] text-white md:text-3xl">
                 {trip.name}
               </div>
             </div>
-            <img className="absolute inset-0 z-10 object-cover h-full max-w-none w-auto transition duration-300"
-                 src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fbelvelo.de%2Fwp-content%2Fuploads%2F2016%2F11%2Fe-bike-reisen-Neuseeland-Mount-Cook-Neuseeland.jpg"
-                 alt=""/>
+            {trip.imageUrl ?
+              <img className="absolute inset-0 z-10 object-cover h-full max-w-none w-auto transition duration-300" src={trip.imageUrl} alt=""/>
+            :
+              <div className="absolute inset-0 w-full h-full" style={{background: fallbackColors[idx % fallbackColors.length]}}/>
+            }
           </div>
         </Card>
       </Link>
   ));
+
+  cards.push(<NewTripCard/>)
 
   return (
     <>

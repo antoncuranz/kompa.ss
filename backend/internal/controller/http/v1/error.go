@@ -7,11 +7,15 @@ import (
 	"travel-planner/internal/controller/http/v1/response"
 )
 
-func errorResponse(ctx *fiber.Ctx, code int, msg string) error {
+func errorResponseDeprecated(ctx *fiber.Ctx, code int, msg string) error {
 	return ctx.Status(code).JSON(response.Error{Error: msg})
 }
 
-func errorResponseFromError(ctx *fiber.Ctx, err error) error {
+func errorResponse(ctx *fiber.Ctx, err error) error {
+	return errorResponseWithStatus(ctx, http.StatusInternalServerError, err)
+}
+
+func errorResponseWithStatus(ctx *fiber.Ctx, code int, err error) error {
 	fmt.Println(err)
-	return ctx.Status(http.StatusInternalServerError).JSON(response.Error{Error: err.Error()})
+	return ctx.Status(code).JSON(response.Error{Error: err.Error()})
 }

@@ -5,6 +5,7 @@ export type Trip = {
   startDate: Date;
   endDate: Date;
   description: string;
+  imageUrl: string;
 };
 
 export type Location = {

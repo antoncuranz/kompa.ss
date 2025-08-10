@@ -6,9 +6,9 @@ import (
 )
 
 type Accommodation struct {
-	Name          string           `json:"name"`
-	ArrivalDate   civil.Date       `json:"arrivalDate"`
-	DepartureDate civil.Date       `json:"departureDate"`
+	Name          string           `json:"name"             validate:"required"`
+	ArrivalDate   civil.Date       `json:"arrivalDate"      validate:"required"`
+	DepartureDate civil.Date       `json:"departureDate"    validate:"required"`
 	CheckInTime   *civil.Time      `json:"checkInTime"`
 	CheckOutTime  *civil.Time      `json:"checkOutTime"`
 	Description   *string          `json:"description"`

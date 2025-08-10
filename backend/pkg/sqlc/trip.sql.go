@@ -7,10 +7,23 @@ package sqlc
 
 import (
 	"context"
+
+	"cloud.google.com/go/civil"
 )
 
+const deleteTripByID = `-- name: DeleteTripByID :exec
+DELETE
+FROM trip
+WHERE id = $1
+`
+
+func (q *Queries) DeleteTripByID(ctx context.Context, id int32) error {
+	_, err := q.db.Exec(ctx, deleteTripByID, id)
+	return err
+}
+
 const getTripByID = `-- name: GetTripByID :one
-SELECT id, name, start_date, end_date, description
+SELECT id, name, start_date, end_date, description, image_url
 FROM trip
 WHERE id = $1
 `
@@ -24,12 +37,13 @@ func (q *Queries) GetTripByID(ctx context.Context, id int32) (Trip, error) {
 		&i.StartDate,
 		&i.EndDate,
 		&i.Description,
+		&i.ImageUrl,
 	)
 	return i, err
 }
 
 const getTrips = `-- name: GetTrips :many
-SELECT id, name, start_date, end_date, description
+SELECT id, name, start_date, end_date, description, image_url
 FROM trip
 `
 
@@ -48,6 +62,7 @@ func (q *Queries) GetTrips(ctx context.Context) ([]Trip, error) {
 			&i.StartDate,
 			&i.EndDate,
 			&i.Description,
+			&i.ImageUrl,
 		); err != nil {
 			return nil, err
 		}
@@ -57,4 +72,62 @@ func (q *Queries) GetTrips(ctx context.Context) ([]Trip, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+const insertTrip = `-- name: InsertTrip :one
+INSERT INTO trip (name, start_date, end_date, description, image_url)
+VALUES ($1, $2, $3, $4, $5)
+RETURNING id
+`
+
+type InsertTripParams struct {
+	Name        string
+	StartDate   civil.Date
+	EndDate     civil.Date
+	Description *string
+	ImageUrl    *string
+}
+
+func (q *Queries) InsertTrip(ctx context.Context, arg InsertTripParams) (int32, error) {
+	row := q.db.QueryRow(ctx, insertTrip,
+		arg.Name,
+		arg.StartDate,
+		arg.EndDate,
+		arg.Description,
+		arg.ImageUrl,
+	)
+	var id int32
+	err := row.Scan(&id)
+	return id, err
+}
+
+const updateTrip = `-- name: UpdateTrip :exec
+UPDATE trip
+SET name        = $2,
+    start_date  = $3,
+    end_date    = $4,
+    description = $5,
+    image_url   = $6
+WHERE id = $1
+`
+
+type UpdateTripParams struct {
+	ID          int32
+	Name        string
+	StartDate   civil.Date
+	EndDate     civil.Date
+	Description *string
+	ImageUrl    *string
+}
+
+func (q *Queries) UpdateTrip(ctx context.Context, arg UpdateTripParams) error {
+	_, err := q.db.Exec(ctx, updateTrip,
+		arg.ID,
+		arg.Name,
+		arg.StartDate,
+		arg.EndDate,
+		arg.Description,
+		arg.ImageUrl,
+	)
+	return err
 }

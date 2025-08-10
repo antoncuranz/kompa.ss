@@ -27,13 +27,12 @@ type AccommodationV1 struct {
 func (r *AccommodationV1) getAllAccommodation(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponse(ctx, http.StatusBadRequest, "unable to parse trip_id")
+		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse trip_id")
 	}
 
 	accommodation, err := r.uc.GetAllAccommodation(ctx.UserContext(), int32(tripID))
 	if err != nil {
-		r.log.Error(err, "http - v1 - getAccommodation")
-		return errorResponse(ctx, http.StatusInternalServerError, "internal server error")
+		return errorResponse(ctx, fmt.Errorf("get accommodation: %w", err))
 	}
 
 	return ctx.Status(http.StatusOK).JSON(accommodation)
@@ -44,23 +43,23 @@ func (r *AccommodationV1) getAllAccommodation(ctx *fiber.Ctx) error {
 // @Tags  	    accommodation
 // @Produce     json
 // @Param       trip_id path int true "Trip ID"
-// @Param       accommodation_id path string true "Accommodation ID"
+// @Param       accommodation_id path int true "Accommodation ID"
 // @Success     200 {object} entity.Accommodation
 // @Failure     500 {object} response.Error
 // @Router      /trips/{trip_id}/accommodation/{accommodation_id} [get]
 func (r *AccommodationV1) getAccommodationByID(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponse(ctx, http.StatusBadRequest, "unable to parse trip_id")
+		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse trip_id")
 	}
 	accommodationID, err := ctx.ParamsInt("accommodation_id")
 	if err != nil {
-		return errorResponse(ctx, http.StatusBadRequest, "unable to parse accommodation_id")
+		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse accommodation_id")
 	}
 
 	accommodation, err := r.uc.GetAccommodationByID(ctx.UserContext(), int32(tripID), int32(accommodationID))
 	if err != nil {
-		return errorResponse(ctx, http.StatusNotFound, fmt.Sprintf("unable to find accommodation with id %d", accommodationID))
+		return errorResponse(ctx, fmt.Errorf("get accommodation [id=%d]: %w", accommodationID, err))
 	}
 
 	return ctx.Status(http.StatusOK).JSON(accommodation)
@@ -79,23 +78,23 @@ func (r *AccommodationV1) getAccommodationByID(ctx *fiber.Ctx) error {
 func (r *AccommodationV1) postAccommodation(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponse(ctx, http.StatusBadRequest, "unable to parse trip_id")
+		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse trip_id")
 	}
 
 	var body request.Accommodation
 
 	if err := ctx.BodyParser(&body); err != nil {
-		return errorResponse(ctx, http.StatusBadRequest, "invalid request body")
+		return errorResponseDeprecated(ctx, http.StatusBadRequest, "invalid request body")
 	}
 
 	if err := r.v.Struct(body); err != nil {
 		fmt.Println(err)
-		return errorResponse(ctx, http.StatusBadRequest, "invalid request body")
+		return errorResponseDeprecated(ctx, http.StatusBadRequest, "invalid request body")
 	}
 
 	_, err = r.uc.CreateAccommodation(ctx.UserContext(), int32(tripID), body)
 	if err != nil {
-		return errorResponseFromError(ctx, fmt.Errorf("create accommodation: %w", err))
+		return errorResponse(ctx, fmt.Errorf("create accommodation: %w", err))
 	}
 
 	return ctx.SendStatus(http.StatusNoContent)
@@ -107,7 +106,7 @@ func (r *AccommodationV1) postAccommodation(ctx *fiber.Ctx) error {
 // @Accept      json
 // @Produce     json
 // @Param       trip_id path int true "Trip ID"
-// @Param       accommodation_id path string true "Accommodation ID"
+// @Param       accommodation_id path int true "Accommodation ID"
 // @Param       request body request.Accommodation true "accommodation"
 // @Success     204
 // @Failure     500 {object} response.Error
@@ -115,25 +114,25 @@ func (r *AccommodationV1) postAccommodation(ctx *fiber.Ctx) error {
 func (r *AccommodationV1) putAccommodation(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponse(ctx, http.StatusBadRequest, "unable to parse trip_id")
+		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse trip_id")
 	}
 	accommodationID, err := ctx.ParamsInt("accommodation_id")
 	if err != nil {
-		return errorResponse(ctx, http.StatusBadRequest, "unable to parse accommodation_id")
+		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse accommodation_id")
 	}
 
 	var body request.Accommodation
 
 	if err := ctx.BodyParser(&body); err != nil {
-		return errorResponse(ctx, http.StatusBadRequest, "invalid request body")
+		return errorResponseDeprecated(ctx, http.StatusBadRequest, "invalid request body")
 	}
 
 	if err := r.v.Struct(body); err != nil {
-		return errorResponse(ctx, http.StatusBadRequest, "invalid request body")
+		return errorResponseDeprecated(ctx, http.StatusBadRequest, "invalid request body")
 	}
 
 	if err := r.uc.UpdateAccommodation(ctx.UserContext(), int32(tripID), int32(accommodationID), body); err != nil {
-		return errorResponseFromError(ctx, fmt.Errorf("update accommodation with id %d: %w", accommodationID, err))
+		return errorResponse(ctx, fmt.Errorf("update accommodation with id %d: %w", accommodationID, err))
 	}
 
 	return ctx.SendStatus(http.StatusNoContent)
@@ -143,22 +142,22 @@ func (r *AccommodationV1) putAccommodation(ctx *fiber.Ctx) error {
 // @ID          deleteAccommodation
 // @Tags  	    accommodation
 // @Param       trip_id path int true "Trip ID"
-// @Param       accommodation_id path string true "Accommodation ID"
+// @Param       accommodation_id path int true "Accommodation ID"
 // @Success     204
 // @Failure     500 {object} response.Error
 // @Router      /trips/{trip_id}/accommodation/{accommodation_id} [delete]
 func (r *AccommodationV1) deleteAccommodation(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponse(ctx, http.StatusBadRequest, "unable to parse trip_id")
+		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse trip_id")
 	}
 	accommodationID, err := ctx.ParamsInt("accommodation_id")
 	if err != nil {
-		return errorResponse(ctx, http.StatusBadRequest, "unable to parse accommodation_id")
+		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse accommodation_id")
 	}
 
 	if err := r.uc.DeleteAccommodation(ctx.UserContext(), int32(tripID), int32(accommodationID)); err != nil {
-		return errorResponseFromError(ctx, fmt.Errorf("delete accommodation with id %d: %w", accommodationID, err))
+		return errorResponse(ctx, fmt.Errorf("delete accommodation with id %d: %w", accommodationID, err))
 	}
 
 	return ctx.SendStatus(http.StatusNoContent)

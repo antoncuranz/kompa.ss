@@ -12,4 +12,5 @@ type Trip struct {
 	StartDate   civil.Date `json:"startDate"`
 	EndDate     civil.Date `json:"endDate"`
 	Description *string    `json:"description"`
+	ImageUrl    *string    `json:"imageUrl"`
 }

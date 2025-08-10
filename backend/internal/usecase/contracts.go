@@ -26,6 +26,9 @@ type (
 	Trips interface {
 		GetTrips(ctx context.Context) ([]entity.Trip, error)
 		GetTripByID(ctx context.Context, id int32) (entity.Trip, error)
+		CreateTrip(ctx context.Context, trip request.Trip) (entity.Trip, error)
+		UpdateTrip(ctx context.Context, tripID int32, trip request.Trip) error
+		DeleteTrip(ctx context.Context, tripID int32) error
 	}
 
 	Flights interface {

@@ -28,7 +28,7 @@ export default function AddressInput({
       updateLocation({...properties["coordinates"], id: 0})
     } else toast({
       title: "Error finding address. Please try a different format.",
-      description: response.statusText
+      description: await response.text()
     })
   }
 

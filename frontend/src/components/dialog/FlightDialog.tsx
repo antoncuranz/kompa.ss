@@ -71,7 +71,7 @@ export default function FlightDialog({
       onClose(true)
     else toast({
       title: "Error upserting Flight",
-      description: response.statusText
+      description: await response.text()
     })
   }
 
@@ -82,7 +82,7 @@ export default function FlightDialog({
       onClose(true)
     else toast({
       title: "Error deleting Flight",
-      description: response.statusText
+      description: await response.text()
     })
   }
 

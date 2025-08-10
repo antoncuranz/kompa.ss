@@ -1,4 +1,4 @@
-import React from "react";
+import React, {MouseEventHandler} from "react";
 import {cn} from "@/lib/utils.ts";
 import {GlowContainer} from "@/components/ui/glow-container.tsx";
 
@@ -7,15 +7,17 @@ export default function Card({
   children,
   headerSlot,
   className,
+  onClick
 }: {
   title?: string
   children: React.ReactNode
   headerSlot?: React.ReactNode
   className?: string
+  onClick?: MouseEventHandler<HTMLDivElement>
 }) {
 
   return (
-    <div className={cn("w-full rounded-2xl sm:rounded-3xl shadow-xl shadow-black/[0.1] dark:shadow-white/[0.05]", className)}>
+    <div className={cn("w-full rounded-2xl sm:rounded-3xl shadow-xl shadow-black/[0.1] dark:shadow-white/[0.05]", className)} onClick={onClick}>
       <GlowContainer className="flex flex-col h-full sm:p-2 rounded-2xl sm:rounded-3xl">
         {(title || headerSlot) &&
           <div className="flex flex-row p-3 sm:pb-5 border-b">

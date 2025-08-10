@@ -24,7 +24,7 @@ func NewActivitiesRepo(pg *postgres.Postgres) *ActivitiesRepo {
 func (r *ActivitiesRepo) GetActivities(ctx context.Context, tripID int32) ([]entity.Activity, error) {
 	activities, err := r.Queries.GetActivities(ctx, tripID)
 	if err != nil {
-		return nil, fmt.Errorf("get activities: %w", fmt.Errorf("get all activities [tripID=%d]: %w", tripID, err))
+		return nil, fmt.Errorf("get all activities [tripID=%d]: %w", tripID, err)
 	}
 
 	return mapActivities(activities), nil

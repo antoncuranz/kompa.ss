@@ -3,58 +3,48 @@ import {Dialog, DialogFooter, DialogContent, DialogHeader, DialogTitle} from "@/
 import {Label} from "@/components/ui/label.tsx";
 import {useState} from "react";
 import {useToast} from "@/components/ui/use-toast.ts";
-import AmountInput from "@/components/dialog/AmountInput.tsx";
 import {Input} from "@/components/ui/input.tsx";
-import {Accommodation, Location, Trip} from "@/types.ts";
+import {Trip} from "@/types.ts";
 import {Textarea} from "@/components/ui/textarea.tsx";
-import AddressInput from "@/components/dialog/AddressInput.tsx";
 import {getDateString, nullIfEmpty} from "@/components/util.ts";
 import {LabelInputContainer, RowContainer} from "@/components/dialog/DialogUtil.tsx";
 import DateInput from "@/components/dialog/DateInput.tsx";
 
-export default function AccommodationDialog({
-  trip, accommodation, open, onClose
+export default function TripDialog({
+  trip, open, onClose
 }: {
-  trip: Trip,
   open: boolean,
   onClose: (needsUpdate: boolean) => void,
-  accommodation?: Accommodation | null
+  trip?: Trip | null
 }) {
-  const [edit, setEdit] = useState<boolean>(accommodation == null)
+  const [edit, setEdit] = useState<boolean>(trip == null)
 
-  const [name, setName] = useState<string>(accommodation?.name ?? "")
-  const [description, setDescription] = useState<string>(accommodation?.description ?? "")
-  const [arrivalDate, setArrivalDate] = useState<Date|null>(accommodation?.arrivalDate ?? null)
-  const [departureDate, setDepartureDate] = useState<Date|null>(accommodation?.departureDate ?? null)
-  const [price, setPrice] = useState<number|null>(accommodation?.price ?? null)
-  const [address, setAddress] = useState<string>(accommodation?.address ?? "")
-  const [location, setLocation] = useState<Location|null>(accommodation?.location ?? null)
+  const [name, setName] = useState<string>(trip?.name ?? "")
+  const [startDate, setStartDate] = useState<Date|null>(trip?.startDate ?? null)
+  const [endDate, setEndDate] = useState<Date|null>(trip?.endDate ?? null)
+  const [description, setDescription] = useState<string>(trip?.description ?? "")
+  const [imageUrl, setImageUrl] = useState<string>(trip?.imageUrl ?? "")
 
   const { toast } = useToast();
 
   async function onSaveButtonClick() {
     const body = JSON.stringify({
-      tripId: trip.id,
       name: name,
-      arrivalDate: arrivalDate ? getDateString(arrivalDate) : null,
-      departureDate: departureDate ? getDateString(departureDate) : null,
-      checkInTime: null,
-      checkOutTime: null,
+      startDate: startDate ? getDateString(startDate) : null,
+      endDate: endDate ? getDateString(endDate) : null,
       description: nullIfEmpty(description),
-      address: nullIfEmpty(address),
-      location: location,
-      price: price,
+      imageUrl: nullIfEmpty(imageUrl)
     })
 
     let response
-    if (accommodation != null) {
-      response = await fetch("/api/v1/trips/" + trip.id + "/accommodation/" + accommodation?.id, {
+    if (trip != null) {
+      response = await fetch("/api/v1/trips/" + trip.id, {
         method: "PUT",
         headers: {"Content-Type": "application/json"},
         body: body
       })
     } else {
-      response = await fetch("/api/v1/trips/" + trip.id + "/accommodation", {
+      response = await fetch("/api/v1/trips", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: body
@@ -64,18 +54,18 @@ export default function AccommodationDialog({
     if (response.ok)
       onClose(true)
     else toast({
-      title: "Error upserting Accommodation",
+      title: "Error upserting Trip",
       description: await response.text()
     })
   }
 
   async function onDeleteButtonClick() {
-    const response = await fetch("/api/v1/trips/" + trip.id + "/accommodation/" + accommodation!.id, {method: "DELETE"})
+    const response = await fetch("/api/v1/trips/" + trip!.id, {method: "DELETE"})
 
     if (response.ok)
       onClose(true)
     else toast({
-      title: "Error deleting Accommodation",
+      title: "Error deleting Trip",
       description: await response.text()
     })
   }
@@ -85,7 +75,7 @@ export default function AccommodationDialog({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
-            {edit ? (accommodation != null ? "Edit" : "New") : "View"} Accommodation
+            {edit ? (trip != null ? "Edit" : "New") : "View"} Trip
           </DialogTitle>
         </DialogHeader>
         <div className="py-4 overflow-y-auto">
@@ -100,11 +90,11 @@ export default function AccommodationDialog({
           <RowContainer>
             <LabelInputContainer>
               <Label htmlFor="arrival_date">Arrival Date</Label>
-              <DateInput date={arrivalDate} updateDate={setArrivalDate} startDate={trip.startDate} endDate={trip.endDate} readOnly={!edit}/>
+              <DateInput date={startDate} updateDate={setStartDate} readOnly={!edit}/>
             </LabelInputContainer>
             <LabelInputContainer>
               <Label htmlFor="departure_date">Departure Date</Label>
-              <DateInput date={departureDate} updateDate={setDepartureDate} startDate={arrivalDate ?? trip.startDate} endDate={trip.endDate} readOnly={!edit}/>
+              <DateInput date={endDate} updateDate={setEndDate} startDate={startDate} readOnly={!edit}/>
             </LabelInputContainer>
           </RowContainer>
 
@@ -119,30 +109,9 @@ export default function AccommodationDialog({
 
           <RowContainer>
             <LabelInputContainer>
-              <Label htmlFor="price">Price</Label>
-              <AmountInput
-                  id="price"
-                  amount={price}
-                  updateAmount={setPrice}
-                  readOnly={!edit}
-              />
-            </LabelInputContainer>
-          </RowContainer>
-
-          <RowContainer>
-            <LabelInputContainer>
-              <Label htmlFor="address">Address</Label>
-              <AddressInput address={address} updateAddress={setAddress} updateLocation={setLocation} readOnly={!edit}/>
-            </LabelInputContainer>
-          </RowContainer>
-          <RowContainer>
-            <LabelInputContainer>
-              <Label htmlFor="lat">Latitude</Label>
-              <Input id="lat" type="text" value={location?.latitude ?? ""} readOnly/>
-            </LabelInputContainer>
-            <LabelInputContainer>
-              <Label htmlFor="lon">Longitude</Label>
-              <Input id="lon" type="text" value={location?.longitude ?? ""} readOnly/>
+              <Label htmlFor="image_url">Image URL</Label>
+              <Input id="image_url" type="text" value={imageUrl}
+                     onChange={e => setImageUrl(e.target.value)} readOnly={!edit}/>
             </LabelInputContainer>
           </RowContainer>
         </div>
