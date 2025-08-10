@@ -2,6 +2,7 @@ package flights
 
 import (
 	"context"
+	"fmt"
 	"travel-planner/internal/controller/http/v1/request"
 	"travel-planner/internal/entity"
 	"travel-planner/internal/repo"
@@ -52,4 +53,12 @@ func (uc *UseCase) retrieveFlightLegs(ctx context.Context, flight request.Flight
 	}
 
 	return legs, nil
+}
+
+func (uc *UseCase) UpdateFlight(ctx context.Context, tripID int32, flightID int32, flight request.Flight) error {
+	return fmt.Errorf("Not yet implemented")
+}
+
+func (uc *UseCase) DeleteFlight(ctx context.Context, tripID int32, flightID int32) error {
+	return uc.repo.DeleteFlight(ctx, tripID, flightID)
 }

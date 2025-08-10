@@ -9,12 +9,45 @@ import (
 	"context"
 )
 
+const deleteLocation = `-- name: DeleteLocation :exec
+DELETE FROM location
+WHERE id = $1
+`
+
+func (q *Queries) DeleteLocation(ctx context.Context, id int32) error {
+	_, err := q.db.Exec(ctx, deleteLocation, id)
+	return err
+}
+
+const getLocationIDByAccommodationID = `-- name: GetLocationIDByAccommodationID :one
+SELECT l.id
+FROM location l
+         JOIN accommodation a on a.location_id = l.id
+WHERE a.id = $1
+`
+
+func (q *Queries) GetLocationIDByAccommodationID(ctx context.Context, id int32) (int32, error) {
+	row := q.db.QueryRow(ctx, getLocationIDByAccommodationID, id)
+	err := row.Scan(&id)
+	return id, err
+}
+
+const getLocationIDByActivityID = `-- name: GetLocationIDByActivityID :one
+SELECT l.id
+FROM location l
+         JOIN activity a on a.location_id = l.id
+WHERE a.id = $1
+`
+
+func (q *Queries) GetLocationIDByActivityID(ctx context.Context, id int32) (int32, error) {
+	row := q.db.QueryRow(ctx, getLocationIDByActivityID, id)
+	err := row.Scan(&id)
+	return id, err
+}
+
 const insertLocation = `-- name: InsertLocation :one
-INSERT INTO location (
-    latitude, longitude
-) VALUES (
-    $1, $2
- )
+INSERT INTO location (latitude, longitude)
+VALUES ($1, $2)
 RETURNING id
 `
 
@@ -28,4 +61,22 @@ func (q *Queries) InsertLocation(ctx context.Context, arg InsertLocationParams) 
 	var id int32
 	err := row.Scan(&id)
 	return id, err
+}
+
+const updateLocation = `-- name: UpdateLocation :exec
+UPDATE location
+SET latitude  = $2,
+    longitude = $3
+WHERE id = $1
+`
+
+type UpdateLocationParams struct {
+	ID        int32
+	Latitude  float32
+	Longitude float32
+}
+
+func (q *Queries) UpdateLocation(ctx context.Context, arg UpdateLocationParams) error {
+	_, err := q.db.Exec(ctx, updateLocation, arg.ID, arg.Latitude, arg.Longitude)
+	return err
 }

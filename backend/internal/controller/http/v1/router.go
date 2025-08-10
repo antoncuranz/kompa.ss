@@ -40,6 +40,8 @@ func NewFlightRoutes(tripsV1Group fiber.Router, uc usecase.Flights, log logger.I
 		flightsV1Group.Get("", r.getFlights)
 		flightsV1Group.Post("", r.postFlight)
 		flightsV1Group.Get("/:flight_id", r.getFlight)
+		flightsV1Group.Put("/:flight_id", r.putFlight)
+		flightsV1Group.Delete("/:flight_id", r.deleteFlight)
 	}
 }
 
@@ -52,6 +54,8 @@ func NewActivityRoutes(tripsV1Group fiber.Router, uc usecase.Activities, log log
 		activitiesV1Group.Get("", r.getActivities)
 		activitiesV1Group.Post("", r.postActivity)
 		activitiesV1Group.Get("/:activity_id", r.getActivity)
+		activitiesV1Group.Put("/:activity_id", r.putActivity)
+		activitiesV1Group.Delete("/:activity_id", r.deleteActivity)
 	}
 }
 
@@ -64,5 +68,7 @@ func NewAccommodationRoutes(tripsV1Group fiber.Router, uc usecase.Accommodation,
 		accommodationV1Group.Get("", r.getAllAccommodation)
 		accommodationV1Group.Post("", r.postAccommodation)
 		accommodationV1Group.Get("/:accommodation_id", r.getAccommodationByID)
+		accommodationV1Group.Put("/:accommodation_id", r.putAccommodation)
+		accommodationV1Group.Delete("/:accommodation_id", r.deleteAccommodation)
 	}
 }

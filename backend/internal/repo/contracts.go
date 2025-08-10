@@ -23,18 +23,23 @@ type (
 		GetFlights(ctx context.Context, tripID int32) ([]entity.Flight, error)
 		GetFlightByID(ctx context.Context, tripID int32, id int32) (entity.Flight, error)
 		SaveFlight(ctx context.Context, flight entity.Flight) (entity.Flight, error)
+		DeleteFlight(ctx context.Context, tripID int32, flightID int32) error
 	}
 
 	ActivitiesRepo interface {
 		GetActivities(ctx context.Context, tripID int32) ([]entity.Activity, error)
 		GetActivityByID(ctx context.Context, tripID int32, activityID int32) (entity.Activity, error)
 		SaveActivity(ctx context.Context, activity entity.Activity) (entity.Activity, error)
+		UpdateActivity(ctx context.Context, activity entity.Activity) error
+		DeleteActivity(ctx context.Context, tripID int32, activityID int32) error
 	}
 
 	AccommodationRepo interface {
 		GetAllAccommodation(ctx context.Context, tripID int32) ([]entity.Accommodation, error)
 		GetAccommodationByID(ctx context.Context, tripID int32, id int32) (entity.Accommodation, error)
 		SaveAccommodation(ctx context.Context, accommodation entity.Accommodation) (entity.Accommodation, error)
+		UpdateAccommodation(ctx context.Context, accommodation entity.Accommodation) error
+		DeleteAccommodation(ctx context.Context, tripID int32, accommodationID int32) error
 	}
 
 	AerodataboxWebAPI interface {

@@ -39,3 +39,23 @@ func (uc *UseCase) CreateAccommodation(ctx context.Context, tripID int32, accomm
 		Price:         accommodation.Price,
 	})
 }
+
+func (uc *UseCase) UpdateAccommodation(ctx context.Context, tripID int32, accommodationID int32, accommodation request.Accommodation) error {
+	return uc.repo.UpdateAccommodation(ctx, entity.Accommodation{
+		ID:            accommodationID,
+		TripID:        tripID,
+		Name:          accommodation.Name,
+		ArrivalDate:   accommodation.ArrivalDate,
+		DepartureDate: accommodation.DepartureDate,
+		CheckInTime:   accommodation.CheckInTime,
+		CheckOutTime:  accommodation.CheckOutTime,
+		Description:   accommodation.Description,
+		Address:       accommodation.Address,
+		Location:      accommodation.Location,
+		Price:         accommodation.Price,
+	})
+}
+
+func (uc *UseCase) DeleteAccommodation(ctx context.Context, tripID int32, accommodationID int32) error {
+	return uc.repo.DeleteAccommodation(ctx, tripID, accommodationID)
+}

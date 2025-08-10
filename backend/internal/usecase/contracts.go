@@ -32,17 +32,23 @@ type (
 		GetFlights(ctx context.Context, tripID int32) ([]entity.Flight, error)
 		GetFlightByID(ctx context.Context, tripID int32, id int32) (entity.Flight, error)
 		CreateFlight(ctx context.Context, tripID int32, flight request.Flight) (entity.Flight, error)
+		UpdateFlight(ctx context.Context, tripID int32, flightID int32, flight request.Flight) error
+		DeleteFlight(ctx context.Context, tripID int32, flightID int32) error
 	}
 
 	Activities interface {
 		GetActivities(ctx context.Context, tripID int32) ([]entity.Activity, error)
-		GetActivityByID(ctx context.Context, tripID int32, id int32) (entity.Activity, error)
+		GetActivityByID(ctx context.Context, tripID int32, activityID int32) (entity.Activity, error)
 		CreateActivity(ctx context.Context, tripID int32, activity request.Activity) (entity.Activity, error)
+		UpdateActivity(ctx context.Context, tripID int32, activityID int32, activity request.Activity) error
+		DeleteActivity(ctx context.Context, tripID int32, activityID int32) error
 	}
 
 	Accommodation interface {
 		GetAllAccommodation(ctx context.Context, tripID int32) ([]entity.Accommodation, error)
 		GetAccommodationByID(ctx context.Context, tripID int32, id int32) (entity.Accommodation, error)
 		CreateAccommodation(ctx context.Context, tripID int32, accommodation request.Accommodation) (entity.Accommodation, error)
+		UpdateAccommodation(ctx context.Context, tripID int32, accommodationID int32, accommodation request.Accommodation) error
+		DeleteAccommodation(ctx context.Context, tripID int32, accommodationID int32) error
 	}
 )

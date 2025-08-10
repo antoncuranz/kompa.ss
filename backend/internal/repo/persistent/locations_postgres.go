@@ -2,6 +2,9 @@ package persistent
 
 import (
 	"context"
+	"database/sql"
+	"errors"
+	"fmt"
 	"travel-planner/internal/entity"
 	"travel-planner/pkg/sqlc"
 )
@@ -11,6 +14,59 @@ func SaveLocation(ctx context.Context, queries *sqlc.Queries, location entity.Lo
 		Latitude:  location.Latitude,
 		Longitude: location.Longitude,
 	})
+}
+
+func GetLocationIDOrNilByActivityID(ctx context.Context, queries *sqlc.Queries, activityID int32) (*int32, error) {
+	id, err := queries.GetLocationIDByActivityID(ctx, activityID)
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, nil
+	}
+	return &id, err
+}
+
+func GetLocationIDOrNilByAccommodationID(ctx context.Context, queries *sqlc.Queries, accommodationID int32) (*int32, error) {
+	id, err := queries.GetLocationIDByAccommodationID(ctx, accommodationID)
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, nil
+	}
+	return &id, err
+}
+
+func UpsertOrDeleteLocation(ctx context.Context, queries *sqlc.Queries, existingLocationId *int32, location *entity.Location) (*int32, error) {
+	var locationId *int32
+
+	if location != nil {
+		if existingLocationId != nil {
+			if err := UpdateLocation(ctx, queries, *existingLocationId, *location); err != nil {
+				return nil, fmt.Errorf("update location: %w", err)
+			}
+			locationId = existingLocationId
+		} else {
+			persistedLocationId, err := SaveLocation(ctx, queries, *location)
+			if err != nil {
+				return nil, fmt.Errorf("save location: %w", err)
+			}
+			locationId = &persistedLocationId
+		}
+	} else if existingLocationId != nil {
+		if err := DeleteLocation(ctx, queries, *existingLocationId); err != nil {
+			return nil, fmt.Errorf("delete location: %w", err)
+		}
+	}
+
+	return locationId, nil
+}
+
+func UpdateLocation(ctx context.Context, queries *sqlc.Queries, locationID int32, location entity.Location) error {
+	return queries.UpdateLocation(ctx, sqlc.UpdateLocationParams{
+		ID:        locationID,
+		Latitude:  location.Latitude,
+		Longitude: location.Longitude,
+	})
+}
+
+func DeleteLocation(ctx context.Context, queries *sqlc.Queries, locationID int32) error {
+	return queries.DeleteLocation(ctx, locationID)
 }
 
 func mapLocation(location sqlc.Location) entity.Location {

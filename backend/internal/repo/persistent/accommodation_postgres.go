@@ -2,6 +2,7 @@ package persistent
 
 import (
 	"context"
+	"fmt"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"travel-planner/internal/entity"
 	"travel-planner/pkg/postgres"
@@ -23,7 +24,7 @@ func NewAccommodationRepo(pg *postgres.Postgres) *AccommodationRepo {
 func (r *AccommodationRepo) GetAllAccommodation(ctx context.Context, tripID int32) ([]entity.Accommodation, error) {
 	rows, err := r.Queries.GetAllAccommodation(ctx, tripID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("get all accommodation [tripID=%d]: %w", tripID, err)
 	}
 
 	return mapAllAccommodation(rows), nil
@@ -41,7 +42,7 @@ func (r *AccommodationRepo) GetAccommodationByID(ctx context.Context, tripID int
 func (r *AccommodationRepo) SaveAccommodation(ctx context.Context, accommodation entity.Accommodation) (entity.Accommodation, error) {
 	tx, err := r.Db.Begin(ctx)
 	if err != nil {
-		return entity.Accommodation{}, err
+		return entity.Accommodation{}, fmt.Errorf("begin tx: %w", err)
 	}
 	defer tx.Rollback(ctx)
 	qtx := r.Queries.WithTx(tx)
@@ -50,7 +51,7 @@ func (r *AccommodationRepo) SaveAccommodation(ctx context.Context, accommodation
 	if accommodation.Location != nil {
 		persistedLocationId, err := SaveLocation(ctx, qtx, *accommodation.Location)
 		if err != nil {
-			return entity.Accommodation{}, err
+			return entity.Accommodation{}, fmt.Errorf("save location: %w", err)
 		}
 		locationId = &persistedLocationId
 	}
@@ -68,15 +69,61 @@ func (r *AccommodationRepo) SaveAccommodation(ctx context.Context, accommodation
 		Price:         accommodation.Price,
 	})
 	if err != nil {
-		return entity.Accommodation{}, err
+		return entity.Accommodation{}, fmt.Errorf("insert accommodation: %w", err)
 	}
 
 	err = tx.Commit(ctx)
 	if err != nil {
-		return entity.Accommodation{}, err
+		return entity.Accommodation{}, fmt.Errorf("commit tx: %w", err)
 	}
 
 	return r.GetAccommodationByID(ctx, accommodation.ID, accommodationID)
+}
+
+func (r *AccommodationRepo) UpdateAccommodation(ctx context.Context, accommodation entity.Accommodation) error {
+	tx, err := r.Db.Begin(ctx)
+	if err != nil {
+		return fmt.Errorf("begin tx: %w", err)
+	}
+	defer tx.Rollback(ctx)
+	qtx := r.Queries.WithTx(tx)
+
+	existingLocationId, err := GetLocationIDOrNilByAccommodationID(ctx, qtx, accommodation.ID)
+	if err != nil {
+		return fmt.Errorf("get existing location id for accommodation [id=%d]: %w", accommodation.ID, err)
+	}
+
+	locationId, err := UpsertOrDeleteLocation(ctx, qtx, existingLocationId, accommodation.Location)
+	if err != nil {
+		return fmt.Errorf("upsert location [existing=%d]: %w", existingLocationId, err)
+	}
+
+	err = qtx.UpdateAccommodation(ctx, sqlc.UpdateAccommodationParams{
+		ID:            accommodation.ID,
+		LocationID:    locationId,
+		Name:          accommodation.Name,
+		ArrivalDate:   accommodation.ArrivalDate,
+		DepartureDate: accommodation.DepartureDate,
+		CheckInTime:   accommodation.CheckInTime,
+		CheckOutTime:  accommodation.CheckOutTime,
+		Address:       accommodation.Address,
+		Description:   accommodation.Description,
+		Price:         accommodation.Price,
+	})
+	if err != nil {
+		return fmt.Errorf("update accommodation [id=%d]: %w", accommodation.ID, err)
+	}
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		return fmt.Errorf("commit tx: %w", err)
+	}
+
+	return nil
+}
+
+func (r *AccommodationRepo) DeleteAccommodation(ctx context.Context, tripID int32, accommodationID int32) error {
+	return r.Queries.DeleteAccommodationByID(ctx, sqlc.DeleteAccommodationByIDParams{TripID: tripID, ID: accommodationID})
 }
 
 func mapAllAccommodation(accommodation []sqlc.GetAllAccommodationRow) []entity.Accommodation {

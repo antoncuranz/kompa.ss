@@ -11,10 +11,27 @@ import (
 	"cloud.google.com/go/civil"
 )
 
+const deleteActivityByID = `-- name: DeleteActivityByID :exec
+DELETE
+FROM activity
+WHERE trip_id = $1
+  AND activity.id = $2
+`
+
+type DeleteActivityByIDParams struct {
+	TripID int32
+	ID     int32
+}
+
+func (q *Queries) DeleteActivityByID(ctx context.Context, arg DeleteActivityByIDParams) error {
+	_, err := q.db.Exec(ctx, deleteActivityByID, arg.TripID, arg.ID)
+	return err
+}
+
 const getActivities = `-- name: GetActivities :many
 SELECT activity.id, activity.trip_id, activity.location_id, activity.name, activity.date, activity.time, activity.description, activity.address, activity.price, location.id, location.latitude, location.longitude
 FROM activity
-LEFT JOIN location on activity.location_id = location.id
+         LEFT JOIN location on activity.location_id = location.id
 WHERE trip_id = $1
 `
 
@@ -61,9 +78,9 @@ func (q *Queries) GetActivities(ctx context.Context, tripID int32) ([]GetActivit
 const getActivityByID = `-- name: GetActivityByID :one
 SELECT activity.id, activity.trip_id, activity.location_id, activity.name, activity.date, activity.time, activity.description, activity.address, activity.price, location.id, location.latitude, location.longitude
 FROM activity
-LEFT JOIN location on activity.location_id = location.id
+         LEFT JOIN location on activity.location_id = location.id
 WHERE trip_id = $1
-AND activity.id = $2
+  AND activity.id = $2
 `
 
 type GetActivityByIDParams struct {
@@ -99,12 +116,8 @@ func (q *Queries) GetActivityByID(ctx context.Context, arg GetActivityByIDParams
 }
 
 const insertActivity = `-- name: InsertActivity :one
-INSERT INTO activity (
-    trip_id, location_id, name, date, time, address, description, price
-) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8
-)
-RETURNING id
+INSERT INTO activity (trip_id, location_id, name, date, time, address, description, price)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id
 `
 
 type InsertActivityParams struct {
@@ -132,4 +145,41 @@ func (q *Queries) InsertActivity(ctx context.Context, arg InsertActivityParams) 
 	var id int32
 	err := row.Scan(&id)
 	return id, err
+}
+
+const updateActivity = `-- name: UpdateActivity :exec
+UPDATE activity
+SET location_id = $2,
+    name        = $3,
+    date        = $4,
+    time        = $5,
+    address     = $6,
+    description = $7,
+    price       = $8
+WHERE id = $1
+`
+
+type UpdateActivityParams struct {
+	ID          int32
+	LocationID  *int32
+	Name        string
+	Date        civil.Date
+	Time        *civil.Time
+	Address     *string
+	Description *string
+	Price       *int32
+}
+
+func (q *Queries) UpdateActivity(ctx context.Context, arg UpdateActivityParams) error {
+	_, err := q.db.Exec(ctx, updateActivity,
+		arg.ID,
+		arg.LocationID,
+		arg.Name,
+		arg.Date,
+		arg.Time,
+		arg.Address,
+		arg.Description,
+		arg.Price,
+	)
+	return err
 }

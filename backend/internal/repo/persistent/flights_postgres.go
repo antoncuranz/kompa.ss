@@ -141,6 +141,10 @@ func (r *FlightsRepo) SaveFlight(ctx context.Context, flight entity.Flight) (ent
 	return r.GetFlightByID(ctx, flight.TripID, flightId)
 }
 
+func (r *FlightsRepo) DeleteFlight(ctx context.Context, tripID int32, flightID int32) error {
+	return r.Queries.DeleteFlightByID(ctx, sqlc.DeleteFlightByIDParams{TripID: tripID, ID: flightID})
+}
+
 // TODO: Move mapping to separate file
 
 func mapFlight(flight sqlc.Flight, legs []sqlc.GetFlightLegsByFlightIDRow, pnrs []sqlc.Pnr) entity.Flight {

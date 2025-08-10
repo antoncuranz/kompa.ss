@@ -303,10 +303,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/entity.Accommodation'
+        "204":
+          description: No Content
         "500":
           description: Internal Server Error
           schema:
@@ -315,6 +313,29 @@ paths:
       tags:
       - accommodation
   /trips/{trip_id}/accommodation/{accommodation_id}:
+    delete:
+      operationId: deleteAccommodation
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        type: integer
+      - description: Accommodation ID
+        in: path
+        name: accommodation_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Delete accommodation
+      tags:
+      - accommodation
     get:
       operationId: getAccommodationByID
       parameters:
@@ -340,6 +361,39 @@ paths:
           schema:
             $ref: '#/definitions/response.Error'
       summary: Get accommodation by ID
+      tags:
+      - accommodation
+    put:
+      consumes:
+      - application/json
+      operationId: putAccommodation
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        type: integer
+      - description: Accommodation ID
+        in: path
+        name: accommodation_id
+        required: true
+        type: string
+      - description: accommodation
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.Accommodation'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Update accommodation
       tags:
       - accommodation
   /trips/{trip_id}/activities:
@@ -386,10 +440,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/entity.Activity'
+        "204":
+          description: No Content
         "500":
           description: Internal Server Error
           schema:
@@ -398,6 +450,29 @@ paths:
       tags:
       - activities
   /trips/{trip_id}/activities/{activity_id}:
+    delete:
+      operationId: deleteActivity
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        type: integer
+      - description: Activity ID
+        in: path
+        name: activity_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Delete activity
+      tags:
+      - activities
     get:
       operationId: getActivity
       parameters:
@@ -423,6 +498,39 @@ paths:
           schema:
             $ref: '#/definitions/response.Error'
       summary: Get activity by ID
+      tags:
+      - activities
+    put:
+      consumes:
+      - application/json
+      operationId: putActivity
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        type: integer
+      - description: Activity ID
+        in: path
+        name: activity_id
+        required: true
+        type: string
+      - description: activity
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.Activity'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Update activity
       tags:
       - activities
   /trips/{trip_id}/flights:
@@ -469,10 +577,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/entity.Flight'
+        "204":
+          description: No Content
         "500":
           description: Internal Server Error
           schema:
@@ -481,6 +587,29 @@ paths:
       tags:
       - flights
   /trips/{trip_id}/flights/{flight_id}:
+    delete:
+      operationId: deleteFlight
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        type: integer
+      - description: Flight ID
+        in: path
+        name: flight_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Delete flight
+      tags:
+      - flights
     get:
       operationId: getFlight
       parameters:
@@ -506,6 +635,39 @@ paths:
           schema:
             $ref: '#/definitions/response.Error'
       summary: Get flight by ID
+      tags:
+      - flights
+    put:
+      consumes:
+      - application/json
+      operationId: putFlight
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        type: integer
+      - description: Flight ID
+        in: path
+        name: flight_id
+        required: true
+        type: string
+      - description: flight
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.Flight'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Update flight
       tags:
       - flights
   /users:

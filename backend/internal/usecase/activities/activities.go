@@ -37,3 +37,21 @@ func (uc *UseCase) CreateActivity(ctx context.Context, tripID int32, activity re
 		Price:       activity.Price,
 	})
 }
+
+func (uc *UseCase) UpdateActivity(ctx context.Context, tripID int32, activityID int32, activity request.Activity) error {
+	return uc.repo.UpdateActivity(ctx, entity.Activity{
+		ID:          activityID,
+		TripID:      tripID,
+		Name:        activity.Name,
+		Date:        activity.Date,
+		Time:        activity.Time,
+		Description: activity.Description,
+		Address:     activity.Address,
+		Location:    activity.Location,
+		Price:       activity.Price,
+	})
+}
+
+func (uc *UseCase) DeleteActivity(ctx context.Context, tripID int32, activityId int32) error {
+	return uc.repo.DeleteActivity(ctx, tripID, activityId)
+}

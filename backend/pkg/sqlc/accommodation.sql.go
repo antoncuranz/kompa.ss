@@ -11,12 +11,29 @@ import (
 	"cloud.google.com/go/civil"
 )
 
+const deleteAccommodationByID = `-- name: DeleteAccommodationByID :exec
+DELETE
+FROM accommodation
+WHERE trip_id = $1
+  AND accommodation.id = $2
+`
+
+type DeleteAccommodationByIDParams struct {
+	TripID int32
+	ID     int32
+}
+
+func (q *Queries) DeleteAccommodationByID(ctx context.Context, arg DeleteAccommodationByIDParams) error {
+	_, err := q.db.Exec(ctx, deleteAccommodationByID, arg.TripID, arg.ID)
+	return err
+}
+
 const getAccommodationByID = `-- name: GetAccommodationByID :one
 SELECT accommodation.id, accommodation.trip_id, accommodation.location_id, accommodation.name, accommodation.arrival_date, accommodation.departure_date, accommodation.check_in_time, accommodation.check_out_time, accommodation.description, accommodation.address, accommodation.price, location.id, location.latitude, location.longitude
 FROM accommodation
-LEFT JOIN location on location_id = location.id
+         LEFT JOIN location on location_id = location.id
 WHERE trip_id = $1
-AND accommodation.id = $2
+  AND accommodation.id = $2
 `
 
 type GetAccommodationByIDParams struct {
@@ -56,7 +73,7 @@ func (q *Queries) GetAccommodationByID(ctx context.Context, arg GetAccommodation
 const getAllAccommodation = `-- name: GetAllAccommodation :many
 SELECT accommodation.id, accommodation.trip_id, accommodation.location_id, accommodation.name, accommodation.arrival_date, accommodation.departure_date, accommodation.check_in_time, accommodation.check_out_time, accommodation.description, accommodation.address, accommodation.price, location.id, location.latitude, location.longitude
 FROM accommodation
-LEFT JOIN location on location_id = location.id
+         LEFT JOIN location on location_id = location.id
 WHERE trip_id = $1
 `
 
@@ -103,11 +120,8 @@ func (q *Queries) GetAllAccommodation(ctx context.Context, tripID int32) ([]GetA
 }
 
 const insertAccommodation = `-- name: InsertAccommodation :one
-INSERT INTO accommodation (
-    trip_id, location_id, name, arrival_date, departure_date, check_in_time, check_out_time, description, address, price
-) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
-)
+INSERT INTO accommodation (trip_id, location_id, name, arrival_date, departure_date, check_in_time, check_out_time, description, address, price)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
 RETURNING id
 `
 
@@ -140,4 +154,47 @@ func (q *Queries) InsertAccommodation(ctx context.Context, arg InsertAccommodati
 	var id int32
 	err := row.Scan(&id)
 	return id, err
+}
+
+const updateAccommodation = `-- name: UpdateAccommodation :exec
+UPDATE accommodation
+SET location_id    = $2,
+    name           = $3,
+    arrival_date   = $4,
+    departure_date = $5,
+    check_in_time  = $6,
+    check_out_time = $7,
+    description    = $8,
+    address        = $9,
+    price          = $10
+WHERE id = $1
+`
+
+type UpdateAccommodationParams struct {
+	ID            int32
+	LocationID    *int32
+	Name          string
+	ArrivalDate   civil.Date
+	DepartureDate civil.Date
+	CheckInTime   *civil.Time
+	CheckOutTime  *civil.Time
+	Description   *string
+	Address       *string
+	Price         *int32
+}
+
+func (q *Queries) UpdateAccommodation(ctx context.Context, arg UpdateAccommodationParams) error {
+	_, err := q.db.Exec(ctx, updateAccommodation,
+		arg.ID,
+		arg.LocationID,
+		arg.Name,
+		arg.ArrivalDate,
+		arg.DepartureDate,
+		arg.CheckInTime,
+		arg.CheckOutTime,
+		arg.Description,
+		arg.Address,
+		arg.Price,
+	)
+	return err
 }
