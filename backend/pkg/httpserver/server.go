@@ -44,11 +44,12 @@ func New(opts ...Option) *Server {
 	}
 
 	app := fiber.New(fiber.Config{
-		Prefork:      s.prefork,
-		ReadTimeout:  s.readTimeout,
-		WriteTimeout: s.writeTimeout,
-		JSONDecoder:  json.Unmarshal,
-		JSONEncoder:  json.Marshal,
+		Prefork:        s.prefork,
+		ReadTimeout:    s.readTimeout,
+		WriteTimeout:   s.writeTimeout,
+		JSONDecoder:    json.Unmarshal,
+		JSONEncoder:    json.Marshal,
+		ReadBufferSize: 8192,
 	})
 
 	s.App = app
