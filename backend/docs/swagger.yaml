@@ -57,6 +57,19 @@ definitions:
       name:
         type: string
     type: object
+  entity.Attachment:
+    properties:
+      blob:
+        items:
+          type: integer
+        type: array
+      id:
+        type: integer
+      name:
+        type: string
+      tripId:
+        type: integer
+    type: object
   entity.Flight:
     properties:
       id:
@@ -157,6 +170,10 @@ definitions:
         type: string
       price:
         type: integer
+    required:
+    - arrivalDate
+    - departureDate
+    - name
     type: object
   request.Activity:
     properties:
@@ -174,6 +191,9 @@ definitions:
         type: integer
       time:
         type: string
+    required:
+    - date
+    - name
     type: object
   request.Flight:
     properties:
@@ -218,6 +238,10 @@ definitions:
         type: string
       startDate:
         type: string
+    required:
+    - endDate
+    - name
+    - startDate
     type: object
   response.Error:
     properties:
@@ -617,6 +641,110 @@ paths:
       summary: Update activity
       tags:
       - activities
+  /trips/{trip_id}/attachments:
+    get:
+      operationId: getAttachments
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.Attachment'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Get all attachments
+      tags:
+      - attachments
+    post:
+      consumes:
+      - multipart/form-data
+      operationId: postAttachment
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        type: integer
+      - collectionFormat: csv
+        description: attachment
+        in: formData
+        items:
+          type: file
+        name: attachments
+        required: true
+        type: array
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Add attachment
+      tags:
+      - attachments
+  /trips/{trip_id}/attachments/{attachment_id}:
+    delete:
+      operationId: deleteAttachment
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        type: integer
+      - description: Attachment ID
+        in: path
+        name: attachment_id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Delete attachment
+      tags:
+      - attachments
+    get:
+      operationId: downloadAttachment
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        type: integer
+      - description: Attachment ID
+        in: path
+        name: attachment_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Attachment'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Download attachment by ID
+      tags:
+      - attachments
   /trips/{trip_id}/flights:
     get:
       operationId: getFlights

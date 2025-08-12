@@ -75,3 +75,16 @@ func NewAccommodationRoutes(tripsV1Group fiber.Router, uc usecase.Accommodation,
 		accommodationV1Group.Delete("/:accommodation_id", r.deleteAccommodation)
 	}
 }
+
+func NewAttachmentRoutes(tripsV1Group fiber.Router, uc usecase.Attachments, log logger.Interface) {
+	r := &AttachmentsV1{uc: uc, log: log, v: validator.New(validator.WithRequiredStructEnabled())}
+
+	attachmentsV1Group := tripsV1Group.Group("/:trip_id/attachments")
+
+	{
+		attachmentsV1Group.Get("", r.getAttachments)
+		attachmentsV1Group.Post("", r.postAttachment)
+		attachmentsV1Group.Get("/:attachment_id", r.downloadAttachment)
+		attachmentsV1Group.Delete("/:attachment_id", r.deleteAttachment)
+	}
+}

@@ -52,6 +52,7 @@ func NewRouter(app *fiber.App, cfg *config.Config, useCases usecase.UseCases, lo
 			v1.NewFlightRoutes(tripsV1Group, useCases.Flights, log)
 			v1.NewActivityRoutes(tripsV1Group, useCases.Activities, log)
 			v1.NewAccommodationRoutes(tripsV1Group, useCases.Accommodation, log)
+			v1.NewAttachmentRoutes(tripsV1Group, useCases.Attachments, log)
 		}
 	}
 }

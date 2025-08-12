@@ -13,6 +13,7 @@ import (
 	"travel-planner/internal/usecase"
 	"travel-planner/internal/usecase/accommodation"
 	"travel-planner/internal/usecase/activities"
+	"travel-planner/internal/usecase/attachments"
 	"travel-planner/internal/usecase/flights"
 	"travel-planner/internal/usecase/trips"
 	"travel-planner/internal/usecase/users"
@@ -20,7 +21,7 @@ import (
 
 	"travel-planner/config"
 	"travel-planner/internal/controller/http"
-	"travel-planner/internal/repo/persistent"
+	persistent "travel-planner/internal/repo/postgres"
 	"travel-planner/pkg/httpserver"
 	"travel-planner/pkg/logger"
 )
@@ -68,6 +69,7 @@ func createUseCases(cfg *config.Config, pg *postgres.Postgres) usecase.UseCases 
 	flightsUseCase := flights.New(persistent.NewFlightsRepo(pg), webapi.New(cfg.WebApi.AerodataboxApiKey))
 	activitiesUseCase := activities.New(persistent.NewActivitiesRepo(pg))
 	accommodationUseCase := accommodation.New(persistent.NewAccommodationRepo(pg))
+	attachmentsUseCase := attachments.New(persistent.NewAttachmentsRepo(pg))
 
 	return usecase.UseCases{
 		Users:         usersUseCase,
@@ -75,6 +77,7 @@ func createUseCases(cfg *config.Config, pg *postgres.Postgres) usecase.UseCases 
 		Flights:       flightsUseCase,
 		Activities:    activitiesUseCase,
 		Accommodation: accommodationUseCase,
+		Attachments:   attachmentsUseCase,
 	}
 }
 

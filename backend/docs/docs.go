@@ -593,6 +593,161 @@ const docTemplate = `{
                 }
             }
         },
+        "/trips/{trip_id}/attachments": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "attachments"
+                ],
+                "summary": "Get all attachments",
+                "operationId": "getAttachments",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Trip ID",
+                        "name": "trip_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entity.Attachment"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "attachments"
+                ],
+                "summary": "Add attachment",
+                "operationId": "postAttachment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Trip ID",
+                        "name": "trip_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "file"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "attachment",
+                        "name": "attachments",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/trips/{trip_id}/attachments/{attachment_id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "attachments"
+                ],
+                "summary": "Download attachment by ID",
+                "operationId": "downloadAttachment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Trip ID",
+                        "name": "trip_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Attachment ID",
+                        "name": "attachment_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Attachment"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "attachments"
+                ],
+                "summary": "Delete attachment",
+                "operationId": "deleteAttachment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Trip ID",
+                        "name": "trip_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Attachment ID",
+                        "name": "attachment_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/trips/{trip_id}/flights": {
             "get": {
                 "produces": [
@@ -951,6 +1106,26 @@ const docTemplate = `{
                 }
             }
         },
+        "entity.Attachment": {
+            "type": "object",
+            "properties": {
+                "blob": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "tripId": {
+                    "type": "integer"
+                }
+            }
+        },
         "entity.Flight": {
             "type": "object",
             "properties": {
@@ -1075,6 +1250,11 @@ const docTemplate = `{
         },
         "request.Accommodation": {
             "type": "object",
+            "required": [
+                "arrivalDate",
+                "departureDate",
+                "name"
+            ],
             "properties": {
                 "address": {
                     "type": "string"
@@ -1107,6 +1287,10 @@ const docTemplate = `{
         },
         "request.Activity": {
             "type": "object",
+            "required": [
+                "date",
+                "name"
+            ],
             "properties": {
                 "address": {
                     "type": "string"
@@ -1178,6 +1362,11 @@ const docTemplate = `{
         },
         "request.Trip": {
             "type": "object",
+            "required": [
+                "endDate",
+                "name",
+                "startDate"
+            ],
             "properties": {
                 "description": {
                     "type": "string"

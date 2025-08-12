@@ -3,6 +3,7 @@ package usecase
 
 import (
 	"context"
+	"mime/multipart"
 	"travel-planner/internal/controller/http/v1/request"
 	"travel-planner/internal/entity"
 )
@@ -16,6 +17,7 @@ type (
 		Flights       Flights
 		Activities    Activities
 		Accommodation Accommodation
+		Attachments   Attachments
 	}
 
 	Users interface {
@@ -53,5 +55,12 @@ type (
 		CreateAccommodation(ctx context.Context, tripID int32, accommodation request.Accommodation) (entity.Accommodation, error)
 		UpdateAccommodation(ctx context.Context, tripID int32, accommodationID int32, accommodation request.Accommodation) error
 		DeleteAccommodation(ctx context.Context, tripID int32, accommodationID int32) error
+	}
+
+	Attachments interface {
+		GetAttachments(ctx context.Context, tripID int32) ([]entity.Attachment, error)
+		GetAttachmentByID(ctx context.Context, tripID int32, attachmentID int32) (entity.Attachment, error)
+		CreateAttachment(ctx context.Context, tripID int32, attachment *multipart.FileHeader) (entity.Attachment, error)
+		DeleteAttachment(ctx context.Context, tripID int32, attachmentID int32) error
 	}
 )

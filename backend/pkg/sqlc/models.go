@@ -41,6 +41,28 @@ type Airport struct {
 	LocationID   *int32
 }
 
+type Attachment struct {
+	ID     int32
+	TripID int32
+	Name   string
+	Blob   []byte
+}
+
+type AttachmentAccommodation struct {
+	AttachmentID    int32
+	AccommodationID int32
+}
+
+type AttachmentActivity struct {
+	AttachmentID int32
+	ActivityID   int32
+}
+
+type AttachmentFlight struct {
+	AttachmentID int32
+	FlightID     int32
+}
+
 type Flight struct {
 	ID     int32
 	TripID int32

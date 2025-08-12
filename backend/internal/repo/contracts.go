@@ -45,6 +45,13 @@ type (
 		DeleteAccommodation(ctx context.Context, tripID int32, accommodationID int32) error
 	}
 
+	AttachmentsRepo interface {
+		GetAttachments(ctx context.Context, tripID int32) ([]entity.Attachment, error)
+		GetAttachmentByID(ctx context.Context, tripID int32, attachmentID int32) (entity.Attachment, error)
+		SaveAttachment(ctx context.Context, attachment entity.Attachment) (entity.Attachment, error)
+		DeleteAttachment(ctx context.Context, tripID int32, attachmentID int32) error
+	}
+
 	AerodataboxWebAPI interface {
 		RetrieveFlightLeg(ctx context.Context, date string, flightNumber string, origin *string) (entity.FlightLeg, error)
 	}
