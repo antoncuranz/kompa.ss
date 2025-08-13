@@ -43,7 +43,7 @@ func StartDockerServer(
 	)
 	assert.NoError(t, err)
 
-	dbConnectionString := fmt.Sprintf("postgres://%s:%s@%s/%s", dbUser, dbPassword, postgresAlias, dbName)
+	dbConnectionString := fmt.Sprintf("postgres://%s:%s@%s:5432/%s", dbUser, dbPassword, postgresAlias, dbName)
 
 	req := testcontainers.ContainerRequest{
 		FromDockerfile: testcontainers.FromDockerfile{
