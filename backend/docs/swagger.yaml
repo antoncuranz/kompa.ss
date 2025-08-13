@@ -254,6 +254,15 @@ components:
           example: message
           type: string
       type: object
+    v1.AttachmentsParam:
+      properties:
+        attachments:
+          items:
+            format: binary
+            type: string
+          type: array
+          uniqueItems: false
+      type: object
 externalDocs:
   description: ""
   url: ""
@@ -719,10 +728,7 @@ paths:
         content:
           multipart/form-data:
             schema:
-              items:
-                type: string
-                format: binary
-              type: array
+              $ref: '#/components/schemas/v1.AttachmentsParam'
         description: attachment
         required: true
       responses:

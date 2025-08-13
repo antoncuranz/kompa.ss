@@ -76,12 +76,16 @@ func determineContentType(filename string) string {
 	return "application/octet-stream"
 }
 
+type AttachmentsParam struct {
+	Attachments []string `format:"binary"`
+}
+
 // @Summary     Add attachment
 // @ID          postAttachment
 // @Tags  	    attachments
 // @Accept      multipart/form-data
 // @Param       trip_id path int true "Trip ID"
-// @Param       attachments formData []string true "attachment"
+// @Param       attachments formData AttachmentsParam true "attachment"
 // @Success     204
 // @Failure     500 {object} response.Error
 // @Router      /trips/{trip_id}/attachments [post]
