@@ -1,300 +1,307 @@
-basePath: /api/v1
-definitions:
-  entity.Accommodation:
-    properties:
-      address:
-        type: string
-      arrivalDate:
-        type: string
-      checkInTime:
-        type: string
-      checkOutTime:
-        type: string
-      departureDate:
-        type: string
-      description:
-        type: string
-      id:
-        type: integer
-      location:
-        $ref: '#/definitions/entity.Location'
-      name:
-        type: string
-      price:
-        type: integer
-      tripId:
-        type: integer
-    type: object
-  entity.Activity:
-    properties:
-      address:
-        type: string
-      date:
-        type: string
-      description:
-        type: string
-      id:
-        type: integer
-      location:
-        $ref: '#/definitions/entity.Location'
-      name:
-        type: string
-      price:
-        type: integer
-      time:
-        type: string
-      tripId:
-        type: integer
-    type: object
-  entity.Airport:
-    properties:
-      iata:
-        type: string
-      location:
-        $ref: '#/definitions/entity.Location'
-      municipality:
-        type: string
-      name:
-        type: string
-    type: object
-  entity.Attachment:
-    properties:
-      blob:
-        items:
+components:
+  schemas:
+    entity.Accommodation:
+      properties:
+        address:
+          type: string
+        arrivalDate:
+          type: string
+        checkInTime:
+          type: string
+        checkOutTime:
+          type: string
+        departureDate:
+          type: string
+        description:
+          type: string
+        id:
           type: integer
-        type: array
-      id:
-        type: integer
-      name:
-        type: string
-      tripId:
-        type: integer
-    type: object
-  entity.Flight:
-    properties:
-      id:
-        type: integer
-      legs:
-        items:
-          $ref: '#/definitions/entity.FlightLeg'
-        type: array
-      pnrs:
-        items:
-          $ref: '#/definitions/entity.PNR'
-        type: array
-      price:
-        type: integer
-      tripId:
-        type: integer
-    type: object
-  entity.FlightLeg:
-    properties:
-      aircraft:
-        type: string
-      airline:
-        type: string
-      arrivalDateTime:
-        type: string
-      departureDateTime:
-        type: string
-      destination:
-        $ref: '#/definitions/entity.Airport'
-      durationInMinutes:
-        type: integer
-      flightNumber:
-        type: string
-      id:
-        type: integer
-      origin:
-        $ref: '#/definitions/entity.Airport'
-    type: object
-  entity.Location:
-    properties:
-      id:
-        type: integer
-      latitude:
-        type: number
-      longitude:
-        type: number
-    type: object
-  entity.PNR:
-    properties:
-      airline:
-        example: LH
-        type: string
-      id:
-        type: integer
-      pnr:
-        example: "123456"
-        type: string
-    type: object
-  entity.Trip:
-    properties:
-      description:
-        type: string
-      endDate:
-        type: string
-      id:
-        type: integer
-      imageUrl:
-        type: string
-      name:
-        type: string
-      startDate:
-        type: string
-    type: object
-  entity.User:
-    properties:
-      id:
-        type: integer
-      name:
-        type: string
-    type: object
-  request.Accommodation:
-    properties:
-      address:
-        type: string
-      arrivalDate:
-        type: string
-      checkInTime:
-        type: string
-      checkOutTime:
-        type: string
-      departureDate:
-        type: string
-      description:
-        type: string
-      location:
-        $ref: '#/definitions/entity.Location'
-      name:
-        type: string
-      price:
-        type: integer
-    required:
-    - arrivalDate
-    - departureDate
-    - name
-    type: object
-  request.Activity:
-    properties:
-      address:
-        type: string
-      date:
-        type: string
-      description:
-        type: string
-      location:
-        $ref: '#/definitions/entity.Location'
-      name:
-        type: string
-      price:
-        type: integer
-      time:
-        type: string
-    required:
-    - date
-    - name
-    type: object
-  request.Flight:
-    properties:
-      legs:
-        items:
-          $ref: '#/definitions/request.FlightLeg'
-        type: array
-      pnrs:
-        items:
-          $ref: '#/definitions/entity.PNR'
-        type: array
-      price:
-        type: integer
-    required:
-    - legs
-    - pnrs
-    type: object
-  request.FlightLeg:
-    properties:
-      date:
-        example: "2026-01-30"
-        type: string
-      flightNumber:
-        example: EK412
-        type: string
-      originAirport:
-        example: SYD
-        type: string
-    required:
-    - date
-    - flightNumber
-    type: object
-  request.Trip:
-    properties:
-      description:
-        type: string
-      endDate:
-        type: string
-      imageUrl:
-        type: string
-      name:
-        type: string
-      startDate:
-        type: string
-    required:
-    - endDate
-    - name
-    - startDate
-    type: object
-  response.Error:
-    properties:
-      error:
-        example: message
-        type: string
-    type: object
-host: 127.0.0.1:8080
+        location:
+          $ref: '#/components/schemas/entity.Location'
+        name:
+          type: string
+        price:
+          type: integer
+        tripId:
+          type: integer
+      type: object
+    entity.Activity:
+      properties:
+        address:
+          type: string
+        date:
+          type: string
+        description:
+          type: string
+        id:
+          type: integer
+        location:
+          $ref: '#/components/schemas/entity.Location'
+        name:
+          type: string
+        price:
+          type: integer
+        time:
+          type: string
+        tripId:
+          type: integer
+      type: object
+    entity.Airport:
+      properties:
+        iata:
+          type: string
+        location:
+          $ref: '#/components/schemas/entity.Location'
+        municipality:
+          type: string
+        name:
+          type: string
+      type: object
+    entity.Attachment:
+      properties:
+        blob:
+          items:
+            type: integer
+          type: array
+          uniqueItems: false
+        id:
+          type: integer
+        name:
+          type: string
+        tripId:
+          type: integer
+      type: object
+    entity.Flight:
+      properties:
+        id:
+          type: integer
+        legs:
+          items:
+            $ref: '#/components/schemas/entity.FlightLeg'
+          type: array
+          uniqueItems: false
+        pnrs:
+          items:
+            $ref: '#/components/schemas/entity.PNR'
+          type: array
+          uniqueItems: false
+        price:
+          type: integer
+        tripId:
+          type: integer
+      type: object
+    entity.FlightLeg:
+      properties:
+        aircraft:
+          type: string
+        airline:
+          type: string
+        arrivalDateTime:
+          type: string
+        departureDateTime:
+          type: string
+        destination:
+          $ref: '#/components/schemas/entity.Airport'
+        durationInMinutes:
+          type: integer
+        flightNumber:
+          type: string
+        id:
+          type: integer
+        origin:
+          $ref: '#/components/schemas/entity.Airport'
+      type: object
+    entity.Location:
+      properties:
+        id:
+          type: integer
+        latitude:
+          type: number
+        longitude:
+          type: number
+      type: object
+    entity.PNR:
+      properties:
+        airline:
+          example: LH
+          type: string
+        id:
+          type: integer
+        pnr:
+          example: "123456"
+          type: string
+      type: object
+    entity.Trip:
+      properties:
+        description:
+          type: string
+        endDate:
+          type: string
+        id:
+          type: integer
+        imageUrl:
+          type: string
+        name:
+          type: string
+        startDate:
+          type: string
+      type: object
+    entity.User:
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      type: object
+    request.Accommodation:
+      properties:
+        address:
+          type: string
+        arrivalDate:
+          type: string
+        checkInTime:
+          type: string
+        checkOutTime:
+          type: string
+        departureDate:
+          type: string
+        description:
+          type: string
+        location:
+          $ref: '#/components/schemas/entity.Location'
+        name:
+          type: string
+        price:
+          type: integer
+      required:
+      - arrivalDate
+      - departureDate
+      - name
+      type: object
+    request.Activity:
+      properties:
+        address:
+          type: string
+        date:
+          type: string
+        description:
+          type: string
+        location:
+          $ref: '#/components/schemas/entity.Location'
+        name:
+          type: string
+        price:
+          type: integer
+        time:
+          type: string
+      required:
+      - date
+      - name
+      type: object
+    request.Flight:
+      properties:
+        legs:
+          items:
+            $ref: '#/components/schemas/request.FlightLeg'
+          type: array
+          uniqueItems: false
+        pnrs:
+          items:
+            $ref: '#/components/schemas/entity.PNR'
+          type: array
+          uniqueItems: false
+        price:
+          type: integer
+      required:
+      - legs
+      - pnrs
+      type: object
+    request.FlightLeg:
+      properties:
+        date:
+          example: "2026-01-30"
+          type: string
+        flightNumber:
+          example: EK412
+          type: string
+        originAirport:
+          example: SYD
+          type: string
+      required:
+      - date
+      - flightNumber
+      type: object
+    request.Trip:
+      properties:
+        description:
+          type: string
+        endDate:
+          type: string
+        imageUrl:
+          type: string
+        name:
+          type: string
+        startDate:
+          type: string
+      required:
+      - endDate
+      - name
+      - startDate
+      type: object
+    response.Error:
+      properties:
+        error:
+          example: message
+          type: string
+      type: object
+externalDocs:
+  description: ""
+  url: ""
 info:
-  contact: {}
   description: Using a translation service as an example
   title: TravelPlanner API
   version: "1.0"
+openapi: 3.1.0
 paths:
   /trips:
     get:
       operationId: getTrips
-      produces:
-      - application/json
       responses:
         "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/entity.Trip'
+                type: array
           description: OK
-          schema:
-            items:
-              $ref: '#/definitions/entity.Trip'
-            type: array
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Get all trips
       tags:
       - trips
     post:
-      consumes:
-      - application/json
       operationId: postTrip
-      parameters:
-      - description: trip
-        in: body
-        name: request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request.Trip'
+        description: trip
         required: true
-        schema:
-          $ref: '#/definitions/request.Trip'
-      produces:
-      - application/json
       responses:
         "204":
           description: No Content
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Add trip
       tags:
       - trips
@@ -306,14 +313,17 @@ paths:
         in: path
         name: trip_id
         required: true
-        type: integer
+        schema:
+          type: integer
       responses:
         "204":
           description: No Content
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Delete trip
       tags:
       - trips
@@ -324,46 +334,49 @@ paths:
         in: path
         name: trip_id
         required: true
-        type: integer
-      produces:
-      - application/json
+        schema:
+          type: integer
       responses:
         "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entity.Trip'
           description: OK
-          schema:
-            $ref: '#/definitions/entity.Trip'
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Get trip by ID
       tags:
       - trips
     put:
-      consumes:
-      - application/json
       operationId: putTrip
       parameters:
       - description: Trip ID
         in: path
         name: trip_id
         required: true
-        type: integer
-      - description: trip
-        in: body
-        name: request
-        required: true
         schema:
-          $ref: '#/definitions/request.Trip'
-      produces:
-      - application/json
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request.Trip'
+        description: trip
+        required: true
       responses:
         "204":
           description: No Content
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Update trip
       tags:
       - trips
@@ -375,48 +388,51 @@ paths:
         in: path
         name: trip_id
         required: true
-        type: integer
-      produces:
-      - application/json
+        schema:
+          type: integer
       responses:
         "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/entity.Accommodation'
+                type: array
           description: OK
-          schema:
-            items:
-              $ref: '#/definitions/entity.Accommodation'
-            type: array
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Get all accommodation
       tags:
       - accommodation
     post:
-      consumes:
-      - application/json
       operationId: postAccommodation
       parameters:
       - description: Trip ID
         in: path
         name: trip_id
         required: true
-        type: integer
-      - description: accommodation
-        in: body
-        name: request
-        required: true
         schema:
-          $ref: '#/definitions/request.Accommodation'
-      produces:
-      - application/json
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request.Accommodation'
+        description: accommodation
+        required: true
       responses:
         "204":
           description: No Content
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Add accommodation
       tags:
       - accommodation
@@ -428,19 +444,23 @@ paths:
         in: path
         name: trip_id
         required: true
-        type: integer
+        schema:
+          type: integer
       - description: Accommodation ID
         in: path
         name: accommodation_id
         required: true
-        type: integer
+        schema:
+          type: integer
       responses:
         "204":
           description: No Content
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Delete accommodation
       tags:
       - accommodation
@@ -451,56 +471,61 @@ paths:
         in: path
         name: trip_id
         required: true
-        type: integer
+        schema:
+          type: integer
       - description: Accommodation ID
         in: path
         name: accommodation_id
         required: true
-        type: integer
-      produces:
-      - application/json
+        schema:
+          type: integer
       responses:
         "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entity.Accommodation'
           description: OK
-          schema:
-            $ref: '#/definitions/entity.Accommodation'
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Get accommodation by ID
       tags:
       - accommodation
     put:
-      consumes:
-      - application/json
       operationId: putAccommodation
       parameters:
       - description: Trip ID
         in: path
         name: trip_id
         required: true
-        type: integer
+        schema:
+          type: integer
       - description: Accommodation ID
         in: path
         name: accommodation_id
         required: true
-        type: integer
-      - description: accommodation
-        in: body
-        name: request
-        required: true
         schema:
-          $ref: '#/definitions/request.Accommodation'
-      produces:
-      - application/json
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request.Accommodation'
+        description: accommodation
+        required: true
       responses:
         "204":
           description: No Content
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Update accommodation
       tags:
       - accommodation
@@ -512,48 +537,51 @@ paths:
         in: path
         name: trip_id
         required: true
-        type: integer
-      produces:
-      - application/json
+        schema:
+          type: integer
       responses:
         "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/entity.Activity'
+                type: array
           description: OK
-          schema:
-            items:
-              $ref: '#/definitions/entity.Activity'
-            type: array
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Get all activities
       tags:
       - activities
     post:
-      consumes:
-      - application/json
       operationId: postActivity
       parameters:
       - description: Trip ID
         in: path
         name: trip_id
         required: true
-        type: integer
-      - description: activity
-        in: body
-        name: request
-        required: true
         schema:
-          $ref: '#/definitions/request.Activity'
-      produces:
-      - application/json
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request.Activity'
+        description: activity
+        required: true
       responses:
         "204":
           description: No Content
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Add activity
       tags:
       - activities
@@ -565,19 +593,23 @@ paths:
         in: path
         name: trip_id
         required: true
-        type: integer
+        schema:
+          type: integer
       - description: Activity ID
         in: path
         name: activity_id
         required: true
-        type: integer
+        schema:
+          type: integer
       responses:
         "204":
           description: No Content
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Delete activity
       tags:
       - activities
@@ -588,56 +620,61 @@ paths:
         in: path
         name: trip_id
         required: true
-        type: integer
+        schema:
+          type: integer
       - description: Activity ID
         in: path
         name: activity_id
         required: true
-        type: integer
-      produces:
-      - application/json
+        schema:
+          type: integer
       responses:
         "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entity.Activity'
           description: OK
-          schema:
-            $ref: '#/definitions/entity.Activity'
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Get activity by ID
       tags:
       - activities
     put:
-      consumes:
-      - application/json
       operationId: putActivity
       parameters:
       - description: Trip ID
         in: path
         name: trip_id
         required: true
-        type: integer
+        schema:
+          type: integer
       - description: Activity ID
         in: path
         name: activity_id
         required: true
-        type: integer
-      - description: activity
-        in: body
-        name: request
-        required: true
         schema:
-          $ref: '#/definitions/request.Activity'
-      produces:
-      - application/json
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request.Activity'
+        description: activity
+        required: true
       responses:
         "204":
           description: No Content
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Update activity
       tags:
       - activities
@@ -649,48 +686,54 @@ paths:
         in: path
         name: trip_id
         required: true
-        type: integer
-      produces:
-      - application/json
+        schema:
+          type: integer
       responses:
         "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/entity.Attachment'
+                type: array
           description: OK
-          schema:
-            items:
-              $ref: '#/definitions/entity.Attachment'
-            type: array
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Get all attachments
       tags:
       - attachments
     post:
-      consumes:
-      - multipart/form-data
       operationId: postAttachment
       parameters:
       - description: Trip ID
         in: path
         name: trip_id
         required: true
-        type: integer
-      - collectionFormat: csv
+        schema:
+          type: integer
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              items:
+                type: string
+                format: binary
+              type: array
         description: attachment
-        in: formData
-        items:
-          type: file
-        name: attachments
         required: true
-        type: array
       responses:
         "204":
           description: No Content
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Add attachment
       tags:
       - attachments
@@ -702,19 +745,23 @@ paths:
         in: path
         name: trip_id
         required: true
-        type: integer
+        schema:
+          type: integer
       - description: Attachment ID
         in: path
         name: attachment_id
         required: true
-        type: integer
+        schema:
+          type: integer
       responses:
         "204":
           description: No Content
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Delete attachment
       tags:
       - attachments
@@ -725,23 +772,27 @@ paths:
         in: path
         name: trip_id
         required: true
-        type: integer
+        schema:
+          type: integer
       - description: Attachment ID
         in: path
         name: attachment_id
         required: true
-        type: integer
-      produces:
-      - application/json
+        schema:
+          type: integer
       responses:
         "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entity.Attachment'
           description: OK
-          schema:
-            $ref: '#/definitions/entity.Attachment'
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Download attachment by ID
       tags:
       - attachments
@@ -753,48 +804,51 @@ paths:
         in: path
         name: trip_id
         required: true
-        type: integer
-      produces:
-      - application/json
+        schema:
+          type: integer
       responses:
         "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/entity.Flight'
+                type: array
           description: OK
-          schema:
-            items:
-              $ref: '#/definitions/entity.Flight'
-            type: array
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Get all flights
       tags:
       - flights
     post:
-      consumes:
-      - application/json
       operationId: postFlight
       parameters:
       - description: Trip ID
         in: path
         name: trip_id
         required: true
-        type: integer
-      - description: flight
-        in: body
-        name: request
-        required: true
         schema:
-          $ref: '#/definitions/request.Flight'
-      produces:
-      - application/json
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request.Flight'
+        description: flight
+        required: true
       responses:
         "204":
           description: No Content
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Add flight
       tags:
       - flights
@@ -806,19 +860,23 @@ paths:
         in: path
         name: trip_id
         required: true
-        type: integer
+        schema:
+          type: integer
       - description: Flight ID
         in: path
         name: flight_id
         required: true
-        type: integer
+        schema:
+          type: integer
       responses:
         "204":
           description: No Content
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Delete flight
       tags:
       - flights
@@ -829,75 +887,82 @@ paths:
         in: path
         name: trip_id
         required: true
-        type: integer
+        schema:
+          type: integer
       - description: Flight ID
         in: path
         name: flight_id
         required: true
-        type: integer
-      produces:
-      - application/json
+        schema:
+          type: integer
       responses:
         "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entity.Flight'
           description: OK
-          schema:
-            $ref: '#/definitions/entity.Flight'
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Get flight by ID
       tags:
       - flights
     put:
-      consumes:
-      - application/json
       operationId: putFlight
       parameters:
       - description: Trip ID
         in: path
         name: trip_id
         required: true
-        type: integer
+        schema:
+          type: integer
       - description: Flight ID
         in: path
         name: flight_id
         required: true
-        type: integer
-      - description: flight
-        in: body
-        name: request
-        required: true
         schema:
-          $ref: '#/definitions/request.Flight'
-      produces:
-      - application/json
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request.Flight'
+        description: flight
+        required: true
       responses:
         "204":
           description: No Content
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Update flight
       tags:
       - flights
   /users:
     get:
       operationId: getUsers
-      produces:
-      - application/json
       responses:
         "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/entity.User'
+                type: array
           description: OK
-          schema:
-            items:
-              $ref: '#/definitions/entity.User'
-            type: array
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Get all users
       tags:
       - users
@@ -909,19 +974,23 @@ paths:
         in: path
         name: user_id
         required: true
-        type: integer
-      produces:
-      - application/json
+        schema:
+          type: integer
       responses:
         "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entity.User'
           description: OK
-          schema:
-            $ref: '#/definitions/entity.User'
         "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
       summary: Get user by ID
       tags:
       - users
-swagger: "2.0"
+servers:
+- url: http://127.0.0.1:8080/api/v1

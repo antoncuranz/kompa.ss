@@ -2,12 +2,12 @@
 package http
 
 import (
+	fiberSwagger "github.com/swaggo/fiber-swagger"
 	"net/http"
 	"travel-planner/internal/usecase"
 
 	"github.com/ansrivas/fiberprometheus/v2"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/swagger"
 	"travel-planner/config"
 	_ "travel-planner/docs" // Swagger docs.
 	"travel-planner/internal/controller/http/middleware"
@@ -20,7 +20,7 @@ import (
 // @title       TravelPlanner API
 // @description Using a translation service as an example
 // @version     1.0
-// @host        127.0.0.1:8080
+// @host        http://127.0.0.1:8080
 // @BasePath    /api/v1
 func NewRouter(app *fiber.App, cfg *config.Config, useCases usecase.UseCases, log logger.Interface) {
 	// Options
@@ -36,7 +36,7 @@ func NewRouter(app *fiber.App, cfg *config.Config, useCases usecase.UseCases, lo
 
 	// Swagger
 	if cfg.Swagger.Enabled {
-		app.Get("/swagger/*", swagger.HandlerDefault)
+		app.Get("/swagger/*", fiberSwagger.WrapHandler)
 	}
 
 	// K8s probe

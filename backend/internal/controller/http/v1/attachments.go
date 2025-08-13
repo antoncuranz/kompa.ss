@@ -81,7 +81,7 @@ func determineContentType(filename string) string {
 // @Tags  	    attachments
 // @Accept      multipart/form-data
 // @Param       trip_id path int true "Trip ID"
-// @Param       attachments formData []file true "attachment"
+// @Param       attachments formData []string true "attachment"
 // @Success     204
 // @Failure     500 {object} response.Error
 // @Router      /trips/{trip_id}/attachments [post]

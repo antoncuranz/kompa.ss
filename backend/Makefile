@@ -30,9 +30,9 @@ compose-down: ### Down docker-compose
 	$(BASE_STACK) down --remove-orphans
 .PHONY: compose-down
 
-swag-v1: ### swag init
-	swag init -g internal/controller/http/router.go
-.PHONY: swag-v1
+swag-v2: ### swag init
+	swag init -g internal/controller/http/router.go --v3.1
+.PHONY: swag-v2
 
 deps: ### deps tidy + verify
 	go mod tidy && go mod verify

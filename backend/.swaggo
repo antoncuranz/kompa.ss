@@ -4,3 +4,4 @@ replace civil.Date time.Time
 replace civil.Time time.Time
 replace civil.DateTime time.Time
 replace time.Duration integer
+replace time.Duration integer
