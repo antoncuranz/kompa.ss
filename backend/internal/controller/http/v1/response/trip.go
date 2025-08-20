@@ -1,10 +1,11 @@
-package request
+package response
 
 import (
 	"cloud.google.com/go/civil"
 )
 
 type Trip struct {
+	ID          int32      `json:"id"`
 	Name        string     `json:"name"`
 	StartDate   civil.Date `json:"startDate"`
 	EndDate     civil.Date `json:"endDate"`

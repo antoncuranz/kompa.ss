@@ -1,14 +1,15 @@
 package request
 
 import (
-	"cloud.google.com/go/civil"
 	"kompass/internal/entity"
+
+	"cloud.google.com/go/civil"
 )
 
 type Accommodation struct {
-	Name          string           `json:"name"             validate:"required"`
-	ArrivalDate   civil.Date       `json:"arrivalDate"      validate:"required"`
-	DepartureDate civil.Date       `json:"departureDate"    validate:"required"`
+	Name          string           `json:"name"`
+	ArrivalDate   civil.Date       `json:"arrivalDate"`
+	DepartureDate civil.Date       `json:"departureDate"`
 	CheckInTime   *civil.Time      `json:"checkInTime"`
 	CheckOutTime  *civil.Time      `json:"checkOutTime"`
 	Description   *string          `json:"description"`

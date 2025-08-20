@@ -22,8 +22,7 @@ import (
 // @title       Kompa.ss API
 // @description Using a translation service as an example
 // @version     1.0
-// @host        http://127.0.0.1:8080
-// @BasePath    /api/v1
+// @servers.url http://127.0.0.1:8080/api/v1
 func NewRouter(app *fiber.App, cfg *config.Config, useCases usecase.UseCases, log logger.Interface) {
 	// Options
 	app.Use(middleware.Logger(log))

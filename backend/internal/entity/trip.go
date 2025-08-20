@@ -7,10 +7,10 @@ import (
 )
 
 type Trip struct {
-	ID          int32      `json:"id"`
-	Name        string     `json:"name"`
-	StartDate   civil.Date `json:"startDate"`
-	EndDate     civil.Date `json:"endDate"`
-	Description *string    `json:"description"`
-	ImageUrl    *string    `json:"imageUrl"`
+	ID          int32
+	Name        string
+	StartDate   civil.Date
+	EndDate     civil.Date
+	Description *string
+	ImageUrl    *string
 }
