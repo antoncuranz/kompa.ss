@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
-	"travel-planner/pkg/logger"
+	"kompass/pkg/logger"
 )
 
 func buildRequestMessage(ctx *fiber.Ctx) string {

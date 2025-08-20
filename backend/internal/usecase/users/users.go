@@ -2,8 +2,8 @@ package users
 
 import (
 	"context"
-	"travel-planner/internal/entity"
-	"travel-planner/internal/repo"
+	"kompass/internal/entity"
+	"kompass/internal/repo"
 )
 
 type UseCase struct {

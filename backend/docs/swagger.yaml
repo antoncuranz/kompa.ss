@@ -268,7 +268,7 @@ externalDocs:
   url: ""
 info:
   description: Using a translation service as an example
-  title: TravelPlanner API
+  title: Kompa.ss API
   version: "1.0"
 openapi: 3.1.0
 paths:

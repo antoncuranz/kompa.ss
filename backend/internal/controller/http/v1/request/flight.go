@@ -1,6 +1,6 @@
 package request
 
-import "travel-planner/internal/entity"
+import "kompass/internal/entity"
 
 type FlightLeg struct {
 	Date          string  `json:"date"          validate:"required" example:"2026-01-30"`

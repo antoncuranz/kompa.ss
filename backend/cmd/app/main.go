@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"travel-planner/config"
-	"travel-planner/internal/app"
+	"kompass/config"
+	"kompass/internal/app"
 )
 
 func main() {

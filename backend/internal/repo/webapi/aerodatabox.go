@@ -7,11 +7,11 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"kompass/internal/entity"
+	"kompass/internal/repo/webapi/response"
 	"net/http"
 	"strings"
 	"time"
-	"travel-planner/internal/entity"
-	"travel-planner/internal/repo/webapi/response"
 )
 
 type AerodataboxWebAPI struct {

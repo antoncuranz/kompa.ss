@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"travel-planner/internal/entity"
-	"travel-planner/pkg/sqlc"
+	"kompass/internal/entity"
+	"kompass/pkg/sqlc"
 )
 
 func SaveLocation(ctx context.Context, queries *sqlc.Queries, location entity.Location) (int32, error) {

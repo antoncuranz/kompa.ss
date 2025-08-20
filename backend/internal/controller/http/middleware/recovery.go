@@ -7,7 +7,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	fiberRecover "github.com/gofiber/fiber/v2/middleware/recover"
-	"travel-planner/pkg/logger"
+	"kompass/pkg/logger"
 )
 
 func buildPanicMessage(ctx *fiber.Ctx, err interface{}) string {

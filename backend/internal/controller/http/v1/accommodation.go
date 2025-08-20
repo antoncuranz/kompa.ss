@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"kompass/internal/controller/http/v1/request"
+	"kompass/internal/usecase"
+	"kompass/pkg/logger"
 	"net/http"
-	"travel-planner/internal/controller/http/v1/request"
-	"travel-planner/internal/usecase"
-	"travel-planner/pkg/logger"
 )
 
 type AccommodationV1 struct {

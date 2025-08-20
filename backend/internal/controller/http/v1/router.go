@@ -3,8 +3,8 @@ package v1
 import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
-	"travel-planner/internal/usecase"
-	"travel-planner/pkg/logger"
+	"kompass/internal/usecase"
+	"kompass/pkg/logger"
 )
 
 func NewUserRoutes(apiV1Group fiber.Router, uc usecase.Users, log logger.Interface) {

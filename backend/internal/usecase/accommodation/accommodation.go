@@ -2,9 +2,9 @@ package accommodation
 
 import (
 	"context"
-	"travel-planner/internal/controller/http/v1/request"
-	"travel-planner/internal/entity"
-	"travel-planner/internal/repo"
+	"kompass/internal/controller/http/v1/request"
+	"kompass/internal/entity"
+	"kompass/internal/repo"
 )
 
 type UseCase struct {

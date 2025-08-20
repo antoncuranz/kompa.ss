@@ -1,4 +1,4 @@
-module travel-planner
+module kompass
 
 go 1.24
 

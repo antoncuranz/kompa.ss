@@ -2,9 +2,9 @@ package postgres
 
 import (
 	"context"
-	"travel-planner/internal/entity"
-	"travel-planner/pkg/postgres"
-	"travel-planner/pkg/sqlc"
+	"kompass/internal/entity"
+	"kompass/pkg/postgres"
+	"kompass/pkg/sqlc"
 )
 
 type UserRepo struct {

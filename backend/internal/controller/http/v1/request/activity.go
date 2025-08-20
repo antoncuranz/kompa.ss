@@ -2,7 +2,7 @@ package request
 
 import (
 	"cloud.google.com/go/civil"
-	"travel-planner/internal/entity"
+	"kompass/internal/entity"
 )
 
 type Activity struct {

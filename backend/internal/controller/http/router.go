@@ -2,22 +2,24 @@
 package http
 
 import (
-	fiberSwagger "github.com/swaggo/fiber-swagger"
+	"kompass/internal/usecase"
 	"net/http"
-	"travel-planner/internal/usecase"
+
+	fiberSwagger "github.com/swaggo/fiber-swagger"
+
+	"kompass/config"
+	_ "kompass/docs" // Swagger docs.
+	"kompass/internal/controller/http/middleware"
+	v1 "kompass/internal/controller/http/v1"
+	"kompass/pkg/logger"
 
 	"github.com/ansrivas/fiberprometheus/v2"
 	"github.com/gofiber/fiber/v2"
-	"travel-planner/config"
-	_ "travel-planner/docs" // Swagger docs.
-	"travel-planner/internal/controller/http/middleware"
-	v1 "travel-planner/internal/controller/http/v1"
-	"travel-planner/pkg/logger"
 )
 
 // NewRouter -.
 // Swagger spec:
-// @title       TravelPlanner API
+// @title       Kompa.ss API
 // @description Using a translation service as an example
 // @version     1.0
 // @host        http://127.0.0.1:8080

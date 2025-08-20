@@ -19,7 +19,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Title:            "TravelPlanner API",
+	Title:            "Kompa.ss API",
 	Description:      "Using a translation service as an example",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

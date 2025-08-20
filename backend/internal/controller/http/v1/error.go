@@ -3,8 +3,8 @@ package v1
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
+	"kompass/internal/controller/http/v1/response"
 	"net/http"
-	"travel-planner/internal/controller/http/v1/response"
 )
 
 func errorResponseDeprecated(ctx *fiber.Ctx, code int, msg string) error {

@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/stretchr/testify/assert"
+	"kompass/integration-test/client"
+	"kompass/integration-test/util"
 	"testing"
-	"travel-planner/integration-test/client"
-	"travel-planner/integration-test/util"
 )
 
 func startApplicationAndBuildClient(t *testing.T) *client.ClientWithResponses {

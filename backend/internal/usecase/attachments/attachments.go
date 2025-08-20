@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"kompass/internal/entity"
+	"kompass/internal/repo"
 	"mime/multipart"
-	"travel-planner/internal/entity"
-	"travel-planner/internal/repo"
 )
 
 type UseCase struct {

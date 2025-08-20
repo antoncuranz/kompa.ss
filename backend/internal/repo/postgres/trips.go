@@ -3,9 +3,9 @@ package postgres
 import (
 	"context"
 	"fmt"
-	"travel-planner/internal/entity"
-	"travel-planner/pkg/postgres"
-	"travel-planner/pkg/sqlc"
+	"kompass/internal/entity"
+	"kompass/pkg/postgres"
+	"kompass/pkg/sqlc"
 )
 
 type TripsRepo struct {

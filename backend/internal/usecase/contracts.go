@@ -3,9 +3,9 @@ package usecase
 
 import (
 	"context"
+	"kompass/internal/controller/http/v1/request"
+	"kompass/internal/entity"
 	"mime/multipart"
-	"travel-planner/internal/controller/http/v1/request"
-	"travel-planner/internal/entity"
 )
 
 //go:generate mockgen -source=contracts.go -destination=./mocks_usecase_test.go -package=usecase_test

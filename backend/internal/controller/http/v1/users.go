@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"kompass/internal/usecase"
+	"kompass/pkg/logger"
 	"net/http"
-	"travel-planner/internal/usecase"
-	"travel-planner/pkg/logger"
 )
 
 type UsersV1 struct {
