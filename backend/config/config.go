@@ -45,7 +45,8 @@ type (
 	}
 
 	WebApi struct {
-		AerodataboxApiKey string `env:"AERODATABOX_API_KEY,required"`
+		AerodataboxBaseURL string `env:"AEDBX_URL" envDefault:"https://aerodatabox.p.rapidapi.com"`
+		AerodataboxApiKey  string `env:"AEDBX_APIKEY"`
 	}
 )
 

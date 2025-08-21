@@ -1,0 +1,74 @@
+[
+  {
+    "greatCircleDistance": {
+      "meter": 9385591.72,
+      "km": 9385.59,
+      "mile": 5831.94,
+      "nm": 5067.81,
+      "feet": 30792623.77
+    },
+    "departure": {
+      "airport": {
+        "icao": "RJTT",
+        "iata": "HND",
+        "name": "Tokyo",
+        "shortName": "Tokyo",
+        "municipalityName": "Tokyo",
+        "location": {
+          "lat": 35.5523,
+          "lon": 139.78
+        },
+        "countryCode": "JP",
+        "timeZone": "Asia/Tokyo"
+      },
+      "scheduledTime": {
+        "utc": "2026-02-01 03:35Z",
+        "local": "2026-02-01 12:35+09:00"
+      },
+      "terminal": "3",
+      "quality": [
+        "Basic"
+      ]
+    },
+    "arrival": {
+      "airport": {
+        "icao": "EDDF",
+        "iata": "FRA",
+        "name": "Frankfurt-am-Main",
+        "shortName": "Frankfurt-am-Main",
+        "municipalityName": "Frankfurt-am-Main",
+        "location": {
+          "lat": 50.0264,
+          "lon": 8.543129
+        },
+        "countryCode": "DE",
+        "timeZone": "Europe/Berlin"
+      },
+      "scheduledTime": {
+        "utc": "2026-02-01 18:00Z",
+        "local": "2026-02-01 19:00+01:00"
+      },
+      "predictedTime": {
+        "utc": "2026-02-01 17:58Z",
+        "local": "2026-02-01 18:58+01:00"
+      },
+      "terminal": "1",
+      "quality": [
+        "Basic"
+      ]
+    },
+    "lastUpdatedUtc": "2025-08-03 00:01Z",
+    "number": "LH 717",
+    "status": "Expected",
+    "codeshareStatus": "Unknown",
+    "isCargo": false,
+    "aircraft": {
+      "model": "Boeing 747-8"
+    },
+    "airline": {
+      "name": "Lufthansa",
+      "iata": "LH",
+      "icao": "DLH"
+    }
+  }
+]

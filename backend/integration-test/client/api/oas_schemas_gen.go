@@ -1131,7 +1131,7 @@ func (s *RequestActivity) SetTime(val string) {
 type RequestFlight struct {
 	Legs  []RequestFlightLeg `json:"legs"`
 	Pnrs  []EntityPNR        `json:"pnrs"`
-	Price int                `json:"price"`
+	Price NilInt             `json:"price"`
 }
 
 // GetLegs returns the value of Legs.
@@ -1145,7 +1145,7 @@ func (s *RequestFlight) GetPnrs() []EntityPNR {
 }
 
 // GetPrice returns the value of Price.
-func (s *RequestFlight) GetPrice() int {
+func (s *RequestFlight) GetPrice() NilInt {
 	return s.Price
 }
 
@@ -1160,15 +1160,15 @@ func (s *RequestFlight) SetPnrs(val []EntityPNR) {
 }
 
 // SetPrice sets the value of Price.
-func (s *RequestFlight) SetPrice(val int) {
+func (s *RequestFlight) SetPrice(val NilInt) {
 	s.Price = val
 }
 
 // Ref: #/components/schemas/request.FlightLeg
 type RequestFlightLeg struct {
-	Date          string `json:"date"`
-	FlightNumber  string `json:"flightNumber"`
-	OriginAirport string `json:"originAirport"`
+	Date          string    `json:"date"`
+	FlightNumber  string    `json:"flightNumber"`
+	OriginAirport NilString `json:"originAirport"`
 }
 
 // GetDate returns the value of Date.
@@ -1182,7 +1182,7 @@ func (s *RequestFlightLeg) GetFlightNumber() string {
 }
 
 // GetOriginAirport returns the value of OriginAirport.
-func (s *RequestFlightLeg) GetOriginAirport() string {
+func (s *RequestFlightLeg) GetOriginAirport() NilString {
 	return s.OriginAirport
 }
 
@@ -1197,7 +1197,7 @@ func (s *RequestFlightLeg) SetFlightNumber(val string) {
 }
 
 // SetOriginAirport sets the value of OriginAirport.
-func (s *RequestFlightLeg) SetOriginAirport(val string) {
+func (s *RequestFlightLeg) SetOriginAirport(val NilString) {
 	s.OriginAirport = val
 }
 

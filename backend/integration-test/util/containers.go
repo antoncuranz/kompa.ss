@@ -8,7 +8,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/log"
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
 	"github.com/testcontainers/testcontainers-go/network"
 	"github.com/testcontainers/testcontainers-go/wait"
@@ -17,13 +16,12 @@ import (
 )
 
 const (
-	startupTimeout    = 5 * time.Second
-	wiremockAlias     = "wiremock"
-	postgresAlias     = "postgres"
-	dbName            = "postgres"
-	dbUser            = "postgres"
-	dbPassword        = "postgres"
-	aerodataboxApiKey = "todo"
+	startupTimeout = 5 * time.Second
+	wiremockAlias  = "wiremock"
+	postgresAlias  = "postgres"
+	dbName         = "postgres"
+	dbUser         = "postgres"
+	dbPassword     = "postgres"
 )
 
 func StartAllContainers(t testing.TB, applicationPort string) *wiremock.Client {
@@ -38,7 +36,11 @@ func StartAllContainers(t testing.TB, applicationPort string) *wiremock.Client {
 }
 
 func startPostgresContainer(t testing.TB, net *testcontainers.DockerNetwork) string {
-	logger := log.TestLogger(t)
+	tcLogger := TcLogger{t}
+	//containerLogger := ContainerLogger{
+	//	containerName: "postgres",
+	//	colorPrefix:   ansiBlue,
+	//}
 
 	postgresContainer, err := postgres.Run(t.Context(), "postgres:17-alpine",
 		postgres.WithDatabase(dbName),
@@ -46,47 +48,66 @@ func startPostgresContainer(t testing.TB, net *testcontainers.DockerNetwork) str
 		postgres.WithPassword(dbPassword),
 		postgres.BasicWaitStrategies(),
 		network.WithNetwork([]string{postgresAlias}, net),
-		testcontainers.WithLogger(logger),
+		testcontainers.WithLogger(tcLogger),
+		//testcontainers.WithLogConsumers(testcontainers.LogConsumer(&containerLogger)),
 	)
 	assert.NoError(t, err)
 
 	cleanupContainer(t, postgresContainer)
-
 	return fmt.Sprintf("postgres://%s:%s@%s:5432/%s", dbUser, dbPassword, postgresAlias, dbName)
 }
 
 func startWiremockContainer(t testing.TB, net *testcontainers.DockerNetwork) *wiremock.Client {
-	logger := log.TestLogger(t)
+	tcLogger := TcLogger{t}
+	containerLogger := ContainerLogger{
+		containerName: "wiremock",
+		colorPrefix:   ansiYellow,
+	}
 
 	wiremockContainer, err := wiremockTc.RunContainer(t.Context(),
 		network.WithNetwork([]string{wiremockAlias}, net),
-		testcontainers.WithLogger(logger),
+		testcontainers.WithImage("docker.io/wiremock/wiremock:3.13.1"),
+		testcontainers.WithLogger(tcLogger),
+		testcontainers.WithLogConsumers(testcontainers.LogConsumer(&containerLogger)),
+		testcontainers.WithEnv(map[string]string{
+			"WIREMOCK_OPTIONS": "--disable-banner --verbose",
+		}),
+		testcontainers.WithFiles(testcontainers.ContainerFile{
+			HostFilePath:      "wiremock/",
+			ContainerFilePath: "/home/",
+			FileMode:          0755,
+		}),
 	)
 	assert.NoError(t, err)
 
 	cleanupContainer(t, wiremockContainer)
-
 	return wiremockContainer.Client
 }
 
 func startApplicationContainer(t testing.TB, dbConnectionString string, port string, net *testcontainers.DockerNetwork) {
-	logger := log.TestLogger(t)
+	tcLogger := TcLogger{t}
+	containerLogger := ContainerLogger{
+		containerName: "kompass",
+		colorPrefix:   ansiGreen,
+	}
 
 	req := testcontainers.ContainerRequest{
 		Image:        "kompa.ss/backend:latest",
 		ExposedPorts: []string{fmt.Sprintf("%s:%s", port, "8080")},
 		WaitingFor:   wait.ForListeningPort("8080").WithStartupTimeout(startupTimeout),
 		Env: map[string]string{
-			"PG_URL":              dbConnectionString,
-			"AERODATABOX_API_KEY": aerodataboxApiKey,
-			"AERODATABOX_URL":     "http://" + wiremockAlias + ":8080",
+			"PG_URL":    dbConnectionString,
+			"AEDBX_URL": "http://" + wiremockAlias + ":8080",
 		},
 		Networks: []string{net.Name},
+		LogConsumerCfg: &testcontainers.LogConsumerConfig{
+			Consumers: []testcontainers.LogConsumer{&containerLogger},
+		},
 	}
 	applicationContainer, err := testcontainers.GenericContainer(t.Context(), testcontainers.GenericContainerRequest{
 		ContainerRequest: req,
 		Started:          true,
-		Logger:           logger,
+		Logger:           tcLogger,
 	})
 	assert.NoError(t, err)
 

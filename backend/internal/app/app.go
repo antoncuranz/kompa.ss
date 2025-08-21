@@ -3,9 +3,6 @@ package app
 
 import (
 	"fmt"
-	"github.com/jackc/pgx/v5/stdlib"
-	_ "github.com/jackc/pgx/v5/stdlib"
-	"github.com/pressly/goose/v3"
 	"kompass/internal/repo/webapi"
 	"kompass/internal/usecase"
 	"kompass/internal/usecase/accommodation"
@@ -18,6 +15,10 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/jackc/pgx/v5/stdlib"
+	_ "github.com/jackc/pgx/v5/stdlib"
+	"github.com/pressly/goose/v3"
 
 	"kompass/config"
 	"kompass/internal/controller/http"
@@ -66,7 +67,7 @@ func Run(cfg *config.Config) {
 func createUseCases(cfg *config.Config, pg *postgres.Postgres) usecase.UseCases {
 	usersUseCase := users.New(persistent.NewUserRepo(pg))
 	tripsUseCase := trips.New(persistent.NewTripsRepo(pg))
-	flightsUseCase := flights.New(persistent.NewFlightsRepo(pg), webapi.New(cfg.WebApi.AerodataboxApiKey))
+	flightsUseCase := flights.New(persistent.NewFlightsRepo(pg), webapi.New(cfg.WebApi))
 	activitiesUseCase := activities.New(persistent.NewActivitiesRepo(pg))
 	accommodationUseCase := accommodation.New(persistent.NewAccommodationRepo(pg))
 	attachmentsUseCase := attachments.New(persistent.NewAttachmentsRepo(pg))

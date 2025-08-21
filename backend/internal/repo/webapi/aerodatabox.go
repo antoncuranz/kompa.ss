@@ -1,32 +1,36 @@
 package webapi
 
 import (
-	"cloud.google.com/go/civil"
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"kompass/config"
 	"kompass/internal/entity"
 	"kompass/internal/repo/webapi/response"
 	"net/http"
 	"strings"
 	"time"
+
+	"cloud.google.com/go/civil"
 )
 
 type AerodataboxWebAPI struct {
-	apiKey string
+	baseURL string
+	apiKey  string
 }
 
-func New(apiKey string) *AerodataboxWebAPI {
+func New(config config.WebApi) *AerodataboxWebAPI {
 	return &AerodataboxWebAPI{
-		apiKey: apiKey,
+		baseURL: config.AerodataboxBaseURL,
+		apiKey:  config.AerodataboxApiKey,
 	}
 }
 
 func (a *AerodataboxWebAPI) RetrieveFlightLeg(ctx context.Context, date string, flightNumber string, origin *string) (entity.FlightLeg, error) {
-	urlFormat := "https://aerodatabox.p.rapidapi.com/flights/number/%s/%s?dateLocalRole=Departure"
-	url := fmt.Sprintf(urlFormat, flightNumber, date)
+	urlFormat := "%s/flights/number/%s/%s?dateLocalRole=Departure"
+	url := fmt.Sprintf(urlFormat, a.baseURL, flightNumber, date)
 
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {

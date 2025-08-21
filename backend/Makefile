@@ -12,21 +12,21 @@ codegen: sqlc openapi goverter ### run all codegen tasks
 .PHONY: codegen
 
 sqlc: ### run sqlc codegen tasks
-	bin/sqlc generate
+	$(LOCAL_BIN)/sqlc generate
 .PHONY: sqlc
 
 openapi: ### run openapi codegen tasks
-	bin/swag init -g internal/controller/http/router.go --v3.1 --requiredByDefault && \
-    bin/ogen --config integration-test/client/ogen.yml --target integration-test/client/api --clean docs/swagger.yaml
+	$(LOCAL_BIN)/swag init -g internal/controller/http/router.go --v3.1 --requiredByDefault && \
+    $(LOCAL_BIN)/ogen --config integration-test/client/ogen.yml --target integration-test/client/api --clean docs/swagger.yaml
 .PHONY: openapi
 
 goverter: ### run goverter codegen tasks
-	bin/goverter gen -g 'output:file ./generated.go' -g 'skipCopySameType' kompass/internal/controller/http/v1/converter kompass/internal/repo/postgres/converter
+	$(LOCAL_BIN)/goverter gen -g 'output:file ./generated.go' -g 'skipCopySameType' kompass/internal/controller/http/v1/converter kompass/internal/repo/postgres/converter
 .PHONY: goverter
 
 mock: ### run mockgen
-	bin/mockgen -source ./internal/repo/contracts.go -package usecase_test > ./internal/usecase/mocks_repo_test.go
-	bin/mockgen -source ./internal/usecase/contracts.go -package usecase_test > ./internal/usecase/mocks_usecase_test.go
+	$(LOCAL_BIN)/mockgen -source ./internal/repo/contracts.go -package usecase_test > ./internal/usecase/mocks_repo_test.go
+	$(LOCAL_BIN)/mockgen -source ./internal/usecase/contracts.go -package usecase_test > ./internal/usecase/mocks_usecase_test.go
 .PHONY: mock
 
 bin-deps: ### install tools

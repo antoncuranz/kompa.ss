@@ -277,6 +277,7 @@ components:
           type: array
           uniqueItems: false
         price:
+          nullable: true
           type: integer
       required:
       - legs
@@ -293,6 +294,7 @@ components:
           type: string
         originAirport:
           example: SYD
+          nullable: true
           type: string
       required:
       - date

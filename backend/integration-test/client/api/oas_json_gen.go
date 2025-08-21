@@ -3183,7 +3183,7 @@ func (s *RequestFlight) encodeFields(e *jx.Encoder) {
 	}
 	{
 		e.FieldStart("price")
-		e.Int(s.Price)
+		s.Price.Encode(e)
 	}
 }
 
@@ -3241,9 +3241,7 @@ func (s *RequestFlight) Decode(d *jx.Decoder) error {
 		case "price":
 			requiredBitSet[0] |= 1 << 2
 			if err := func() error {
-				v, err := d.Int()
-				s.Price = int(v)
-				if err != nil {
+				if err := s.Price.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -3325,7 +3323,7 @@ func (s *RequestFlightLeg) encodeFields(e *jx.Encoder) {
 	}
 	{
 		e.FieldStart("originAirport")
-		e.Str(s.OriginAirport)
+		s.OriginAirport.Encode(e)
 	}
 }
 
@@ -3371,9 +3369,7 @@ func (s *RequestFlightLeg) Decode(d *jx.Decoder) error {
 		case "originAirport":
 			requiredBitSet[0] |= 1 << 2
 			if err := func() error {
-				v, err := d.Str()
-				s.OriginAirport = string(v)
-				if err != nil {
+				if err := s.OriginAirport.Decode(d); err != nil {
 					return err
 				}
 				return nil
