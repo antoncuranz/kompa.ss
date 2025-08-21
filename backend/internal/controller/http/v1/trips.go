@@ -2,9 +2,8 @@ package v1
 
 import (
 	"fmt"
+	"kompass/internal/controller/http/v1/converter"
 	"kompass/internal/controller/http/v1/request"
-	"kompass/internal/controller/http/v1/response"
-	"kompass/internal/entity"
 	"kompass/internal/usecase"
 	"kompass/pkg/logger"
 	"net/http"
@@ -17,6 +16,7 @@ type TripsV1 struct {
 	uc  usecase.Trips
 	log logger.Interface
 	v   *validator.Validate
+	c   converter.TripConverter
 }
 
 // @Summary     Get all trips
@@ -32,7 +32,7 @@ func (r *TripsV1) getTrips(ctx *fiber.Ctx) error {
 		return errorResponse(ctx, fmt.Errorf("get trips: %w", err))
 	}
 
-	return ctx.Status(http.StatusOK).JSON(mapTrips(trips))
+	return ctx.Status(http.StatusOK).JSON(r.c.ConvertTrips(trips))
 }
 
 // @Summary     Get trip by ID
@@ -56,7 +56,7 @@ func (r *TripsV1) getTrip(ctx *fiber.Ctx) error {
 		return errorResponseWithStatus(ctx, http.StatusNotFound, fmt.Errorf("get trip [id=%d]: %w", tripID, err))
 	}
 
-	return ctx.Status(http.StatusOK).JSON(mapTrip(trip))
+	return ctx.Status(http.StatusOK).JSON(r.c.ConvertTrip(trip))
 }
 
 // @Summary     Add trip
@@ -85,7 +85,7 @@ func (r *TripsV1) postTrip(ctx *fiber.Ctx) error {
 		return errorResponse(ctx, fmt.Errorf("create trip: %w", err))
 	}
 
-	return ctx.Status(http.StatusOK).JSON(mapTrip(trip))
+	return ctx.Status(http.StatusOK).JSON(r.c.ConvertTrip(trip))
 }
 
 // @Summary     Update trip
@@ -142,23 +142,4 @@ func (r *TripsV1) deleteTrip(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.SendStatus(http.StatusNoContent)
-}
-
-func mapTrips(trips []entity.Trip) []response.Trip {
-	result := []response.Trip{}
-	for _, trip := range trips {
-		result = append(result, mapTrip(trip))
-	}
-	return result
-}
-
-func mapTrip(trip entity.Trip) response.Trip {
-	return response.Trip{
-		ID:          trip.ID,
-		Name:        trip.Name,
-		StartDate:   trip.StartDate,
-		EndDate:     trip.EndDate,
-		Description: trip.Description,
-		ImageUrl:    trip.ImageUrl,
-	}
 }

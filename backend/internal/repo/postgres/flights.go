@@ -2,21 +2,25 @@ package postgres
 
 import (
 	"context"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"kompass/internal/entity"
+	"kompass/internal/repo/postgres/converter"
 	"kompass/pkg/postgres"
 	"kompass/pkg/sqlc"
+
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type FlightsRepo struct {
 	Db      *pgxpool.Pool
 	Queries *sqlc.Queries
+	c       converter.FlightConverter
 }
 
 func NewFlightsRepo(pg *postgres.Postgres) *FlightsRepo {
 	return &FlightsRepo{
 		pg.Pool,
 		sqlc.New(pg.Pool),
+		&converter.FlightConverterImpl{},
 	}
 }
 
@@ -37,7 +41,7 @@ func (r *FlightsRepo) GetFlights(ctx context.Context, tripID int32) ([]entity.Fl
 		if err != nil {
 			return []entity.Flight{}, err
 		}
-		result = append(result, mapFlight(flight, legs, pnrs))
+		result = append(result, r.c.ConvertFlight(converter.ConvertFlightParams{Flight: flight, Legs: legs, PNRs: pnrs}))
 	}
 	return result, nil
 }
@@ -58,7 +62,7 @@ func (r *FlightsRepo) GetFlightByID(ctx context.Context, tripID int32, flightID 
 		return entity.Flight{}, err
 	}
 
-	return mapFlight(flight, legs, pnrs), nil
+	return r.c.ConvertFlight(converter.ConvertFlightParams{Flight: flight, Legs: legs, PNRs: pnrs}), nil
 }
 
 func (r *FlightsRepo) SaveFlight(ctx context.Context, flight entity.Flight) (entity.Flight, error) {
@@ -143,64 +147,4 @@ func (r *FlightsRepo) SaveFlight(ctx context.Context, flight entity.Flight) (ent
 
 func (r *FlightsRepo) DeleteFlight(ctx context.Context, tripID int32, flightID int32) error {
 	return r.Queries.DeleteFlightByID(ctx, sqlc.DeleteFlightByIDParams{TripID: tripID, ID: flightID})
-}
-
-// TODO: Move mapping to separate file
-
-func mapFlight(flight sqlc.Flight, legs []sqlc.GetFlightLegsByFlightIDRow, pnrs []sqlc.Pnr) entity.Flight {
-	return entity.Flight{
-		ID:     flight.ID,
-		TripID: flight.TripID,
-		Legs:   mapFlightLegs(legs),
-		PNRs:   mapPnrs(pnrs),
-		Price:  flight.Price,
-	}
-}
-
-func mapFlightLegs(legs []sqlc.GetFlightLegsByFlightIDRow) []entity.FlightLeg {
-	result := []entity.FlightLeg{}
-	for _, leg := range legs {
-		result = append(result, mapFlightLeg(leg))
-	}
-	return result
-}
-
-func mapFlightLeg(leg sqlc.GetFlightLegsByFlightIDRow) entity.FlightLeg {
-	return entity.FlightLeg{
-		ID:                leg.FlightLeg.ID,
-		Origin:            mapAirport(leg.Airport, leg.Location),
-		Destination:       mapAirport(leg.Airport_2, leg.Location_2),
-		Airline:           leg.FlightLeg.Airline,
-		FlightNumber:      leg.FlightLeg.FlightNumber,
-		DepartureDateTime: leg.FlightLeg.DepartureTime,
-		ArrivalDateTime:   leg.FlightLeg.ArrivalTime,
-		DurationInMinutes: leg.FlightLeg.DurationInMinutes,
-		Aircraft:          leg.FlightLeg.Aircraft,
-	}
-}
-
-func mapAirport(airport sqlc.Airport, location sqlc.Location) entity.Airport {
-	mappedLocation := mapLocation(location)
-	return entity.Airport{
-		Iata:         airport.Iata,
-		Name:         airport.Name,
-		Municipality: airport.Municipality,
-		Location:     &mappedLocation,
-	}
-}
-
-func mapPnrs(pnrs []sqlc.Pnr) []entity.PNR {
-	result := []entity.PNR{}
-	for _, pnr := range pnrs {
-		result = append(result, mapPnr(pnr))
-	}
-	return result
-}
-
-func mapPnr(pnr sqlc.Pnr) entity.PNR {
-	return entity.PNR{
-		ID:      pnr.ID,
-		Airline: pnr.Airline,
-		PNR:     pnr.Pnr,
-	}
 }

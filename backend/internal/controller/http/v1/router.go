@@ -1,10 +1,12 @@
 package v1
 
 import (
-	"github.com/go-playground/validator/v10"
-	"github.com/gofiber/fiber/v2"
+	"kompass/internal/controller/http/v1/converter"
 	"kompass/internal/usecase"
 	"kompass/pkg/logger"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/gofiber/fiber/v2"
 )
 
 func NewUserRoutes(apiV1Group fiber.Router, uc usecase.Users, log logger.Interface) {
@@ -19,7 +21,12 @@ func NewUserRoutes(apiV1Group fiber.Router, uc usecase.Users, log logger.Interfa
 }
 
 func NewTripRoutes(apiV1Group fiber.Router, uc usecase.Trips, log logger.Interface) fiber.Router {
-	r := &TripsV1{uc: uc, log: log, v: validator.New(validator.WithRequiredStructEnabled())}
+	r := &TripsV1{
+		uc:  uc,
+		log: log,
+		v:   validator.New(validator.WithRequiredStructEnabled()),
+		c:   &converter.TripConverterImpl{},
+	}
 
 	tripsV1Group := apiV1Group.Group("/trips")
 

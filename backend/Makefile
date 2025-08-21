@@ -8,14 +8,25 @@ LOCAL_BIN:=$(CURDIR)/bin
 help: ## Display this help screen
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
-openapi: ### run openapi code gen
-	swag init -g internal/controller/http/router.go --v3.1 --requiredByDefault && \
-    go run github.com/ogen-go/ogen/cmd/ogen@latest --config integration-test/client/ogen.yml --target integration-test/client/api --clean docs/swagger.yaml
+codegen: sqlc openapi goverter ### run all codegen tasks
+.PHONY: codegen
+
+sqlc: ### run sqlc codegen tasks
+	bin/sqlc generate
+.PHONY: sqlc
+
+openapi: ### run openapi codegen tasks
+	bin/swag init -g internal/controller/http/router.go --v3.1 --requiredByDefault && \
+    bin/ogen --config integration-test/client/ogen.yml --target integration-test/client/api --clean docs/swagger.yaml
 .PHONY: openapi
 
+goverter: ### run goverter codegen tasks
+	bin/goverter gen -g 'output:file ./generated.go' -g 'skipCopySameType' kompass/internal/controller/http/v1/converter kompass/internal/repo/postgres/converter
+.PHONY: goverter
+
 mock: ### run mockgen
-	mockgen -source ./internal/repo/contracts.go -package usecase_test > ./internal/usecase/mocks_repo_test.go
-	mockgen -source ./internal/usecase/contracts.go -package usecase_test > ./internal/usecase/mocks_usecase_test.go
+	bin/mockgen -source ./internal/repo/contracts.go -package usecase_test > ./internal/usecase/mocks_repo_test.go
+	bin/mockgen -source ./internal/usecase/contracts.go -package usecase_test > ./internal/usecase/mocks_usecase_test.go
 .PHONY: mock
 
 bin-deps: ### install tools
