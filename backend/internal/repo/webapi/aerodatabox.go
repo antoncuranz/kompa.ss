@@ -131,7 +131,7 @@ func mapAirport(airport response.ListingAirportContract) entity.Airport {
 		Iata:         *airport.Iata, // FIXME
 		Name:         airport.Name,
 		Municipality: *airport.MunicipalityName, // FIXME
-		Location: &entity.Location{
+		Location: entity.Location{
 			Latitude:  airport.Location.Lat,
 			Longitude: airport.Location.Lon,
 		},

@@ -50,14 +50,17 @@ create table accommodation
     price          integer
 );
 
-create table flight
+create table transportation
 (
     id             serial primary key,
     trip_id        integer not null references trip on delete cascade,
+    type           varchar(20) not null,
+    origin_id      integer not null references location,
+    destination_id integer not null references location,
+    departure_time timestamp not null,
+    arrival_time   timestamp not null,
+    geojson        json,
     price          integer
---     type           varchar(20) not null,
---     geojson        json,
---     price          integer
 );
 
 create table airport
@@ -71,7 +74,7 @@ create table airport
 create table flight_leg
 (
     id                  serial primary key,
-    flight_id           integer not null references flight on delete cascade,
+    transportation_id   integer not null references transportation on delete cascade,
     origin              varchar(3) not null references airport,
     destination         varchar(3) not null references airport,
     airline             varchar(255) not null,
@@ -82,20 +85,21 @@ create table flight_leg
     aircraft            varchar(255)
 );
 
-create table pnr
+create table flight_pnr
 (
-    id             serial primary key,
-    flight_id      integer not null references flight on delete cascade,
-    airline        varchar(255) not null,
-    pnr            varchar(255) not null
+    id                  serial primary key,
+    transportation_id   integer not null references transportation on delete cascade,
+    airline             varchar(255) not null,
+    pnr                 varchar(255) not null
 );
 
 -- +goose Down
 DROP TABLE IF EXISTS "user";
 DROP TABLE IF EXISTS trip;
+DROP TABLE IF EXISTS location;
 DROP TABLE IF EXISTS activity;
 DROP TABLE IF EXISTS accomodation;
-DROP TABLE IF EXISTS flight;
+DROP TABLE IF EXISTS transportation;
 DROP TABLE IF EXISTS airport;
 DROP TABLE IF EXISTS flight_leg;
-DROP TABLE IF EXISTS pnr;
+DROP TABLE IF EXISTS flight_pnr;

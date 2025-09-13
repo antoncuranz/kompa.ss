@@ -9,36 +9,39 @@ import (
 )
 
 type UseCase struct {
-	repo        repo.FlightsRepo
+	repo        repo.TransportationRepo
 	aerodatabox repo.AerodataboxWebAPI
 }
 
-func New(r repo.FlightsRepo, a repo.AerodataboxWebAPI) *UseCase {
+func New(r repo.TransportationRepo, a repo.AerodataboxWebAPI) *UseCase {
 	return &UseCase{
 		repo:        r,
 		aerodatabox: a,
 	}
 }
 
-func (uc *UseCase) GetFlights(ctx context.Context, tripID int32) ([]entity.Flight, error) {
-	return uc.repo.GetFlights(ctx, tripID)
-}
-
-func (uc *UseCase) GetFlightByID(ctx context.Context, tripID int32, flightID int32) (entity.Flight, error) {
-	return uc.repo.GetFlightByID(ctx, tripID, flightID)
-}
-
-func (uc *UseCase) CreateFlight(ctx context.Context, tripID int32, flight request.Flight) (entity.Flight, error) {
+func (uc *UseCase) CreateFlight(ctx context.Context, tripID int32, flight request.Flight) (entity.Transportation, error) {
 	flightLegs, err := uc.retrieveFlightLegs(ctx, flight)
 	if err != nil {
-		return entity.Flight{}, err
+		return entity.Transportation{}, err
 	}
 
-	return uc.repo.SaveFlight(ctx, entity.Flight{
-		TripID: tripID,
-		Legs:   flightLegs,
-		PNRs:   flight.PNRs,
-		Price:  flight.Price,
+	firstLeg := flightLegs[0]
+	lastLeg := flightLegs[len(flightLegs)-1]
+
+	return uc.repo.SaveTransportation(ctx, entity.Transportation{
+		TripID:            tripID,
+		Type:              entity.PLANE,
+		Origin:            firstLeg.Origin.Location,
+		Destination:       lastLeg.Destination.Location,
+		DepartureDateTime: firstLeg.DepartureDateTime,
+		ArrivalDateTime:   lastLeg.ArrivalDateTime,
+		GeoJson:           nil, // TODO!
+		Price:             flight.Price,
+		FlightDetail: &entity.FlightDetail{
+			Legs: flightLegs,
+			PNRs: flight.PNRs,
+		},
 	})
 }
 
@@ -57,8 +60,4 @@ func (uc *UseCase) retrieveFlightLegs(ctx context.Context, flight request.Flight
 
 func (uc *UseCase) UpdateFlight(ctx context.Context, tripID int32, flightID int32, flight request.Flight) error {
 	return fmt.Errorf("Not yet implemented")
-}
-
-func (uc *UseCase) DeleteFlight(ctx context.Context, tripID int32, flightID int32) error {
-	return uc.repo.DeleteFlight(ctx, tripID, flightID)
 }

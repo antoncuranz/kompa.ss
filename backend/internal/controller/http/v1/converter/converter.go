@@ -10,3 +10,9 @@ type TripConverter interface {
 	ConvertTrips(trips []entity.Trip) []response.Trip
 	ConvertTrip(trip entity.Trip) response.Trip
 }
+
+// goverter:converter
+type TransportationConverter interface {
+	ConvertAllTransportation(transportation []entity.Transportation) []response.Transportation
+	ConvertTransportation(transportation entity.Transportation) response.Transportation
+}

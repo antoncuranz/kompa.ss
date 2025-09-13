@@ -41,17 +41,31 @@ func NewTripRoutes(apiV1Group fiber.Router, uc usecase.Trips, log logger.Interfa
 	return tripsV1Group
 }
 
+func NewTransportationRoutes(tripsV1Group fiber.Router, uc usecase.Transportation, log logger.Interface) {
+	r := &TransportationV1{
+		uc:  uc,
+		log: log,
+		v:   validator.New(validator.WithRequiredStructEnabled()),
+		c:   &converter.TransportationConverterImpl{},
+	}
+
+	transportationV1Group := tripsV1Group.Group("/:trip_id/transportation")
+
+	{
+		transportationV1Group.Get("", r.getAllTransportation)
+		transportationV1Group.Get("/:transportation_id", r.getTransportation)
+		transportationV1Group.Delete("/:transportation_id", r.deleteTransportation)
+	}
+}
+
 func NewFlightRoutes(tripsV1Group fiber.Router, uc usecase.Flights, log logger.Interface) {
 	r := &FlightsV1{uc: uc, log: log, v: validator.New(validator.WithRequiredStructEnabled())}
 
 	flightsV1Group := tripsV1Group.Group("/:trip_id/flights")
 
 	{
-		flightsV1Group.Get("", r.getFlights)
 		flightsV1Group.Post("", r.postFlight)
-		flightsV1Group.Get("/:flight_id", r.getFlight)
 		flightsV1Group.Put("/:flight_id", r.putFlight)
-		flightsV1Group.Delete("/:flight_id", r.deleteFlight)
 	}
 }
 

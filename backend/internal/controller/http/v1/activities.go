@@ -27,7 +27,7 @@ type ActivitiesV1 struct {
 func (r *ActivitiesV1) getActivities(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse trip_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
 	}
 
 	activities, err := r.uc.GetActivities(ctx.UserContext(), int32(tripID))
@@ -50,11 +50,11 @@ func (r *ActivitiesV1) getActivities(ctx *fiber.Ctx) error {
 func (r *ActivitiesV1) getActivity(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse trip_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
 	}
 	activityID, err := ctx.ParamsInt("activity_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse activity_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse activity_id: %w", err))
 	}
 
 	activity, err := r.uc.GetActivityByID(ctx.UserContext(), int32(tripID), int32(activityID))
@@ -78,18 +78,18 @@ func (r *ActivitiesV1) getActivity(ctx *fiber.Ctx) error {
 func (r *ActivitiesV1) postActivity(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse trip_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
 	}
 
 	var body request.Activity
 
 	if err := ctx.BodyParser(&body); err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "invalid request body")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
 	}
 
 	if err := r.v.Struct(body); err != nil {
 		fmt.Println(err)
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "invalid request body")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
 	}
 
 	_, err = r.uc.CreateActivity(ctx.UserContext(), int32(tripID), body)
@@ -114,21 +114,21 @@ func (r *ActivitiesV1) postActivity(ctx *fiber.Ctx) error {
 func (r *ActivitiesV1) putActivity(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse trip_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
 	}
 	activityID, err := ctx.ParamsInt("activity_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse activity_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse activity_id: %w", err))
 	}
 
 	var body request.Activity
 
 	if err := ctx.BodyParser(&body); err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "invalid request body")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
 	}
 
 	if err := r.v.Struct(body); err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "invalid request body")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
 	}
 
 	if err := r.uc.UpdateActivity(ctx.UserContext(), int32(tripID), int32(activityID), body); err != nil {
@@ -149,11 +149,11 @@ func (r *ActivitiesV1) putActivity(ctx *fiber.Ctx) error {
 func (r *ActivitiesV1) deleteActivity(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse trip_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
 	}
 	activityID, err := ctx.ParamsInt("activity_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse activity_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse activity_id: %w", err))
 	}
 
 	if err := r.uc.DeleteActivity(ctx.UserContext(), int32(tripID), int32(activityID)); err != nil {

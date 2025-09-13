@@ -12,12 +12,13 @@ import (
 
 type (
 	UseCases struct {
-		Users         Users
-		Trips         Trips
-		Flights       Flights
-		Activities    Activities
-		Accommodation Accommodation
-		Attachments   Attachments
+		Users          Users
+		Trips          Trips
+		Flights        Flights
+		Transportation Transportation
+		Activities     Activities
+		Accommodation  Accommodation
+		Attachments    Attachments
 	}
 
 	Users interface {
@@ -33,12 +34,15 @@ type (
 		DeleteTrip(ctx context.Context, tripID int32) error
 	}
 
+	Transportation interface {
+		GetAllTransportation(ctx context.Context, tripID int32) ([]entity.Transportation, error)
+		GetTransportationByID(ctx context.Context, tripID int32, transportationID int32) (entity.Transportation, error)
+		DeleteTransportation(ctx context.Context, tripID int32, transportationID int32) error
+	}
+
 	Flights interface {
-		GetFlights(ctx context.Context, tripID int32) ([]entity.Flight, error)
-		GetFlightByID(ctx context.Context, tripID int32, id int32) (entity.Flight, error)
-		CreateFlight(ctx context.Context, tripID int32, flight request.Flight) (entity.Flight, error)
+		CreateFlight(ctx context.Context, tripID int32, flight request.Flight) (entity.Transportation, error)
 		UpdateFlight(ctx context.Context, tripID int32, flightID int32, flight request.Flight) error
-		DeleteFlight(ctx context.Context, tripID int32, flightID int32) error
 	}
 
 	Activities interface {

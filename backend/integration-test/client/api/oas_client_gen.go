@@ -39,12 +39,6 @@ type Invoker interface {
 	//
 	// DELETE /trips/{trip_id}/attachments/{attachment_id}
 	DeleteAttachment(ctx context.Context, params DeleteAttachmentParams) (DeleteAttachmentRes, error)
-	// DeleteFlight invokes deleteFlight operation.
-	//
-	// Delete flight.
-	//
-	// DELETE /trips/{trip_id}/flights/{flight_id}
-	DeleteFlight(ctx context.Context, params DeleteFlightParams) (DeleteFlightRes, error)
 	// DeleteTransportation invokes deleteTransportation operation.
 	//
 	// Delete Transportation.
@@ -91,7 +85,7 @@ type Invoker interface {
 	//
 	// Get all Transportation.
 	//
-	// GET /trips/{trip_id}/Transportation
+	// GET /trips/{trip_id}/transportation
 	GetAllTransportation(ctx context.Context, params GetAllTransportationParams) (GetAllTransportationRes, error)
 	// GetAttachments invokes getAttachments operation.
 	//
@@ -99,18 +93,6 @@ type Invoker interface {
 	//
 	// GET /trips/{trip_id}/attachments
 	GetAttachments(ctx context.Context, params GetAttachmentsParams) (GetAttachmentsRes, error)
-	// GetFlight invokes getFlight operation.
-	//
-	// Get flight by ID.
-	//
-	// GET /trips/{trip_id}/flights/{flight_id}
-	GetFlight(ctx context.Context, params GetFlightParams) (GetFlightRes, error)
-	// GetFlights invokes getFlights operation.
-	//
-	// Get all flights.
-	//
-	// GET /trips/{trip_id}/flights
-	GetFlights(ctx context.Context, params GetFlightsParams) (GetFlightsRes, error)
 	// GetTransportation invokes getTransportation operation.
 	//
 	// Get Transportation by ID.
@@ -448,79 +430,6 @@ func (c *Client) sendDeleteAttachment(ctx context.Context, params DeleteAttachme
 	defer resp.Body.Close()
 
 	result, err := decodeDeleteAttachmentResponse(resp)
-	if err != nil {
-		return res, errors.Wrap(err, "decode response")
-	}
-
-	return result, nil
-}
-
-// DeleteFlight invokes deleteFlight operation.
-//
-// Delete flight.
-//
-// DELETE /trips/{trip_id}/flights/{flight_id}
-func (c *Client) DeleteFlight(ctx context.Context, params DeleteFlightParams) (DeleteFlightRes, error) {
-	res, err := c.sendDeleteFlight(ctx, params)
-	return res, err
-}
-
-func (c *Client) sendDeleteFlight(ctx context.Context, params DeleteFlightParams) (res DeleteFlightRes, err error) {
-
-	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [4]string
-	pathParts[0] = "/trips/"
-	{
-		// Encode "trip_id" parameter.
-		e := uri.NewPathEncoder(uri.PathEncoderConfig{
-			Param:   "trip_id",
-			Style:   uri.PathStyleSimple,
-			Explode: false,
-		})
-		if err := func() error {
-			return e.EncodeValue(conv.IntToString(params.TripID))
-		}(); err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		encoded, err := e.Result()
-		if err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		pathParts[1] = encoded
-	}
-	pathParts[2] = "/flights/"
-	{
-		// Encode "flight_id" parameter.
-		e := uri.NewPathEncoder(uri.PathEncoderConfig{
-			Param:   "flight_id",
-			Style:   uri.PathStyleSimple,
-			Explode: false,
-		})
-		if err := func() error {
-			return e.EncodeValue(conv.IntToString(params.FlightID))
-		}(); err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		encoded, err := e.Result()
-		if err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		pathParts[3] = encoded
-	}
-	uri.AddPathParts(u, pathParts[:]...)
-
-	r, err := ht.NewRequest(ctx, "DELETE", u)
-	if err != nil {
-		return res, errors.Wrap(err, "create request")
-	}
-
-	resp, err := c.cfg.Client.Do(r)
-	if err != nil {
-		return res, errors.Wrap(err, "do request")
-	}
-	defer resp.Body.Close()
-
-	result, err := decodeDeleteFlightResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -988,7 +897,7 @@ func (c *Client) sendGetAllAccommodation(ctx context.Context, params GetAllAccom
 //
 // Get all Transportation.
 //
-// GET /trips/{trip_id}/Transportation
+// GET /trips/{trip_id}/transportation
 func (c *Client) GetAllTransportation(ctx context.Context, params GetAllTransportationParams) (GetAllTransportationRes, error) {
 	res, err := c.sendGetAllTransportation(ctx, params)
 	return res, err
@@ -1017,7 +926,7 @@ func (c *Client) sendGetAllTransportation(ctx context.Context, params GetAllTran
 		}
 		pathParts[1] = encoded
 	}
-	pathParts[2] = "/Transportation"
+	pathParts[2] = "/transportation"
 	uri.AddPathParts(u, pathParts[:]...)
 
 	r, err := ht.NewRequest(ctx, "GET", u)
@@ -1087,134 +996,6 @@ func (c *Client) sendGetAttachments(ctx context.Context, params GetAttachmentsPa
 	defer resp.Body.Close()
 
 	result, err := decodeGetAttachmentsResponse(resp)
-	if err != nil {
-		return res, errors.Wrap(err, "decode response")
-	}
-
-	return result, nil
-}
-
-// GetFlight invokes getFlight operation.
-//
-// Get flight by ID.
-//
-// GET /trips/{trip_id}/flights/{flight_id}
-func (c *Client) GetFlight(ctx context.Context, params GetFlightParams) (GetFlightRes, error) {
-	res, err := c.sendGetFlight(ctx, params)
-	return res, err
-}
-
-func (c *Client) sendGetFlight(ctx context.Context, params GetFlightParams) (res GetFlightRes, err error) {
-
-	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [4]string
-	pathParts[0] = "/trips/"
-	{
-		// Encode "trip_id" parameter.
-		e := uri.NewPathEncoder(uri.PathEncoderConfig{
-			Param:   "trip_id",
-			Style:   uri.PathStyleSimple,
-			Explode: false,
-		})
-		if err := func() error {
-			return e.EncodeValue(conv.IntToString(params.TripID))
-		}(); err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		encoded, err := e.Result()
-		if err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		pathParts[1] = encoded
-	}
-	pathParts[2] = "/flights/"
-	{
-		// Encode "flight_id" parameter.
-		e := uri.NewPathEncoder(uri.PathEncoderConfig{
-			Param:   "flight_id",
-			Style:   uri.PathStyleSimple,
-			Explode: false,
-		})
-		if err := func() error {
-			return e.EncodeValue(conv.IntToString(params.FlightID))
-		}(); err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		encoded, err := e.Result()
-		if err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		pathParts[3] = encoded
-	}
-	uri.AddPathParts(u, pathParts[:]...)
-
-	r, err := ht.NewRequest(ctx, "GET", u)
-	if err != nil {
-		return res, errors.Wrap(err, "create request")
-	}
-
-	resp, err := c.cfg.Client.Do(r)
-	if err != nil {
-		return res, errors.Wrap(err, "do request")
-	}
-	defer resp.Body.Close()
-
-	result, err := decodeGetFlightResponse(resp)
-	if err != nil {
-		return res, errors.Wrap(err, "decode response")
-	}
-
-	return result, nil
-}
-
-// GetFlights invokes getFlights operation.
-//
-// Get all flights.
-//
-// GET /trips/{trip_id}/flights
-func (c *Client) GetFlights(ctx context.Context, params GetFlightsParams) (GetFlightsRes, error) {
-	res, err := c.sendGetFlights(ctx, params)
-	return res, err
-}
-
-func (c *Client) sendGetFlights(ctx context.Context, params GetFlightsParams) (res GetFlightsRes, err error) {
-
-	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [3]string
-	pathParts[0] = "/trips/"
-	{
-		// Encode "trip_id" parameter.
-		e := uri.NewPathEncoder(uri.PathEncoderConfig{
-			Param:   "trip_id",
-			Style:   uri.PathStyleSimple,
-			Explode: false,
-		})
-		if err := func() error {
-			return e.EncodeValue(conv.IntToString(params.TripID))
-		}(); err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		encoded, err := e.Result()
-		if err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		pathParts[1] = encoded
-	}
-	pathParts[2] = "/flights"
-	uri.AddPathParts(u, pathParts[:]...)
-
-	r, err := ht.NewRequest(ctx, "GET", u)
-	if err != nil {
-		return res, errors.Wrap(err, "create request")
-	}
-
-	resp, err := c.cfg.Client.Do(r)
-	if err != nil {
-		return res, errors.Wrap(err, "do request")
-	}
-	defer resp.Body.Close()
-
-	result, err := decodeGetFlightsResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}

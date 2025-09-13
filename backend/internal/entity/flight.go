@@ -6,11 +6,16 @@ import (
 	"cloud.google.com/go/civil"
 )
 
+type FlightDetail struct {
+	Legs []FlightLeg `json:"legs"`
+	PNRs []PNR       `json:"pnrs"`
+}
+
 type Airport struct {
-	Iata         string    `json:"iata"`
-	Name         string    `json:"name"`
-	Municipality string    `json:"municipality"`
-	Location     *Location `json:"location"`
+	Iata         string   `json:"iata"`
+	Name         string   `json:"name"`
+	Municipality string   `json:"municipality"`
+	Location     Location `json:"location"`
 }
 
 type FlightLeg struct {
@@ -29,12 +34,4 @@ type PNR struct {
 	ID      int32  `json:"id"`
 	Airline string `json:"airline" example:"LH"`
 	PNR     string `json:"pnr"     example:"123456"`
-}
-
-type Flight struct {
-	ID     int32       `json:"id"`
-	TripID int32       `json:"tripId"`
-	Legs   []FlightLeg `json:"legs"`
-	PNRs   []PNR       `json:"pnrs"`
-	Price  *int32      `json:"price"`
 }

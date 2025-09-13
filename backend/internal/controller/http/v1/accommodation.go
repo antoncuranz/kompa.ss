@@ -2,12 +2,13 @@ package v1
 
 import (
 	"fmt"
-	"github.com/go-playground/validator/v10"
-	"github.com/gofiber/fiber/v2"
 	"kompass/internal/controller/http/v1/request"
 	"kompass/internal/usecase"
 	"kompass/pkg/logger"
 	"net/http"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/gofiber/fiber/v2"
 )
 
 type AccommodationV1 struct {
@@ -27,7 +28,7 @@ type AccommodationV1 struct {
 func (r *AccommodationV1) getAllAccommodation(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse trip_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %v", err))
 	}
 
 	accommodation, err := r.uc.GetAllAccommodation(ctx.UserContext(), int32(tripID))
@@ -50,11 +51,11 @@ func (r *AccommodationV1) getAllAccommodation(ctx *fiber.Ctx) error {
 func (r *AccommodationV1) getAccommodationByID(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse trip_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %v", err))
 	}
 	accommodationID, err := ctx.ParamsInt("accommodation_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse accommodation_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse accommodation_id: %w", err))
 	}
 
 	accommodation, err := r.uc.GetAccommodationByID(ctx.UserContext(), int32(tripID), int32(accommodationID))
@@ -78,18 +79,18 @@ func (r *AccommodationV1) getAccommodationByID(ctx *fiber.Ctx) error {
 func (r *AccommodationV1) postAccommodation(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse trip_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
 	}
 
 	var body request.Accommodation
 
 	if err := ctx.BodyParser(&body); err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "invalid request body")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
 	}
 
 	if err := r.v.Struct(body); err != nil {
 		fmt.Println(err)
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "invalid request body")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
 	}
 
 	_, err = r.uc.CreateAccommodation(ctx.UserContext(), int32(tripID), body)
@@ -114,21 +115,21 @@ func (r *AccommodationV1) postAccommodation(ctx *fiber.Ctx) error {
 func (r *AccommodationV1) putAccommodation(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse trip_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
 	}
 	accommodationID, err := ctx.ParamsInt("accommodation_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse accommodation_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse accommodation_id: %w", err))
 	}
 
 	var body request.Accommodation
 
 	if err := ctx.BodyParser(&body); err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "invalid request body")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
 	}
 
 	if err := r.v.Struct(body); err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "invalid request body")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
 	}
 
 	if err := r.uc.UpdateAccommodation(ctx.UserContext(), int32(tripID), int32(accommodationID), body); err != nil {
@@ -149,11 +150,11 @@ func (r *AccommodationV1) putAccommodation(ctx *fiber.Ctx) error {
 func (r *AccommodationV1) deleteAccommodation(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse trip_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
 	}
 	accommodationID, err := ctx.ParamsInt("accommodation_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse accommodation_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse accommodation_id: %w", err))
 	}
 
 	if err := r.uc.DeleteAccommodation(ctx.UserContext(), int32(tripID), int32(accommodationID)); err != nil {

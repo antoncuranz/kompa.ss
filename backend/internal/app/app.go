@@ -9,6 +9,7 @@ import (
 	"kompass/internal/usecase/activities"
 	"kompass/internal/usecase/attachments"
 	"kompass/internal/usecase/flights"
+	"kompass/internal/usecase/transportation"
 	"kompass/internal/usecase/trips"
 	"kompass/internal/usecase/users"
 	"kompass/pkg/postgres"
@@ -65,20 +66,24 @@ func Run(cfg *config.Config) {
 }
 
 func createUseCases(cfg *config.Config, pg *postgres.Postgres) usecase.UseCases {
+	transportationRepo := persistent.NewTransportationRepo(pg, persistent.NewFlightsRepo(pg))
+
 	usersUseCase := users.New(persistent.NewUserRepo(pg))
 	tripsUseCase := trips.New(persistent.NewTripsRepo(pg))
-	flightsUseCase := flights.New(persistent.NewFlightsRepo(pg), webapi.New(cfg.WebApi))
+	transportationUseCase := transportation.New(transportationRepo)
+	flightsUseCase := flights.New(transportationRepo, webapi.New(cfg.WebApi))
 	activitiesUseCase := activities.New(persistent.NewActivitiesRepo(pg))
 	accommodationUseCase := accommodation.New(persistent.NewAccommodationRepo(pg))
 	attachmentsUseCase := attachments.New(persistent.NewAttachmentsRepo(pg))
 
 	return usecase.UseCases{
-		Users:         usersUseCase,
-		Trips:         tripsUseCase,
-		Flights:       flightsUseCase,
-		Activities:    activitiesUseCase,
-		Accommodation: accommodationUseCase,
-		Attachments:   attachmentsUseCase,
+		Users:          usersUseCase,
+		Trips:          tripsUseCase,
+		Transportation: transportationUseCase,
+		Flights:        flightsUseCase,
+		Activities:     activitiesUseCase,
+		Accommodation:  accommodationUseCase,
+		Attachments:    attachmentsUseCase,
 	}
 }
 

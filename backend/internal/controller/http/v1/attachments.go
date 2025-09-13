@@ -2,13 +2,14 @@ package v1
 
 import (
 	"fmt"
-	"github.com/go-playground/validator/v10"
-	"github.com/gofiber/fiber/v2"
 	"kompass/internal/usecase"
 	"kompass/pkg/logger"
 	"mime"
 	"net/http"
 	"path/filepath"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/gofiber/fiber/v2"
 )
 
 type AttachmentsV1 struct {
@@ -28,7 +29,7 @@ type AttachmentsV1 struct {
 func (r *AttachmentsV1) getAttachments(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse trip_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
 	}
 
 	attachments, err := r.uc.GetAttachments(ctx.UserContext(), int32(tripID))
@@ -51,11 +52,11 @@ func (r *AttachmentsV1) getAttachments(ctx *fiber.Ctx) error {
 func (r *AttachmentsV1) downloadAttachment(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse trip_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
 	}
 	attachmentID, err := ctx.ParamsInt("attachment_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse attachment_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse attachment_id: %w", err))
 	}
 
 	attachment, err := r.uc.GetAttachmentByID(ctx.UserContext(), int32(tripID), int32(attachmentID))
@@ -92,7 +93,7 @@ type AttachmentsParam struct {
 func (r *AttachmentsV1) postAttachment(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse trip_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
 	}
 
 	form, err := ctx.MultipartForm()
@@ -125,11 +126,11 @@ func (r *AttachmentsV1) postAttachment(ctx *fiber.Ctx) error {
 func (r *AttachmentsV1) deleteAttachment(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse trip_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
 	}
 	attachmentID, err := ctx.ParamsInt("attachment_id")
 	if err != nil {
-		return errorResponseDeprecated(ctx, http.StatusBadRequest, "unable to parse attachment_id")
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse attachment_id: %w", err))
 	}
 
 	if err := r.uc.DeleteAttachment(ctx.UserContext(), int32(tripID), int32(attachmentID)); err != nil {

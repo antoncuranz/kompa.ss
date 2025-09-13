@@ -9,6 +9,40 @@ import (
 	entity "kompass/internal/entity"
 )
 
+type TransportationConverterImpl struct{}
+
+func (c *TransportationConverterImpl) ConvertAllTransportation(source []entity.Transportation) []response.Transportation {
+	var responseTransportationList []response.Transportation
+	if source != nil {
+		responseTransportationList = make([]response.Transportation, len(source))
+		for i := 0; i < len(source); i++ {
+			responseTransportationList[i] = c.ConvertTransportation(source[i])
+		}
+	}
+	return responseTransportationList
+}
+func (c *TransportationConverterImpl) ConvertTransportation(source entity.Transportation) response.Transportation {
+	var responseTransportation response.Transportation
+	responseTransportation.ID = source.ID
+	responseTransportation.TripID = source.TripID
+	responseTransportation.Type = string(source.Type)
+	responseTransportation.Origin = c.entityLocationToEntityLocation(source.Origin)
+	responseTransportation.Destination = c.entityLocationToEntityLocation(source.Destination)
+	responseTransportation.DepartureDateTime = c.civilDateTimeToCivilDateTime(source.DepartureDateTime)
+	responseTransportation.ArrivalDateTime = c.civilDateTimeToCivilDateTime(source.ArrivalDateTime)
+	responseTransportation.GeoJson = source.GeoJson
+	responseTransportation.Price = source.Price
+	responseTransportation.FlightDetail = source.FlightDetail
+	responseTransportation.TrainDetail = source.TrainDetail
+	return responseTransportation
+}
+func (c *TransportationConverterImpl) civilDateTimeToCivilDateTime(source civil.DateTime) civil.DateTime {
+	return source
+}
+func (c *TransportationConverterImpl) entityLocationToEntityLocation(source entity.Location) entity.Location {
+	return source
+}
+
 type TripConverterImpl struct{}
 
 func (c *TripConverterImpl) ConvertTrip(source entity.Trip) response.Trip {

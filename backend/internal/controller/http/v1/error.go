@@ -2,14 +2,11 @@ package v1
 
 import (
 	"fmt"
-	"github.com/gofiber/fiber/v2"
 	"kompass/internal/controller/http/v1/response"
 	"net/http"
-)
 
-func errorResponseDeprecated(ctx *fiber.Ctx, code int, msg string) error {
-	return ctx.Status(code).JSON(response.Error{Error: msg})
-}
+	"github.com/gofiber/fiber/v2"
+)
 
 func errorResponse(ctx *fiber.Ctx, err error) error {
 	return errorResponseWithStatus(ctx, http.StatusInternalServerError, err)

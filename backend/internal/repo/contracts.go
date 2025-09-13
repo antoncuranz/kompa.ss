@@ -22,11 +22,11 @@ type (
 		DeleteTrip(ctx context.Context, tripID int32) error
 	}
 
-	FlightsRepo interface {
-		GetFlights(ctx context.Context, tripID int32) ([]entity.Flight, error)
-		GetFlightByID(ctx context.Context, tripID int32, id int32) (entity.Flight, error)
-		SaveFlight(ctx context.Context, flight entity.Flight) (entity.Flight, error)
-		DeleteFlight(ctx context.Context, tripID int32, flightID int32) error
+	TransportationRepo interface {
+		GetAllTransportation(ctx context.Context, tripID int32) ([]entity.Transportation, error)
+		GetTransportationByID(ctx context.Context, tripID int32, id int32) (entity.Transportation, error)
+		SaveTransportation(ctx context.Context, transportation entity.Transportation) (entity.Transportation, error)
+		DeleteTransportation(ctx context.Context, tripID int32, flightID int32) error
 	}
 
 	ActivitiesRepo interface {

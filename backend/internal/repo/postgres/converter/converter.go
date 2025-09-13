@@ -5,31 +5,39 @@ import (
 	"kompass/pkg/sqlc"
 )
 
-type ConvertFlightParams struct {
-	Flight sqlc.Flight
-	Legs   []sqlc.GetFlightLegsByFlightIDRow
-	PNRs   []sqlc.Pnr
+type ConvertTransportationParams struct {
+	Transportation sqlc.Transportation
+	Origin         sqlc.Location
+	Destination    sqlc.Location
+}
+
+// goverter:converter
+type TransportationConverter interface {
+	// goverter:map Transportation.ID ID
+	// goverter:map Transportation.TripID TripID
+	// goverter:map Transportation.Type Type
+	// goverter:map Transportation.DepartureTime DepartureDateTime
+	// goverter:map Transportation.ArrivalTime ArrivalDateTime
+	// goverter:map Transportation.Price Price
+	// goverter:ignore FlightDetail TrainDetail
+	// goverter:ignore GeoJson
+	ConvertTransportation(source ConvertTransportationParams) entity.Transportation
 }
 
 // goverter:converter
 // goverter:extend ConvertFlightLeg
 type FlightConverter interface {
-	// goverter:map Flight.ID ID
-	// goverter:map Flight.TripID TripID
-	// goverter:map Flight.Price Price
-	ConvertFlight(source ConvertFlightParams) entity.Flight
+	ConvertFlightLegs(legs []sqlc.GetFlightLegsByTransportationIDRow) []entity.FlightLeg
 
-	ConvertFlightLegs(legs []sqlc.GetFlightLegsByFlightIDRow) []entity.FlightLeg
-
-	ConvertPnrs(pnrs []sqlc.Pnr) []entity.PNR
+	ConvertPnrs(pnrs []sqlc.FlightPnr) []entity.PNR
 
 	// goverter:map Pnr PNR
-	ConvertPnr(pnr sqlc.Pnr) entity.PNR
+	ConvertPnr(pnr sqlc.FlightPnr) entity.PNR
 
 	ConvertLocation(location sqlc.Location) entity.Location
 }
 
-func ConvertFlightLeg(c FlightConverter, leg sqlc.GetFlightLegsByFlightIDRow) entity.FlightLeg {
+func ConvertFlightLeg(c FlightConverter, leg sqlc.GetFlightLegsByTransportationIDRow) entity.FlightLeg {
 	return entity.FlightLeg{
 		ID:                leg.FlightLeg.ID,
 		Origin:            ConvertAirport(c, leg.Airport, leg.Location),
@@ -44,11 +52,10 @@ func ConvertFlightLeg(c FlightConverter, leg sqlc.GetFlightLegsByFlightIDRow) en
 }
 
 func ConvertAirport(c FlightConverter, airport sqlc.Airport, location sqlc.Location) entity.Airport {
-	mappedLocation := c.ConvertLocation(location)
 	return entity.Airport{
 		Iata:         airport.Iata,
 		Name:         airport.Name,
 		Municipality: airport.Municipality,
-		Location:     &mappedLocation,
+		Location:     c.ConvertLocation(location),
 	}
 }

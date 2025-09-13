@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"fmt"
 	"kompass/internal/entity"
 	"kompass/internal/repo/postgres/converter"
 	"kompass/pkg/postgres"
@@ -24,64 +25,24 @@ func NewFlightsRepo(pg *postgres.Postgres) *FlightsRepo {
 	}
 }
 
-func (r *FlightsRepo) GetFlights(ctx context.Context, tripID int32) ([]entity.Flight, error) {
-	flights, err := r.Queries.GetFlights(ctx, tripID)
+func (r *FlightsRepo) GetFlightDetail(ctx context.Context, transportationID int32) (entity.FlightDetail, error) {
+	legs, err := r.Queries.GetFlightLegsByTransportationID(ctx, transportationID)
 	if err != nil {
-		return nil, err
+		return entity.FlightDetail{}, fmt.Errorf("get flight legs [t.id=%d] from db: %w", transportationID, err)
 	}
 
-	result := []entity.Flight{}
-	for _, flight := range flights {
-		legs, err := r.Queries.GetFlightLegsByFlightID(ctx, flight.ID)
-		if err != nil {
-			return []entity.Flight{}, err
-		}
-
-		pnrs, err := r.Queries.GetPnrsByFlightID(ctx, flight.ID)
-		if err != nil {
-			return []entity.Flight{}, err
-		}
-		result = append(result, r.c.ConvertFlight(converter.ConvertFlightParams{Flight: flight, Legs: legs, PNRs: pnrs}))
+	pnrs, err := r.Queries.GetPnrsByTransportationID(ctx, transportationID)
+	if err != nil {
+		return entity.FlightDetail{}, fmt.Errorf("get PNRs [t.id=%d] from db: %w", transportationID, err)
 	}
-	return result, nil
+
+	return entity.FlightDetail{
+		Legs: r.c.ConvertFlightLegs(legs),
+		PNRs: r.c.ConvertPnrs(pnrs),
+	}, nil
 }
 
-func (r *FlightsRepo) GetFlightByID(ctx context.Context, tripID int32, flightID int32) (entity.Flight, error) {
-	flight, err := r.Queries.GetFlightByID(ctx, sqlc.GetFlightByIDParams{TripID: tripID, ID: flightID})
-	if err != nil {
-		return entity.Flight{}, err
-	}
-
-	legs, err := r.Queries.GetFlightLegsByFlightID(ctx, flight.ID)
-	if err != nil {
-		return entity.Flight{}, err
-	}
-
-	pnrs, err := r.Queries.GetPnrsByFlightID(ctx, flight.ID)
-	if err != nil {
-		return entity.Flight{}, err
-	}
-
-	return r.c.ConvertFlight(converter.ConvertFlightParams{Flight: flight, Legs: legs, PNRs: pnrs}), nil
-}
-
-func (r *FlightsRepo) SaveFlight(ctx context.Context, flight entity.Flight) (entity.Flight, error) {
-
-	tx, err := r.Db.Begin(ctx)
-	if err != nil {
-		return entity.Flight{}, err
-	}
-	defer tx.Rollback(ctx)
-	qtx := r.Queries.WithTx(tx)
-
-	flightId, err := qtx.InsertFlight(ctx, sqlc.InsertFlightParams{
-		TripID: flight.TripID,
-		Price:  flight.Price,
-	})
-	if err != nil {
-		return entity.Flight{}, err
-	}
-
+func (r *FlightsRepo) SaveFlightDetail(ctx context.Context, qtx *sqlc.Queries, transportationID int32, flight entity.FlightDetail) error {
 	airportSet := make(map[string]entity.Airport)
 	for _, leg := range flight.Legs {
 		airportSet[leg.Origin.Iata] = leg.Origin
@@ -91,12 +52,9 @@ func (r *FlightsRepo) SaveFlight(ctx context.Context, flight entity.Flight) (ent
 	for iata := range airportSet {
 		airport := airportSet[iata]
 
-		locationId, err := qtx.InsertLocation(ctx, sqlc.InsertLocationParams{
-			Latitude:  airport.Location.Latitude,
-			Longitude: airport.Location.Longitude,
-		})
+		locationId, err := SaveLocation(ctx, qtx, airport.Location)
 		if err != nil {
-			return entity.Flight{}, err
+			return fmt.Errorf("save location: %w", err)
 		}
 		err = qtx.InsertAirport(ctx, sqlc.InsertAirportParams{
 			Iata:         airport.Iata,
@@ -105,13 +63,13 @@ func (r *FlightsRepo) SaveFlight(ctx context.Context, flight entity.Flight) (ent
 			LocationID:   &locationId,
 		})
 		if err != nil {
-			return entity.Flight{}, err
+			return fmt.Errorf("insert airport: %w", err)
 		}
 	}
 
 	for _, leg := range flight.Legs {
 		_, err := qtx.InsertFlightLeg(ctx, sqlc.InsertFlightLegParams{
-			FlightID:          flightId,
+			TransportationID:  transportationID,
 			Origin:            leg.Origin.Iata,
 			Destination:       leg.Destination.Iata,
 			Airline:           leg.Airline,
@@ -122,29 +80,20 @@ func (r *FlightsRepo) SaveFlight(ctx context.Context, flight entity.Flight) (ent
 			Aircraft:          leg.Aircraft,
 		})
 		if err != nil {
-			return entity.Flight{}, err
+			return fmt.Errorf("insert leg: %w", err)
 		}
 	}
 
 	for _, pnr := range flight.PNRs {
 		_, err := qtx.InsertPNR(ctx, sqlc.InsertPNRParams{
-			FlightID: flightId,
-			Airline:  pnr.Airline,
-			Pnr:      pnr.PNR,
+			TransportationID: transportationID,
+			Airline:          pnr.Airline,
+			Pnr:              pnr.PNR,
 		})
 		if err != nil {
-			return entity.Flight{}, err
+			return fmt.Errorf("insert pnr: %w", err)
 		}
 	}
 
-	err = tx.Commit(ctx)
-	if err != nil {
-		return entity.Flight{}, err
-	}
-
-	return r.GetFlightByID(ctx, flight.TripID, flightId)
-}
-
-func (r *FlightsRepo) DeleteFlight(ctx context.Context, tripID int32, flightID int32) error {
-	return r.Queries.DeleteFlightByID(ctx, sqlc.DeleteFlightByIDParams{TripID: tripID, ID: flightID})
+	return nil
 }

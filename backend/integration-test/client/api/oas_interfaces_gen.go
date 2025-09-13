@@ -13,10 +13,6 @@ type DeleteAttachmentRes interface {
 	deleteAttachmentRes()
 }
 
-type DeleteFlightRes interface {
-	deleteFlightRes()
-}
-
 type DeleteTransportationRes interface {
 	deleteTransportationRes()
 }
@@ -51,14 +47,6 @@ type GetAllTransportationRes interface {
 
 type GetAttachmentsRes interface {
 	getAttachmentsRes()
-}
-
-type GetFlightRes interface {
-	getFlightRes()
-}
-
-type GetFlightsRes interface {
-	getFlightsRes()
 }
 
 type GetTransportationRes interface {

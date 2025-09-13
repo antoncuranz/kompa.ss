@@ -18,20 +18,19 @@ func (suite *IntegrationTestSuite) TestGetTransportation() {
 	}, api.PostFlightParams{TripID: tripID})
 	suite.NoError(err)
 
-	// when
-	res, err := suite.api.GetFlights(suite.T().Context(), api.GetFlightsParams{TripID: tripID})
+	//// when
+	res, err := suite.api.GetAllTransportation(suite.T().Context(), api.GetAllTransportationParams{TripID: tripID})
 	suite.NoError(err)
 
 	// then
-	flights := res.(*api.GetFlightsOKApplicationJSON)
-	suite.Len(*flights, 1)
+	allTransportation := res.(*api.GetAllTransportationOKApplicationJSON)
+	suite.Len(*allTransportation, 1)
 
-	//// when
-	//res, err := suite.api.GetAllTransportation(suite.T().Context(), api.GetAllTransportationParams{TripID: tripID})
-	//suite.NoError(err)
-	//
-	//// then
-	//transportation := res.(*api.GetAllTransportationOKApplicationJSON)
-	//suite.Empty(*transportation)
-	//suite.Len(*transportation, 1)
+	flight := (*allTransportation)[0]
+	suite.Equal("PLANE", flight.Type)
+
+	flightDetail, ok := flight.FlightDetail.Get()
+	suite.True(ok)
+	suite.Len(flightDetail.Legs, 1)
+	suite.Equal("LH 717", flightDetail.Legs[0].FlightNumber)
 }

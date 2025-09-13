@@ -58,20 +58,14 @@ type AttachmentActivity struct {
 	ActivityID   int32
 }
 
-type AttachmentFlight struct {
-	AttachmentID int32
-	FlightID     int32
-}
-
-type Flight struct {
-	ID     int32
-	TripID int32
-	Price  *int32
+type AttachmentTransportation struct {
+	AttachmentID     int32
+	TransportationID int32
 }
 
 type FlightLeg struct {
 	ID                int32
-	FlightID          int32
+	TransportationID  int32
 	Origin            string
 	Destination       string
 	Airline           string
@@ -82,17 +76,29 @@ type FlightLeg struct {
 	Aircraft          *string
 }
 
+type FlightPnr struct {
+	ID               int32
+	TransportationID int32
+	Airline          string
+	Pnr              string
+}
+
 type Location struct {
 	ID        int32
 	Latitude  float32
 	Longitude float32
 }
 
-type Pnr struct {
-	ID       int32
-	FlightID int32
-	Airline  string
-	Pnr      string
+type Transportation struct {
+	ID            int32
+	TripID        int32
+	Type          string
+	OriginID      int32
+	DestinationID int32
+	DepartureTime civil.DateTime
+	ArrivalTime   civil.DateTime
+	Geojson       []byte
+	Price         *int32
 }
 
 type Trip struct {

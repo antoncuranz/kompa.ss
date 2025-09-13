@@ -103,10 +103,9 @@ components:
       - name
       - tripId
       type: object
-    entity.Flight:
+    entity.FlightDetail:
+      nullable: true
       properties:
-        id:
-          type: integer
         legs:
           items:
             $ref: '#/components/schemas/entity.FlightLeg'
@@ -117,16 +116,9 @@ components:
             $ref: '#/components/schemas/entity.PNR'
           type: array
           uniqueItems: false
-        price:
-          type: integer
-        tripId:
-          type: integer
       required:
-      - id
       - legs
       - pnrs
-      - price
-      - tripId
       type: object
     entity.FlightLeg:
       properties:
@@ -187,17 +179,12 @@ components:
       - id
       - pnr
       type: object
-    entity.TransportationType:
-      type: integer
-      x-enum-varnames:
-      - PLANE
-      - TRAIN
-      - BUS
-      - BOAT
-      - BIKE
-      - CAR
-      - FOOT
-      - OTHER
+    entity.TrainDetail:
+      nullable: true
+      properties:
+        trainNumber:
+          type: string
+      type: object
     entity.User:
       properties:
         id:
@@ -330,27 +317,6 @@ components:
       required:
       - error
       type: object
-    response.FlightDetail:
-      properties:
-        legs:
-          items:
-            $ref: '#/components/schemas/entity.FlightLeg'
-          type: array
-          uniqueItems: false
-        pnrs:
-          items:
-            $ref: '#/components/schemas/entity.PNR'
-          type: array
-          uniqueItems: false
-      required:
-      - legs
-      - pnrs
-      type: object
-    response.TrainDetail:
-      properties:
-        trainNumber:
-          type: string
-      type: object
     response.Transportation:
       properties:
         arrivalDateTime:
@@ -359,6 +325,8 @@ components:
           type: string
         destination:
           $ref: '#/components/schemas/entity.Location'
+        flightDetail:
+          $ref: '#/components/schemas/entity.FlightDetail'
         geoJson:
           nullable: true
           type: string
@@ -369,15 +337,12 @@ components:
         price:
           nullable: true
           type: integer
-        transportationDetail:
-          nullable: true
-          oneOf:
-          - $ref: '#/components/schemas/response.FlightDetail'
-          - $ref: '#/components/schemas/response.TrainDetail'
+        trainDetail:
+          $ref: '#/components/schemas/entity.TrainDetail'
         tripId:
           type: integer
         type:
-          $ref: '#/components/schemas/entity.TransportationType'
+          type: string
       required:
       - arrivalDateTime
       - departureDateTime
@@ -386,7 +351,6 @@ components:
       - id
       - origin
       - price
-      - transportationDetail
       - tripId
       - type
       type: object
@@ -597,34 +561,6 @@ paths:
       summary: Update trip
       tags:
       - trips
-  /trips/{trip_id}/Transportation:
-    get:
-      operationId: getAllTransportation
-      parameters:
-      - description: Trip ID
-        in: path
-        name: trip_id
-        required: true
-        schema:
-          type: integer
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: '#/components/schemas/response.Transportation'
-                type: array
-          description: OK
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/response.Error'
-          description: Internal Server Error
-      summary: Get all Transportation
-      tags:
-      - transportation
   /trips/{trip_id}/accommodation:
     get:
       operationId: getAllAccommodation
@@ -1039,33 +975,6 @@ paths:
       tags:
       - attachments
   /trips/{trip_id}/flights:
-    get:
-      operationId: getFlights
-      parameters:
-      - description: Trip ID
-        in: path
-        name: trip_id
-        required: true
-        schema:
-          type: integer
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: '#/components/schemas/entity.Flight'
-                type: array
-          description: OK
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/response.Error'
-          description: Internal Server Error
-      summary: Get all flights
-      tags:
-      - flights
     post:
       operationId: postFlight
       parameters:
@@ -1095,64 +1004,6 @@ paths:
       tags:
       - flights
   /trips/{trip_id}/flights/{flight_id}:
-    delete:
-      operationId: deleteFlight
-      parameters:
-      - description: Trip ID
-        in: path
-        name: trip_id
-        required: true
-        schema:
-          type: integer
-      - description: Flight ID
-        in: path
-        name: flight_id
-        required: true
-        schema:
-          type: integer
-      responses:
-        "204":
-          description: No Content
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/response.Error'
-          description: Internal Server Error
-      summary: Delete flight
-      tags:
-      - flights
-    get:
-      operationId: getFlight
-      parameters:
-      - description: Trip ID
-        in: path
-        name: trip_id
-        required: true
-        schema:
-          type: integer
-      - description: Flight ID
-        in: path
-        name: flight_id
-        required: true
-        schema:
-          type: integer
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/entity.Flight'
-          description: OK
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/response.Error'
-          description: Internal Server Error
-      summary: Get flight by ID
-      tags:
-      - flights
     put:
       operationId: putFlight
       parameters:
@@ -1187,6 +1038,34 @@ paths:
       summary: Update flight
       tags:
       - flights
+  /trips/{trip_id}/transportation:
+    get:
+      operationId: getAllTransportation
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/response.Transportation'
+                type: array
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Internal Server Error
+      summary: Get all Transportation
+      tags:
+      - transportation
   /trips/{trip_id}/transportation/{transportation_id}:
     delete:
       operationId: deleteTransportation

@@ -4,22 +4,14 @@
 package converter
 
 import (
+	civil "cloud.google.com/go/civil"
 	entity "kompass/internal/entity"
 	sqlc "kompass/pkg/sqlc"
 )
 
 type FlightConverterImpl struct{}
 
-func (c *FlightConverterImpl) ConvertFlight(source ConvertFlightParams) entity.Flight {
-	var entityFlight entity.Flight
-	entityFlight.ID = source.Flight.ID
-	entityFlight.TripID = source.Flight.TripID
-	entityFlight.Legs = c.ConvertFlightLegs(source.Legs)
-	entityFlight.PNRs = c.ConvertPnrs(source.PNRs)
-	entityFlight.Price = source.Flight.Price
-	return entityFlight
-}
-func (c *FlightConverterImpl) ConvertFlightLegs(source []sqlc.GetFlightLegsByFlightIDRow) []entity.FlightLeg {
+func (c *FlightConverterImpl) ConvertFlightLegs(source []sqlc.GetFlightLegsByTransportationIDRow) []entity.FlightLeg {
 	var entityFlightLegList []entity.FlightLeg
 	if source != nil {
 		entityFlightLegList = make([]entity.FlightLeg, len(source))
@@ -36,14 +28,14 @@ func (c *FlightConverterImpl) ConvertLocation(source sqlc.Location) entity.Locat
 	entityLocation.Longitude = source.Longitude
 	return entityLocation
 }
-func (c *FlightConverterImpl) ConvertPnr(source sqlc.Pnr) entity.PNR {
+func (c *FlightConverterImpl) ConvertPnr(source sqlc.FlightPnr) entity.PNR {
 	var entityPNR entity.PNR
 	entityPNR.ID = source.ID
 	entityPNR.Airline = source.Airline
 	entityPNR.PNR = source.Pnr
 	return entityPNR
 }
-func (c *FlightConverterImpl) ConvertPnrs(source []sqlc.Pnr) []entity.PNR {
+func (c *FlightConverterImpl) ConvertPnrs(source []sqlc.FlightPnr) []entity.PNR {
 	var entityPNRList []entity.PNR
 	if source != nil {
 		entityPNRList = make([]entity.PNR, len(source))
@@ -52,4 +44,29 @@ func (c *FlightConverterImpl) ConvertPnrs(source []sqlc.Pnr) []entity.PNR {
 		}
 	}
 	return entityPNRList
+}
+
+type TransportationConverterImpl struct{}
+
+func (c *TransportationConverterImpl) ConvertTransportation(source ConvertTransportationParams) entity.Transportation {
+	var entityTransportation entity.Transportation
+	entityTransportation.ID = source.Transportation.ID
+	entityTransportation.TripID = source.Transportation.TripID
+	entityTransportation.Type = entity.TransportationType(source.Transportation.Type)
+	entityTransportation.Origin = c.sqlcLocationToEntityLocation(source.Origin)
+	entityTransportation.Destination = c.sqlcLocationToEntityLocation(source.Destination)
+	entityTransportation.DepartureDateTime = c.civilDateTimeToCivilDateTime(source.Transportation.DepartureTime)
+	entityTransportation.ArrivalDateTime = c.civilDateTimeToCivilDateTime(source.Transportation.ArrivalTime)
+	entityTransportation.Price = source.Transportation.Price
+	return entityTransportation
+}
+func (c *TransportationConverterImpl) civilDateTimeToCivilDateTime(source civil.DateTime) civil.DateTime {
+	return source
+}
+func (c *TransportationConverterImpl) sqlcLocationToEntityLocation(source sqlc.Location) entity.Location {
+	var entityLocation entity.Location
+	entityLocation.ID = source.ID
+	entityLocation.Latitude = source.Latitude
+	entityLocation.Longitude = source.Longitude
+	return entityLocation
 }

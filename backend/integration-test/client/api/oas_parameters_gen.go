@@ -26,14 +26,6 @@ type DeleteAttachmentParams struct {
 	AttachmentID int
 }
 
-// DeleteFlightParams is parameters of deleteFlight operation.
-type DeleteFlightParams struct {
-	// Trip ID.
-	TripID int
-	// Flight ID.
-	FlightID int
-}
-
 // DeleteTransportationParams is parameters of deleteTransportation operation.
 type DeleteTransportationParams struct {
 	// Trip ID.
@@ -92,20 +84,6 @@ type GetAllTransportationParams struct {
 
 // GetAttachmentsParams is parameters of getAttachments operation.
 type GetAttachmentsParams struct {
-	// Trip ID.
-	TripID int
-}
-
-// GetFlightParams is parameters of getFlight operation.
-type GetFlightParams struct {
-	// Trip ID.
-	TripID int
-	// Flight ID.
-	FlightID int
-}
-
-// GetFlightsParams is parameters of getFlights operation.
-type GetFlightsParams struct {
 	// Trip ID.
 	TripID int
 }

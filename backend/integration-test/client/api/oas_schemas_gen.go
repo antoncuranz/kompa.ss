@@ -21,11 +21,6 @@ type DeleteAttachmentNoContent struct{}
 
 func (*DeleteAttachmentNoContent) deleteAttachmentRes() {}
 
-// DeleteFlightNoContent is response for DeleteFlight operation.
-type DeleteFlightNoContent struct{}
-
-func (*DeleteFlightNoContent) deleteFlightRes() {}
-
 type DeleteTransportationInternalServerError ResponseError
 
 func (*DeleteTransportationInternalServerError) deleteTransportationRes() {}
@@ -386,66 +381,31 @@ func (s *EntityAttachment) SetTripId(val int) {
 
 func (*EntityAttachment) downloadAttachmentRes() {}
 
-// Ref: #/components/schemas/entity.Flight
-type EntityFlight struct {
-	ID     int               `json:"id"`
-	Legs   []EntityFlightLeg `json:"legs"`
-	Pnrs   []EntityPNR       `json:"pnrs"`
-	Price  int               `json:"price"`
-	TripId int               `json:"tripId"`
-}
-
-// GetID returns the value of ID.
-func (s *EntityFlight) GetID() int {
-	return s.ID
+// Ref: #/components/schemas/entity.FlightDetail
+type EntityFlightDetail struct {
+	Legs []EntityFlightLeg `json:"legs"`
+	Pnrs []EntityPNR       `json:"pnrs"`
 }
 
 // GetLegs returns the value of Legs.
-func (s *EntityFlight) GetLegs() []EntityFlightLeg {
+func (s *EntityFlightDetail) GetLegs() []EntityFlightLeg {
 	return s.Legs
 }
 
 // GetPnrs returns the value of Pnrs.
-func (s *EntityFlight) GetPnrs() []EntityPNR {
+func (s *EntityFlightDetail) GetPnrs() []EntityPNR {
 	return s.Pnrs
 }
 
-// GetPrice returns the value of Price.
-func (s *EntityFlight) GetPrice() int {
-	return s.Price
-}
-
-// GetTripId returns the value of TripId.
-func (s *EntityFlight) GetTripId() int {
-	return s.TripId
-}
-
-// SetID sets the value of ID.
-func (s *EntityFlight) SetID(val int) {
-	s.ID = val
-}
-
 // SetLegs sets the value of Legs.
-func (s *EntityFlight) SetLegs(val []EntityFlightLeg) {
+func (s *EntityFlightDetail) SetLegs(val []EntityFlightLeg) {
 	s.Legs = val
 }
 
 // SetPnrs sets the value of Pnrs.
-func (s *EntityFlight) SetPnrs(val []EntityPNR) {
+func (s *EntityFlightDetail) SetPnrs(val []EntityPNR) {
 	s.Pnrs = val
 }
-
-// SetPrice sets the value of Price.
-func (s *EntityFlight) SetPrice(val int) {
-	s.Price = val
-}
-
-// SetTripId sets the value of TripId.
-func (s *EntityFlight) SetTripId(val int) {
-	s.TripId = val
-}
-
-func (*EntityFlight) getFlightRes() {}
 
 // Ref: #/components/schemas/entity.FlightLeg
 type EntityFlightLeg struct {
@@ -624,7 +584,20 @@ func (s *EntityPNR) SetPnr(val string) {
 	s.Pnr = val
 }
 
-type EntityTransportationType int
+// Ref: #/components/schemas/entity.TrainDetail
+type EntityTrainDetail struct {
+	TrainNumber OptString `json:"trainNumber"`
+}
+
+// GetTrainNumber returns the value of TrainNumber.
+func (s *EntityTrainDetail) GetTrainNumber() OptString {
+	return s.TrainNumber
+}
+
+// SetTrainNumber sets the value of TrainNumber.
+func (s *EntityTrainDetail) SetTrainNumber(val OptString) {
+	s.TrainNumber = val
+}
 
 // Ref: #/components/schemas/entity.User
 type EntityUser struct {
@@ -669,10 +642,6 @@ func (*GetAllTransportationOKApplicationJSON) getAllTransportationRes() {}
 type GetAttachmentsOKApplicationJSON []EntityAttachment
 
 func (*GetAttachmentsOKApplicationJSON) getAttachmentsRes() {}
-
-type GetFlightsOKApplicationJSON []EntityFlight
-
-func (*GetFlightsOKApplicationJSON) getFlightsRes() {}
 
 type GetTransportationInternalServerError ResponseError
 
@@ -747,51 +716,6 @@ func (o NilInt) Or(d int) int {
 	return d
 }
 
-// NewNilResponseTransportationTransportationDetail returns new NilResponseTransportationTransportationDetail with value set to v.
-func NewNilResponseTransportationTransportationDetail(v ResponseTransportationTransportationDetail) NilResponseTransportationTransportationDetail {
-	return NilResponseTransportationTransportationDetail{
-		Value: v,
-	}
-}
-
-// NilResponseTransportationTransportationDetail is nullable ResponseTransportationTransportationDetail.
-type NilResponseTransportationTransportationDetail struct {
-	Value ResponseTransportationTransportationDetail
-	Null  bool
-}
-
-// SetTo sets value to v.
-func (o *NilResponseTransportationTransportationDetail) SetTo(v ResponseTransportationTransportationDetail) {
-	o.Null = false
-	o.Value = v
-}
-
-// IsNull returns true if value is Null.
-func (o NilResponseTransportationTransportationDetail) IsNull() bool { return o.Null }
-
-// SetToNull sets value to null.
-func (o *NilResponseTransportationTransportationDetail) SetToNull() {
-	o.Null = true
-	var v ResponseTransportationTransportationDetail
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o NilResponseTransportationTransportationDetail) Get() (v ResponseTransportationTransportationDetail, ok bool) {
-	if o.Null {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o NilResponseTransportationTransportationDetail) Or(d ResponseTransportationTransportationDetail) ResponseTransportationTransportationDetail {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
-}
-
 // NewNilString returns new NilString with value set to v.
 func NewNilString(v string) NilString {
 	return NilString{
@@ -831,6 +755,132 @@ func (o NilString) Get() (v string, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o NilString) Or(d string) string {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptNilEntityFlightDetail returns new OptNilEntityFlightDetail with value set to v.
+func NewOptNilEntityFlightDetail(v EntityFlightDetail) OptNilEntityFlightDetail {
+	return OptNilEntityFlightDetail{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptNilEntityFlightDetail is optional nullable EntityFlightDetail.
+type OptNilEntityFlightDetail struct {
+	Value EntityFlightDetail
+	Set   bool
+	Null  bool
+}
+
+// IsSet returns true if OptNilEntityFlightDetail was set.
+func (o OptNilEntityFlightDetail) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptNilEntityFlightDetail) Reset() {
+	var v EntityFlightDetail
+	o.Value = v
+	o.Set = false
+	o.Null = false
+}
+
+// SetTo sets value to v.
+func (o *OptNilEntityFlightDetail) SetTo(v EntityFlightDetail) {
+	o.Set = true
+	o.Null = false
+	o.Value = v
+}
+
+// IsNull returns true if value is Null.
+func (o OptNilEntityFlightDetail) IsNull() bool { return o.Null }
+
+// SetToNull sets value to null.
+func (o *OptNilEntityFlightDetail) SetToNull() {
+	o.Set = true
+	o.Null = true
+	var v EntityFlightDetail
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptNilEntityFlightDetail) Get() (v EntityFlightDetail, ok bool) {
+	if o.Null {
+		return v, false
+	}
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptNilEntityFlightDetail) Or(d EntityFlightDetail) EntityFlightDetail {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptNilEntityTrainDetail returns new OptNilEntityTrainDetail with value set to v.
+func NewOptNilEntityTrainDetail(v EntityTrainDetail) OptNilEntityTrainDetail {
+	return OptNilEntityTrainDetail{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptNilEntityTrainDetail is optional nullable EntityTrainDetail.
+type OptNilEntityTrainDetail struct {
+	Value EntityTrainDetail
+	Set   bool
+	Null  bool
+}
+
+// IsSet returns true if OptNilEntityTrainDetail was set.
+func (o OptNilEntityTrainDetail) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptNilEntityTrainDetail) Reset() {
+	var v EntityTrainDetail
+	o.Value = v
+	o.Set = false
+	o.Null = false
+}
+
+// SetTo sets value to v.
+func (o *OptNilEntityTrainDetail) SetTo(v EntityTrainDetail) {
+	o.Set = true
+	o.Null = false
+	o.Value = v
+}
+
+// IsNull returns true if value is Null.
+func (o OptNilEntityTrainDetail) IsNull() bool { return o.Null }
+
+// SetToNull sets value to null.
+func (o *OptNilEntityTrainDetail) SetToNull() {
+	o.Set = true
+	o.Null = true
+	var v EntityTrainDetail
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptNilEntityTrainDetail) Get() (v EntityTrainDetail, ok bool) {
+	if o.Null {
+		return v, false
+	}
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptNilEntityTrainDetail) Or(d EntityTrainDetail) EntityTrainDetail {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -1278,7 +1328,6 @@ func (s *ResponseError) SetError(val string) {
 func (*ResponseError) deleteAccommodationRes()  {}
 func (*ResponseError) deleteActivityRes()       {}
 func (*ResponseError) deleteAttachmentRes()     {}
-func (*ResponseError) deleteFlightRes()         {}
 func (*ResponseError) downloadAttachmentRes()   {}
 func (*ResponseError) getAccommodationByIDRes() {}
 func (*ResponseError) getActivitiesRes()        {}
@@ -1286,8 +1335,6 @@ func (*ResponseError) getActivityRes()          {}
 func (*ResponseError) getAllAccommodationRes()  {}
 func (*ResponseError) getAllTransportationRes() {}
 func (*ResponseError) getAttachmentsRes()       {}
-func (*ResponseError) getFlightRes()            {}
-func (*ResponseError) getFlightsRes()           {}
 func (*ResponseError) getTripsRes()             {}
 func (*ResponseError) getUserRes()              {}
 func (*ResponseError) getUsersRes()             {}
@@ -1299,59 +1346,19 @@ func (*ResponseError) putAccommodationRes()     {}
 func (*ResponseError) putActivityRes()          {}
 func (*ResponseError) putFlightRes()            {}
 
-// Ref: #/components/schemas/response.FlightDetail
-type ResponseFlightDetail struct {
-	Legs []EntityFlightLeg `json:"legs"`
-	Pnrs []EntityPNR       `json:"pnrs"`
-}
-
-// GetLegs returns the value of Legs.
-func (s *ResponseFlightDetail) GetLegs() []EntityFlightLeg {
-	return s.Legs
-}
-
-// GetPnrs returns the value of Pnrs.
-func (s *ResponseFlightDetail) GetPnrs() []EntityPNR {
-	return s.Pnrs
-}
-
-// SetLegs sets the value of Legs.
-func (s *ResponseFlightDetail) SetLegs(val []EntityFlightLeg) {
-	s.Legs = val
-}
-
-// SetPnrs sets the value of Pnrs.
-func (s *ResponseFlightDetail) SetPnrs(val []EntityPNR) {
-	s.Pnrs = val
-}
-
-// Ref: #/components/schemas/response.TrainDetail
-type ResponseTrainDetail struct {
-	TrainNumber OptString `json:"trainNumber"`
-}
-
-// GetTrainNumber returns the value of TrainNumber.
-func (s *ResponseTrainDetail) GetTrainNumber() OptString {
-	return s.TrainNumber
-}
-
-// SetTrainNumber sets the value of TrainNumber.
-func (s *ResponseTrainDetail) SetTrainNumber(val OptString) {
-	s.TrainNumber = val
-}
-
 // Ref: #/components/schemas/response.Transportation
 type ResponseTransportation struct {
-	ArrivalDateTime      string                                        `json:"arrivalDateTime"`
-	DepartureDateTime    string                                        `json:"departureDateTime"`
-	Destination          EntityLocation                                `json:"destination"`
-	GeoJson              NilString                                     `json:"geoJson"`
-	ID                   int                                           `json:"id"`
-	Origin               EntityLocation                                `json:"origin"`
-	Price                NilInt                                        `json:"price"`
-	TransportationDetail NilResponseTransportationTransportationDetail `json:"transportationDetail"`
-	TripId               int                                           `json:"tripId"`
-	Type                 EntityTransportationType                      `json:"type"`
+	ArrivalDateTime   string                   `json:"arrivalDateTime"`
+	DepartureDateTime string                   `json:"departureDateTime"`
+	Destination       EntityLocation           `json:"destination"`
+	FlightDetail      OptNilEntityFlightDetail `json:"flightDetail"`
+	GeoJson           NilString                `json:"geoJson"`
+	ID                int                      `json:"id"`
+	Origin            EntityLocation           `json:"origin"`
+	Price             NilInt                   `json:"price"`
+	TrainDetail       OptNilEntityTrainDetail  `json:"trainDetail"`
+	TripId            int                      `json:"tripId"`
+	Type              string                   `json:"type"`
 }
 
 // GetArrivalDateTime returns the value of ArrivalDateTime.
@@ -1367,6 +1374,11 @@ func (s *ResponseTransportation) GetDepartureDateTime() string {
 // GetDestination returns the value of Destination.
 func (s *ResponseTransportation) GetDestination() EntityLocation {
 	return s.Destination
+}
+
+// GetFlightDetail returns the value of FlightDetail.
+func (s *ResponseTransportation) GetFlightDetail() OptNilEntityFlightDetail {
+	return s.FlightDetail
 }
 
 // GetGeoJson returns the value of GeoJson.
@@ -1389,9 +1401,9 @@ func (s *ResponseTransportation) GetPrice() NilInt {
 	return s.Price
 }
 
-// GetTransportationDetail returns the value of TransportationDetail.
-func (s *ResponseTransportation) GetTransportationDetail() NilResponseTransportationTransportationDetail {
-	return s.TransportationDetail
+// GetTrainDetail returns the value of TrainDetail.
+func (s *ResponseTransportation) GetTrainDetail() OptNilEntityTrainDetail {
+	return s.TrainDetail
 }
 
 // GetTripId returns the value of TripId.
@@ -1400,7 +1412,7 @@ func (s *ResponseTransportation) GetTripId() int {
 }
 
 // GetType returns the value of Type.
-func (s *ResponseTransportation) GetType() EntityTransportationType {
+func (s *ResponseTransportation) GetType() string {
 	return s.Type
 }
 
@@ -1417,6 +1429,11 @@ func (s *ResponseTransportation) SetDepartureDateTime(val string) {
 // SetDestination sets the value of Destination.
 func (s *ResponseTransportation) SetDestination(val EntityLocation) {
 	s.Destination = val
+}
+
+// SetFlightDetail sets the value of FlightDetail.
+func (s *ResponseTransportation) SetFlightDetail(val OptNilEntityFlightDetail) {
+	s.FlightDetail = val
 }
 
 // SetGeoJson sets the value of GeoJson.
@@ -1439,9 +1456,9 @@ func (s *ResponseTransportation) SetPrice(val NilInt) {
 	s.Price = val
 }
 
-// SetTransportationDetail sets the value of TransportationDetail.
-func (s *ResponseTransportation) SetTransportationDetail(val NilResponseTransportationTransportationDetail) {
-	s.TransportationDetail = val
+// SetTrainDetail sets the value of TrainDetail.
+func (s *ResponseTransportation) SetTrainDetail(val OptNilEntityTrainDetail) {
+	s.TrainDetail = val
 }
 
 // SetTripId sets the value of TripId.
@@ -1450,79 +1467,11 @@ func (s *ResponseTransportation) SetTripId(val int) {
 }
 
 // SetType sets the value of Type.
-func (s *ResponseTransportation) SetType(val EntityTransportationType) {
+func (s *ResponseTransportation) SetType(val string) {
 	s.Type = val
 }
 
 func (*ResponseTransportation) getTransportationRes() {}
-
-// ResponseTransportationTransportationDetail represents sum type.
-type ResponseTransportationTransportationDetail struct {
-	Type                 ResponseTransportationTransportationDetailType // switch on this field
-	ResponseFlightDetail ResponseFlightDetail
-	ResponseTrainDetail  ResponseTrainDetail
-}
-
-// ResponseTransportationTransportationDetailType is oneOf type of ResponseTransportationTransportationDetail.
-type ResponseTransportationTransportationDetailType string
-
-// Possible values for ResponseTransportationTransportationDetailType.
-const (
-	ResponseFlightDetailResponseTransportationTransportationDetail ResponseTransportationTransportationDetailType = "ResponseFlightDetail"
-	ResponseTrainDetailResponseTransportationTransportationDetail  ResponseTransportationTransportationDetailType = "ResponseTrainDetail"
-)
-
-// IsResponseFlightDetail reports whether ResponseTransportationTransportationDetail is ResponseFlightDetail.
-func (s ResponseTransportationTransportationDetail) IsResponseFlightDetail() bool {
-	return s.Type == ResponseFlightDetailResponseTransportationTransportationDetail
-}
-
-// IsResponseTrainDetail reports whether ResponseTransportationTransportationDetail is ResponseTrainDetail.
-func (s ResponseTransportationTransportationDetail) IsResponseTrainDetail() bool {
-	return s.Type == ResponseTrainDetailResponseTransportationTransportationDetail
-}
-
-// SetResponseFlightDetail sets ResponseTransportationTransportationDetail to ResponseFlightDetail.
-func (s *ResponseTransportationTransportationDetail) SetResponseFlightDetail(v ResponseFlightDetail) {
-	s.Type = ResponseFlightDetailResponseTransportationTransportationDetail
-	s.ResponseFlightDetail = v
-}
-
-// GetResponseFlightDetail returns ResponseFlightDetail and true boolean if ResponseTransportationTransportationDetail is ResponseFlightDetail.
-func (s ResponseTransportationTransportationDetail) GetResponseFlightDetail() (v ResponseFlightDetail, ok bool) {
-	if !s.IsResponseFlightDetail() {
-		return v, false
-	}
-	return s.ResponseFlightDetail, true
-}
-
-// NewResponseFlightDetailResponseTransportationTransportationDetail returns new ResponseTransportationTransportationDetail from ResponseFlightDetail.
-func NewResponseFlightDetailResponseTransportationTransportationDetail(v ResponseFlightDetail) ResponseTransportationTransportationDetail {
-	var s ResponseTransportationTransportationDetail
-	s.SetResponseFlightDetail(v)
-	return s
-}
-
-// SetResponseTrainDetail sets ResponseTransportationTransportationDetail to ResponseTrainDetail.
-func (s *ResponseTransportationTransportationDetail) SetResponseTrainDetail(v ResponseTrainDetail) {
-	s.Type = ResponseTrainDetailResponseTransportationTransportationDetail
-	s.ResponseTrainDetail = v
-}
-
-// GetResponseTrainDetail returns ResponseTrainDetail and true boolean if ResponseTransportationTransportationDetail is ResponseTrainDetail.
-func (s ResponseTransportationTransportationDetail) GetResponseTrainDetail() (v ResponseTrainDetail, ok bool) {
-	if !s.IsResponseTrainDetail() {
-		return v, false
-	}
-	return s.ResponseTrainDetail, true
-}
-
-// NewResponseTrainDetailResponseTransportationTransportationDetail returns new ResponseTransportationTransportationDetail from ResponseTrainDetail.
-func NewResponseTrainDetailResponseTransportationTransportationDetail(v ResponseTrainDetail) ResponseTransportationTransportationDetail {
-	var s ResponseTransportationTransportationDetail
-	s.SetResponseTrainDetail(v)
-	return s
-}
 
 // Ref: #/components/schemas/response.Trip
 type ResponseTrip struct {

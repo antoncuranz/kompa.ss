@@ -1003,18 +1003,14 @@ func (s *EntityAttachment) UnmarshalJSON(data []byte) error {
 }
 
 // Encode implements json.Marshaler.
-func (s *EntityFlight) Encode(e *jx.Encoder) {
+func (s *EntityFlightDetail) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *EntityFlight) encodeFields(e *jx.Encoder) {
-	{
-		e.FieldStart("id")
-		e.Int(s.ID)
-	}
+func (s *EntityFlightDetail) encodeFields(e *jx.Encoder) {
 	{
 		e.FieldStart("legs")
 		e.ArrStart()
@@ -1031,47 +1027,24 @@ func (s *EntityFlight) encodeFields(e *jx.Encoder) {
 		}
 		e.ArrEnd()
 	}
-	{
-		e.FieldStart("price")
-		e.Int(s.Price)
-	}
-	{
-		e.FieldStart("tripId")
-		e.Int(s.TripId)
-	}
 }
 
-var jsonFieldsNameOfEntityFlight = [5]string{
-	0: "id",
-	1: "legs",
-	2: "pnrs",
-	3: "price",
-	4: "tripId",
+var jsonFieldsNameOfEntityFlightDetail = [2]string{
+	0: "legs",
+	1: "pnrs",
 }
 
-// Decode decodes EntityFlight from json.
-func (s *EntityFlight) Decode(d *jx.Decoder) error {
+// Decode decodes EntityFlightDetail from json.
+func (s *EntityFlightDetail) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode EntityFlight to nil")
+		return errors.New("invalid: unable to decode EntityFlightDetail to nil")
 	}
 	var requiredBitSet [1]uint8
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "id":
-			requiredBitSet[0] |= 1 << 0
-			if err := func() error {
-				v, err := d.Int()
-				s.ID = int(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"id\"")
-			}
 		case "legs":
-			requiredBitSet[0] |= 1 << 1
+			requiredBitSet[0] |= 1 << 0
 			if err := func() error {
 				s.Legs = make([]EntityFlightLeg, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
@@ -1089,7 +1062,7 @@ func (s *EntityFlight) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"legs\"")
 			}
 		case "pnrs":
-			requiredBitSet[0] |= 1 << 2
+			requiredBitSet[0] |= 1 << 1
 			if err := func() error {
 				s.Pnrs = make([]EntityPNR, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
@@ -1106,41 +1079,17 @@ func (s *EntityFlight) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"pnrs\"")
 			}
-		case "price":
-			requiredBitSet[0] |= 1 << 3
-			if err := func() error {
-				v, err := d.Int()
-				s.Price = int(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"price\"")
-			}
-		case "tripId":
-			requiredBitSet[0] |= 1 << 4
-			if err := func() error {
-				v, err := d.Int()
-				s.TripId = int(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"tripId\"")
-			}
 		default:
 			return d.Skip()
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode EntityFlight")
+		return errors.Wrap(err, "decode EntityFlightDetail")
 	}
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [1]uint8{
-		0b00011111,
+		0b00000011,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
@@ -1152,8 +1101,8 @@ func (s *EntityFlight) Decode(d *jx.Decoder) error {
 				bitIdx := bits.TrailingZeros8(result)
 				fieldIdx := i*8 + bitIdx
 				var name string
-				if fieldIdx < len(jsonFieldsNameOfEntityFlight) {
-					name = jsonFieldsNameOfEntityFlight[fieldIdx]
+				if fieldIdx < len(jsonFieldsNameOfEntityFlightDetail) {
+					name = jsonFieldsNameOfEntityFlightDetail[fieldIdx]
 				} else {
 					name = strconv.Itoa(fieldIdx)
 				}
@@ -1174,14 +1123,14 @@ func (s *EntityFlight) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *EntityFlight) MarshalJSON() ([]byte, error) {
+func (s *EntityFlightDetail) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *EntityFlight) UnmarshalJSON(data []byte) error {
+func (s *EntityFlightDetail) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -1675,42 +1624,65 @@ func (s *EntityPNR) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
-// Encode encodes EntityTransportationType as json.
-func (s EntityTransportationType) Encode(e *jx.Encoder) {
-	unwrapped := int(s)
-
-	e.Int(unwrapped)
+// Encode implements json.Marshaler.
+func (s *EntityTrainDetail) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
 }
 
-// Decode decodes EntityTransportationType from json.
-func (s *EntityTransportationType) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode EntityTransportationType to nil")
+// encodeFields encodes fields.
+func (s *EntityTrainDetail) encodeFields(e *jx.Encoder) {
+	{
+		if s.TrainNumber.Set {
+			e.FieldStart("trainNumber")
+			s.TrainNumber.Encode(e)
+		}
 	}
-	var unwrapped int
-	if err := func() error {
-		v, err := d.Int()
-		unwrapped = int(v)
-		if err != nil {
-			return err
+}
+
+var jsonFieldsNameOfEntityTrainDetail = [1]string{
+	0: "trainNumber",
+}
+
+// Decode decodes EntityTrainDetail from json.
+func (s *EntityTrainDetail) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode EntityTrainDetail to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "trainNumber":
+			if err := func() error {
+				s.TrainNumber.Reset()
+				if err := s.TrainNumber.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"trainNumber\"")
+			}
+		default:
+			return d.Skip()
 		}
 		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
+	}); err != nil {
+		return errors.Wrap(err, "decode EntityTrainDetail")
 	}
-	*s = EntityTransportationType(unwrapped)
+
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s EntityTransportationType) MarshalJSON() ([]byte, error) {
+func (s *EntityTrainDetail) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *EntityTransportationType) UnmarshalJSON(data []byte) error {
+func (s *EntityTrainDetail) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -2024,56 +1996,6 @@ func (s GetAttachmentsOKApplicationJSON) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *GetAttachmentsOKApplicationJSON) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes GetFlightsOKApplicationJSON as json.
-func (s GetFlightsOKApplicationJSON) Encode(e *jx.Encoder) {
-	unwrapped := []EntityFlight(s)
-
-	e.ArrStart()
-	for _, elem := range unwrapped {
-		elem.Encode(e)
-	}
-	e.ArrEnd()
-}
-
-// Decode decodes GetFlightsOKApplicationJSON from json.
-func (s *GetFlightsOKApplicationJSON) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode GetFlightsOKApplicationJSON to nil")
-	}
-	var unwrapped []EntityFlight
-	if err := func() error {
-		unwrapped = make([]EntityFlight, 0)
-		if err := d.Arr(func(d *jx.Decoder) error {
-			var elem EntityFlight
-			if err := elem.Decode(d); err != nil {
-				return err
-			}
-			unwrapped = append(unwrapped, elem)
-			return nil
-		}); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = GetFlightsOKApplicationJSON(unwrapped)
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s GetFlightsOKApplicationJSON) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *GetFlightsOKApplicationJSON) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -2414,50 +2336,6 @@ func (s *NilInt) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
-// Encode encodes ResponseTransportationTransportationDetail as json.
-func (o NilResponseTransportationTransportationDetail) Encode(e *jx.Encoder) {
-	if o.Null {
-		e.Null()
-		return
-	}
-	o.Value.Encode(e)
-}
-
-// Decode decodes ResponseTransportationTransportationDetail from json.
-func (o *NilResponseTransportationTransportationDetail) Decode(d *jx.Decoder) error {
-	if o == nil {
-		return errors.New("invalid: unable to decode NilResponseTransportationTransportationDetail to nil")
-	}
-	if d.Next() == jx.Null {
-		if err := d.Null(); err != nil {
-			return err
-		}
-
-		var v ResponseTransportationTransportationDetail
-		o.Value = v
-		o.Null = true
-		return nil
-	}
-	o.Null = false
-	if err := o.Value.Decode(d); err != nil {
-		return err
-	}
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s NilResponseTransportationTransportationDetail) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *NilResponseTransportationTransportationDetail) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
 // Encode encodes string as json.
 func (o NilString) Encode(e *jx.Encoder) {
 	if o.Null {
@@ -2500,6 +2378,104 @@ func (s NilString) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *NilString) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes EntityFlightDetail as json.
+func (o OptNilEntityFlightDetail) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	if o.Null {
+		e.Null()
+		return
+	}
+	o.Value.Encode(e)
+}
+
+// Decode decodes EntityFlightDetail from json.
+func (o *OptNilEntityFlightDetail) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptNilEntityFlightDetail to nil")
+	}
+	if d.Next() == jx.Null {
+		if err := d.Null(); err != nil {
+			return err
+		}
+
+		var v EntityFlightDetail
+		o.Value = v
+		o.Set = true
+		o.Null = true
+		return nil
+	}
+	o.Set = true
+	o.Null = false
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptNilEntityFlightDetail) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptNilEntityFlightDetail) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes EntityTrainDetail as json.
+func (o OptNilEntityTrainDetail) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	if o.Null {
+		e.Null()
+		return
+	}
+	o.Value.Encode(e)
+}
+
+// Decode decodes EntityTrainDetail from json.
+func (o *OptNilEntityTrainDetail) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptNilEntityTrainDetail to nil")
+	}
+	if d.Next() == jx.Null {
+		if err := d.Null(); err != nil {
+			return err
+		}
+
+		var v EntityTrainDetail
+		o.Value = v
+		o.Set = true
+		o.Null = true
+		return nil
+	}
+	o.Set = true
+	o.Null = false
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptNilEntityTrainDetail) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptNilEntityTrainDetail) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -3689,202 +3665,6 @@ func (s *ResponseError) UnmarshalJSON(data []byte) error {
 }
 
 // Encode implements json.Marshaler.
-func (s *ResponseFlightDetail) Encode(e *jx.Encoder) {
-	e.ObjStart()
-	s.encodeFields(e)
-	e.ObjEnd()
-}
-
-// encodeFields encodes fields.
-func (s *ResponseFlightDetail) encodeFields(e *jx.Encoder) {
-	{
-		e.FieldStart("legs")
-		e.ArrStart()
-		for _, elem := range s.Legs {
-			elem.Encode(e)
-		}
-		e.ArrEnd()
-	}
-	{
-		e.FieldStart("pnrs")
-		e.ArrStart()
-		for _, elem := range s.Pnrs {
-			elem.Encode(e)
-		}
-		e.ArrEnd()
-	}
-}
-
-var jsonFieldsNameOfResponseFlightDetail = [2]string{
-	0: "legs",
-	1: "pnrs",
-}
-
-// Decode decodes ResponseFlightDetail from json.
-func (s *ResponseFlightDetail) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode ResponseFlightDetail to nil")
-	}
-	var requiredBitSet [1]uint8
-
-	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "legs":
-			requiredBitSet[0] |= 1 << 0
-			if err := func() error {
-				s.Legs = make([]EntityFlightLeg, 0)
-				if err := d.Arr(func(d *jx.Decoder) error {
-					var elem EntityFlightLeg
-					if err := elem.Decode(d); err != nil {
-						return err
-					}
-					s.Legs = append(s.Legs, elem)
-					return nil
-				}); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"legs\"")
-			}
-		case "pnrs":
-			requiredBitSet[0] |= 1 << 1
-			if err := func() error {
-				s.Pnrs = make([]EntityPNR, 0)
-				if err := d.Arr(func(d *jx.Decoder) error {
-					var elem EntityPNR
-					if err := elem.Decode(d); err != nil {
-						return err
-					}
-					s.Pnrs = append(s.Pnrs, elem)
-					return nil
-				}); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"pnrs\"")
-			}
-		default:
-			return d.Skip()
-		}
-		return nil
-	}); err != nil {
-		return errors.Wrap(err, "decode ResponseFlightDetail")
-	}
-	// Validate required fields.
-	var failures []validate.FieldError
-	for i, mask := range [1]uint8{
-		0b00000011,
-	} {
-		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
-			// Mask only required fields and check equality to mask using XOR.
-			//
-			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
-			// Bits of fields which would be set are actually bits of missed fields.
-			missed := bits.OnesCount8(result)
-			for bitN := 0; bitN < missed; bitN++ {
-				bitIdx := bits.TrailingZeros8(result)
-				fieldIdx := i*8 + bitIdx
-				var name string
-				if fieldIdx < len(jsonFieldsNameOfResponseFlightDetail) {
-					name = jsonFieldsNameOfResponseFlightDetail[fieldIdx]
-				} else {
-					name = strconv.Itoa(fieldIdx)
-				}
-				failures = append(failures, validate.FieldError{
-					Name:  name,
-					Error: validate.ErrFieldRequired,
-				})
-				// Reset bit.
-				result &^= 1 << bitIdx
-			}
-		}
-	}
-	if len(failures) > 0 {
-		return &validate.Error{Fields: failures}
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *ResponseFlightDetail) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *ResponseFlightDetail) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode implements json.Marshaler.
-func (s *ResponseTrainDetail) Encode(e *jx.Encoder) {
-	e.ObjStart()
-	s.encodeFields(e)
-	e.ObjEnd()
-}
-
-// encodeFields encodes fields.
-func (s *ResponseTrainDetail) encodeFields(e *jx.Encoder) {
-	{
-		if s.TrainNumber.Set {
-			e.FieldStart("trainNumber")
-			s.TrainNumber.Encode(e)
-		}
-	}
-}
-
-var jsonFieldsNameOfResponseTrainDetail = [1]string{
-	0: "trainNumber",
-}
-
-// Decode decodes ResponseTrainDetail from json.
-func (s *ResponseTrainDetail) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode ResponseTrainDetail to nil")
-	}
-
-	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "trainNumber":
-			if err := func() error {
-				s.TrainNumber.Reset()
-				if err := s.TrainNumber.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"trainNumber\"")
-			}
-		default:
-			return d.Skip()
-		}
-		return nil
-	}); err != nil {
-		return errors.Wrap(err, "decode ResponseTrainDetail")
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *ResponseTrainDetail) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *ResponseTrainDetail) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode implements json.Marshaler.
 func (s *ResponseTransportation) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
@@ -3906,6 +3686,12 @@ func (s *ResponseTransportation) encodeFields(e *jx.Encoder) {
 		s.Destination.Encode(e)
 	}
 	{
+		if s.FlightDetail.Set {
+			e.FieldStart("flightDetail")
+			s.FlightDetail.Encode(e)
+		}
+	}
+	{
 		e.FieldStart("geoJson")
 		s.GeoJson.Encode(e)
 	}
@@ -3922,8 +3708,10 @@ func (s *ResponseTransportation) encodeFields(e *jx.Encoder) {
 		s.Price.Encode(e)
 	}
 	{
-		e.FieldStart("transportationDetail")
-		s.TransportationDetail.Encode(e)
+		if s.TrainDetail.Set {
+			e.FieldStart("trainDetail")
+			s.TrainDetail.Encode(e)
+		}
 	}
 	{
 		e.FieldStart("tripId")
@@ -3931,21 +3719,22 @@ func (s *ResponseTransportation) encodeFields(e *jx.Encoder) {
 	}
 	{
 		e.FieldStart("type")
-		s.Type.Encode(e)
+		e.Str(s.Type)
 	}
 }
 
-var jsonFieldsNameOfResponseTransportation = [10]string{
-	0: "arrivalDateTime",
-	1: "departureDateTime",
-	2: "destination",
-	3: "geoJson",
-	4: "id",
-	5: "origin",
-	6: "price",
-	7: "transportationDetail",
-	8: "tripId",
-	9: "type",
+var jsonFieldsNameOfResponseTransportation = [11]string{
+	0:  "arrivalDateTime",
+	1:  "departureDateTime",
+	2:  "destination",
+	3:  "flightDetail",
+	4:  "geoJson",
+	5:  "id",
+	6:  "origin",
+	7:  "price",
+	8:  "trainDetail",
+	9:  "tripId",
+	10: "type",
 }
 
 // Decode decodes ResponseTransportation from json.
@@ -3991,8 +3780,18 @@ func (s *ResponseTransportation) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"destination\"")
 			}
+		case "flightDetail":
+			if err := func() error {
+				s.FlightDetail.Reset()
+				if err := s.FlightDetail.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"flightDetail\"")
+			}
 		case "geoJson":
-			requiredBitSet[0] |= 1 << 3
+			requiredBitSet[0] |= 1 << 4
 			if err := func() error {
 				if err := s.GeoJson.Decode(d); err != nil {
 					return err
@@ -4002,7 +3801,7 @@ func (s *ResponseTransportation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"geoJson\"")
 			}
 		case "id":
-			requiredBitSet[0] |= 1 << 4
+			requiredBitSet[0] |= 1 << 5
 			if err := func() error {
 				v, err := d.Int()
 				s.ID = int(v)
@@ -4014,7 +3813,7 @@ func (s *ResponseTransportation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"id\"")
 			}
 		case "origin":
-			requiredBitSet[0] |= 1 << 5
+			requiredBitSet[0] |= 1 << 6
 			if err := func() error {
 				if err := s.Origin.Decode(d); err != nil {
 					return err
@@ -4024,7 +3823,7 @@ func (s *ResponseTransportation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"origin\"")
 			}
 		case "price":
-			requiredBitSet[0] |= 1 << 6
+			requiredBitSet[0] |= 1 << 7
 			if err := func() error {
 				if err := s.Price.Decode(d); err != nil {
 					return err
@@ -4033,18 +3832,18 @@ func (s *ResponseTransportation) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"price\"")
 			}
-		case "transportationDetail":
-			requiredBitSet[0] |= 1 << 7
+		case "trainDetail":
 			if err := func() error {
-				if err := s.TransportationDetail.Decode(d); err != nil {
+				s.TrainDetail.Reset()
+				if err := s.TrainDetail.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"transportationDetail\"")
+				return errors.Wrap(err, "decode field \"trainDetail\"")
 			}
 		case "tripId":
-			requiredBitSet[1] |= 1 << 0
+			requiredBitSet[1] |= 1 << 1
 			if err := func() error {
 				v, err := d.Int()
 				s.TripId = int(v)
@@ -4056,9 +3855,11 @@ func (s *ResponseTransportation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"tripId\"")
 			}
 		case "type":
-			requiredBitSet[1] |= 1 << 1
+			requiredBitSet[1] |= 1 << 2
 			if err := func() error {
-				if err := s.Type.Decode(d); err != nil {
+				v, err := d.Str()
+				s.Type = string(v)
+				if err != nil {
 					return err
 				}
 				return nil
@@ -4075,8 +3876,8 @@ func (s *ResponseTransportation) Decode(d *jx.Decoder) error {
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [2]uint8{
-		0b11111111,
-		0b00000011,
+		0b11110111,
+		0b00000110,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
@@ -4118,100 +3919,6 @@ func (s *ResponseTransportation) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *ResponseTransportation) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes ResponseTransportationTransportationDetail as json.
-func (s ResponseTransportationTransportationDetail) Encode(e *jx.Encoder) {
-	switch s.Type {
-	case ResponseFlightDetailResponseTransportationTransportationDetail:
-		s.ResponseFlightDetail.Encode(e)
-	case ResponseTrainDetailResponseTransportationTransportationDetail:
-		s.ResponseTrainDetail.Encode(e)
-	}
-}
-
-func (s ResponseTransportationTransportationDetail) encodeFields(e *jx.Encoder) {
-	switch s.Type {
-	case ResponseFlightDetailResponseTransportationTransportationDetail:
-		s.ResponseFlightDetail.encodeFields(e)
-	case ResponseTrainDetailResponseTransportationTransportationDetail:
-		s.ResponseTrainDetail.encodeFields(e)
-	}
-}
-
-// Decode decodes ResponseTransportationTransportationDetail from json.
-func (s *ResponseTransportationTransportationDetail) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode ResponseTransportationTransportationDetail to nil")
-	}
-	// Sum type fields.
-	if typ := d.Next(); typ != jx.Object {
-		return errors.Errorf("unexpected json type %q", typ)
-	}
-
-	var found bool
-	if err := d.Capture(func(d *jx.Decoder) error {
-		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
-			switch string(key) {
-			case "legs":
-				match := ResponseFlightDetailResponseTransportationTransportationDetail
-				if found && s.Type != match {
-					s.Type = ""
-					return errors.Errorf("multiple oneOf matches: (%v, %v)", s.Type, match)
-				}
-				found = true
-				s.Type = match
-			case "pnrs":
-				match := ResponseFlightDetailResponseTransportationTransportationDetail
-				if found && s.Type != match {
-					s.Type = ""
-					return errors.Errorf("multiple oneOf matches: (%v, %v)", s.Type, match)
-				}
-				found = true
-				s.Type = match
-			case "trainNumber":
-				match := ResponseTrainDetailResponseTransportationTransportationDetail
-				if found && s.Type != match {
-					s.Type = ""
-					return errors.Errorf("multiple oneOf matches: (%v, %v)", s.Type, match)
-				}
-				found = true
-				s.Type = match
-			}
-			return d.Skip()
-		})
-	}); err != nil {
-		return errors.Wrap(err, "capture")
-	}
-	if !found {
-		return errors.New("unable to detect sum type variant")
-	}
-	switch s.Type {
-	case ResponseFlightDetailResponseTransportationTransportationDetail:
-		if err := s.ResponseFlightDetail.Decode(d); err != nil {
-			return err
-		}
-	case ResponseTrainDetailResponseTransportationTransportationDetail:
-		if err := s.ResponseTrainDetail.Decode(d); err != nil {
-			return err
-		}
-	default:
-		return errors.Errorf("inferred invalid type: %s", s.Type)
-	}
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s ResponseTransportationTransportationDetail) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *ResponseTransportationTransportationDetail) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }

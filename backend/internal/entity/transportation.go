@@ -6,18 +6,22 @@ import (
 	"cloud.google.com/go/civil"
 )
 
-type TransportationType int32
+type TransportationType string
 
 const (
-	PLANE TransportationType = iota
-	TRAIN
-	BUS
-	BOAT
-	BIKE
-	CAR
-	FOOT
-	OTHER
+	PLANE TransportationType = "PLANE"
+	TRAIN TransportationType = "TRAIN"
+	BUS   TransportationType = "BUS"
+	BOAT  TransportationType = "BOAT"
+	BIKE  TransportationType = "BIKE"
+	CAR   TransportationType = "CAR"
+	FOOT  TransportationType = "FOOT"
+	OTHER TransportationType = "OTHER"
 )
+
+func (t TransportationType) String() string {
+	return string(t)
+}
 
 type Transportation struct {
 	ID                int32              `json:"id"`
@@ -29,4 +33,10 @@ type Transportation struct {
 	ArrivalDateTime   civil.DateTime     `json:"arrivalDateTime"`
 	GeoJson           *string            `json:"geoJson"`
 	Price             *int32             `json:"price"`
+	FlightDetail      *FlightDetail      `json:"flightDetail"`
+	TrainDetail       *TrainDetail       `json:"trainDetail"`
+}
+
+type TrainDetail struct {
+	TrainNumber string
 }

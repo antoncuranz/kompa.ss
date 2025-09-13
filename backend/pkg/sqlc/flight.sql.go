@@ -11,44 +11,8 @@ import (
 	"cloud.google.com/go/civil"
 )
 
-const deleteFlightByID = `-- name: DeleteFlightByID :exec
-DELETE
-FROM flight
-WHERE trip_id = $1
-  AND flight.id = $2
-`
-
-type DeleteFlightByIDParams struct {
-	TripID int32
-	ID     int32
-}
-
-func (q *Queries) DeleteFlightByID(ctx context.Context, arg DeleteFlightByIDParams) error {
-	_, err := q.db.Exec(ctx, deleteFlightByID, arg.TripID, arg.ID)
-	return err
-}
-
-const getFlightByID = `-- name: GetFlightByID :one
-SELECT id, trip_id, price
-FROM flight f
-WHERE trip_id = $1
-  AND id = $2
-`
-
-type GetFlightByIDParams struct {
-	TripID int32
-	ID     int32
-}
-
-func (q *Queries) GetFlightByID(ctx context.Context, arg GetFlightByIDParams) (Flight, error) {
-	row := q.db.QueryRow(ctx, getFlightByID, arg.TripID, arg.ID)
-	var i Flight
-	err := row.Scan(&i.ID, &i.TripID, &i.Price)
-	return i, err
-}
-
-const getFlightLegsByFlightID = `-- name: GetFlightLegsByFlightID :many
-SELECT flight_leg.id, flight_leg.flight_id, flight_leg.origin, flight_leg.destination, flight_leg.airline, flight_leg.flight_number, flight_leg.departure_time, flight_leg.arrival_time, flight_leg.duration_in_minutes, flight_leg.aircraft,
+const getFlightLegsByTransportationID = `-- name: GetFlightLegsByTransportationID :many
+SELECT flight_leg.id, flight_leg.transportation_id, flight_leg.origin, flight_leg.destination, flight_leg.airline, flight_leg.flight_number, flight_leg.departure_time, flight_leg.arrival_time, flight_leg.duration_in_minutes, flight_leg.aircraft,
        origin.iata, origin.name, origin.municipality, origin.location_id,
        destination.iata, destination.name, destination.municipality, destination.location_id,
        origin_location.id, origin_location.latitude, origin_location.longitude,
@@ -58,11 +22,11 @@ FROM flight_leg
          JOIN airport destination on flight_leg.destination = destination.iata
          JOIN location origin_location on origin.location_id = origin_location.id
          JOIN location destination_location on destination.location_id = destination_location.id
-WHERE flight_id = $1
+WHERE transportation_id = $1
 ORDER BY departure_time
 `
 
-type GetFlightLegsByFlightIDRow struct {
+type GetFlightLegsByTransportationIDRow struct {
 	FlightLeg  FlightLeg
 	Airport    Airport
 	Airport_2  Airport
@@ -70,18 +34,18 @@ type GetFlightLegsByFlightIDRow struct {
 	Location_2 Location
 }
 
-func (q *Queries) GetFlightLegsByFlightID(ctx context.Context, flightID int32) ([]GetFlightLegsByFlightIDRow, error) {
-	rows, err := q.db.Query(ctx, getFlightLegsByFlightID, flightID)
+func (q *Queries) GetFlightLegsByTransportationID(ctx context.Context, transportationID int32) ([]GetFlightLegsByTransportationIDRow, error) {
+	rows, err := q.db.Query(ctx, getFlightLegsByTransportationID, transportationID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []GetFlightLegsByFlightIDRow{}
+	items := []GetFlightLegsByTransportationIDRow{}
 	for rows.Next() {
-		var i GetFlightLegsByFlightIDRow
+		var i GetFlightLegsByTransportationIDRow
 		if err := rows.Scan(
 			&i.FlightLeg.ID,
-			&i.FlightLeg.FlightID,
+			&i.FlightLeg.TransportationID,
 			&i.FlightLeg.Origin,
 			&i.FlightLeg.Destination,
 			&i.FlightLeg.Airline,
@@ -115,50 +79,24 @@ func (q *Queries) GetFlightLegsByFlightID(ctx context.Context, flightID int32) (
 	return items, nil
 }
 
-const getFlights = `-- name: GetFlights :many
-SELECT id, trip_id, price
-FROM flight
-WHERE trip_id = $1
+const getPnrsByTransportationID = `-- name: GetPnrsByTransportationID :many
+SELECT id, transportation_id, airline, pnr
+FROM flight_pnr
+WHERE transportation_id = $1
 `
 
-func (q *Queries) GetFlights(ctx context.Context, tripID int32) ([]Flight, error) {
-	rows, err := q.db.Query(ctx, getFlights, tripID)
+func (q *Queries) GetPnrsByTransportationID(ctx context.Context, transportationID int32) ([]FlightPnr, error) {
+	rows, err := q.db.Query(ctx, getPnrsByTransportationID, transportationID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []Flight{}
+	items := []FlightPnr{}
 	for rows.Next() {
-		var i Flight
-		if err := rows.Scan(&i.ID, &i.TripID, &i.Price); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const getPnrsByFlightID = `-- name: GetPnrsByFlightID :many
-SELECT id, flight_id, airline, pnr
-FROM pnr
-WHERE flight_id = $1
-`
-
-func (q *Queries) GetPnrsByFlightID(ctx context.Context, flightID int32) ([]Pnr, error) {
-	rows, err := q.db.Query(ctx, getPnrsByFlightID, flightID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	items := []Pnr{}
-	for rows.Next() {
-		var i Pnr
+		var i FlightPnr
 		if err := rows.Scan(
 			&i.ID,
-			&i.FlightID,
+			&i.TransportationID,
 			&i.Airline,
 			&i.Pnr,
 		); err != nil {
@@ -195,32 +133,14 @@ func (q *Queries) InsertAirport(ctx context.Context, arg InsertAirportParams) er
 	return err
 }
 
-const insertFlight = `-- name: InsertFlight :one
-INSERT INTO flight (trip_id, price)
-VALUES ($1, $2)
-RETURNING id
-`
-
-type InsertFlightParams struct {
-	TripID int32
-	Price  *int32
-}
-
-func (q *Queries) InsertFlight(ctx context.Context, arg InsertFlightParams) (int32, error) {
-	row := q.db.QueryRow(ctx, insertFlight, arg.TripID, arg.Price)
-	var id int32
-	err := row.Scan(&id)
-	return id, err
-}
-
 const insertFlightLeg = `-- name: InsertFlightLeg :one
-INSERT INTO flight_leg (flight_id, origin, destination, airline, flight_number, departure_time, arrival_time, duration_in_minutes, aircraft)
+INSERT INTO flight_leg (transportation_id, origin, destination, airline, flight_number, departure_time, arrival_time, duration_in_minutes, aircraft)
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 RETURNING id
 `
 
 type InsertFlightLegParams struct {
-	FlightID          int32
+	TransportationID  int32
 	Origin            string
 	Destination       string
 	Airline           string
@@ -233,7 +153,7 @@ type InsertFlightLegParams struct {
 
 func (q *Queries) InsertFlightLeg(ctx context.Context, arg InsertFlightLegParams) (int32, error) {
 	row := q.db.QueryRow(ctx, insertFlightLeg,
-		arg.FlightID,
+		arg.TransportationID,
 		arg.Origin,
 		arg.Destination,
 		arg.Airline,
@@ -249,19 +169,19 @@ func (q *Queries) InsertFlightLeg(ctx context.Context, arg InsertFlightLegParams
 }
 
 const insertPNR = `-- name: InsertPNR :one
-INSERT INTO pnr (flight_id, airline, pnr)
+INSERT INTO flight_pnr (transportation_id, airline, pnr)
 VALUES ($1, $2, $3)
 RETURNING id
 `
 
 type InsertPNRParams struct {
-	FlightID int32
-	Airline  string
-	Pnr      string
+	TransportationID int32
+	Airline          string
+	Pnr              string
 }
 
 func (q *Queries) InsertPNR(ctx context.Context, arg InsertPNRParams) (int32, error) {
-	row := q.db.QueryRow(ctx, insertPNR, arg.FlightID, arg.Airline, arg.Pnr)
+	row := q.db.QueryRow(ctx, insertPNR, arg.TransportationID, arg.Airline, arg.Pnr)
 	var id int32
 	err := row.Scan(&id)
 	return id, err
