@@ -40,12 +40,33 @@ export type Accommodation = {
   price: number | null;
 };
 
-export type Flight = {
-  id: number;
-  tripId: number;
+export enum TransportationType {
+    Plane = "PLANE",
+    Train = "TRAIN",
+    Bus   = "BUS",
+    Boat  = "BOAT",
+    Bike  = "BIKE",
+    Car   = "CAR",
+    Foot  = "FOOT",
+    Other = "OTHER",
+}
+
+export type Transportation = {
+    id: number;
+    tripId: number;
+    type: TransportationType;
+    origin: Location;
+    destination: Location;
+    departureDateTime: string;
+    arrivalDateTime: string;
+    geoJson: string | null;
+    price: number | null;
+    flightDetail: FlightDetail | null;
+};
+
+export type FlightDetail = {
   legs: FlightLeg[];
   pnrs: PNR[];
-  price: number | null;
 };
 
 export type PNR = {
@@ -86,7 +107,7 @@ export type Airport = {
 
 export type DayRenderData = {
   day: string;
-  flights: {flight: Flight; leg: FlightLeg}[];
+  transportation: Transportation[];
   activities: Activity[];
   accommodation: Accommodation | undefined;
 };

@@ -1,7 +1,7 @@
 "use client"
 
 import React, {useState} from "react";
-import {Accommodation, Activity, DayRenderData, Flight, Trip} from "@/types.ts";
+import {Accommodation, Activity, DayRenderData, Transportation, Trip} from "@/types.ts";
 import Day from "@/components/itinerary/Day.tsx";
 import ActivityDialog from "@/components/dialog/ActivityDialog.tsx";
 import AccommodationDialog from "@/components/dialog/AccommodationDialog.tsx";
@@ -21,7 +21,7 @@ export default function Itinerary({
   const [dialogAccommodation, setDialogAccommodation] = useState<Accommodation|null>()
 
   const [flightDialogOpen, setFlightDialogOpen] = useState(false)
-  const [dialogFlight, setDialogFlight] = useState<Flight|null>()
+  const [dialogFlight, setDialogFlight] = useState<Transportation|null>()
 
   const router = useRouter()
 
@@ -47,7 +47,7 @@ export default function Itinerary({
       router.refresh()
   }
 
-  function onFlightClick(flight: Flight) {
+  function onFlightClick(flight: Transportation) {
     setDialogFlight(flight)
     setFlightDialogOpen(true)
   }

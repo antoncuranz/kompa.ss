@@ -1,7 +1,8 @@
 import {
-  Accommodation,
-  Activity,
-  Flight, Trip,
+    Accommodation,
+    Activity,
+    Transportation,
+    Trip,
 } from "@/types.ts";
 import React from "react";
 
@@ -49,8 +50,8 @@ export async function fetchAccommodation(tripId: number) {
   return await fetchData("/api/v1/trips/" + tripId + "/accommodation") as Accommodation[]
 }
 
-export async function fetchFlights(tripId: number) {
-  return await fetchData("/api/v1/trips/" + tripId + "/flights") as Flight[]
+export async function fetchTransportation(tripId: number) {
+  return await fetchData("/api/v1/trips/" + tripId + "/transportation") as Transportation[]
 }
 
 export async function fetchActivities(tripId: number) {

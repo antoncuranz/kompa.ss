@@ -5,14 +5,14 @@ import {Collapsible} from "@/components/ui/collapsible.tsx";
 import {ChevronDown, ChevronUp, SquarePen} from "lucide-react";
 import {CollapsibleContent, CollapsibleTrigger} from "@radix-ui/react-collapsible";
 import {cn} from "@/lib/utils.ts";
-import {Flight, FlightLeg} from "@/types.ts";
+import {FlightDetail, FlightLeg} from "@/types.ts";
 import {formatDurationMinutes, formatTime} from "@/components/util.ts";
 import React, {MouseEventHandler, useState} from "react";
 
 export default function FlightEntry({
   flight, flightLeg, className, onInfoBtnClick
 }: {
-  flight: Flight,
+  flight: FlightDetail,
   flightLeg: FlightLeg,
   className?: string
   onInfoBtnClick?: MouseEventHandler<HTMLButtonElement> | undefined

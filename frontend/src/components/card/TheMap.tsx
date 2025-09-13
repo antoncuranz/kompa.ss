@@ -2,21 +2,20 @@
 
 import React, {useState} from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
-import {Layer, Map, Source} from "react-map-gl/mapbox";
-import type {FeatureCollection, Feature} from 'geojson';
+import {Layer, Map, Popup, Source} from "react-map-gl/mapbox";
+import type {Feature, FeatureCollection} from 'geojson';
 import RenderAfterMap from "@/components/card/RenderAfterMap.tsx";
-import {Accommodation, Activity, Flight, FlightLeg} from "@/types.ts";
-import {Popup} from "react-map-gl/mapbox";
+import {Accommodation, Activity, FlightLeg, Transportation, TransportationType} from "@/types.ts";
 import {LngLat, MapMouseEvent} from "mapbox-gl";
 import {formatDateShort, formatTime, isSameDay} from "@/components/util.ts";
 import {useTheme} from "next-themes";
 
 export default function TheMap({
-  activities, accommodation, flights
+  activities, accommodation, transportation
 }: {
   activities: Activity[],
   accommodation: Accommodation[],
-  flights: Flight[]
+  transportation: Transportation[]
 }) {
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
@@ -77,8 +76,10 @@ export default function TheMap({
   }
 
   function getFlightGeoJson(): FeatureCollection {
-    const features = flights
-        .flatMap(flight => flight.legs)
+      const features = transportation
+        .filter(transportation => transportation.type == TransportationType.Plane)
+        .map(transportation => transportation.flightDetail!)
+        .flatMap(flightDetail => flightDetail.legs)
         .map(mapLegToFeature)
 
     return {type: "FeatureCollection", features: features};

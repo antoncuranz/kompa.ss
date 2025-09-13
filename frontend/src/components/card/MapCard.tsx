@@ -1,7 +1,7 @@
 import React from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Card from "@/components/card/Card.tsx";
-import {fetchAccommodation, fetchActivities, fetchFlights} from "@/requests.ts";
+import {fetchAccommodation, fetchActivities, fetchTransportation} from "@/requests.ts";
 import TheMap from "@/components/card/TheMap.tsx";
 
 export default async function MapCard({
@@ -12,11 +12,11 @@ export default async function MapCard({
 }) {
   const activities = await fetchActivities(tripId)
   const accommodation = await fetchAccommodation(tripId)
-  const flights = await fetchFlights(tripId)
+  const transportation = await fetchTransportation(tripId)
 
   return (
     <Card className={className}>
-      <TheMap activities={activities} accommodation={accommodation} flights={flights}/>
+      <TheMap activities={activities} accommodation={accommodation} transportation={transportation}/>
     </Card>
   )
 }

@@ -6,7 +6,7 @@ import {useState} from "react";
 import {useToast} from "@/components/ui/use-toast.ts";
 import AmountInput from "@/components/dialog/AmountInput.tsx";
 import {Input} from "@/components/ui/input.tsx";
-import {AddFlightLeg, AddPNR, Flight, FlightLeg, Trip} from "@/types.ts";
+import {AddFlightLeg, AddPNR, Transportation, FlightLeg, Trip} from "@/types.ts";
 import {LabelInputContainer, RowContainer} from "@/components/dialog/DialogUtil.tsx";
 import DateInput from "@/components/dialog/DateInput.tsx";
 
@@ -16,12 +16,12 @@ export default function FlightDialog({
   trip: Trip
   open: boolean
   onClose: (needsUpdate: boolean) => void
-  flight?: Flight | null
+  flight?: Transportation | null
 }) {
   const [edit, setEdit] = useState<boolean>(flight == null)
 
   const [price, setPrice] = useState<number|null>(flight?.price ?? null)
-  const [flightLegs, setFlightLegs] = useState<AddFlightLeg[]>(mapLegsOrDefault(flight?.legs))
+  const [flightLegs, setFlightLegs] = useState<AddFlightLeg[]>(mapLegsOrDefault(flight?.flightDetail?.legs))
 
   function mapLegsOrDefault(flightLegs: FlightLeg[]|undefined): AddFlightLeg[] {
     if (flightLegs != null) {
@@ -39,7 +39,7 @@ export default function FlightDialog({
     }]
   }
 
-  const [pnrs, setPnrs] = useState<AddPNR[]>(flight?.pnrs ?? [])
+  const [pnrs, setPnrs] = useState<AddPNR[]>(flight?.flightDetail?.pnrs ?? [])
 
   const { toast } = useToast();
 
