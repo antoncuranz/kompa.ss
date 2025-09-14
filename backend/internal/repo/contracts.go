@@ -3,6 +3,8 @@ package repo
 
 import (
 	"context"
+	"github.com/paulmach/orb/geojson"
+	"kompass/internal/controller/http/v1/request"
 	"kompass/internal/entity"
 )
 
@@ -26,6 +28,7 @@ type (
 		GetAllTransportation(ctx context.Context, tripID int32) ([]entity.Transportation, error)
 		GetTransportationByID(ctx context.Context, tripID int32, id int32) (entity.Transportation, error)
 		SaveTransportation(ctx context.Context, transportation entity.Transportation) (entity.Transportation, error)
+		SaveGeoJson(ctx context.Context, transportationID int32, geoJson *geojson.FeatureCollection) error
 		DeleteTransportation(ctx context.Context, tripID int32, flightID int32) error
 	}
 
@@ -54,5 +57,11 @@ type (
 
 	AerodataboxWebAPI interface {
 		RetrieveFlightLeg(ctx context.Context, date string, flightNumber string, origin *string) (entity.FlightLeg, error)
+	}
+
+	DbVendoWebAPI interface {
+		RetrieveLocation(ctx context.Context, query string) (entity.TrainStation, error)
+		RetrieveJourney(ctx context.Context, journey request.TrainJourney) (entity.TrainDetail, error)
+		RetrievePolylines(ctx context.Context, refreshToken string) ([]geojson.FeatureCollection, error)
 	}
 )

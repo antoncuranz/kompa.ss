@@ -81,18 +81,12 @@ func (r *ActivitiesV1) postActivity(ctx *fiber.Ctx) error {
 		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
 	}
 
-	var body request.Activity
-
-	if err := ctx.BodyParser(&body); err != nil {
+	body, err := ParseAndValidateRequestBody[request.Activity](ctx, r.v)
+	if err != nil {
 		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
 	}
 
-	if err := r.v.Struct(body); err != nil {
-		fmt.Println(err)
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
-	}
-
-	_, err = r.uc.CreateActivity(ctx.UserContext(), int32(tripID), body)
+	_, err = r.uc.CreateActivity(ctx.UserContext(), int32(tripID), *body)
 	if err != nil {
 		return errorResponse(ctx, fmt.Errorf("create activity: %w", err))
 	}
@@ -121,17 +115,12 @@ func (r *ActivitiesV1) putActivity(ctx *fiber.Ctx) error {
 		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse activity_id: %w", err))
 	}
 
-	var body request.Activity
-
-	if err := ctx.BodyParser(&body); err != nil {
+	body, err := ParseAndValidateRequestBody[request.Activity](ctx, r.v)
+	if err != nil {
 		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
 	}
 
-	if err := r.v.Struct(body); err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
-	}
-
-	if err := r.uc.UpdateActivity(ctx.UserContext(), int32(tripID), int32(activityID), body); err != nil {
+	if err := r.uc.UpdateActivity(ctx.UserContext(), int32(tripID), int32(activityID), *body); err != nil {
 		return errorResponse(ctx, fmt.Errorf("update activity with id %d: %w", activityID, err))
 	}
 

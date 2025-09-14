@@ -82,18 +82,12 @@ func (r *AccommodationV1) postAccommodation(ctx *fiber.Ctx) error {
 		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
 	}
 
-	var body request.Accommodation
-
-	if err := ctx.BodyParser(&body); err != nil {
+	body, err := ParseAndValidateRequestBody[request.Accommodation](ctx, r.v)
+	if err != nil {
 		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
 	}
 
-	if err := r.v.Struct(body); err != nil {
-		fmt.Println(err)
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
-	}
-
-	_, err = r.uc.CreateAccommodation(ctx.UserContext(), int32(tripID), body)
+	_, err = r.uc.CreateAccommodation(ctx.UserContext(), int32(tripID), *body)
 	if err != nil {
 		return errorResponse(ctx, fmt.Errorf("create accommodation: %w", err))
 	}
@@ -122,17 +116,12 @@ func (r *AccommodationV1) putAccommodation(ctx *fiber.Ctx) error {
 		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse accommodation_id: %w", err))
 	}
 
-	var body request.Accommodation
-
-	if err := ctx.BodyParser(&body); err != nil {
+	body, err := ParseAndValidateRequestBody[request.Accommodation](ctx, r.v)
+	if err != nil {
 		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
 	}
 
-	if err := r.v.Struct(body); err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
-	}
-
-	if err := r.uc.UpdateAccommodation(ctx.UserContext(), int32(tripID), int32(accommodationID), body); err != nil {
+	if err := r.uc.UpdateAccommodation(ctx.UserContext(), int32(tripID), int32(accommodationID), *body); err != nil {
 		return errorResponse(ctx, fmt.Errorf("update accommodation with id %d: %w", accommodationID, err))
 	}
 

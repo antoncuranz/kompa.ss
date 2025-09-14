@@ -3,6 +3,7 @@ package postgres
 import (
 	"context"
 	"fmt"
+	"github.com/paulmach/orb/geojson"
 	"kompass/internal/entity"
 	"kompass/internal/repo/postgres/converter"
 	"kompass/pkg/postgres"
@@ -16,14 +17,16 @@ type TransportationRepo struct {
 	Queries *sqlc.Queries
 	c       converter.TransportationConverter
 	flights *FlightsRepo
+	trains  *TrainsRepo
 }
 
-func NewTransportationRepo(pg *postgres.Postgres, flights *FlightsRepo) *TransportationRepo {
+func NewTransportationRepo(pg *postgres.Postgres, flights *FlightsRepo, trains *TrainsRepo) *TransportationRepo {
 	return &TransportationRepo{
 		pg.Pool,
 		sqlc.New(pg.Pool),
 		&converter.TransportationConverterImpl{},
 		flights,
+		trains,
 	}
 }
 
@@ -72,6 +75,12 @@ func (r *TransportationRepo) GetTransportationByID(ctx context.Context, tripID i
 			return entity.Transportation{}, fmt.Errorf("get flightDetail [t.id=%d]: %w", transportation.ID, err)
 		}
 		transportation.FlightDetail = &flightDetail
+	} else if transportation.Type == entity.TRAIN {
+		trainDetail, err := r.trains.GetTrainDetail(ctx, transportation.ID)
+		if err != nil {
+			return entity.Transportation{}, fmt.Errorf("get trainDetail [t.id=%d]: %w", transportation.ID, err)
+		}
+		transportation.TrainDetail = &trainDetail
 	}
 
 	return transportation, nil
@@ -102,7 +111,6 @@ func (r *TransportationRepo) SaveTransportation(ctx context.Context, transportat
 		DestinationID: destinationId,
 		DepartureTime: transportation.DepartureDateTime,
 		ArrivalTime:   transportation.ArrivalDateTime,
-		Geojson:       nil, // TODO (also goverter!)
 		Price:         transportation.Price,
 	})
 	if err != nil {
@@ -114,6 +122,11 @@ func (r *TransportationRepo) SaveTransportation(ctx context.Context, transportat
 			return entity.Transportation{}, fmt.Errorf("save flight detail: %w", err)
 		}
 	}
+	if transportation.TrainDetail != nil {
+		if err := r.trains.SaveTrainDetail(ctx, qtx, transportationID, *transportation.TrainDetail); err != nil {
+			return entity.Transportation{}, fmt.Errorf("save train detail: %w", err)
+		}
+	}
 
 	err = tx.Commit(ctx)
 	if err != nil {
@@ -121,6 +134,18 @@ func (r *TransportationRepo) SaveTransportation(ctx context.Context, transportat
 	}
 
 	return r.GetTransportationByID(ctx, transportation.TripID, transportationID)
+}
+
+func (r *TransportationRepo) SaveGeoJson(ctx context.Context, transportationID int32, geoJson *geojson.FeatureCollection) error {
+	marshalledGeoJson, err := geoJson.MarshalJSON()
+	if err != nil {
+		return fmt.Errorf("marshal geojson: %w", err)
+	}
+
+	return r.Queries.InsertGeoJson(ctx, sqlc.InsertGeoJsonParams{
+		TransportationID: transportationID,
+		Geojson:          marshalledGeoJson,
+	})
 }
 
 func (r *TransportationRepo) DeleteTransportation(ctx context.Context, tripID int32, transportationID int32) error {

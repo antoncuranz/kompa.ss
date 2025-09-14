@@ -49,6 +49,10 @@ type GetAttachmentsRes interface {
 	getAttachmentsRes()
 }
 
+type GetTrainStationRes interface {
+	getTrainStationRes()
+}
+
 type GetTransportationRes interface {
 	getTransportationRes()
 }
@@ -83,6 +87,10 @@ type PostAttachmentRes interface {
 
 type PostFlightRes interface {
 	postFlightRes()
+}
+
+type PostTrainJourneyRes interface {
+	postTrainJourneyRes()
 }
 
 type PostTripRes interface {

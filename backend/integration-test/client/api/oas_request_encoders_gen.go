@@ -85,6 +85,20 @@ func encodePostFlightRequest(
 	return nil
 }
 
+func encodePostTrainJourneyRequest(
+	req *RequestTrainJourney,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
 func encodePostTripRequest(
 	req *RequestTrip,
 	r *http.Request,

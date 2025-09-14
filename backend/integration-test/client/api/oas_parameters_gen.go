@@ -88,6 +88,14 @@ type GetAttachmentsParams struct {
 	TripID int
 }
 
+// GetTrainStationParams is parameters of getTrainStation operation.
+type GetTrainStationParams struct {
+	// Trip ID.
+	TripID int
+	// Station query.
+	Query string
+}
+
 // GetTransportationParams is parameters of getTransportation operation.
 type GetTransportationParams struct {
 	// Trip ID.
@@ -128,6 +136,12 @@ type PostAttachmentParams struct {
 
 // PostFlightParams is parameters of postFlight operation.
 type PostFlightParams struct {
+	// Trip ID.
+	TripID int
+}
+
+// PostTrainJourneyParams is parameters of postTrainJourney operation.
+type PostTrainJourneyParams struct {
 	// Trip ID.
 	TripID int
 }

@@ -36,7 +36,6 @@ func (uc *UseCase) CreateFlight(ctx context.Context, tripID int32, flight reques
 		Destination:       lastLeg.Destination.Location,
 		DepartureDateTime: firstLeg.DepartureDateTime,
 		ArrivalDateTime:   lastLeg.ArrivalDateTime,
-		GeoJson:           nil, // TODO!
 		Price:             flight.Price,
 		FlightDetail: &entity.FlightDetail{
 			Legs: flightLegs,

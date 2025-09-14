@@ -70,17 +70,12 @@ func (r *TripsV1) getTrip(ctx *fiber.Ctx) error {
 // @Failure     500 {object} response.Error
 // @Router      /trips [post]
 func (r *TripsV1) postTrip(ctx *fiber.Ctx) error {
-	var body request.Trip
-
-	if err := ctx.BodyParser(&body); err != nil {
+	body, err := ParseAndValidateRequestBody[request.Trip](ctx, r.v)
+	if err != nil {
 		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse request body: %w", err))
 	}
 
-	if err := r.v.Struct(body); err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("validate request body: %w", err))
-	}
-
-	trip, err := r.uc.CreateTrip(ctx.UserContext(), body)
+	trip, err := r.uc.CreateTrip(ctx.UserContext(), *body)
 	if err != nil {
 		return errorResponse(ctx, fmt.Errorf("create trip: %w", err))
 	}
@@ -105,17 +100,12 @@ func (r *TripsV1) putTrip(ctx *fiber.Ctx) error {
 		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse trip_id: %w", err))
 	}
 
-	var body request.Trip
-
-	if err := ctx.BodyParser(&body); err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse request body: %w", err))
+	body, err := ParseAndValidateRequestBody[request.Trip](ctx, r.v)
+	if err != nil {
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
 	}
 
-	if err := r.v.Struct(body); err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("validate request body: %w", err))
-	}
-
-	if err := r.uc.UpdateTrip(ctx.UserContext(), int32(tripID), body); err != nil { // TODO: 404
+	if err := r.uc.UpdateTrip(ctx.UserContext(), int32(tripID), *body); err != nil { // TODO: 404
 		return errorResponse(ctx, fmt.Errorf("update trip with id %d: %w", tripID, err))
 	}
 

@@ -93,6 +93,12 @@ type Invoker interface {
 	//
 	// GET /trips/{trip_id}/attachments
 	GetAttachments(ctx context.Context, params GetAttachmentsParams) (GetAttachmentsRes, error)
+	// GetTrainStation invokes getTrainStation operation.
+	//
+	// Get train station.
+	//
+	// GET /trips/{trip_id}/trains/stations
+	GetTrainStation(ctx context.Context, params GetTrainStationParams) (GetTrainStationRes, error)
 	// GetTransportation invokes getTransportation operation.
 	//
 	// Get Transportation by ID.
@@ -147,6 +153,12 @@ type Invoker interface {
 	//
 	// POST /trips/{trip_id}/flights
 	PostFlight(ctx context.Context, request *RequestFlight, params PostFlightParams) (PostFlightRes, error)
+	// PostTrainJourney invokes postTrainJourney operation.
+	//
+	// Add train journey.
+	//
+	// POST /trips/{trip_id}/trains
+	PostTrainJourney(ctx context.Context, request *RequestTrainJourney, params PostTrainJourneyParams) (PostTrainJourneyRes, error)
 	// PostTrip invokes postTrip operation.
 	//
 	// Add trip.
@@ -1003,6 +1015,78 @@ func (c *Client) sendGetAttachments(ctx context.Context, params GetAttachmentsPa
 	return result, nil
 }
 
+// GetTrainStation invokes getTrainStation operation.
+//
+// Get train station.
+//
+// GET /trips/{trip_id}/trains/stations
+func (c *Client) GetTrainStation(ctx context.Context, params GetTrainStationParams) (GetTrainStationRes, error) {
+	res, err := c.sendGetTrainStation(ctx, params)
+	return res, err
+}
+
+func (c *Client) sendGetTrainStation(ctx context.Context, params GetTrainStationParams) (res GetTrainStationRes, err error) {
+
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [3]string
+	pathParts[0] = "/trips/"
+	{
+		// Encode "trip_id" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "trip_id",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.IntToString(params.TripID))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	pathParts[2] = "/trains/stations"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	q := uri.NewQueryEncoder()
+	{
+		// Encode "query" parameter.
+		cfg := uri.QueryParameterEncodingConfig{
+			Name:    "query",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
+			return e.EncodeValue(conv.StringToString(params.Query))
+		}); err != nil {
+			return res, errors.Wrap(err, "encode query")
+		}
+	}
+	u.RawQuery = q.Values().Encode()
+
+	r, err := ht.NewRequest(ctx, "GET", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeGetTrainStationResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // GetTransportation invokes getTransportation operation.
 //
 // Get Transportation by ID.
@@ -1481,6 +1565,64 @@ func (c *Client) sendPostFlight(ctx context.Context, request *RequestFlight, par
 	defer resp.Body.Close()
 
 	result, err := decodePostFlightResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// PostTrainJourney invokes postTrainJourney operation.
+//
+// Add train journey.
+//
+// POST /trips/{trip_id}/trains
+func (c *Client) PostTrainJourney(ctx context.Context, request *RequestTrainJourney, params PostTrainJourneyParams) (PostTrainJourneyRes, error) {
+	res, err := c.sendPostTrainJourney(ctx, request, params)
+	return res, err
+}
+
+func (c *Client) sendPostTrainJourney(ctx context.Context, request *RequestTrainJourney, params PostTrainJourneyParams) (res PostTrainJourneyRes, err error) {
+
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [3]string
+	pathParts[0] = "/trips/"
+	{
+		// Encode "trip_id" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "trip_id",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.IntToString(params.TripID))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	pathParts[2] = "/trains"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodePostTrainJourneyRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	result, err := decodePostTrainJourneyResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}

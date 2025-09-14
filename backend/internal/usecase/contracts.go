@@ -3,6 +3,7 @@ package usecase
 
 import (
 	"context"
+	"github.com/paulmach/orb/geojson"
 	"kompass/internal/controller/http/v1/request"
 	"kompass/internal/entity"
 	"mime/multipart"
@@ -15,6 +16,7 @@ type (
 		Users          Users
 		Trips          Trips
 		Flights        Flights
+		Trains         Trains
 		Transportation Transportation
 		Activities     Activities
 		Accommodation  Accommodation
@@ -43,6 +45,12 @@ type (
 	Flights interface {
 		CreateFlight(ctx context.Context, tripID int32, flight request.Flight) (entity.Transportation, error)
 		UpdateFlight(ctx context.Context, tripID int32, flightID int32, flight request.Flight) error
+	}
+
+	Trains interface {
+		RetrieveLocation(ctx context.Context, query string) (entity.TrainStation, error)
+		CreateTrainJourney(ctx context.Context, tripID int32, journey request.TrainJourney) (entity.Transportation, error)
+		RetrieveAndPersistPolyline(ctx context.Context, transportationID int32, refreshToken string) (*geojson.FeatureCollection, error)
 	}
 
 	Activities interface {

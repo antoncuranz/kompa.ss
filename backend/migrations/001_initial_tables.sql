@@ -59,8 +59,13 @@ create table transportation
     destination_id integer not null references location,
     departure_time timestamp not null,
     arrival_time   timestamp not null,
-    geojson        json,
     price          integer
+);
+
+create table transportation_geojson
+(
+    transportation_id   integer primary key references transportation on delete cascade,
+    geojson             json not null
 );
 
 create table airport
@@ -99,6 +104,7 @@ DROP TABLE IF EXISTS trip;
 DROP TABLE IF EXISTS location;
 DROP TABLE IF EXISTS activity;
 DROP TABLE IF EXISTS accomodation;
+DROP TABLE IF EXISTS transportation_geojson;
 DROP TABLE IF EXISTS transportation;
 DROP TABLE IF EXISTS airport;
 DROP TABLE IF EXISTS flight_leg;

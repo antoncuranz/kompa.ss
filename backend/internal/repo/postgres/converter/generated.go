@@ -46,6 +46,26 @@ func (c *FlightConverterImpl) ConvertPnrs(source []sqlc.FlightPnr) []entity.PNR 
 	return entityPNRList
 }
 
+type TrainConverterImpl struct{}
+
+func (c *TrainConverterImpl) ConvertLocation(source sqlc.Location) entity.Location {
+	var entityLocation entity.Location
+	entityLocation.ID = source.ID
+	entityLocation.Latitude = source.Latitude
+	entityLocation.Longitude = source.Longitude
+	return entityLocation
+}
+func (c *TrainConverterImpl) ConvertTrainLegs(source []sqlc.GetTrainLegsByTransportationIDRow) []entity.TrainLeg {
+	var entityTrainLegList []entity.TrainLeg
+	if source != nil {
+		entityTrainLegList = make([]entity.TrainLeg, len(source))
+		for i := 0; i < len(source); i++ {
+			entityTrainLegList[i] = ConvertTrainLeg(c, source[i])
+		}
+	}
+	return entityTrainLegList
+}
+
 type TransportationConverterImpl struct{}
 
 func (c *TransportationConverterImpl) ConvertTransportation(source ConvertTransportationParams) entity.Transportation {

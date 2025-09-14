@@ -69,6 +69,17 @@ func NewFlightRoutes(tripsV1Group fiber.Router, uc usecase.Flights, log logger.I
 	}
 }
 
+func NewTrainRoutes(apiV1Group fiber.Router, uc usecase.Trains, log logger.Interface) {
+	r := &TrainsV1{uc: uc, log: log, v: validator.New(validator.WithRequiredStructEnabled())}
+
+	trainsV1Group := apiV1Group.Group("/:trip_id/trains")
+
+	{
+		trainsV1Group.Post("", r.postTrainJourney)
+		trainsV1Group.Get("/stations", r.getTrainStation)
+	}
+}
+
 func NewActivityRoutes(tripsV1Group fiber.Router, uc usecase.Activities, log logger.Interface) {
 	r := &ActivitiesV1{uc: uc, log: log, v: validator.New(validator.WithRequiredStructEnabled())}
 

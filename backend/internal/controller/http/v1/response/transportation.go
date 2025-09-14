@@ -14,7 +14,6 @@ type Transportation struct {
 	Destination       entity.Location      `json:"destination"`
 	DepartureDateTime civil.DateTime       `json:"departureDateTime"`
 	ArrivalDateTime   civil.DateTime       `json:"arrivalDateTime"`
-	GeoJson           *string              `json:"geoJson" extensions:"nullable"`
 	Price             *int32               `json:"price" extensions:"nullable"`
 	FlightDetail      *entity.FlightDetail `json:"flightDetail,omitempty" validate:"optional" extensions:"nullable"`
 	TrainDetail       *entity.TrainDetail  `json:"trainDetail,omitempty" validate:"optional" extensions:"nullable"`

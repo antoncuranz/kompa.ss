@@ -89,6 +89,27 @@ type Location struct {
 	Longitude float32
 }
 
+type TrainDetail struct {
+	TransportationID int32
+	RefreshToken     string
+}
+
+type TrainLeg struct {
+	ID               int32
+	TransportationID int32
+	Origin           string
+	Destination      string
+	DepartureTime    civil.DateTime
+	ArrivalTime      civil.DateTime
+	LineName         string
+}
+
+type TrainStation struct {
+	ID         string
+	Name       string
+	LocationID *int32
+}
+
 type Transportation struct {
 	ID            int32
 	TripID        int32
@@ -97,8 +118,12 @@ type Transportation struct {
 	DestinationID int32
 	DepartureTime civil.DateTime
 	ArrivalTime   civil.DateTime
-	Geojson       []byte
 	Price         *int32
+}
+
+type TransportationGeojson struct {
+	TransportationID int32
+	Geojson          []byte
 }
 
 type Trip struct {

@@ -20,9 +20,12 @@ type TransportationConverter interface {
 	// goverter:map Transportation.ArrivalTime ArrivalDateTime
 	// goverter:map Transportation.Price Price
 	// goverter:ignore FlightDetail TrainDetail
-	// goverter:ignore GeoJson
 	ConvertTransportation(source ConvertTransportationParams) entity.Transportation
 }
+
+//func ConvertGeoJson(source []byte) (*geojson.FeatureCollection, error) {
+//	return geojson.UnmarshalFeatureCollection(source)
+//}
 
 // goverter:converter
 // goverter:extend ConvertFlightLeg
@@ -57,5 +60,32 @@ func ConvertAirport(c FlightConverter, airport sqlc.Airport, location sqlc.Locat
 		Name:         airport.Name,
 		Municipality: airport.Municipality,
 		Location:     c.ConvertLocation(location),
+	}
+}
+
+// goverter:converter
+// goverter:extend ConvertTrainLeg
+type TrainConverter interface {
+	ConvertTrainLegs(legs []sqlc.GetTrainLegsByTransportationIDRow) []entity.TrainLeg
+
+	ConvertLocation(location sqlc.Location) entity.Location
+}
+
+func ConvertTrainLeg(c TrainConverter, leg sqlc.GetTrainLegsByTransportationIDRow) entity.TrainLeg {
+	return entity.TrainLeg{
+		ID:                leg.TrainLeg.ID,
+		Origin:            ConvertTrainStation(c, leg.TrainStation, leg.Location),
+		Destination:       ConvertTrainStation(c, leg.TrainStation_2, leg.Location_2),
+		DepartureDateTime: leg.TrainLeg.DepartureTime,
+		ArrivalDateTime:   leg.TrainLeg.ArrivalTime,
+		LineName:          leg.TrainLeg.LineName,
+	}
+}
+
+func ConvertTrainStation(c TrainConverter, trainStation sqlc.TrainStation, location sqlc.Location) entity.TrainStation {
+	return entity.TrainStation{
+		ID:       trainStation.ID,
+		Name:     trainStation.Name,
+		Location: c.ConvertLocation(location),
 	}
 }

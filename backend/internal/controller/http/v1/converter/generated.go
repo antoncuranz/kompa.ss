@@ -30,7 +30,6 @@ func (c *TransportationConverterImpl) ConvertTransportation(source entity.Transp
 	responseTransportation.Destination = c.entityLocationToEntityLocation(source.Destination)
 	responseTransportation.DepartureDateTime = c.civilDateTimeToCivilDateTime(source.DepartureDateTime)
 	responseTransportation.ArrivalDateTime = c.civilDateTimeToCivilDateTime(source.ArrivalDateTime)
-	responseTransportation.GeoJson = source.GeoJson
 	responseTransportation.Price = source.Price
 	responseTransportation.FlightDetail = source.FlightDetail
 	responseTransportation.TrainDetail = source.TrainDetail

@@ -31,12 +31,8 @@ type Transportation struct {
 	Destination       Location           `json:"destination"`
 	DepartureDateTime civil.DateTime     `json:"departureDateTime"`
 	ArrivalDateTime   civil.DateTime     `json:"arrivalDateTime"`
-	GeoJson           *string            `json:"geoJson"`
-	Price             *int32             `json:"price"`
-	FlightDetail      *FlightDetail      `json:"flightDetail"`
-	TrainDetail       *TrainDetail       `json:"trainDetail"`
-}
-
-type TrainDetail struct {
-	TrainNumber string
+	//GeoJson           *geojson.FeatureCollection `json:"geoJson"`
+	Price        *int32        `json:"price"`
+	FlightDetail *FlightDetail `json:"flightDetail"`
+	TrainDetail  *TrainDetail  `json:"trainDetail"`
 }

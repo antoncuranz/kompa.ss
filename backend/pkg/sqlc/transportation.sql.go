@@ -29,7 +29,7 @@ func (q *Queries) DeleteTransportationByID(ctx context.Context, arg DeleteTransp
 }
 
 const getAllTransportation = `-- name: GetAllTransportation :many
-SELECT transportation.id, transportation.trip_id, transportation.type, transportation.origin_id, transportation.destination_id, transportation.departure_time, transportation.arrival_time, transportation.geojson, transportation.price,
+SELECT transportation.id, transportation.trip_id, transportation.type, transportation.origin_id, transportation.destination_id, transportation.departure_time, transportation.arrival_time, transportation.price,
        origin.id, origin.latitude, origin.longitude,
        destination.id, destination.latitude, destination.longitude
 FROM transportation
@@ -61,7 +61,6 @@ func (q *Queries) GetAllTransportation(ctx context.Context, tripID int32) ([]Get
 			&i.Transportation.DestinationID,
 			&i.Transportation.DepartureTime,
 			&i.Transportation.ArrivalTime,
-			&i.Transportation.Geojson,
 			&i.Transportation.Price,
 			&i.Location.ID,
 			&i.Location.Latitude,
@@ -81,7 +80,7 @@ func (q *Queries) GetAllTransportation(ctx context.Context, tripID int32) ([]Get
 }
 
 const getTransportationByID = `-- name: GetTransportationByID :one
-SELECT transportation.id, transportation.trip_id, transportation.type, transportation.origin_id, transportation.destination_id, transportation.departure_time, transportation.arrival_time, transportation.geojson, transportation.price,
+SELECT transportation.id, transportation.trip_id, transportation.type, transportation.origin_id, transportation.destination_id, transportation.departure_time, transportation.arrival_time, transportation.price,
        origin.id, origin.latitude, origin.longitude,
        destination.id, destination.latitude, destination.longitude
 FROM transportation
@@ -113,7 +112,6 @@ func (q *Queries) GetTransportationByID(ctx context.Context, arg GetTransportati
 		&i.Transportation.DestinationID,
 		&i.Transportation.DepartureTime,
 		&i.Transportation.ArrivalTime,
-		&i.Transportation.Geojson,
 		&i.Transportation.Price,
 		&i.Location.ID,
 		&i.Location.Latitude,
@@ -125,9 +123,27 @@ func (q *Queries) GetTransportationByID(ctx context.Context, arg GetTransportati
 	return i, err
 }
 
+const insertGeoJson = `-- name: InsertGeoJson :exec
+INSERT INTO transportation_geojson (transportation_id, geojson)
+VALUES ($1, $2)
+ON CONFLICT(transportation_id)
+DO UPDATE SET
+    geojson = $2
+`
+
+type InsertGeoJsonParams struct {
+	TransportationID int32
+	Geojson          []byte
+}
+
+func (q *Queries) InsertGeoJson(ctx context.Context, arg InsertGeoJsonParams) error {
+	_, err := q.db.Exec(ctx, insertGeoJson, arg.TransportationID, arg.Geojson)
+	return err
+}
+
 const insertTransportation = `-- name: InsertTransportation :one
-INSERT INTO transportation (trip_id, type, origin_id, destination_id, departure_time, arrival_time, geojson, price)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+INSERT INTO transportation (trip_id, type, origin_id, destination_id, departure_time, arrival_time, price)
+VALUES ($1, $2, $3, $4, $5, $6, $7)
 RETURNING id
 `
 
@@ -138,7 +154,6 @@ type InsertTransportationParams struct {
 	DestinationID int32
 	DepartureTime civil.DateTime
 	ArrivalTime   civil.DateTime
-	Geojson       []byte
 	Price         *int32
 }
 
@@ -150,7 +165,6 @@ func (q *Queries) InsertTransportation(ctx context.Context, arg InsertTransporta
 		arg.DestinationID,
 		arg.DepartureTime,
 		arg.ArrivalTime,
-		arg.Geojson,
 		arg.Price,
 	)
 	var id int32

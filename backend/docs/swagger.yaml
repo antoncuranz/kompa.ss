@@ -182,8 +182,51 @@ components:
     entity.TrainDetail:
       nullable: true
       properties:
-        trainNumber:
+        legs:
+          items:
+            $ref: '#/components/schemas/entity.TrainLeg'
+          type: array
+          uniqueItems: false
+        refreshToken:
           type: string
+      required:
+      - legs
+      - refreshToken
+      type: object
+    entity.TrainLeg:
+      properties:
+        arrivalDateTime:
+          type: string
+        departureDateTime:
+          type: string
+        destination:
+          $ref: '#/components/schemas/entity.TrainStation'
+        id:
+          type: integer
+        lineName:
+          type: string
+        origin:
+          $ref: '#/components/schemas/entity.TrainStation'
+      required:
+      - arrivalDateTime
+      - departureDateTime
+      - destination
+      - id
+      - lineName
+      - origin
+      type: object
+    entity.TrainStation:
+      properties:
+        id:
+          type: string
+        location:
+          $ref: '#/components/schemas/entity.Location'
+        name:
+          type: string
+      required:
+      - id
+      - location
+      - name
       type: object
     entity.User:
       properties:
@@ -288,6 +331,30 @@ components:
       - flightNumber
       - originAirport
       type: object
+    request.TrainJourney:
+      properties:
+        departureDate:
+          example: "2025-09-20"
+          type: string
+        fromStationId:
+          example: "8011113"
+          type: string
+        toStationId:
+          example: "8000261"
+          type: string
+        trainNumbers:
+          example:
+          - ICE707
+          items:
+            type: string
+          type: array
+          uniqueItems: false
+      required:
+      - departureDate
+      - fromStationId
+      - toStationId
+      - trainNumbers
+      type: object
     request.Trip:
       properties:
         description:
@@ -327,9 +394,6 @@ components:
           $ref: '#/components/schemas/entity.Location'
         flightDetail:
           $ref: '#/components/schemas/entity.FlightDetail'
-        geoJson:
-          nullable: true
-          type: string
         id:
           type: integer
         origin:
@@ -347,7 +411,6 @@ components:
       - arrivalDateTime
       - departureDateTime
       - destination
-      - geoJson
       - id
       - origin
       - price
@@ -1038,6 +1101,71 @@ paths:
       summary: Update flight
       tags:
       - flights
+  /trips/{trip_id}/trains:
+    post:
+      operationId: postTrainJourney
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request.TrainJourney'
+        description: train journey
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entity.TrainDetail'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Internal Server Error
+      summary: Add train journey
+      tags:
+      - trains
+  /trips/{trip_id}/trains/stations:
+    get:
+      operationId: getTrainStation
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        schema:
+          type: integer
+      - description: station query
+        in: query
+        name: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entity.TrainStation'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Internal Server Error
+      summary: Get train station
+      tags:
+      - trains
   /trips/{trip_id}/transportation:
     get:
       operationId: getAllTransportation
