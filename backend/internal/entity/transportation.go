@@ -31,8 +31,7 @@ type Transportation struct {
 	Destination       Location           `json:"destination"`
 	DepartureDateTime civil.DateTime     `json:"departureDateTime"`
 	ArrivalDateTime   civil.DateTime     `json:"arrivalDateTime"`
-	//GeoJson           *geojson.FeatureCollection `json:"geoJson"`
-	Price        *int32        `json:"price"`
-	FlightDetail *FlightDetail `json:"flightDetail"`
-	TrainDetail  *TrainDetail  `json:"trainDetail"`
+	Price             *int32             `json:"price" extensions:"nullable"`
+	FlightDetail      *FlightDetail      `json:"flightDetail,omitempty" validate:"optional" extensions:"nullable"`
+	TrainDetail       *TrainDetail       `json:"trainDetail,omitempty" validate:"optional" extensions:"nullable"`
 }

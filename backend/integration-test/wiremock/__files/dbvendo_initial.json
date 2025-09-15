@@ -1,0 +1,663 @@
+{
+  "earlierRef": "3|OB|MTµ14µ404917µ404917µ405198µ405198µ0µ0µ5µ404757µ1µ0µ1050µ0µ0µ-2147483648µ1µ2|PDHµee329395c05bf3a04697aa72273955d3|RDµ20092025|RTµ20000|USµ0|RSµINIT",
+  "laterRef": "3|OF|MTµ14µ405138µ405138µ405362µ405362µ0µ0µ485µ405072µ5µ0µ1050µ0µ0µ-2147483648µ1µ2|PDHµee329395c05bf3a04697aa72273955d3|RDµ20092025|RTµ20000|USµ0|RSµINIT",
+  "journeys": [
+    {
+      "type": "journey",
+      "legs": [
+        {
+          "origin": {
+            "id": "8011113",
+            "name": "Berlin Südkreuz",
+            "type": "station",
+            "location": {
+              "type": "location",
+              "id": "8011113",
+              "latitude": 52.47623,
+              "longitude": 13.365863
+            },
+            "products": {
+              "nationalExpress": true,
+              "national": true,
+              "regionalExpress": true,
+              "regional": true,
+              "suburban": false,
+              "subway": false,
+              "tram": false,
+              "bus": false,
+              "taxi": false,
+              "ferry": false
+            },
+            "weight": 2521008.9,
+            "ril100Ids": [
+              "BPAF",
+              "BSKR",
+              "BSKV"
+            ],
+            "ifoptId": "de:11000:900058101",
+            "priceCategory": 1,
+            "transitAuthority": "VBB Berlin",
+            "stadaId": "4859"
+          },
+          "destination": {
+            "id": "8000261",
+            "name": "München Hbf",
+            "type": "station",
+            "location": {
+              "type": "location",
+              "id": "8000261",
+              "latitude": 48.140366,
+              "longitude": 11.558744
+            },
+            "products": {
+              "nationalExpress": true,
+              "national": true,
+              "regionalExpress": true,
+              "regional": true,
+              "suburban": true,
+              "subway": false,
+              "tram": false,
+              "bus": false,
+              "taxi": false,
+              "ferry": false
+            },
+            "weight": 2714704.9,
+            "ril100Ids": [
+              "MH",
+              "MH  N",
+              "MH  S",
+              "MHT"
+            ],
+            "priceCategory": 1,
+            "transitAuthority": "BEG",
+            "stadaId": "4234"
+          },
+          "departure": "2025-09-20T04:37:00+02:00",
+          "plannedDeparture": "2025-09-20T04:37:00+02:00",
+          "departureDelay": null,
+          "arrival": "2025-09-20T09:18:00+02:00",
+          "plannedArrival": "2025-09-20T09:18:00+02:00",
+          "arrivalDelay": null,
+          "tripId": "2|#VN#1#ST#1757539091#PI#0#ZI#229884#TA#0#DA#200925#1S#8011102#1T#422#LS#8000261#LT#918#PU#80#RT#1#CA#ICE#ZE#501#ZB#ICE           501#PC#0#FR#8011102#FT#422#TO#8000261#TT#918#",
+          "line": {
+            "type": "line",
+            "id": "ice-501",
+            "fahrtNr": "501",
+            "name": "ICE 501",
+            "public": true,
+            "adminCode": "80____",
+            "productName": "ICE",
+            "mode": "train",
+            "product": "nationalExpress",
+            "operator": {
+              "type": "operator",
+              "id": "db-fernverkehr-ag",
+              "name": "DB Fernverkehr AG"
+            }
+          },
+          "direction": "München Hbf",
+          "arrivalPlatform": "20",
+          "plannedArrivalPlatform": "20",
+          "departurePlatform": "4",
+          "plannedDeparturePlatform": "4",
+          "remarks": [
+            {
+              "text": "Komfort Check-in possible (visit bahn.de/kci for more information)",
+              "type": "hint",
+              "code": "komfort-checkin",
+              "summary": "Komfort-Checkin available"
+            },
+            {
+              "text": "Bordrestaurant",
+              "type": "hint",
+              "code": "on-board-restaurant",
+              "summary": "Bordrestaurant available"
+            }
+          ],
+          "loadFactor": "high"
+        }
+      ],
+      "refreshToken": "¶HKI¶T$A=1@O=Berlin Südkreuz@X=13365315@Y=52475043@L=8011113@a=128@$A=1@O=München Hbf@X=11558339@Y=48140229@L=8000261@a=128@$202509200437$202509200918$ICE           501$$1$$$$$$",
+      "remarks": [],
+      "price": {
+        "amount": 99.99,
+        "currency": "EUR",
+        "hint": null,
+        "partialFare": false
+      }
+    },
+    {
+      "type": "journey",
+      "legs": [
+        {
+          "origin": {
+            "id": "8011113",
+            "name": "Berlin Südkreuz",
+            "type": "station",
+            "location": {
+              "type": "location",
+              "id": "8011113",
+              "latitude": 52.47623,
+              "longitude": 13.365863
+            },
+            "products": {
+              "nationalExpress": true,
+              "national": true,
+              "regionalExpress": true,
+              "regional": true,
+              "suburban": false,
+              "subway": false,
+              "tram": false,
+              "bus": false,
+              "taxi": false,
+              "ferry": false
+            },
+            "weight": 2521008.9,
+            "ril100Ids": [
+              "BPAF",
+              "BSKR",
+              "BSKV"
+            ],
+            "ifoptId": "de:11000:900058101",
+            "priceCategory": 1,
+            "transitAuthority": "VBB Berlin",
+            "stadaId": "4859"
+          },
+          "destination": {
+            "id": "8000261",
+            "name": "München Hbf",
+            "type": "station",
+            "location": {
+              "type": "location",
+              "id": "8000261",
+              "latitude": 48.140366,
+              "longitude": 11.558744
+            },
+            "products": {
+              "nationalExpress": true,
+              "national": true,
+              "regionalExpress": true,
+              "regional": true,
+              "suburban": true,
+              "subway": false,
+              "tram": false,
+              "bus": false,
+              "taxi": false,
+              "ferry": false
+            },
+            "weight": 2714704.9,
+            "ril100Ids": [
+              "MH",
+              "MH  N",
+              "MH  S",
+              "MHT"
+            ],
+            "priceCategory": 1,
+            "transitAuthority": "BEG",
+            "stadaId": "4234"
+          },
+          "departure": "2025-09-20T06:06:00+02:00",
+          "plannedDeparture": "2025-09-20T06:06:00+02:00",
+          "departureDelay": null,
+          "arrival": "2025-09-20T10:02:00+02:00",
+          "plannedArrival": "2025-09-20T10:02:00+02:00",
+          "arrivalDelay": null,
+          "tripId": "2|#VN#1#ST#1757539091#PI#0#ZI#220152#TA#0#DA#200925#1S#8011102#1T#550#LS#8000261#LT#1002#PU#80#RT#1#CA#ICE#ZE#1001#ZB#ICE          1001#PC#0#FR#8011102#FT#550#TO#8000261#TT#1002#",
+          "line": {
+            "type": "line",
+            "id": "ice-1001",
+            "fahrtNr": "1001",
+            "name": "ICE 1001",
+            "public": true,
+            "adminCode": "80____",
+            "productName": "ICE",
+            "mode": "train",
+            "product": "nationalExpress",
+            "operator": {
+              "type": "operator",
+              "id": "db-fernverkehr-ag",
+              "name": "DB Fernverkehr AG"
+            }
+          },
+          "direction": "München Hbf",
+          "arrivalPlatform": "20",
+          "plannedArrivalPlatform": "20",
+          "departurePlatform": "3",
+          "plannedDeparturePlatform": "3",
+          "remarks": [
+            {
+              "text": "Komfort Check-in possible (visit bahn.de/kci for more information)",
+              "type": "hint",
+              "code": "komfort-checkin",
+              "summary": "Komfort-Checkin available"
+            },
+            {
+              "text": "Bordrestaurant",
+              "type": "hint",
+              "code": "on-board-restaurant",
+              "summary": "Bordrestaurant available"
+            },
+            {
+              "text": "ICE Sprinter",
+              "type": "hint",
+              "code": "ice-sprinter",
+              "summary": "ICE Sprinter service"
+            }
+          ],
+          "loadFactor": "high"
+        }
+      ],
+      "refreshToken": "¶HKI¶T$A=1@O=Berlin Südkreuz@X=13365315@Y=52475043@L=8011113@a=128@$A=1@O=München Hbf@X=11558339@Y=48140229@L=8000261@a=128@$202509200606$202509201002$ICE          1001$$1$$$$$$",
+      "remarks": [],
+      "price": {
+        "amount": 119.99,
+        "currency": "EUR",
+        "hint": null,
+        "partialFare": false
+      }
+    },
+    {
+      "type": "journey",
+      "legs": [
+        {
+          "origin": {
+            "id": "8011113",
+            "name": "Berlin Südkreuz",
+            "type": "station",
+            "location": {
+              "type": "location",
+              "id": "8011113",
+              "latitude": 52.47623,
+              "longitude": 13.365863
+            },
+            "products": {
+              "nationalExpress": true,
+              "national": true,
+              "regionalExpress": true,
+              "regional": true,
+              "suburban": false,
+              "subway": false,
+              "tram": false,
+              "bus": false,
+              "taxi": false,
+              "ferry": false
+            },
+            "weight": 2521008.9,
+            "ril100Ids": [
+              "BPAF",
+              "BSKR",
+              "BSKV"
+            ],
+            "ifoptId": "de:11000:900058101",
+            "priceCategory": 1,
+            "transitAuthority": "VBB Berlin",
+            "stadaId": "4859"
+          },
+          "destination": {
+            "id": "8000261",
+            "name": "München Hbf",
+            "type": "station",
+            "location": {
+              "type": "location",
+              "id": "8000261",
+              "latitude": 48.140366,
+              "longitude": 11.558744
+            },
+            "products": {
+              "nationalExpress": true,
+              "national": true,
+              "regionalExpress": true,
+              "regional": true,
+              "suburban": true,
+              "subway": false,
+              "tram": false,
+              "bus": false,
+              "taxi": false,
+              "ferry": false
+            },
+            "weight": 2714704.9,
+            "ril100Ids": [
+              "MH",
+              "MH  N",
+              "MH  S",
+              "MHT"
+            ],
+            "priceCategory": 1,
+            "transitAuthority": "BEG",
+            "stadaId": "4234"
+          },
+          "departure": "2025-09-20T06:35:00+02:00",
+          "plannedDeparture": "2025-09-20T06:35:00+02:00",
+          "departureDelay": null,
+          "arrival": "2025-09-20T11:03:00+02:00",
+          "plannedArrival": "2025-09-20T11:03:00+02:00",
+          "arrivalDelay": null,
+          "tripId": "2|#VN#1#ST#1757539091#PI#0#ZI#229986#TA#0#DA#200925#1S#8011102#1T#619#LS#8000261#LT#1103#PU#80#RT#1#CA#ICE#ZE#503#ZB#ICE           503#PC#0#FR#8011102#FT#619#TO#8000261#TT#1103#",
+          "line": {
+            "type": "line",
+            "id": "ice-503",
+            "fahrtNr": "503",
+            "name": "ICE 503",
+            "public": true,
+            "adminCode": "80____",
+            "productName": "ICE",
+            "mode": "train",
+            "product": "nationalExpress",
+            "operator": {
+              "type": "operator",
+              "id": "db-fernverkehr-ag",
+              "name": "DB Fernverkehr AG"
+            }
+          },
+          "direction": "München Hbf",
+          "arrivalPlatform": "20",
+          "plannedArrivalPlatform": "20",
+          "departurePlatform": "3",
+          "plannedDeparturePlatform": "3",
+          "remarks": [
+            {
+              "text": "Komfort Check-in possible (visit bahn.de/kci for more information)",
+              "type": "hint",
+              "code": "komfort-checkin",
+              "summary": "Komfort-Checkin available"
+            },
+            {
+              "text": "Bicycles conveyed - subject to reservation",
+              "type": "hint",
+              "code": "bicycle-conveyance-reservation",
+              "summary": "bicycles conveyed, subject to reservation"
+            },
+            {
+              "text": "Number of bicycles conveyed limited",
+              "type": "hint",
+              "code": "bicycle-conveyance",
+              "summary": "bicycles conveyed"
+            },
+            {
+              "text": "Bordrestaurant",
+              "type": "hint",
+              "code": "on-board-restaurant",
+              "summary": "Bordrestaurant available"
+            },
+            {
+              "text": "Vehicle-bound boarding aid available",
+              "type": "hint",
+              "code": "boarding-ramp",
+              "summary": "vehicle-mounted boarding ramp available"
+            }
+          ],
+          "loadFactor": "high"
+        }
+      ],
+      "refreshToken": "¶HKI¶T$A=1@O=Berlin Südkreuz@X=13365315@Y=52475043@L=8011113@a=128@$A=1@O=München Hbf@X=11558339@Y=48140229@L=8000261@a=128@$202509200635$202509201103$ICE           503$$1$$$$$$",
+      "remarks": [],
+      "price": {
+        "amount": 99.99,
+        "currency": "EUR",
+        "hint": null,
+        "partialFare": false
+      }
+    },
+    {
+      "type": "journey",
+      "legs": [
+        {
+          "origin": {
+            "id": "8011113",
+            "name": "Berlin Südkreuz",
+            "type": "station",
+            "location": {
+              "type": "location",
+              "id": "8011113",
+              "latitude": 52.47623,
+              "longitude": 13.365863
+            },
+            "products": {
+              "nationalExpress": true,
+              "national": true,
+              "regionalExpress": true,
+              "regional": true,
+              "suburban": false,
+              "subway": false,
+              "tram": false,
+              "bus": false,
+              "taxi": false,
+              "ferry": false
+            },
+            "weight": 2521008.9,
+            "ril100Ids": [
+              "BPAF",
+              "BSKR",
+              "BSKV"
+            ],
+            "ifoptId": "de:11000:900058101",
+            "priceCategory": 1,
+            "transitAuthority": "VBB Berlin",
+            "stadaId": "4859"
+          },
+          "destination": {
+            "id": "8000261",
+            "name": "München Hbf",
+            "type": "station",
+            "location": {
+              "type": "location",
+              "id": "8000261",
+              "latitude": 48.140366,
+              "longitude": 11.558744
+            },
+            "products": {
+              "nationalExpress": true,
+              "national": true,
+              "regionalExpress": true,
+              "regional": true,
+              "suburban": true,
+              "subway": false,
+              "tram": false,
+              "bus": false,
+              "taxi": false,
+              "ferry": false
+            },
+            "weight": 2714704.9,
+            "ril100Ids": [
+              "MH",
+              "MH  N",
+              "MH  S",
+              "MHT"
+            ],
+            "priceCategory": 1,
+            "transitAuthority": "BEG",
+            "stadaId": "4234"
+          },
+          "departure": "2025-09-20T07:11:00+02:00",
+          "plannedDeparture": "2025-09-20T07:11:00+02:00",
+          "departureDelay": null,
+          "arrival": "2025-09-20T11:11:00+02:00",
+          "plannedArrival": "2025-09-20T11:11:00+02:00",
+          "arrivalDelay": null,
+          "tripId": "2|#VN#1#ST#1757539091#PI#0#ZI#222233#TA#0#DA#200925#1S#8011102#1T#652#LS#8000261#LT#1111#PU#80#RT#1#CA#ICE#ZE#1103#ZB#ICE          1103#PC#0#FR#8011102#FT#652#TO#8000261#TT#1111#",
+          "line": {
+            "type": "line",
+            "id": "ice-1103",
+            "fahrtNr": "1103",
+            "name": "ICE 1103",
+            "public": true,
+            "adminCode": "80____",
+            "productName": "ICE",
+            "mode": "train",
+            "product": "nationalExpress",
+            "operator": {
+              "type": "operator",
+              "id": "db-fernverkehr-ag",
+              "name": "DB Fernverkehr AG"
+            }
+          },
+          "direction": "München Hbf",
+          "arrivalPlatform": "22",
+          "plannedArrivalPlatform": "22",
+          "departurePlatform": "4",
+          "plannedDeparturePlatform": "4",
+          "remarks": [
+            {
+              "text": "Komfort Check-in possible (visit bahn.de/kci for more information)",
+              "type": "hint",
+              "code": "komfort-checkin",
+              "summary": "Komfort-Checkin available"
+            },
+            {
+              "text": "Bordrestaurant",
+              "type": "hint",
+              "code": "on-board-restaurant",
+              "summary": "Bordrestaurant available"
+            },
+            {
+              "text": "ICE Sprinter",
+              "type": "hint",
+              "code": "ice-sprinter",
+              "summary": "ICE Sprinter service"
+            }
+          ],
+          "loadFactor": "high"
+        }
+      ],
+      "refreshToken": "¶HKI¶T$A=1@O=Berlin Südkreuz@X=13365315@Y=52475043@L=8011113@a=128@$A=1@O=München Hbf@X=11558339@Y=48140229@L=8000261@a=128@$202509200711$202509201111$ICE          1103$$1$$$$$$",
+      "remarks": [],
+      "price": {
+        "amount": 119.99,
+        "currency": "EUR",
+        "hint": null,
+        "partialFare": false
+      }
+    },
+    {
+      "type": "journey",
+      "legs": [
+        {
+          "origin": {
+            "id": "8011113",
+            "name": "Berlin Südkreuz",
+            "type": "station",
+            "location": {
+              "type": "location",
+              "id": "8011113",
+              "latitude": 52.47623,
+              "longitude": 13.365863
+            },
+            "products": {
+              "nationalExpress": true,
+              "national": true,
+              "regionalExpress": true,
+              "regional": true,
+              "suburban": false,
+              "subway": false,
+              "tram": false,
+              "bus": false,
+              "taxi": false,
+              "ferry": false
+            },
+            "weight": 2521008.9,
+            "ril100Ids": [
+              "BPAF",
+              "BSKR",
+              "BSKV"
+            ],
+            "ifoptId": "de:11000:900058101",
+            "priceCategory": 1,
+            "transitAuthority": "VBB Berlin",
+            "stadaId": "4859"
+          },
+          "destination": {
+            "id": "8000261",
+            "name": "München Hbf",
+            "type": "station",
+            "location": {
+              "type": "location",
+              "id": "8000261",
+              "latitude": 48.140366,
+              "longitude": 11.558744
+            },
+            "products": {
+              "nationalExpress": true,
+              "national": true,
+              "regionalExpress": true,
+              "regional": true,
+              "suburban": true,
+              "subway": false,
+              "tram": false,
+              "bus": false,
+              "taxi": false,
+              "ferry": false
+            },
+            "weight": 2714704.9,
+            "ril100Ids": [
+              "MH",
+              "MH  N",
+              "MH  S",
+              "MHT"
+            ],
+            "priceCategory": 1,
+            "transitAuthority": "BEG",
+            "stadaId": "4234"
+          },
+          "departure": "2025-09-20T08:18:00+02:00",
+          "plannedDeparture": "2025-09-20T08:18:00+02:00",
+          "departureDelay": null,
+          "arrival": "2025-09-20T12:02:00+02:00",
+          "plannedArrival": "2025-09-20T12:02:00+02:00",
+          "arrivalDelay": null,
+          "tripId": "2|#VN#1#ST#1757539091#PI#0#ZI#220197#TA#0#DA#200925#1S#8098160#1T#811#LS#8002187#LT#1343#PU#80#RT#1#CA#ICE#ZE#1003#ZB#ICE          1003#PC#0#FR#8098160#FT#811#TO#8002187#TT#1343#",
+          "line": {
+            "type": "line",
+            "id": "ice-1003",
+            "fahrtNr": "1003",
+            "name": "ICE 1003",
+            "public": true,
+            "adminCode": "80____",
+            "productName": "ICE",
+            "mode": "train",
+            "product": "nationalExpress",
+            "operator": {
+              "type": "operator",
+              "id": "db-fernverkehr-ag",
+              "name": "DB Fernverkehr AG"
+            }
+          },
+          "direction": "Garmisch-Partenkirchen",
+          "arrivalPlatform": "19",
+          "plannedArrivalPlatform": "19",
+          "departurePlatform": "5",
+          "plannedDeparturePlatform": "5",
+          "remarks": [
+            {
+              "text": "Komfort Check-in possible (visit bahn.de/kci for more information)",
+              "type": "hint",
+              "code": "komfort-checkin",
+              "summary": "Komfort-Checkin available"
+            },
+            {
+              "text": "Bordrestaurant",
+              "type": "hint",
+              "code": "on-board-restaurant",
+              "summary": "Bordrestaurant available"
+            },
+            {
+              "text": "ICE Sprinter",
+              "type": "hint",
+              "code": "ice-sprinter",
+              "summary": "ICE Sprinter service"
+            }
+          ],
+          "loadFactor": "high"
+        }
+      ],
+      "refreshToken": "¶HKI¶T$A=1@O=Berlin Südkreuz@X=13365315@Y=52475043@L=8011113@a=128@$A=1@O=München Hbf@X=11558339@Y=48140229@L=8000261@a=128@$202509200818$202509201202$ICE          1003$$1$$$$$$",
+      "remarks": [],
+      "price": {
+        "amount": 119.99,
+        "currency": "EUR",
+        "hint": null,
+        "partialFare": false
+      }
+    }
+  ],
+  "realtimeDataUpdatedAt": null
+}

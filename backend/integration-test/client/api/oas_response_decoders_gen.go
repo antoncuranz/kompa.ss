@@ -1035,7 +1035,7 @@ func decodeGetTransportationResponse(resp *http.Response) (res GetTransportation
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response ResponseTransportation
+			var response EntityTransportation
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -1155,7 +1155,7 @@ func decodeGetTripResponse(resp *http.Response) (res GetTripRes, _ error) {
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response ResponseTrip
+			var response EntityTrip
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -1723,7 +1723,7 @@ func decodePostTrainJourneyResponse(resp *http.Response) (res PostTrainJourneyRe
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response NilEntityTrainDetail
+			var response EntityTransportation
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -1742,15 +1742,8 @@ func decodePostTrainJourneyResponse(resp *http.Response) (res PostTrainJourneyRe
 			}
 			// Validate response.
 			if err := func() error {
-				if value, ok := response.Get(); ok {
-					if err := func() error {
-						if err := value.Validate(); err != nil {
-							return err
-						}
-						return nil
-					}(); err != nil {
-						return err
-					}
+				if err := response.Validate(); err != nil {
+					return err
 				}
 				return nil
 			}(); err != nil {
@@ -1815,7 +1808,7 @@ func decodePostTripResponse(resp *http.Response) (res PostTripRes, _ error) {
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response ResponseTrip
+			var response EntityTrip
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err

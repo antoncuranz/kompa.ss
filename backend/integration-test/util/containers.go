@@ -91,13 +91,16 @@ func startApplicationContainer(t testing.TB, dbConnectionString string, port str
 		colorPrefix:   ansiGreen,
 	}
 
+	wiremockUrl := "http://" + wiremockAlias + ":8080"
+
 	req := testcontainers.ContainerRequest{
 		Image:        "kompa.ss/backend:latest",
 		ExposedPorts: []string{fmt.Sprintf("%s:%s", port, "8080")},
 		WaitingFor:   wait.ForListeningPort("8080").WithStartupTimeout(startupTimeout),
 		Env: map[string]string{
-			"PG_URL":    dbConnectionString,
-			"AEDBX_URL": "http://" + wiremockAlias + ":8080",
+			"PG_URL":      dbConnectionString,
+			"AEDBX_URL":   wiremockUrl + "/aedbx",
+			"DBVENDO_URL": wiremockUrl + "/dbvendo",
 		},
 		Networks: []string{net.Name},
 		LogConsumerCfg: &testcontainers.LogConsumerConfig{

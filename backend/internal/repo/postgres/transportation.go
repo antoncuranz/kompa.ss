@@ -50,6 +50,12 @@ func (r *TransportationRepo) GetAllTransportation(ctx context.Context, tripID in
 				return []entity.Transportation{}, fmt.Errorf("get flightDetail [t.id=%d]: %w", transportation.ID, err)
 			}
 			transportation.FlightDetail = &flightDetail
+		} else if transportation.Type == entity.TRAIN {
+			trainDetail, err := r.trains.GetTrainDetail(ctx, transportation.ID)
+			if err != nil {
+				return []entity.Transportation{}, fmt.Errorf("get trainDetail [t.id=%d]: %w", transportation.ID, err)
+			}
+			transportation.TrainDetail = &trainDetail
 		}
 
 		result = append(result, transportation)

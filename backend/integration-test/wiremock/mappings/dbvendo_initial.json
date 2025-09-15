@@ -1,0 +1,21 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/dbvendo/journeys",
+    "queryParameters": {
+      "from": {
+        "equalTo": "8011113"
+      },
+      "to": {
+        "equalTo": "8000261"
+      },
+      "departure": {
+        "equalTo": "2025-09-20"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "dbvendo_initial.json"
+  }
+}

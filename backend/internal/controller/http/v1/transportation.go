@@ -2,7 +2,6 @@ package v1
 
 import (
 	"fmt"
-	"kompass/internal/controller/http/v1/converter"
 	"kompass/internal/usecase"
 	"kompass/pkg/logger"
 	"net/http"
@@ -15,7 +14,6 @@ type TransportationV1 struct {
 	uc  usecase.Transportation
 	log logger.Interface
 	v   *validator.Validate
-	c   converter.TransportationConverter
 }
 
 // @Summary     Get all Transportation
@@ -23,7 +21,7 @@ type TransportationV1 struct {
 // @Tags  	    transportation
 // @Produce     json
 // @Param       trip_id path int true "Trip ID"
-// @Success     200 {object} []response.Transportation
+// @Success     200 {object} []entity.Transportation
 // @Failure     500 {object} response.Error
 // @Router      /trips/{trip_id}/transportation [get]
 func (r *TransportationV1) getAllTransportation(ctx *fiber.Ctx) error {
@@ -37,7 +35,7 @@ func (r *TransportationV1) getAllTransportation(ctx *fiber.Ctx) error {
 		return errorResponse(ctx, fmt.Errorf("get all transportation: %w", err))
 	}
 
-	return ctx.Status(http.StatusOK).JSON(r.c.ConvertAllTransportation(transportation))
+	return ctx.Status(http.StatusOK).JSON(transportation)
 }
 
 // @Summary     Get Transportation by ID
@@ -46,7 +44,7 @@ func (r *TransportationV1) getAllTransportation(ctx *fiber.Ctx) error {
 // @Produce     json
 // @Param       trip_id path int true "Trip ID"
 // @Param       transportation_id path int true "Transportation ID"
-// @Success     200 {object} response.Transportation
+// @Success     200 {object} entity.Transportation
 // @Failure     404 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Router      /trips/{trip_id}/transportation/{transportation_id} [get]
@@ -65,7 +63,7 @@ func (r *TransportationV1) getTransportation(ctx *fiber.Ctx) error {
 		return errorResponse(ctx, fmt.Errorf("get transportation [id=%d]: %w", transportationID, err))
 	}
 
-	return ctx.Status(http.StatusOK).JSON(r.c.ConvertTransportation(transportation))
+	return ctx.Status(http.StatusOK).JSON(transportation)
 }
 
 // @Summary     Delete Transportation

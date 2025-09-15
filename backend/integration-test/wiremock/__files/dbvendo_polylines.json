@@ -1,0 +1,188 @@
+{
+	"journey": {
+		"type": "journey",
+		"legs": [
+			{
+				"origin": {
+					"id": "8011113",
+					"name": "Berlin Südkreuz",
+					"type": "station",
+					"location": {
+						"type": "location",
+						"id": "8011113",
+						"latitude": 52.47623,
+						"longitude": 13.365863
+					},
+					"products": {
+						"nationalExpress": true,
+						"national": true,
+						"regionalExpress": true,
+						"regional": true,
+						"suburban": false,
+						"subway": false,
+						"tram": false,
+						"bus": false,
+						"taxi": false,
+						"ferry": false
+					},
+					"weight": 2521008.9,
+					"ril100Ids": [
+						"BPAF",
+						"BSKR",
+						"BSKV"
+					],
+					"ifoptId": "de:11000:900058101",
+					"priceCategory": 1,
+					"transitAuthority": "VBB Berlin",
+					"stadaId": "4859"
+				},
+				"destination": {
+					"id": "8000261",
+					"name": "München Hbf",
+					"type": "station",
+					"location": {
+						"type": "location",
+						"id": "8000261",
+						"latitude": 48.140366,
+						"longitude": 11.558744
+					},
+					"products": {
+						"nationalExpress": true,
+						"national": true,
+						"regionalExpress": true,
+						"regional": true,
+						"suburban": true,
+						"subway": false,
+						"tram": false,
+						"bus": false,
+						"taxi": false,
+						"ferry": false
+					},
+					"weight": 2714704.9,
+					"ril100Ids": [
+						"MH",
+						"MH  N",
+						"MH  S",
+						"MHT"
+					],
+					"priceCategory": 1,
+					"transitAuthority": "BEG",
+					"stadaId": "4234"
+				},
+				"departure": "2025-09-21T13:41:00+02:00",
+				"plannedDeparture": "2025-09-21T13:41:00+02:00",
+				"departureDelay": null,
+				"arrival": "2025-09-21T18:03:00+02:00",
+				"plannedArrival": "2025-09-21T18:03:00+02:00",
+				"arrivalDelay": null,
+				"polyline": {
+					"type": "FeatureCollection",
+					"features": [
+						{
+							"type": "Feature",
+							"properties": {},
+							"geometry": {
+								"type": "Point",
+								"coordinates": [
+									13.364928,
+									52.476014
+								]
+							}
+						},
+						{
+							"type": "Feature",
+							"properties": {},
+							"geometry": {
+								"type": "Point",
+								"coordinates": [
+									13.365467,
+									52.475151
+								]
+							}
+						},
+						{
+							"type": "Feature",
+							"properties": {},
+							"geometry": {
+								"type": "Point",
+								"coordinates": [
+									11.556622,
+									48.14102
+								]
+							}
+						},
+						{
+							"type": "Feature",
+							"properties": {},
+							"geometry": {
+								"type": "Point",
+								"coordinates": [
+									11.558815,
+									48.140858
+								]
+							}
+						}
+					]
+				},
+				"tripId": "2|#VN#1#ST#1757539091#PI#0#ZI#236312#TA#0#DA#210925#1S#8002553#1T#1020#LS#8000261#LT#1803#PU#80#RT#1#CA#ICE#ZE#707#ZB#ICE           707#PC#0#FR#8002553#FT#1020#TO#8000261#TT#1803#",
+				"line": {
+					"type": "line",
+					"id": "ice-707",
+					"fahrtNr": "707",
+					"name": "ICE 707",
+					"public": true,
+					"adminCode": "80____",
+					"productName": "ICE",
+					"mode": "train",
+					"product": "nationalExpress",
+					"operator": {
+						"type": "operator",
+						"id": "db-fernverkehr-ag",
+						"name": "DB Fernverkehr AG"
+					}
+				},
+				"direction": "München Hbf",
+				"arrivalPlatform": "22",
+				"plannedArrivalPlatform": "22",
+				"departurePlatform": "3",
+				"plannedDeparturePlatform": "3",
+				"remarks": [
+					{
+						"text": "Komfort Check-in possible (visit bahn.de/kci for more information)",
+						"type": "hint",
+						"code": "komfort-checkin",
+						"summary": "Komfort-Checkin available"
+					},
+					{
+						"text": "Bicycles conveyed - subject to reservation",
+						"type": "hint",
+						"code": "bicycle-conveyance-reservation",
+						"summary": "bicycles conveyed, subject to reservation"
+					},
+					{
+						"text": "Number of bicycles conveyed limited",
+						"type": "hint",
+						"code": "bicycle-conveyance",
+						"summary": "bicycles conveyed"
+					},
+					{
+						"text": "Bordrestaurant",
+						"type": "hint",
+						"code": "on-board-restaurant",
+						"summary": "Bordrestaurant available"
+					},
+					{
+						"text": "Vehicle-bound boarding aid available",
+						"type": "hint",
+						"code": "boarding-ramp",
+						"summary": "vehicle-mounted boarding ramp available"
+					}
+				],
+				"loadFactor": "very-high"
+			}
+		],
+		"refreshToken": "¶HKI¶T$A=1@O=Berlin Südkreuz@X=13365315@Y=52475043@L=8011113@a=128@$A=1@O=München Hbf@X=11558339@Y=48140229@L=8000261@a=128@$202509211341$202509211803$ICE           707$$1$$$$$$",
+		"remarks": []
+	},
+	"realtimeDataUpdatedAt": null
+}

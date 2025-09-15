@@ -2,7 +2,6 @@ package v1
 
 import (
 	"fmt"
-	"kompass/internal/controller/http/v1/converter"
 	"kompass/internal/controller/http/v1/request"
 	"kompass/internal/usecase"
 	"kompass/pkg/logger"
@@ -16,14 +15,13 @@ type TripsV1 struct {
 	uc  usecase.Trips
 	log logger.Interface
 	v   *validator.Validate
-	c   converter.TripConverter
 }
 
 // @Summary     Get all trips
 // @ID          getTrips
 // @Tags  	    trips
 // @Produce     json
-// @Success     200 {object} []response.Trip
+// @Success     200 {object} []entity.Trip
 // @Failure     500 {object} response.Error
 // @Router      /trips [get]
 func (r *TripsV1) getTrips(ctx *fiber.Ctx) error {
@@ -32,7 +30,7 @@ func (r *TripsV1) getTrips(ctx *fiber.Ctx) error {
 		return errorResponse(ctx, fmt.Errorf("get trips: %w", err))
 	}
 
-	return ctx.Status(http.StatusOK).JSON(r.c.ConvertTrips(trips))
+	return ctx.Status(http.StatusOK).JSON(trips)
 }
 
 // @Summary     Get trip by ID
@@ -40,7 +38,7 @@ func (r *TripsV1) getTrips(ctx *fiber.Ctx) error {
 // @Tags  	    trips
 // @Produce     json
 // @Param       trip_id path int true "Trip ID"
-// @Success     200 {object} response.Trip
+// @Success     200 {object} entity.Trip
 // @Failure     400 {object} response.Error
 // @Failure     404 {object} response.Error
 // @Failure     500 {object} response.Error
@@ -56,7 +54,7 @@ func (r *TripsV1) getTrip(ctx *fiber.Ctx) error {
 		return errorResponseWithStatus(ctx, http.StatusNotFound, fmt.Errorf("get trip [id=%d]: %w", tripID, err))
 	}
 
-	return ctx.Status(http.StatusOK).JSON(r.c.ConvertTrip(trip))
+	return ctx.Status(http.StatusOK).JSON(trip)
 }
 
 // @Summary     Add trip
@@ -65,7 +63,7 @@ func (r *TripsV1) getTrip(ctx *fiber.Ctx) error {
 // @Accept      json
 // @Produce     json
 // @Param       request body request.Trip true "trip"
-// @Success     200 {object} response.Trip
+// @Success     200 {object} entity.Trip
 // @Failure     400 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Router      /trips [post]
@@ -80,7 +78,7 @@ func (r *TripsV1) postTrip(ctx *fiber.Ctx) error {
 		return errorResponse(ctx, fmt.Errorf("create trip: %w", err))
 	}
 
-	return ctx.Status(http.StatusOK).JSON(r.c.ConvertTrip(trip))
+	return ctx.Status(http.StatusOK).JSON(trip)
 }
 
 // @Summary     Update trip

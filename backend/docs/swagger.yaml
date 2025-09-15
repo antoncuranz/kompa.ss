@@ -228,6 +228,74 @@ components:
       - location
       - name
       type: object
+    entity.Transportation:
+      properties:
+        arrivalDateTime:
+          type: string
+        departureDateTime:
+          type: string
+        destination:
+          $ref: '#/components/schemas/entity.Location'
+        flightDetail:
+          $ref: '#/components/schemas/entity.FlightDetail'
+        id:
+          type: integer
+        origin:
+          $ref: '#/components/schemas/entity.Location'
+        price:
+          nullable: true
+          type: integer
+        trainDetail:
+          $ref: '#/components/schemas/entity.TrainDetail'
+        tripId:
+          type: integer
+        type:
+          $ref: '#/components/schemas/entity.TransportationType'
+      required:
+      - arrivalDateTime
+      - departureDateTime
+      - destination
+      - id
+      - origin
+      - price
+      - tripId
+      - type
+      type: object
+    entity.TransportationType:
+      type: string
+      x-enum-varnames:
+      - PLANE
+      - TRAIN
+      - BUS
+      - BOAT
+      - BIKE
+      - CAR
+      - FOOT
+      - OTHER
+    entity.Trip:
+      properties:
+        description:
+          nullable: true
+          type: string
+        endDate:
+          type: string
+        id:
+          type: integer
+        imageUrl:
+          nullable: true
+          type: string
+        name:
+          type: string
+        startDate:
+          type: string
+      required:
+      - description
+      - endDate
+      - id
+      - imageUrl
+      - name
+      - startDate
+      type: object
     entity.User:
       properties:
         id:
@@ -384,63 +452,6 @@ components:
       required:
       - error
       type: object
-    response.Transportation:
-      properties:
-        arrivalDateTime:
-          type: string
-        departureDateTime:
-          type: string
-        destination:
-          $ref: '#/components/schemas/entity.Location'
-        flightDetail:
-          $ref: '#/components/schemas/entity.FlightDetail'
-        id:
-          type: integer
-        origin:
-          $ref: '#/components/schemas/entity.Location'
-        price:
-          nullable: true
-          type: integer
-        trainDetail:
-          $ref: '#/components/schemas/entity.TrainDetail'
-        tripId:
-          type: integer
-        type:
-          type: string
-      required:
-      - arrivalDateTime
-      - departureDateTime
-      - destination
-      - id
-      - origin
-      - price
-      - tripId
-      - type
-      type: object
-    response.Trip:
-      properties:
-        description:
-          nullable: true
-          type: string
-        endDate:
-          type: string
-        id:
-          type: integer
-        imageUrl:
-          nullable: true
-          type: string
-        name:
-          type: string
-        startDate:
-          type: string
-      required:
-      - description
-      - endDate
-      - id
-      - imageUrl
-      - name
-      - startDate
-      type: object
     v1.AttachmentsParam:
       properties:
         attachments:
@@ -470,7 +481,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/response.Trip'
+                  $ref: '#/components/schemas/entity.Trip'
                 type: array
           description: OK
         "500":
@@ -496,7 +507,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/response.Trip'
+                $ref: '#/components/schemas/entity.Trip'
           description: OK
         "400":
           content:
@@ -561,7 +572,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/response.Trip'
+                $ref: '#/components/schemas/entity.Trip'
           description: OK
         "400":
           content:
@@ -1123,7 +1134,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/entity.TrainDetail'
+                $ref: '#/components/schemas/entity.Transportation'
           description: OK
         "500":
           content:
@@ -1182,7 +1193,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/response.Transportation'
+                  $ref: '#/components/schemas/entity.Transportation'
                 type: array
           description: OK
         "500":
@@ -1248,7 +1259,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/response.Transportation'
+                $ref: '#/components/schemas/entity.Transportation'
           description: OK
         "404":
           content:

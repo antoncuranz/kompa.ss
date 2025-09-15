@@ -39,7 +39,7 @@ func (suite *IntegrationTestSuite) CreateTrip() int {
 	})
 	suite.NoError(err)
 
-	trip := res.(*api.ResponseTrip)
+	trip := res.(*api.EntityTrip)
 	return trip.ID
 }
 

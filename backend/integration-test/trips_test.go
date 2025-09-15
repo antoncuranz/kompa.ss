@@ -15,7 +15,7 @@ func (suite *IntegrationTestSuite) TestGetTripOK() {
 	suite.NoError(err)
 
 	// then
-	trip := res.(*api.ResponseTrip)
+	trip := res.(*api.EntityTrip)
 	fmt.Println("Trip found: ", trip)
 }
 

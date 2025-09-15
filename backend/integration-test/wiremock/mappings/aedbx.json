@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/aedbx/flights/number/LH717/2026-02-01?dateLocalRole=Departure"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "aedbx.json"
+  }
+}

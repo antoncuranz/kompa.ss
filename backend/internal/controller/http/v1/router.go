@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"kompass/internal/controller/http/v1/converter"
 	"kompass/internal/usecase"
 	"kompass/pkg/logger"
 
@@ -25,7 +24,6 @@ func NewTripRoutes(apiV1Group fiber.Router, uc usecase.Trips, log logger.Interfa
 		uc:  uc,
 		log: log,
 		v:   validator.New(validator.WithRequiredStructEnabled()),
-		c:   &converter.TripConverterImpl{},
 	}
 
 	tripsV1Group := apiV1Group.Group("/trips")
@@ -46,7 +44,6 @@ func NewTransportationRoutes(tripsV1Group fiber.Router, uc usecase.Transportatio
 		uc:  uc,
 		log: log,
 		v:   validator.New(validator.WithRequiredStructEnabled()),
-		c:   &converter.TransportationConverterImpl{},
 	}
 
 	transportationV1Group := tripsV1Group.Group("/:trip_id/transportation")

@@ -21,7 +21,7 @@ openapi: ### run openapi codegen tasks
 .PHONY: openapi
 
 goverter: ### run goverter codegen tasks
-	$(LOCAL_BIN)/goverter gen -g 'output:file ./generated.go' -g 'skipCopySameType' kompass/internal/controller/http/v1/converter kompass/internal/repo/postgres/converter kompass/internal/repo/webapi/converter
+	$(LOCAL_BIN)/goverter gen -g 'output:file ./generated.go' -g 'skipCopySameType' kompass/internal/repo/postgres/converter kompass/internal/repo/webapi/converter
 .PHONY: goverter
 
 mock: ### run mockgen

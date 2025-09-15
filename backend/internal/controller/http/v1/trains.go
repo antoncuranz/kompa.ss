@@ -43,7 +43,7 @@ func (r *TrainsV1) getTrainStation(ctx *fiber.Ctx) error {
 // @Produce     json
 // @Param       trip_id path int true "Trip ID"
 // @Param       request body request.TrainJourney true "train journey"
-// @Success     200 {object} entity.TrainDetail
+// @Success     200 {object} entity.Transportation
 // @Failure     500 {object} response.Error
 // @Router      /trips/{trip_id}/trains [post]
 func (r *TrainsV1) postTrainJourney(ctx *fiber.Ctx) error {
