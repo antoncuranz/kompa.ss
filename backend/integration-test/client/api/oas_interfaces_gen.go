@@ -49,6 +49,10 @@ type GetAttachmentsRes interface {
 	getAttachmentsRes()
 }
 
+type GetGeoJsonRes interface {
+	getGeoJsonRes()
+}
+
 type GetTrainStationRes interface {
 	getTrainStationRes()
 }

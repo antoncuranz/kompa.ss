@@ -14,6 +14,7 @@ type TrainLeg struct {
 	Destination       TrainStation   `json:"destination"`
 	DepartureDateTime civil.DateTime `json:"departureDateTime"`
 	ArrivalDateTime   civil.DateTime `json:"arrivalDateTime"`
+	DurationInMinutes int32          `json:"durationInMinutes"`
 	LineName          string         `json:"lineName"`
 }
 

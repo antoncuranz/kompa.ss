@@ -18,6 +18,7 @@ const (
 	GetAllAccommodationOperation  OperationName = "GetAllAccommodation"
 	GetAllTransportationOperation OperationName = "GetAllTransportation"
 	GetAttachmentsOperation       OperationName = "GetAttachments"
+	GetGeoJsonOperation           OperationName = "GetGeoJson"
 	GetTrainStationOperation      OperationName = "GetTrainStation"
 	GetTransportationOperation    OperationName = "GetTransportation"
 	GetTripOperation              OperationName = "GetTrip"

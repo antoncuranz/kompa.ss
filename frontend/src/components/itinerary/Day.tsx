@@ -6,6 +6,7 @@ import React from "react";
 import ActivityEntry from "@/components/itinerary/ActivityEntry.tsx";
 import {Accommodation, Activity, DayRenderData, Transportation, TransportationType} from "@/types.ts";
 import {Separator} from "@/components/ui/separator.tsx";
+import TrainEntry from "@/components/itinerary/TrainEntry.tsx";
 
 export default function Day({
   dayData,
@@ -23,37 +24,51 @@ export default function Day({
 
   const collapsedDays = nextDay ? getDaysBetween(dayData.day, nextDay).length-2 : 0
 
-  const nightTransportation = dayData.transportation
-    .find(pair => !isSameDay(pair.arrivalDateTime, dayData.day))
+  const hasNightTransportation = dayData.transportation
+    .find(t => !isSameDay(t.arrivalDateTime, dayData.day)) != undefined
 
-  const dayTransportation = nightTransportation ? dayData.transportation.slice(0, -1) : dayData.transportation
+  function renderTransportation(transportation: Transportation) {
+    switch (transportation.type) {
+      case TransportationType.Plane:
+        return renderFlight(transportation)
+      case TransportationType.Train:
+        return renderTrain(transportation)
+      default:
+        return <></>
+    }
+  }
 
-  function renderDayTransportation(transportation: Transportation) {
-    if (transportation.type != TransportationType.Plane)
-      return <></>
-
+  function renderFlight(transportation: Transportation) {
     const flight = transportation.flightDetail!
-    return flight.legs.map((leg, idx) =>
+    const filteredLegs = flight.legs
+        .filter(leg => isSameDay(leg.departureDateTime, dayData.day))
+
+    return filteredLegs.map((leg, idx) =>
       <div key={idx}>
         <FlightEntry flight={flight} flightLeg={leg} onInfoBtnClick={() => onFlightClick(transportation)}/>
-          {flight.legs.length > idx + 1 &&
+        {filteredLegs.length > idx + 1 &&
           <span className="mx-3 text-sm text-muted-foreground">
-            {formatDuration(leg.arrivalDateTime, flight.legs[idx+1].departureDateTime)} Layover
+            {formatDuration(leg.arrivalDateTime, filteredLegs[idx+1].departureDateTime)} Layover
           </span>
         }
       </div>
     )
   }
 
-  function renderNightTransportation(transportation: Transportation) {
-    if (transportation.type != TransportationType.Plane)
-      return <></>
+  function renderTrain(transportation: Transportation) {
+    const train = transportation.trainDetail!
+    const filteredLegs = train.legs
+        .filter(leg => isSameDay(leg.departureDateTime, dayData.day))
 
-    const flight = transportation.flightDetail!
-    const nightLeg = flight.legs.find(leg => !isSameDay(leg.arrivalDateTime, dayData.day))!
-
-    return (
-      <FlightEntry flight={flight} flightLeg={nightLeg} onInfoBtnClick={() => onFlightClick(transportation)}/>
+    return filteredLegs.map((leg, idx) =>
+        <div key={idx}>
+          <TrainEntry trainLeg={leg}/>
+          {filteredLegs.length > idx + 1 &&
+            <span className="mx-3 text-sm text-muted-foreground">
+              {formatDuration(leg.arrivalDateTime, filteredLegs[idx+1].departureDateTime)} Layover
+            </span>
+          }
+        </div>
     )
   }
 
@@ -65,17 +80,14 @@ export default function Day({
           <ActivityEntry key={act.id} activity={act} onClick={() => onActivityClick(act)}/>
       )}
 
-      {dayTransportation.map((transportation, idx) =>
+      {dayData.transportation.map((transportation, idx) =>
         <div key={idx}>
-          {renderDayTransportation(transportation)}
+          {renderTransportation(transportation)}
         </div>
       )}
 
-      {nextDay && (nightTransportation ?
-        <>
-          {renderNightTransportation(nightTransportation)}
-          <Separator className="relative bottom-5 z-0"/>
-        </>
+      {nextDay && (hasNightTransportation ?
+        <Separator className="relative bottom-5 z-0"/>
       :
         <DaySeparator accomodation={dayData.accommodation} collapsedDays={collapsedDays} onAccommodationClick={onAccommodationClick}/>
       )}

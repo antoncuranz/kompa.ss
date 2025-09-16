@@ -488,6 +488,14 @@ func (s GetAttachmentsOKApplicationJSON) Validate() error {
 	return nil
 }
 
+func (s GetGeoJsonOKApplicationJSON) Validate() error {
+	alias := ([]string)(s)
+	if alias == nil {
+		return errors.New("nil is invalid value")
+	}
+	return nil
+}
+
 func (s GetTripsOKApplicationJSON) Validate() error {
 	alias := ([]EntityTrip)(s)
 	if alias == nil {

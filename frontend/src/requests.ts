@@ -57,3 +57,7 @@ export async function fetchTransportation(tripId: number) {
 export async function fetchActivities(tripId: number) {
   return await fetchData("/api/v1/trips/" + tripId + "/activities") as Activity[];
 }
+
+export async function fetchGeoJson(tripId: number) {
+  return await fetchData("/api/v1/trips/" + tripId + "/transportation/geojson") as GeoJSON.FeatureCollection[]
+}

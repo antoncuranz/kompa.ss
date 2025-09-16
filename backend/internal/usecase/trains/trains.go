@@ -67,6 +67,7 @@ func (uc *UseCase) RetrieveAndPersistPolyline(ctx context.Context, transportatio
 	}
 
 	featureCollection := geojson.NewFeatureCollection()
+	featureCollection.ExtraMembers = map[string]interface{}{"transportationType": "TRAIN"}
 
 	// start point
 	featureCollection.Append(geojson.NewFeature(

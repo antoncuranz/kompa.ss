@@ -22,15 +22,21 @@ INSERT INTO transportation (trip_id, type, origin_id, destination_id, departure_
 VALUES ($1, $2, $3, $4, $5, $6, $7)
 RETURNING id;
 
--- name: InsertGeoJson :exec
-INSERT INTO transportation_geojson (transportation_id, geojson)
-VALUES ($1, $2)
-ON CONFLICT(transportation_id)
-DO UPDATE SET
-    geojson = $2;
-
 -- name: DeleteTransportationByID :exec
 DELETE
 FROM transportation
 WHERE trip_id = $1
   AND transportation.id = $2;
+
+-- name: GetAllGeoJson :many
+SELECT transportation_geojson.geojson
+FROM transportation_geojson
+         JOIN transportation on transportation_geojson.transportation_id = transportation.id
+WHERE transportation.trip_id = $1;
+
+-- name: InsertGeoJson :exec
+INSERT INTO transportation_geojson (transportation_id, geojson)
+VALUES ($1, $2)
+    ON CONFLICT(transportation_id)
+DO UPDATE SET
+    geojson = $2;

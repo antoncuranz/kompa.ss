@@ -3,6 +3,7 @@ package transportation
 import (
 	"context"
 	"fmt"
+	"github.com/paulmach/orb/geojson"
 	"kompass/internal/entity"
 	"kompass/internal/repo"
 )
@@ -37,4 +38,8 @@ func (uc *UseCase) GetTransportationByID(ctx context.Context, tripID int32, tran
 
 func (uc *UseCase) DeleteTransportation(ctx context.Context, tripID int32, transportationID int32) error {
 	return uc.repo.DeleteTransportation(ctx, tripID, transportationID)
+}
+
+func (uc *UseCase) GetAllGeoJson(ctx context.Context, tripID int32) ([]geojson.FeatureCollection, error) {
+	return uc.repo.GetAllGeoJson(ctx, tripID)
 }

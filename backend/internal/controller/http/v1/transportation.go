@@ -91,3 +91,25 @@ func (r *TransportationV1) deleteTransportation(ctx *fiber.Ctx) error {
 
 	return ctx.SendStatus(http.StatusNoContent)
 }
+
+// @Summary     Get GeoJson
+// @ID          getGeoJson
+// @Tags  	    transportation
+// @Produce     json
+// @Param       trip_id path int true "Trip ID"
+// @Success     200 {object} []geojson.FeatureCollection
+// @Failure     500 {object} response.Error
+// @Router      /trips/{trip_id}/transportation/geojson [get]
+func (r *TransportationV1) getGeoJson(ctx *fiber.Ctx) error {
+	tripID, err := ctx.ParamsInt("trip_id")
+	if err != nil {
+		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse trip_id: %w", err))
+	}
+
+	geojson, err := r.uc.GetAllGeoJson(ctx.Context(), int32(tripID))
+	if err != nil {
+		return errorResponse(ctx, fmt.Errorf("get geojson: %w", err))
+	}
+
+	return ctx.Status(http.StatusOK).JSON(geojson)
+}

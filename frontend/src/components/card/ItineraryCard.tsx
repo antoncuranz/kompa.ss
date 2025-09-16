@@ -1,5 +1,5 @@
 import {DayRenderData} from "@/types.ts";
-import {getDaysBetween, isSameDay} from "@/components/util.ts";
+import {dayIsBetween, getDaysBetween, isSameDay} from "@/components/util.ts";
 import React from "react";
 import AddSomethingDropdown from "@/components/dialog/AddSomethingDropdown.tsx";
 import Card from "@/components/card/Card.tsx";
@@ -24,23 +24,23 @@ export default async function ItineraryCard({
       const filteredActivities = activities
           .filter(act => isSameDay(day, act.date))
 
-      const filteredTransportation = transportation
-          .filter(pair => isSameDay(pair.departureDateTime, day))
+      const relevantTransportation = transportation
+          .filter(t => dayIsBetween(day, t.departureDateTime, t.arrivalDateTime))
 
-      const filteredAccommodation = accommodation.find(acc =>
+      const relevantAccommodation = accommodation.find(acc =>
           acc.arrivalDate <= day && acc.departureDate > day
       )
 
       // TODO: also push if day is today!
-      if (isSameDay(day, trip.endDate) || grouped.length == 0 || filteredTransportation.length != 0 ||
-          filteredActivities.length != 0 || filteredAccommodation != grouped[grouped.length-1].accommodation ||
+      if (isSameDay(day, trip.endDate) || grouped.length == 0 || relevantTransportation.length != 0 ||
+          filteredActivities.length != 0 || relevantAccommodation != grouped[grouped.length-1].accommodation ||
           grouped[grouped.length-1].transportation.find(pair => isSameDay(pair.arrivalDateTime, day))
       ) {
         grouped.push({
           day: day,
-          transportation: filteredTransportation,
+          transportation: relevantTransportation,
           activities: filteredActivities,
-          accommodation: filteredAccommodation,
+          accommodation: relevantAccommodation,
         })
       }
     }

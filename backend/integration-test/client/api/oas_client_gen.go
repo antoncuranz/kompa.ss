@@ -93,6 +93,12 @@ type Invoker interface {
 	//
 	// GET /trips/{trip_id}/attachments
 	GetAttachments(ctx context.Context, params GetAttachmentsParams) (GetAttachmentsRes, error)
+	// GetGeoJson invokes getGeoJson operation.
+	//
+	// Get GeoJson.
+	//
+	// GET /trips/{trip_id}/transportation/geojson
+	GetGeoJson(ctx context.Context, params GetGeoJsonParams) (GetGeoJsonRes, error)
 	// GetTrainStation invokes getTrainStation operation.
 	//
 	// Get train station.
@@ -1008,6 +1014,61 @@ func (c *Client) sendGetAttachments(ctx context.Context, params GetAttachmentsPa
 	defer resp.Body.Close()
 
 	result, err := decodeGetAttachmentsResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// GetGeoJson invokes getGeoJson operation.
+//
+// Get GeoJson.
+//
+// GET /trips/{trip_id}/transportation/geojson
+func (c *Client) GetGeoJson(ctx context.Context, params GetGeoJsonParams) (GetGeoJsonRes, error) {
+	res, err := c.sendGetGeoJson(ctx, params)
+	return res, err
+}
+
+func (c *Client) sendGetGeoJson(ctx context.Context, params GetGeoJsonParams) (res GetGeoJsonRes, err error) {
+
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [3]string
+	pathParts[0] = "/trips/"
+	{
+		// Encode "trip_id" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "trip_id",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.IntToString(params.TripID))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	pathParts[2] = "/transportation/geojson"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	r, err := ht.NewRequest(ctx, "GET", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeGetGeoJsonResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}

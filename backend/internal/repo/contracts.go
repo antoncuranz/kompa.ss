@@ -28,8 +28,9 @@ type (
 		GetAllTransportation(ctx context.Context, tripID int32) ([]entity.Transportation, error)
 		GetTransportationByID(ctx context.Context, tripID int32, id int32) (entity.Transportation, error)
 		SaveTransportation(ctx context.Context, transportation entity.Transportation) (entity.Transportation, error)
-		SaveGeoJson(ctx context.Context, transportationID int32, geoJson *geojson.FeatureCollection) error
 		DeleteTransportation(ctx context.Context, tripID int32, flightID int32) error
+		GetAllGeoJson(ctx context.Context, tripID int32) ([]geojson.FeatureCollection, error)
+		SaveGeoJson(ctx context.Context, transportationID int32, geoJson *geojson.FeatureCollection) error
 	}
 
 	ActivitiesRepo interface {

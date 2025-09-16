@@ -615,6 +615,7 @@ type EntityTrainLeg struct {
 	ArrivalDateTime   string             `json:"arrivalDateTime"`
 	DepartureDateTime string             `json:"departureDateTime"`
 	Destination       EntityTrainStation `json:"destination"`
+	DurationInMinutes int                `json:"durationInMinutes"`
 	ID                int                `json:"id"`
 	LineName          string             `json:"lineName"`
 	Origin            EntityTrainStation `json:"origin"`
@@ -633,6 +634,11 @@ func (s *EntityTrainLeg) GetDepartureDateTime() string {
 // GetDestination returns the value of Destination.
 func (s *EntityTrainLeg) GetDestination() EntityTrainStation {
 	return s.Destination
+}
+
+// GetDurationInMinutes returns the value of DurationInMinutes.
+func (s *EntityTrainLeg) GetDurationInMinutes() int {
+	return s.DurationInMinutes
 }
 
 // GetID returns the value of ID.
@@ -663,6 +669,11 @@ func (s *EntityTrainLeg) SetDepartureDateTime(val string) {
 // SetDestination sets the value of Destination.
 func (s *EntityTrainLeg) SetDestination(val EntityTrainStation) {
 	s.Destination = val
+}
+
+// SetDurationInMinutes sets the value of DurationInMinutes.
+func (s *EntityTrainLeg) SetDurationInMinutes(val int) {
+	s.DurationInMinutes = val
 }
 
 // SetID sets the value of ID.
@@ -954,6 +965,10 @@ func (*GetAllTransportationOKApplicationJSON) getAllTransportationRes() {}
 type GetAttachmentsOKApplicationJSON []EntityAttachment
 
 func (*GetAttachmentsOKApplicationJSON) getAttachmentsRes() {}
+
+type GetGeoJsonOKApplicationJSON []string
+
+func (*GetGeoJsonOKApplicationJSON) getGeoJsonRes() {}
 
 type GetTransportationInternalServerError ResponseError
 
@@ -1649,6 +1664,7 @@ func (*ResponseError) getActivityRes()          {}
 func (*ResponseError) getAllAccommodationRes()  {}
 func (*ResponseError) getAllTransportationRes() {}
 func (*ResponseError) getAttachmentsRes()       {}
+func (*ResponseError) getGeoJsonRes()           {}
 func (*ResponseError) getTrainStationRes()      {}
 func (*ResponseError) getTripsRes()             {}
 func (*ResponseError) getUserRes()              {}

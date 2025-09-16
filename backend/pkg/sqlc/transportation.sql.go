@@ -28,6 +28,33 @@ func (q *Queries) DeleteTransportationByID(ctx context.Context, arg DeleteTransp
 	return err
 }
 
+const getAllGeoJson = `-- name: GetAllGeoJson :many
+SELECT transportation_geojson.geojson
+FROM transportation_geojson
+         JOIN transportation on transportation_geojson.transportation_id = transportation.id
+WHERE transportation.trip_id = $1
+`
+
+func (q *Queries) GetAllGeoJson(ctx context.Context, tripID int32) ([][]byte, error) {
+	rows, err := q.db.Query(ctx, getAllGeoJson, tripID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := [][]byte{}
+	for rows.Next() {
+		var geojson []byte
+		if err := rows.Scan(&geojson); err != nil {
+			return nil, err
+		}
+		items = append(items, geojson)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getAllTransportation = `-- name: GetAllTransportation :many
 SELECT transportation.id, transportation.trip_id, transportation.type, transportation.origin_id, transportation.destination_id, transportation.departure_time, transportation.arrival_time, transportation.price,
        origin.id, origin.latitude, origin.longitude,
@@ -126,7 +153,7 @@ func (q *Queries) GetTransportationByID(ctx context.Context, arg GetTransportati
 const insertGeoJson = `-- name: InsertGeoJson :exec
 INSERT INTO transportation_geojson (transportation_id, geojson)
 VALUES ($1, $2)
-ON CONFLICT(transportation_id)
+    ON CONFLICT(transportation_id)
 DO UPDATE SET
     geojson = $2
 `

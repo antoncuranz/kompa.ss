@@ -75,7 +75,7 @@ export default function FlightDialog({
   }
 
   async function onDeleteButtonClick() {
-    const response = await fetch("/api/v1/trips/" + trip.id + "/flights/" + flight!.id, {method: "DELETE"})
+    const response = await fetch("/api/v1/trips/" + trip.id + "/transportation/" + flight!.id, {method: "DELETE"})
 
     if (response.ok)
       onClose(true)
@@ -132,18 +132,6 @@ export default function FlightDialog({
           </DialogTitle>
         </DialogHeader>
         <div className="py-4 overflow-y-auto">
-          <RowContainer>
-            <LabelInputContainer>
-              <Label htmlFor="price">Price</Label>
-              <AmountInput
-                  id="price"
-                  amount={price}
-                  updateAmount={setPrice}
-                  readOnly={!edit}
-              />
-            </LabelInputContainer>
-          </RowContainer>
-
           <div className="flex">
             <h3 className="font-semibold mb-2 flex-grow">Flight Legs</h3>
             {edit &&
@@ -225,6 +213,18 @@ export default function FlightDialog({
               </RowContainer>
             </div>
           )}
+
+          <RowContainer>
+            <LabelInputContainer>
+              <Label htmlFor="price">Price</Label>
+              <AmountInput
+                  id="price"
+                  amount={price}
+                  updateAmount={setPrice}
+                  readOnly={!edit}
+              />
+            </LabelInputContainer>
+          </RowContainer>
         </div>
         <DialogFooter>
           {edit ?

@@ -40,6 +40,7 @@ type (
 		GetAllTransportation(ctx context.Context, tripID int32) ([]entity.Transportation, error)
 		GetTransportationByID(ctx context.Context, tripID int32, transportationID int32) (entity.Transportation, error)
 		DeleteTransportation(ctx context.Context, tripID int32, transportationID int32) error
+		GetAllGeoJson(ctx context.Context, tripID int32) ([]geojson.FeatureCollection, error)
 	}
 
 	Flights interface {

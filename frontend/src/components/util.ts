@@ -39,6 +39,11 @@ export function isSameDay(timestampA: string, timestampB: string) {
   return timestampA.substring(0, 10) == timestampB.substring(0, 10)
 }
 
+export function dayIsBetween(dateStr: string, timestampA: string, timestampB: string) {
+  const date = new Date(dateStr)
+  return date >= new Date(timestampA.substring(0, 10)) && date <= new Date(timestampB.substring(0, 10))
+}
+
 export function formatDuration(timestampA: string, timestampB: string) {
   const difference = dateFromString(timestampB).getTime() - dateFromString(timestampA).getTime();
   return formatDurationMinutes(Math.floor(difference / (1000 * 60)))

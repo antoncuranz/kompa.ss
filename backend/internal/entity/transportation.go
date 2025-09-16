@@ -12,10 +12,10 @@ const (
 	PLANE TransportationType = "PLANE"
 	TRAIN TransportationType = "TRAIN"
 	BUS   TransportationType = "BUS"
-	BOAT  TransportationType = "BOAT"
-	BIKE  TransportationType = "BIKE"
 	CAR   TransportationType = "CAR"
+	BIKE  TransportationType = "BIKE"
 	FOOT  TransportationType = "FOOT"
+	BOAT  TransportationType = "BOAT"
 	OTHER TransportationType = "OTHER"
 )
 

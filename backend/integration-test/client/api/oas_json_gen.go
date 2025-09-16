@@ -1769,6 +1769,10 @@ func (s *EntityTrainLeg) encodeFields(e *jx.Encoder) {
 		s.Destination.Encode(e)
 	}
 	{
+		e.FieldStart("durationInMinutes")
+		e.Int(s.DurationInMinutes)
+	}
+	{
 		e.FieldStart("id")
 		e.Int(s.ID)
 	}
@@ -1782,13 +1786,14 @@ func (s *EntityTrainLeg) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfEntityTrainLeg = [6]string{
+var jsonFieldsNameOfEntityTrainLeg = [7]string{
 	0: "arrivalDateTime",
 	1: "departureDateTime",
 	2: "destination",
-	3: "id",
-	4: "lineName",
-	5: "origin",
+	3: "durationInMinutes",
+	4: "id",
+	5: "lineName",
+	6: "origin",
 }
 
 // Decode decodes EntityTrainLeg from json.
@@ -1834,8 +1839,20 @@ func (s *EntityTrainLeg) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"destination\"")
 			}
-		case "id":
+		case "durationInMinutes":
 			requiredBitSet[0] |= 1 << 3
+			if err := func() error {
+				v, err := d.Int()
+				s.DurationInMinutes = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"durationInMinutes\"")
+			}
+		case "id":
+			requiredBitSet[0] |= 1 << 4
 			if err := func() error {
 				v, err := d.Int()
 				s.ID = int(v)
@@ -1847,7 +1864,7 @@ func (s *EntityTrainLeg) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"id\"")
 			}
 		case "lineName":
-			requiredBitSet[0] |= 1 << 4
+			requiredBitSet[0] |= 1 << 5
 			if err := func() error {
 				v, err := d.Str()
 				s.LineName = string(v)
@@ -1859,7 +1876,7 @@ func (s *EntityTrainLeg) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"lineName\"")
 			}
 		case "origin":
-			requiredBitSet[0] |= 1 << 5
+			requiredBitSet[0] |= 1 << 6
 			if err := func() error {
 				if err := s.Origin.Decode(d); err != nil {
 					return err
@@ -1878,7 +1895,7 @@ func (s *EntityTrainLeg) Decode(d *jx.Decoder) error {
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [1]uint8{
-		0b00111111,
+		0b01111111,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
@@ -2820,6 +2837,58 @@ func (s GetAttachmentsOKApplicationJSON) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *GetAttachmentsOKApplicationJSON) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes GetGeoJsonOKApplicationJSON as json.
+func (s GetGeoJsonOKApplicationJSON) Encode(e *jx.Encoder) {
+	unwrapped := []string(s)
+
+	e.ArrStart()
+	for _, elem := range unwrapped {
+		e.Str(elem)
+	}
+	e.ArrEnd()
+}
+
+// Decode decodes GetGeoJsonOKApplicationJSON from json.
+func (s *GetGeoJsonOKApplicationJSON) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode GetGeoJsonOKApplicationJSON to nil")
+	}
+	var unwrapped []string
+	if err := func() error {
+		unwrapped = make([]string, 0)
+		if err := d.Arr(func(d *jx.Decoder) error {
+			var elem string
+			v, err := d.Str()
+			elem = string(v)
+			if err != nil {
+				return err
+			}
+			unwrapped = append(unwrapped, elem)
+			return nil
+		}); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = GetGeoJsonOKApplicationJSON(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s GetGeoJsonOKApplicationJSON) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *GetGeoJsonOKApplicationJSON) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }

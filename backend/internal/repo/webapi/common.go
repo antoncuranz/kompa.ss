@@ -18,7 +18,7 @@ func RequestAndParseJsonBody[V interface{}](ctx context.Context, method string, 
 	if err != nil {
 		return nil, fmt.Errorf("do http request: %w", err)
 	} else if res.StatusCode != 200 {
-		return nil, fmt.Errorf("http status code %d: %w", res.StatusCode, err)
+		return nil, fmt.Errorf("http status code %d", res.StatusCode)
 	}
 
 	defer res.Body.Close()

@@ -201,6 +201,8 @@ components:
           type: string
         destination:
           $ref: '#/components/schemas/entity.TrainStation'
+        durationInMinutes:
+          type: integer
         id:
           type: integer
         lineName:
@@ -211,6 +213,7 @@ components:
       - arrivalDateTime
       - departureDateTime
       - destination
+      - durationInMinutes
       - id
       - lineName
       - origin
@@ -267,10 +270,10 @@ components:
       - PLANE
       - TRAIN
       - BUS
-      - BOAT
-      - BIKE
       - CAR
+      - BIKE
       - FOOT
+      - BOAT
       - OTHER
     entity.Trip:
       properties:
@@ -1274,6 +1277,34 @@ paths:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
       summary: Get Transportation by ID
+      tags:
+      - transportation
+  /trips/{trip_id}/transportation/geojson:
+    get:
+      operationId: getGeoJson
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  type: string
+                type: array
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Internal Server Error
+      summary: Get GeoJson
       tags:
       - transportation
   /users:

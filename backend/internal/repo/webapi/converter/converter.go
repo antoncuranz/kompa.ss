@@ -16,6 +16,8 @@ type TrainConverter interface {
 	// goverter:map PlannedDeparture DepartureDateTime
 	// goverter:map PlannedArrival ArrivalDateTime
 	// goverter:map Line.Name LineName
+	// goverter:ignore DurationInMinutes
+	// TODO!
 	ConvertLeg(source response.Leg) (entity.TrainLeg, error)
 
 	ConvertStation(source response.StationOrStop) entity.TrainStation

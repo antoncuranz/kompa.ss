@@ -5,17 +5,17 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import {Layer, Map, Popup, Source} from "react-map-gl/mapbox";
 import type {Feature, FeatureCollection} from 'geojson';
 import RenderAfterMap from "@/components/card/RenderAfterMap.tsx";
-import {Accommodation, Activity, FlightLeg, Transportation, TransportationType} from "@/types.ts";
+import {Accommodation, Activity} from "@/types.ts";
 import {LngLat, MapMouseEvent} from "mapbox-gl";
-import {formatDateShort, formatTime, isSameDay} from "@/components/util.ts";
+import {formatDateShort, formatTime} from "@/components/util.ts";
 import {useTheme} from "next-themes";
 
 export default function TheMap({
-  activities, accommodation, transportation
+  activities, accommodation, geojson
 }: {
   activities: Activity[],
   accommodation: Accommodation[],
-  transportation: Transportation[]
+  geojson: GeoJSON.FeatureCollection[],
 }) {
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
@@ -75,33 +75,33 @@ export default function TheMap({
     }
   }
 
-  function getFlightGeoJson(): FeatureCollection {
-      const features = transportation
-        .filter(transportation => transportation.type == TransportationType.Plane)
-        .map(transportation => transportation.flightDetail!)
-        .flatMap(flightDetail => flightDetail.legs)
-        .map(mapLegToFeature)
+  // function getFlightGeoJson(): FeatureCollection {
+  //     const features = transportation
+  //       .filter(transportation => transportation.type == TransportationType.Plane)
+  //       .map(transportation => transportation.flightDetail!)
+  //       .flatMap(flightDetail => flightDetail.legs)
+  //       .map(mapLegToFeature)
+  //
+  //   return {type: "FeatureCollection", features: features};
+  // }
 
-    return {type: "FeatureCollection", features: features};
-  }
-
-  function mapLegToFeature(leg: FlightLeg): Feature {
-    return {
-      type: 'Feature',
-      geometry: {
-        type: 'LineString',
-        coordinates: [
-          [leg.origin.location!.longitude, leg.origin.location!.latitude],
-          [leg.destination.location!.longitude, leg.destination.location!.latitude],
-        ]
-      },
-      properties: {
-        "popupTitle": `✈️ Flight from ${leg.origin.municipality} to ${leg.destination.municipality}`,
-        "popupBody": leg.flightNumber,
-        "popupBodyRight": `${formatDateShort(leg.departureDateTime)} ${formatTime(leg.departureDateTime)} - ${formatTime(leg.arrivalDateTime)}` + (!isSameDay(leg.departureDateTime, leg.arrivalDateTime) ? " (+1)" : "")
-      }
-    }
-  }
+  // function mapLegToFeature(leg: FlightLeg): Feature {
+  //   return {
+  //     type: 'Feature',
+  //     geometry: {
+  //       type: 'LineString',
+  //       coordinates: [
+  //         [leg.origin.location!.longitude, leg.origin.location!.latitude],
+  //         [leg.destination.location!.longitude, leg.destination.location!.latitude],
+  //       ]
+  //     },
+  //     properties: {
+  //       "popupTitle": `✈️ Flight from ${leg.origin.municipality} to ${leg.destination.municipality}`,
+  //       "popupBody": leg.flightNumber,
+  //       "popupBodyRight": `${formatDateShort(leg.departureDateTime)} ${formatTime(leg.departureDateTime)} - ${formatTime(leg.arrivalDateTime)}` + (!isSameDay(leg.departureDateTime, leg.arrivalDateTime) ? " (+1)" : "")
+  //     }
+  //   }
+  // }
 
   function onMouseEnter(event: MapMouseEvent) {
     if (!event.features || event.features.length == 0)
@@ -129,6 +129,17 @@ export default function TheMap({
     })
   }
 
+  function getColorByType(fc: FeatureCollection) {
+    // @ts-expect-error custom property
+    const type = fc["transportationType"] as string
+
+    switch (type) {
+      case "PLANE": return "#007cbf"
+      case "TRAIN": return "#ec0016"
+      default: return "black"
+    }
+  }
+
   return (
     <Map
         mapboxAccessToken={mapboxToken}
@@ -142,6 +153,18 @@ export default function TheMap({
         onMouseLeave={() => setPopupInfo(null)}
     >
       <RenderAfterMap theme={getMapboxTheme()}>
+        {geojson.map((fc, idx) =>
+            <Source key={idx} type="geojson" data={fc}>
+              <Layer type="line"
+                     paint={{"line-color": getColorByType(fc), "line-width": 5, "line-emissive-strength": 1}}
+                     layout={{"line-cap": "round"}}
+              />
+              <Layer type="circle"
+                     filter={["==", ["geometry-type"], "Point"]}
+                     paint={{"circle-color": getColorByType(fc), "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
+              />
+            </Source>
+        )}
         <Source type="geojson" data={getAccommodationGeoJson()}>
           <Layer id="accommodation"
                  type="circle"
@@ -154,16 +177,16 @@ export default function TheMap({
                  paint={{"circle-color": "#36bf00", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
           />
         </Source>
-        <Source type="geojson" data={getFlightGeoJson()}>
-          <Layer type="line"
-                 paint={{"line-color": "#007cbf", "line-width": 5, "line-emissive-strength": 1}}
-                 layout={{"line-cap": "round"}}
-          />
-          <Layer id="flight"
-                 type="circle"
-                 paint={{"circle-color": "#007cbf", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
-          />
-        </Source>
+        {/*<Source type="geojson" data={getFlightGeoJson()}>*/}
+        {/*  <Layer type="line"*/}
+        {/*         paint={{"line-color": "#007cbf", "line-width": 5, "line-emissive-strength": 1}}*/}
+        {/*         layout={{"line-cap": "round"}}*/}
+        {/*  />*/}
+        {/*  <Layer id="flight"*/}
+        {/*         type="circle"*/}
+        {/*         paint={{"circle-color": "#007cbf", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}*/}
+        {/*  />*/}
+        {/*</Source>*/}
         {popupInfo && (
             <Popup offset={10}
                    closeButton={false}

@@ -41,27 +41,28 @@ export type Accommodation = {
 };
 
 export enum TransportationType {
-    Plane = "PLANE",
-    Train = "TRAIN",
-    Bus   = "BUS",
-    Boat  = "BOAT",
-    Bike  = "BIKE",
-    Car   = "CAR",
-    Foot  = "FOOT",
-    Other = "OTHER",
+  Plane = "PLANE",
+  Train = "TRAIN",
+  Bus   = "BUS",
+  Boat  = "BOAT",
+  Bike  = "BIKE",
+  Car   = "CAR",
+  Foot  = "FOOT",
+  Other = "OTHER",
 }
 
 export type Transportation = {
-    id: number;
-    tripId: number;
-    type: TransportationType;
-    origin: Location;
-    destination: Location;
-    departureDateTime: string;
-    arrivalDateTime: string;
-    geoJson: string | null;
-    price: number | null;
-    flightDetail: FlightDetail | null;
+  id: number;
+  tripId: number;
+  type: TransportationType;
+  origin: Location;
+  destination: Location;
+  departureDateTime: string;
+  arrivalDateTime: string;
+  geoJson: string | null;
+  price: number | null;
+  flightDetail: FlightDetail | null;
+  trainDetail: TrainDetail | null;
 };
 
 export type FlightDetail = {
@@ -102,7 +103,26 @@ export type Airport = {
   iata: string;
   name: string;
   municipality: string;
-  location: Location | null;
+  location: Location;
+}
+
+export type TrainDetail = {
+  legs: TrainLeg[];
+};
+
+export type TrainLeg = {
+  id: number;
+  origin: TrainStation;
+  destination: TrainStation;
+  departureDateTime: string;
+  arrivalDateTime: string;
+  durationInMinutes: number;
+  lineName: string;
+};
+
+export type TrainStation = {
+  id: string;
+  name: string;
 }
 
 export type DayRenderData = {

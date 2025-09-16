@@ -142,6 +142,27 @@ func (r *TransportationRepo) SaveTransportation(ctx context.Context, transportat
 	return r.GetTransportationByID(ctx, transportation.TripID, transportationID)
 }
 
+func (r *TransportationRepo) DeleteTransportation(ctx context.Context, tripID int32, transportationID int32) error {
+	return r.Queries.DeleteTransportationByID(ctx, sqlc.DeleteTransportationByIDParams{TripID: tripID, ID: transportationID})
+}
+
+func (r *TransportationRepo) GetAllGeoJson(ctx context.Context, tripID int32) ([]geojson.FeatureCollection, error) {
+	rows, err := r.Queries.GetAllGeoJson(ctx, tripID)
+	if err != nil {
+		return nil, fmt.Errorf("get all geojson from db [t.id=%d]: %w", tripID, err)
+	}
+
+	allGeoJson := []geojson.FeatureCollection{}
+	for _, bytes := range rows {
+		geoJson, err := geojson.UnmarshalFeatureCollection(bytes)
+		if err != nil {
+			return nil, fmt.Errorf("unmarshall GeoJson: %w", err)
+		}
+		allGeoJson = append(allGeoJson, *geoJson)
+	}
+	return allGeoJson, nil
+}
+
 func (r *TransportationRepo) SaveGeoJson(ctx context.Context, transportationID int32, geoJson *geojson.FeatureCollection) error {
 	marshalledGeoJson, err := geoJson.MarshalJSON()
 	if err != nil {
@@ -152,8 +173,4 @@ func (r *TransportationRepo) SaveGeoJson(ctx context.Context, transportationID i
 		TransportationID: transportationID,
 		Geojson:          marshalledGeoJson,
 	})
-}
-
-func (r *TransportationRepo) DeleteTransportation(ctx context.Context, tripID int32, transportationID int32) error {
-	return r.Queries.DeleteTransportationByID(ctx, sqlc.DeleteTransportationByIDParams{TripID: tripID, ID: transportationID})
 }

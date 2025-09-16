@@ -3,6 +3,8 @@ package flights
 import (
 	"context"
 	"fmt"
+	"github.com/paulmach/orb"
+	"github.com/paulmach/orb/geojson"
 	"kompass/internal/controller/http/v1/request"
 	"kompass/internal/entity"
 	"kompass/internal/repo"
@@ -29,7 +31,7 @@ func (uc *UseCase) CreateFlight(ctx context.Context, tripID int32, flight reques
 	firstLeg := flightLegs[0]
 	lastLeg := flightLegs[len(flightLegs)-1]
 
-	return uc.repo.SaveTransportation(ctx, entity.Transportation{
+	transportation, err := uc.repo.SaveTransportation(ctx, entity.Transportation{
 		TripID:            tripID,
 		Type:              entity.PLANE,
 		Origin:            firstLeg.Origin.Location,
@@ -42,6 +44,52 @@ func (uc *UseCase) CreateFlight(ctx context.Context, tripID int32, flight reques
 			PNRs: flight.PNRs,
 		},
 	})
+	if err != nil {
+		return entity.Transportation{}, err
+	}
+
+	return transportation, uc.SaveGeoJson(ctx, transportation)
+}
+
+func (uc *UseCase) SaveGeoJson(ctx context.Context, transportation entity.Transportation) error {
+
+	legs := transportation.FlightDetail.Legs
+
+	featureCollection := geojson.NewFeatureCollection()
+	featureCollection.ExtraMembers = map[string]interface{}{"transportationType": "PLANE"}
+
+	// start point
+	featureCollection.Append(geojson.NewFeature(
+		locationToPoint(legs[0].Origin.Location),
+	))
+
+	for _, leg := range legs {
+		// line
+		featureCollection.Append(geojson.NewFeature(
+			orb.LineString{
+				locationToPoint(leg.Origin.Location),
+				locationToPoint(leg.Destination.Location),
+			},
+		))
+
+		// intermediate/end point
+		featureCollection.Append(geojson.NewFeature(
+			locationToPoint(leg.Destination.Location),
+		))
+	}
+
+	err := uc.repo.SaveGeoJson(ctx, transportation.ID, featureCollection)
+	if err != nil {
+		return fmt.Errorf("save geojson: %w", err)
+	}
+	return nil
+}
+
+func locationToPoint(location entity.Location) orb.Point {
+	return orb.Point{
+		float64(location.Longitude),
+		float64(location.Latitude),
+	}
 }
 
 func (uc *UseCase) retrieveFlightLegs(ctx context.Context, flight request.Flight) ([]entity.FlightLeg, error) {

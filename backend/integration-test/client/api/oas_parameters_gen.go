@@ -88,6 +88,12 @@ type GetAttachmentsParams struct {
 	TripID int
 }
 
+// GetGeoJsonParams is parameters of getGeoJson operation.
+type GetGeoJsonParams struct {
+	// Trip ID.
+	TripID int
+}
+
 // GetTrainStationParams is parameters of getTrainStation operation.
 type GetTrainStationParams struct {
 	// Trip ID.
