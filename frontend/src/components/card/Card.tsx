@@ -4,12 +4,14 @@ import {GlowContainer} from "@/components/ui/glow-container.tsx";
 
 export default function Card({
   title,
+  subtitle,
   children,
   headerSlot,
   className,
   onClick
 }: {
   title?: string
+  subtitle?: string
   children: React.ReactNode
   headerSlot?: React.ReactNode
   className?: string
@@ -21,7 +23,10 @@ export default function Card({
       <GlowContainer className="flex flex-col h-full sm:p-2 rounded-2xl sm:rounded-3xl">
         {(title || headerSlot) &&
           <div className="flex flex-row p-3 sm:pb-5 border-b">
-            <h3 className="flex-grow font-semibold text-xl/[2rem] sm:text-2xl">{title}</h3>
+            <div className="flex-grow text-xl/[2rem] sm:text-2xl">
+              <span className="font-semibold mr-2">{title}</span>
+              <span>{subtitle}</span>
+            </div>
             {headerSlot}
           </div>
         }

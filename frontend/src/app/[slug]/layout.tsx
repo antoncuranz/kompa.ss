@@ -1,4 +1,18 @@
 import Navigation from "@/components/navigation/Navigation.tsx";
+import {fetchTrip} from "@/requests.ts";
+
+export async function generateMetadata({
+  params
+} : {
+  params: Promise<{ slug: string }>
+}) {
+  const tripId = parseInt((await params).slug)
+  const trip = await fetchTrip(tripId)
+
+  return {
+    title: "kompa.ss - " + trip.name
+  };
+}
 
 export default async function RootLayout({
   params, children,

@@ -49,7 +49,7 @@ export default async function ItineraryCard({
   }
 
   return (
-    <Card title="Itinerary" headerSlot={<AddSomethingDropdown trip={trip}/>} className={className}>
+    <Card title={trip.name} subtitle="Itinerary" headerSlot={<AddSomethingDropdown trip={trip}/>} className={className}>
       <Itinerary trip={trip} dataByDays={processDataAndGroupByDays()}/>
     </Card>
   )
