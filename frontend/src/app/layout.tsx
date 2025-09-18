@@ -6,7 +6,7 @@ import {UserProvider} from "@/components/provider/UserProvider.tsx";
 import {getCurrentUser} from "@/requests.ts";
 
 export const metadata: Metadata = {
-  title: "travel-planner",
+  title: "kompa.ss",
 }
 
 export const viewport: Viewport = {
