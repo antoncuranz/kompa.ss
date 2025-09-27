@@ -17,8 +17,15 @@ func (s *EntityAccommodation) Validate() error {
 
 	var failures []validate.FieldError
 	if err := func() error {
-		if err := s.Location.Validate(); err != nil {
-			return err
+		if value, ok := s.Location.Get(); ok {
+			if err := func() error {
+				if err := value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
 		}
 		return nil
 	}(); err != nil {
@@ -40,8 +47,15 @@ func (s *EntityActivity) Validate() error {
 
 	var failures []validate.FieldError
 	if err := func() error {
-		if err := s.Location.Validate(); err != nil {
-			return err
+		if value, ok := s.Location.Get(); ok {
+			if err := func() error {
+				if err := value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
 		}
 		return nil
 	}(); err != nil {
@@ -63,8 +77,15 @@ func (s *EntityAirport) Validate() error {
 
 	var failures []validate.FieldError
 	if err := func() error {
-		if err := s.Location.Validate(); err != nil {
-			return err
+		if value, ok := s.Location.Get(); ok {
+			if err := func() error {
+				if err := value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
 		}
 		return nil
 	}(); err != nil {
@@ -302,8 +323,15 @@ func (s *EntityTrainStation) Validate() error {
 
 	var failures []validate.FieldError
 	if err := func() error {
-		if err := s.Location.Validate(); err != nil {
-			return err
+		if value, ok := s.Location.Get(); ok {
+			if err := func() error {
+				if err := value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
 		}
 		return nil
 	}(); err != nil {
@@ -325,8 +353,15 @@ func (s *EntityTransportation) Validate() error {
 
 	var failures []validate.FieldError
 	if err := func() error {
-		if err := s.Destination.Validate(); err != nil {
-			return err
+		if value, ok := s.Destination.Get(); ok {
+			if err := func() error {
+				if err := value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
 		}
 		return nil
 	}(); err != nil {
@@ -354,8 +389,15 @@ func (s *EntityTransportation) Validate() error {
 		})
 	}
 	if err := func() error {
-		if err := s.Origin.Validate(); err != nil {
-			return err
+		if value, ok := s.Origin.Get(); ok {
+			if err := func() error {
+				if err := value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
 		}
 		return nil
 	}(); err != nil {
@@ -519,8 +561,15 @@ func (s *RequestAccommodation) Validate() error {
 
 	var failures []validate.FieldError
 	if err := func() error {
-		if err := s.Location.Validate(); err != nil {
-			return err
+		if value, ok := s.Location.Get(); ok {
+			if err := func() error {
+				if err := value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
 		}
 		return nil
 	}(); err != nil {
@@ -542,8 +591,15 @@ func (s *RequestActivity) Validate() error {
 
 	var failures []validate.FieldError
 	if err := func() error {
-		if err := s.Location.Validate(); err != nil {
-			return err
+		if value, ok := s.Location.Get(); ok {
+			if err := func() error {
+				if err := value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
 		}
 		return nil
 	}(); err != nil {

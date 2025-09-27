@@ -9,9 +9,9 @@ type Activity struct {
 	TripID      int32       `json:"tripId"`
 	Name        string      `json:"name"`
 	Date        civil.Date  `json:"date"`
-	Time        *civil.Time `json:"time"`
-	Description *string     `json:"description"`
-	Address     *string     `json:"address"`
-	Location    *Location   `json:"location"`
-	Price       *int32      `json:"price"`
+	Time        *civil.Time `json:"time" extensions:"nullable"`
+	Description *string     `json:"description" extensions:"nullable"`
+	Address     *string     `json:"address" extensions:"nullable"`
+	Location    *Location   `json:"location" extensions:"nullable"`
+	Price       *int32      `json:"price" extensions:"nullable"`
 }

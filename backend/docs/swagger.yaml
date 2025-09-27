@@ -3,16 +3,20 @@ components:
     entity.Accommodation:
       properties:
         address:
+          nullable: true
           type: string
         arrivalDate:
           type: string
         checkInTime:
+          nullable: true
           type: string
         checkOutTime:
+          nullable: true
           type: string
         departureDate:
           type: string
         description:
+          nullable: true
           type: string
         id:
           type: integer
@@ -21,6 +25,7 @@ components:
         name:
           type: string
         price:
+          nullable: true
           type: integer
         tripId:
           type: integer
@@ -40,10 +45,12 @@ components:
     entity.Activity:
       properties:
         address:
+          nullable: true
           type: string
         date:
           type: string
         description:
+          nullable: true
           type: string
         id:
           type: integer
@@ -52,8 +59,10 @@ components:
         name:
           type: string
         price:
+          nullable: true
           type: integer
         time:
+          nullable: true
           type: string
         tripId:
           type: integer
@@ -123,6 +132,7 @@ components:
     entity.FlightLeg:
       properties:
         aircraft:
+          nullable: true
           type: string
         airline:
           type: string
@@ -152,6 +162,7 @@ components:
       - origin
       type: object
     entity.Location:
+      nullable: true
       properties:
         id:
           type: integer
@@ -318,22 +329,27 @@ components:
     request.Accommodation:
       properties:
         address:
+          nullable: true
           type: string
         arrivalDate:
           type: string
         checkInTime:
+          nullable: true
           type: string
         checkOutTime:
+          nullable: true
           type: string
         departureDate:
           type: string
         description:
+          nullable: true
           type: string
         location:
           $ref: '#/components/schemas/entity.Location'
         name:
           type: string
         price:
+          nullable: true
           type: integer
       required:
       - address
@@ -349,18 +365,22 @@ components:
     request.Activity:
       properties:
         address:
+          nullable: true
           type: string
         date:
           type: string
         description:
+          nullable: true
           type: string
         location:
           $ref: '#/components/schemas/entity.Location'
         name:
           type: string
         price:
+          nullable: true
           type: integer
         time:
+          nullable: true
           type: string
       required:
       - address

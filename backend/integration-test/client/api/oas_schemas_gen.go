@@ -78,21 +78,21 @@ func (*DeleteTripNotFound) deleteTripRes() {}
 
 // Ref: #/components/schemas/entity.Accommodation
 type EntityAccommodation struct {
-	Address       string         `json:"address"`
-	ArrivalDate   string         `json:"arrivalDate"`
-	CheckInTime   string         `json:"checkInTime"`
-	CheckOutTime  string         `json:"checkOutTime"`
-	DepartureDate string         `json:"departureDate"`
-	Description   string         `json:"description"`
-	ID            int            `json:"id"`
-	Location      EntityLocation `json:"location"`
-	Name          string         `json:"name"`
-	Price         int            `json:"price"`
-	TripId        int            `json:"tripId"`
+	Address       NilString         `json:"address"`
+	ArrivalDate   string            `json:"arrivalDate"`
+	CheckInTime   NilString         `json:"checkInTime"`
+	CheckOutTime  NilString         `json:"checkOutTime"`
+	DepartureDate string            `json:"departureDate"`
+	Description   NilString         `json:"description"`
+	ID            int               `json:"id"`
+	Location      NilEntityLocation `json:"location"`
+	Name          string            `json:"name"`
+	Price         NilInt            `json:"price"`
+	TripId        int               `json:"tripId"`
 }
 
 // GetAddress returns the value of Address.
-func (s *EntityAccommodation) GetAddress() string {
+func (s *EntityAccommodation) GetAddress() NilString {
 	return s.Address
 }
 
@@ -102,12 +102,12 @@ func (s *EntityAccommodation) GetArrivalDate() string {
 }
 
 // GetCheckInTime returns the value of CheckInTime.
-func (s *EntityAccommodation) GetCheckInTime() string {
+func (s *EntityAccommodation) GetCheckInTime() NilString {
 	return s.CheckInTime
 }
 
 // GetCheckOutTime returns the value of CheckOutTime.
-func (s *EntityAccommodation) GetCheckOutTime() string {
+func (s *EntityAccommodation) GetCheckOutTime() NilString {
 	return s.CheckOutTime
 }
 
@@ -117,7 +117,7 @@ func (s *EntityAccommodation) GetDepartureDate() string {
 }
 
 // GetDescription returns the value of Description.
-func (s *EntityAccommodation) GetDescription() string {
+func (s *EntityAccommodation) GetDescription() NilString {
 	return s.Description
 }
 
@@ -127,7 +127,7 @@ func (s *EntityAccommodation) GetID() int {
 }
 
 // GetLocation returns the value of Location.
-func (s *EntityAccommodation) GetLocation() EntityLocation {
+func (s *EntityAccommodation) GetLocation() NilEntityLocation {
 	return s.Location
 }
 
@@ -137,7 +137,7 @@ func (s *EntityAccommodation) GetName() string {
 }
 
 // GetPrice returns the value of Price.
-func (s *EntityAccommodation) GetPrice() int {
+func (s *EntityAccommodation) GetPrice() NilInt {
 	return s.Price
 }
 
@@ -147,7 +147,7 @@ func (s *EntityAccommodation) GetTripId() int {
 }
 
 // SetAddress sets the value of Address.
-func (s *EntityAccommodation) SetAddress(val string) {
+func (s *EntityAccommodation) SetAddress(val NilString) {
 	s.Address = val
 }
 
@@ -157,12 +157,12 @@ func (s *EntityAccommodation) SetArrivalDate(val string) {
 }
 
 // SetCheckInTime sets the value of CheckInTime.
-func (s *EntityAccommodation) SetCheckInTime(val string) {
+func (s *EntityAccommodation) SetCheckInTime(val NilString) {
 	s.CheckInTime = val
 }
 
 // SetCheckOutTime sets the value of CheckOutTime.
-func (s *EntityAccommodation) SetCheckOutTime(val string) {
+func (s *EntityAccommodation) SetCheckOutTime(val NilString) {
 	s.CheckOutTime = val
 }
 
@@ -172,7 +172,7 @@ func (s *EntityAccommodation) SetDepartureDate(val string) {
 }
 
 // SetDescription sets the value of Description.
-func (s *EntityAccommodation) SetDescription(val string) {
+func (s *EntityAccommodation) SetDescription(val NilString) {
 	s.Description = val
 }
 
@@ -182,7 +182,7 @@ func (s *EntityAccommodation) SetID(val int) {
 }
 
 // SetLocation sets the value of Location.
-func (s *EntityAccommodation) SetLocation(val EntityLocation) {
+func (s *EntityAccommodation) SetLocation(val NilEntityLocation) {
 	s.Location = val
 }
 
@@ -192,7 +192,7 @@ func (s *EntityAccommodation) SetName(val string) {
 }
 
 // SetPrice sets the value of Price.
-func (s *EntityAccommodation) SetPrice(val int) {
+func (s *EntityAccommodation) SetPrice(val NilInt) {
 	s.Price = val
 }
 
@@ -205,19 +205,19 @@ func (*EntityAccommodation) getAccommodationByIDRes() {}
 
 // Ref: #/components/schemas/entity.Activity
 type EntityActivity struct {
-	Address     string         `json:"address"`
-	Date        string         `json:"date"`
-	Description string         `json:"description"`
-	ID          int            `json:"id"`
-	Location    EntityLocation `json:"location"`
-	Name        string         `json:"name"`
-	Price       int            `json:"price"`
-	Time        string         `json:"time"`
-	TripId      int            `json:"tripId"`
+	Address     NilString         `json:"address"`
+	Date        string            `json:"date"`
+	Description NilString         `json:"description"`
+	ID          int               `json:"id"`
+	Location    NilEntityLocation `json:"location"`
+	Name        string            `json:"name"`
+	Price       NilInt            `json:"price"`
+	Time        NilString         `json:"time"`
+	TripId      int               `json:"tripId"`
 }
 
 // GetAddress returns the value of Address.
-func (s *EntityActivity) GetAddress() string {
+func (s *EntityActivity) GetAddress() NilString {
 	return s.Address
 }
 
@@ -227,7 +227,7 @@ func (s *EntityActivity) GetDate() string {
 }
 
 // GetDescription returns the value of Description.
-func (s *EntityActivity) GetDescription() string {
+func (s *EntityActivity) GetDescription() NilString {
 	return s.Description
 }
 
@@ -237,7 +237,7 @@ func (s *EntityActivity) GetID() int {
 }
 
 // GetLocation returns the value of Location.
-func (s *EntityActivity) GetLocation() EntityLocation {
+func (s *EntityActivity) GetLocation() NilEntityLocation {
 	return s.Location
 }
 
@@ -247,12 +247,12 @@ func (s *EntityActivity) GetName() string {
 }
 
 // GetPrice returns the value of Price.
-func (s *EntityActivity) GetPrice() int {
+func (s *EntityActivity) GetPrice() NilInt {
 	return s.Price
 }
 
 // GetTime returns the value of Time.
-func (s *EntityActivity) GetTime() string {
+func (s *EntityActivity) GetTime() NilString {
 	return s.Time
 }
 
@@ -262,7 +262,7 @@ func (s *EntityActivity) GetTripId() int {
 }
 
 // SetAddress sets the value of Address.
-func (s *EntityActivity) SetAddress(val string) {
+func (s *EntityActivity) SetAddress(val NilString) {
 	s.Address = val
 }
 
@@ -272,7 +272,7 @@ func (s *EntityActivity) SetDate(val string) {
 }
 
 // SetDescription sets the value of Description.
-func (s *EntityActivity) SetDescription(val string) {
+func (s *EntityActivity) SetDescription(val NilString) {
 	s.Description = val
 }
 
@@ -282,7 +282,7 @@ func (s *EntityActivity) SetID(val int) {
 }
 
 // SetLocation sets the value of Location.
-func (s *EntityActivity) SetLocation(val EntityLocation) {
+func (s *EntityActivity) SetLocation(val NilEntityLocation) {
 	s.Location = val
 }
 
@@ -292,12 +292,12 @@ func (s *EntityActivity) SetName(val string) {
 }
 
 // SetPrice sets the value of Price.
-func (s *EntityActivity) SetPrice(val int) {
+func (s *EntityActivity) SetPrice(val NilInt) {
 	s.Price = val
 }
 
 // SetTime sets the value of Time.
-func (s *EntityActivity) SetTime(val string) {
+func (s *EntityActivity) SetTime(val NilString) {
 	s.Time = val
 }
 
@@ -310,10 +310,10 @@ func (*EntityActivity) getActivityRes() {}
 
 // Ref: #/components/schemas/entity.Airport
 type EntityAirport struct {
-	Iata         string         `json:"iata"`
-	Location     EntityLocation `json:"location"`
-	Municipality string         `json:"municipality"`
-	Name         string         `json:"name"`
+	Iata         string            `json:"iata"`
+	Location     NilEntityLocation `json:"location"`
+	Municipality string            `json:"municipality"`
+	Name         string            `json:"name"`
 }
 
 // GetIata returns the value of Iata.
@@ -322,7 +322,7 @@ func (s *EntityAirport) GetIata() string {
 }
 
 // GetLocation returns the value of Location.
-func (s *EntityAirport) GetLocation() EntityLocation {
+func (s *EntityAirport) GetLocation() NilEntityLocation {
 	return s.Location
 }
 
@@ -342,7 +342,7 @@ func (s *EntityAirport) SetIata(val string) {
 }
 
 // SetLocation sets the value of Location.
-func (s *EntityAirport) SetLocation(val EntityLocation) {
+func (s *EntityAirport) SetLocation(val NilEntityLocation) {
 	s.Location = val
 }
 
@@ -434,7 +434,7 @@ func (s *EntityFlightDetail) SetPnrs(val []EntityPNR) {
 
 // Ref: #/components/schemas/entity.FlightLeg
 type EntityFlightLeg struct {
-	Aircraft          string        `json:"aircraft"`
+	Aircraft          NilString     `json:"aircraft"`
 	Airline           string        `json:"airline"`
 	ArrivalDateTime   string        `json:"arrivalDateTime"`
 	DepartureDateTime string        `json:"departureDateTime"`
@@ -446,7 +446,7 @@ type EntityFlightLeg struct {
 }
 
 // GetAircraft returns the value of Aircraft.
-func (s *EntityFlightLeg) GetAircraft() string {
+func (s *EntityFlightLeg) GetAircraft() NilString {
 	return s.Aircraft
 }
 
@@ -491,7 +491,7 @@ func (s *EntityFlightLeg) GetOrigin() EntityAirport {
 }
 
 // SetAircraft sets the value of Aircraft.
-func (s *EntityFlightLeg) SetAircraft(val string) {
+func (s *EntityFlightLeg) SetAircraft(val NilString) {
 	s.Aircraft = val
 }
 
@@ -718,9 +718,9 @@ func (s *EntityTrainLeg) SetOrigin(val EntityTrainStation) {
 
 // Ref: #/components/schemas/entity.TrainStation
 type EntityTrainStation struct {
-	ID       string         `json:"id"`
-	Location EntityLocation `json:"location"`
-	Name     string         `json:"name"`
+	ID       string            `json:"id"`
+	Location NilEntityLocation `json:"location"`
+	Name     string            `json:"name"`
 }
 
 // GetID returns the value of ID.
@@ -729,7 +729,7 @@ func (s *EntityTrainStation) GetID() string {
 }
 
 // GetLocation returns the value of Location.
-func (s *EntityTrainStation) GetLocation() EntityLocation {
+func (s *EntityTrainStation) GetLocation() NilEntityLocation {
 	return s.Location
 }
 
@@ -744,7 +744,7 @@ func (s *EntityTrainStation) SetID(val string) {
 }
 
 // SetLocation sets the value of Location.
-func (s *EntityTrainStation) SetLocation(val EntityLocation) {
+func (s *EntityTrainStation) SetLocation(val NilEntityLocation) {
 	s.Location = val
 }
 
@@ -759,10 +759,10 @@ func (*EntityTrainStation) getTrainStationRes() {}
 type EntityTransportation struct {
 	ArrivalDateTime   string                   `json:"arrivalDateTime"`
 	DepartureDateTime string                   `json:"departureDateTime"`
-	Destination       EntityLocation           `json:"destination"`
+	Destination       NilEntityLocation        `json:"destination"`
 	FlightDetail      OptNilEntityFlightDetail `json:"flightDetail"`
 	ID                int                      `json:"id"`
-	Origin            EntityLocation           `json:"origin"`
+	Origin            NilEntityLocation        `json:"origin"`
 	Price             NilInt                   `json:"price"`
 	TrainDetail       OptNilEntityTrainDetail  `json:"trainDetail"`
 	TripId            int                      `json:"tripId"`
@@ -780,7 +780,7 @@ func (s *EntityTransportation) GetDepartureDateTime() string {
 }
 
 // GetDestination returns the value of Destination.
-func (s *EntityTransportation) GetDestination() EntityLocation {
+func (s *EntityTransportation) GetDestination() NilEntityLocation {
 	return s.Destination
 }
 
@@ -795,7 +795,7 @@ func (s *EntityTransportation) GetID() int {
 }
 
 // GetOrigin returns the value of Origin.
-func (s *EntityTransportation) GetOrigin() EntityLocation {
+func (s *EntityTransportation) GetOrigin() NilEntityLocation {
 	return s.Origin
 }
 
@@ -830,7 +830,7 @@ func (s *EntityTransportation) SetDepartureDateTime(val string) {
 }
 
 // SetDestination sets the value of Destination.
-func (s *EntityTransportation) SetDestination(val EntityLocation) {
+func (s *EntityTransportation) SetDestination(val NilEntityLocation) {
 	s.Destination = val
 }
 
@@ -845,7 +845,7 @@ func (s *EntityTransportation) SetID(val int) {
 }
 
 // SetOrigin sets the value of Origin.
-func (s *EntityTransportation) SetOrigin(val EntityLocation) {
+func (s *EntityTransportation) SetOrigin(val NilEntityLocation) {
 	s.Origin = val
 }
 
@@ -1044,6 +1044,51 @@ func (*GetTripsOKApplicationJSON) getTripsRes() {}
 type GetUsersOKApplicationJSON []EntityUser
 
 func (*GetUsersOKApplicationJSON) getUsersRes() {}
+
+// NewNilEntityLocation returns new NilEntityLocation with value set to v.
+func NewNilEntityLocation(v EntityLocation) NilEntityLocation {
+	return NilEntityLocation{
+		Value: v,
+	}
+}
+
+// NilEntityLocation is nullable EntityLocation.
+type NilEntityLocation struct {
+	Value EntityLocation
+	Null  bool
+}
+
+// SetTo sets value to v.
+func (o *NilEntityLocation) SetTo(v EntityLocation) {
+	o.Null = false
+	o.Value = v
+}
+
+// IsNull returns true if value is Null.
+func (o NilEntityLocation) IsNull() bool { return o.Null }
+
+// SetToNull sets value to null.
+func (o *NilEntityLocation) SetToNull() {
+	o.Null = true
+	var v EntityLocation
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o NilEntityLocation) Get() (v EntityLocation, ok bool) {
+	if o.Null {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o NilEntityLocation) Or(d EntityLocation) EntityLocation {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
 
 // NewNilInt returns new NilInt with value set to v.
 func NewNilInt(v int) NilInt {
@@ -1323,19 +1368,19 @@ func (*PutTripNotFound) putTripRes() {}
 
 // Ref: #/components/schemas/request.Accommodation
 type RequestAccommodation struct {
-	Address       string         `json:"address"`
-	ArrivalDate   string         `json:"arrivalDate"`
-	CheckInTime   string         `json:"checkInTime"`
-	CheckOutTime  string         `json:"checkOutTime"`
-	DepartureDate string         `json:"departureDate"`
-	Description   string         `json:"description"`
-	Location      EntityLocation `json:"location"`
-	Name          string         `json:"name"`
-	Price         int            `json:"price"`
+	Address       NilString         `json:"address"`
+	ArrivalDate   string            `json:"arrivalDate"`
+	CheckInTime   NilString         `json:"checkInTime"`
+	CheckOutTime  NilString         `json:"checkOutTime"`
+	DepartureDate string            `json:"departureDate"`
+	Description   NilString         `json:"description"`
+	Location      NilEntityLocation `json:"location"`
+	Name          string            `json:"name"`
+	Price         NilInt            `json:"price"`
 }
 
 // GetAddress returns the value of Address.
-func (s *RequestAccommodation) GetAddress() string {
+func (s *RequestAccommodation) GetAddress() NilString {
 	return s.Address
 }
 
@@ -1345,12 +1390,12 @@ func (s *RequestAccommodation) GetArrivalDate() string {
 }
 
 // GetCheckInTime returns the value of CheckInTime.
-func (s *RequestAccommodation) GetCheckInTime() string {
+func (s *RequestAccommodation) GetCheckInTime() NilString {
 	return s.CheckInTime
 }
 
 // GetCheckOutTime returns the value of CheckOutTime.
-func (s *RequestAccommodation) GetCheckOutTime() string {
+func (s *RequestAccommodation) GetCheckOutTime() NilString {
 	return s.CheckOutTime
 }
 
@@ -1360,12 +1405,12 @@ func (s *RequestAccommodation) GetDepartureDate() string {
 }
 
 // GetDescription returns the value of Description.
-func (s *RequestAccommodation) GetDescription() string {
+func (s *RequestAccommodation) GetDescription() NilString {
 	return s.Description
 }
 
 // GetLocation returns the value of Location.
-func (s *RequestAccommodation) GetLocation() EntityLocation {
+func (s *RequestAccommodation) GetLocation() NilEntityLocation {
 	return s.Location
 }
 
@@ -1375,12 +1420,12 @@ func (s *RequestAccommodation) GetName() string {
 }
 
 // GetPrice returns the value of Price.
-func (s *RequestAccommodation) GetPrice() int {
+func (s *RequestAccommodation) GetPrice() NilInt {
 	return s.Price
 }
 
 // SetAddress sets the value of Address.
-func (s *RequestAccommodation) SetAddress(val string) {
+func (s *RequestAccommodation) SetAddress(val NilString) {
 	s.Address = val
 }
 
@@ -1390,12 +1435,12 @@ func (s *RequestAccommodation) SetArrivalDate(val string) {
 }
 
 // SetCheckInTime sets the value of CheckInTime.
-func (s *RequestAccommodation) SetCheckInTime(val string) {
+func (s *RequestAccommodation) SetCheckInTime(val NilString) {
 	s.CheckInTime = val
 }
 
 // SetCheckOutTime sets the value of CheckOutTime.
-func (s *RequestAccommodation) SetCheckOutTime(val string) {
+func (s *RequestAccommodation) SetCheckOutTime(val NilString) {
 	s.CheckOutTime = val
 }
 
@@ -1405,12 +1450,12 @@ func (s *RequestAccommodation) SetDepartureDate(val string) {
 }
 
 // SetDescription sets the value of Description.
-func (s *RequestAccommodation) SetDescription(val string) {
+func (s *RequestAccommodation) SetDescription(val NilString) {
 	s.Description = val
 }
 
 // SetLocation sets the value of Location.
-func (s *RequestAccommodation) SetLocation(val EntityLocation) {
+func (s *RequestAccommodation) SetLocation(val NilEntityLocation) {
 	s.Location = val
 }
 
@@ -1420,23 +1465,23 @@ func (s *RequestAccommodation) SetName(val string) {
 }
 
 // SetPrice sets the value of Price.
-func (s *RequestAccommodation) SetPrice(val int) {
+func (s *RequestAccommodation) SetPrice(val NilInt) {
 	s.Price = val
 }
 
 // Ref: #/components/schemas/request.Activity
 type RequestActivity struct {
-	Address     string         `json:"address"`
-	Date        string         `json:"date"`
-	Description string         `json:"description"`
-	Location    EntityLocation `json:"location"`
-	Name        string         `json:"name"`
-	Price       int            `json:"price"`
-	Time        string         `json:"time"`
+	Address     NilString         `json:"address"`
+	Date        string            `json:"date"`
+	Description NilString         `json:"description"`
+	Location    NilEntityLocation `json:"location"`
+	Name        string            `json:"name"`
+	Price       NilInt            `json:"price"`
+	Time        NilString         `json:"time"`
 }
 
 // GetAddress returns the value of Address.
-func (s *RequestActivity) GetAddress() string {
+func (s *RequestActivity) GetAddress() NilString {
 	return s.Address
 }
 
@@ -1446,12 +1491,12 @@ func (s *RequestActivity) GetDate() string {
 }
 
 // GetDescription returns the value of Description.
-func (s *RequestActivity) GetDescription() string {
+func (s *RequestActivity) GetDescription() NilString {
 	return s.Description
 }
 
 // GetLocation returns the value of Location.
-func (s *RequestActivity) GetLocation() EntityLocation {
+func (s *RequestActivity) GetLocation() NilEntityLocation {
 	return s.Location
 }
 
@@ -1461,17 +1506,17 @@ func (s *RequestActivity) GetName() string {
 }
 
 // GetPrice returns the value of Price.
-func (s *RequestActivity) GetPrice() int {
+func (s *RequestActivity) GetPrice() NilInt {
 	return s.Price
 }
 
 // GetTime returns the value of Time.
-func (s *RequestActivity) GetTime() string {
+func (s *RequestActivity) GetTime() NilString {
 	return s.Time
 }
 
 // SetAddress sets the value of Address.
-func (s *RequestActivity) SetAddress(val string) {
+func (s *RequestActivity) SetAddress(val NilString) {
 	s.Address = val
 }
 
@@ -1481,12 +1526,12 @@ func (s *RequestActivity) SetDate(val string) {
 }
 
 // SetDescription sets the value of Description.
-func (s *RequestActivity) SetDescription(val string) {
+func (s *RequestActivity) SetDescription(val NilString) {
 	s.Description = val
 }
 
 // SetLocation sets the value of Location.
-func (s *RequestActivity) SetLocation(val EntityLocation) {
+func (s *RequestActivity) SetLocation(val NilEntityLocation) {
 	s.Location = val
 }
 
@@ -1496,12 +1541,12 @@ func (s *RequestActivity) SetName(val string) {
 }
 
 // SetPrice sets the value of Price.
-func (s *RequestActivity) SetPrice(val int) {
+func (s *RequestActivity) SetPrice(val NilInt) {
 	s.Price = val
 }
 
 // SetTime sets the value of Time.
-func (s *RequestActivity) SetTime(val string) {
+func (s *RequestActivity) SetTime(val NilString) {
 	s.Time = val
 }
 

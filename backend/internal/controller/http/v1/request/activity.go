@@ -9,9 +9,9 @@ import (
 type Activity struct {
 	Name        string           `json:"name"`
 	Date        civil.Date       `json:"date"`
-	Time        *civil.Time      `json:"time"`
-	Description *string          `json:"description"`
-	Address     *string          `json:"address"`
-	Location    *entity.Location `json:"location"`
-	Price       *int32           `json:"price"`
+	Time        *civil.Time      `json:"time" extensions:"nullable"`
+	Description *string          `json:"description" extensions:"nullable"`
+	Address     *string          `json:"address" extensions:"nullable"`
+	Location    *entity.Location `json:"location" extensions:"nullable"`
+	Price       *int32           `json:"price" extensions:"nullable"`
 }

@@ -213,7 +213,7 @@ func (s *EntityAccommodation) Encode(e *jx.Encoder) {
 func (s *EntityAccommodation) encodeFields(e *jx.Encoder) {
 	{
 		e.FieldStart("address")
-		e.Str(s.Address)
+		s.Address.Encode(e)
 	}
 	{
 		e.FieldStart("arrivalDate")
@@ -221,11 +221,11 @@ func (s *EntityAccommodation) encodeFields(e *jx.Encoder) {
 	}
 	{
 		e.FieldStart("checkInTime")
-		e.Str(s.CheckInTime)
+		s.CheckInTime.Encode(e)
 	}
 	{
 		e.FieldStart("checkOutTime")
-		e.Str(s.CheckOutTime)
+		s.CheckOutTime.Encode(e)
 	}
 	{
 		e.FieldStart("departureDate")
@@ -233,7 +233,7 @@ func (s *EntityAccommodation) encodeFields(e *jx.Encoder) {
 	}
 	{
 		e.FieldStart("description")
-		e.Str(s.Description)
+		s.Description.Encode(e)
 	}
 	{
 		e.FieldStart("id")
@@ -249,7 +249,7 @@ func (s *EntityAccommodation) encodeFields(e *jx.Encoder) {
 	}
 	{
 		e.FieldStart("price")
-		e.Int(s.Price)
+		s.Price.Encode(e)
 	}
 	{
 		e.FieldStart("tripId")
@@ -283,9 +283,7 @@ func (s *EntityAccommodation) Decode(d *jx.Decoder) error {
 		case "address":
 			requiredBitSet[0] |= 1 << 0
 			if err := func() error {
-				v, err := d.Str()
-				s.Address = string(v)
-				if err != nil {
+				if err := s.Address.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -307,9 +305,7 @@ func (s *EntityAccommodation) Decode(d *jx.Decoder) error {
 		case "checkInTime":
 			requiredBitSet[0] |= 1 << 2
 			if err := func() error {
-				v, err := d.Str()
-				s.CheckInTime = string(v)
-				if err != nil {
+				if err := s.CheckInTime.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -319,9 +315,7 @@ func (s *EntityAccommodation) Decode(d *jx.Decoder) error {
 		case "checkOutTime":
 			requiredBitSet[0] |= 1 << 3
 			if err := func() error {
-				v, err := d.Str()
-				s.CheckOutTime = string(v)
-				if err != nil {
+				if err := s.CheckOutTime.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -343,9 +337,7 @@ func (s *EntityAccommodation) Decode(d *jx.Decoder) error {
 		case "description":
 			requiredBitSet[0] |= 1 << 5
 			if err := func() error {
-				v, err := d.Str()
-				s.Description = string(v)
-				if err != nil {
+				if err := s.Description.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -389,9 +381,7 @@ func (s *EntityAccommodation) Decode(d *jx.Decoder) error {
 		case "price":
 			requiredBitSet[1] |= 1 << 1
 			if err := func() error {
-				v, err := d.Int()
-				s.Price = int(v)
-				if err != nil {
+				if err := s.Price.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -478,7 +468,7 @@ func (s *EntityActivity) Encode(e *jx.Encoder) {
 func (s *EntityActivity) encodeFields(e *jx.Encoder) {
 	{
 		e.FieldStart("address")
-		e.Str(s.Address)
+		s.Address.Encode(e)
 	}
 	{
 		e.FieldStart("date")
@@ -486,7 +476,7 @@ func (s *EntityActivity) encodeFields(e *jx.Encoder) {
 	}
 	{
 		e.FieldStart("description")
-		e.Str(s.Description)
+		s.Description.Encode(e)
 	}
 	{
 		e.FieldStart("id")
@@ -502,11 +492,11 @@ func (s *EntityActivity) encodeFields(e *jx.Encoder) {
 	}
 	{
 		e.FieldStart("price")
-		e.Int(s.Price)
+		s.Price.Encode(e)
 	}
 	{
 		e.FieldStart("time")
-		e.Str(s.Time)
+		s.Time.Encode(e)
 	}
 	{
 		e.FieldStart("tripId")
@@ -538,9 +528,7 @@ func (s *EntityActivity) Decode(d *jx.Decoder) error {
 		case "address":
 			requiredBitSet[0] |= 1 << 0
 			if err := func() error {
-				v, err := d.Str()
-				s.Address = string(v)
-				if err != nil {
+				if err := s.Address.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -562,9 +550,7 @@ func (s *EntityActivity) Decode(d *jx.Decoder) error {
 		case "description":
 			requiredBitSet[0] |= 1 << 2
 			if err := func() error {
-				v, err := d.Str()
-				s.Description = string(v)
-				if err != nil {
+				if err := s.Description.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -608,9 +594,7 @@ func (s *EntityActivity) Decode(d *jx.Decoder) error {
 		case "price":
 			requiredBitSet[0] |= 1 << 6
 			if err := func() error {
-				v, err := d.Int()
-				s.Price = int(v)
-				if err != nil {
+				if err := s.Price.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -620,9 +604,7 @@ func (s *EntityActivity) Decode(d *jx.Decoder) error {
 		case "time":
 			requiredBitSet[0] |= 1 << 7
 			if err := func() error {
-				v, err := d.Str()
-				s.Time = string(v)
-				if err != nil {
+				if err := s.Time.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -1146,7 +1128,7 @@ func (s *EntityFlightLeg) Encode(e *jx.Encoder) {
 func (s *EntityFlightLeg) encodeFields(e *jx.Encoder) {
 	{
 		e.FieldStart("aircraft")
-		e.Str(s.Aircraft)
+		s.Aircraft.Encode(e)
 	}
 	{
 		e.FieldStart("airline")
@@ -1206,9 +1188,7 @@ func (s *EntityFlightLeg) Decode(d *jx.Decoder) error {
 		case "aircraft":
 			requiredBitSet[0] |= 1 << 0
 			if err := func() error {
-				v, err := d.Str()
-				s.Aircraft = string(v)
-				if err != nil {
+				if err := s.Aircraft.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -3217,6 +3197,50 @@ func (s *GetUsersOKApplicationJSON) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
+// Encode encodes EntityLocation as json.
+func (o NilEntityLocation) Encode(e *jx.Encoder) {
+	if o.Null {
+		e.Null()
+		return
+	}
+	o.Value.Encode(e)
+}
+
+// Decode decodes EntityLocation from json.
+func (o *NilEntityLocation) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode NilEntityLocation to nil")
+	}
+	if d.Next() == jx.Null {
+		if err := d.Null(); err != nil {
+			return err
+		}
+
+		var v EntityLocation
+		o.Value = v
+		o.Null = true
+		return nil
+	}
+	o.Null = false
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s NilEntityLocation) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *NilEntityLocation) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode encodes int as json.
 func (o NilInt) Encode(e *jx.Encoder) {
 	if o.Null {
@@ -3608,7 +3632,7 @@ func (s *RequestAccommodation) Encode(e *jx.Encoder) {
 func (s *RequestAccommodation) encodeFields(e *jx.Encoder) {
 	{
 		e.FieldStart("address")
-		e.Str(s.Address)
+		s.Address.Encode(e)
 	}
 	{
 		e.FieldStart("arrivalDate")
@@ -3616,11 +3640,11 @@ func (s *RequestAccommodation) encodeFields(e *jx.Encoder) {
 	}
 	{
 		e.FieldStart("checkInTime")
-		e.Str(s.CheckInTime)
+		s.CheckInTime.Encode(e)
 	}
 	{
 		e.FieldStart("checkOutTime")
-		e.Str(s.CheckOutTime)
+		s.CheckOutTime.Encode(e)
 	}
 	{
 		e.FieldStart("departureDate")
@@ -3628,7 +3652,7 @@ func (s *RequestAccommodation) encodeFields(e *jx.Encoder) {
 	}
 	{
 		e.FieldStart("description")
-		e.Str(s.Description)
+		s.Description.Encode(e)
 	}
 	{
 		e.FieldStart("location")
@@ -3640,7 +3664,7 @@ func (s *RequestAccommodation) encodeFields(e *jx.Encoder) {
 	}
 	{
 		e.FieldStart("price")
-		e.Int(s.Price)
+		s.Price.Encode(e)
 	}
 }
 
@@ -3668,9 +3692,7 @@ func (s *RequestAccommodation) Decode(d *jx.Decoder) error {
 		case "address":
 			requiredBitSet[0] |= 1 << 0
 			if err := func() error {
-				v, err := d.Str()
-				s.Address = string(v)
-				if err != nil {
+				if err := s.Address.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -3692,9 +3714,7 @@ func (s *RequestAccommodation) Decode(d *jx.Decoder) error {
 		case "checkInTime":
 			requiredBitSet[0] |= 1 << 2
 			if err := func() error {
-				v, err := d.Str()
-				s.CheckInTime = string(v)
-				if err != nil {
+				if err := s.CheckInTime.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -3704,9 +3724,7 @@ func (s *RequestAccommodation) Decode(d *jx.Decoder) error {
 		case "checkOutTime":
 			requiredBitSet[0] |= 1 << 3
 			if err := func() error {
-				v, err := d.Str()
-				s.CheckOutTime = string(v)
-				if err != nil {
+				if err := s.CheckOutTime.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -3728,9 +3746,7 @@ func (s *RequestAccommodation) Decode(d *jx.Decoder) error {
 		case "description":
 			requiredBitSet[0] |= 1 << 5
 			if err := func() error {
-				v, err := d.Str()
-				s.Description = string(v)
-				if err != nil {
+				if err := s.Description.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -3762,9 +3778,7 @@ func (s *RequestAccommodation) Decode(d *jx.Decoder) error {
 		case "price":
 			requiredBitSet[1] |= 1 << 0
 			if err := func() error {
-				v, err := d.Int()
-				s.Price = int(v)
-				if err != nil {
+				if err := s.Price.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -3839,7 +3853,7 @@ func (s *RequestActivity) Encode(e *jx.Encoder) {
 func (s *RequestActivity) encodeFields(e *jx.Encoder) {
 	{
 		e.FieldStart("address")
-		e.Str(s.Address)
+		s.Address.Encode(e)
 	}
 	{
 		e.FieldStart("date")
@@ -3847,7 +3861,7 @@ func (s *RequestActivity) encodeFields(e *jx.Encoder) {
 	}
 	{
 		e.FieldStart("description")
-		e.Str(s.Description)
+		s.Description.Encode(e)
 	}
 	{
 		e.FieldStart("location")
@@ -3859,11 +3873,11 @@ func (s *RequestActivity) encodeFields(e *jx.Encoder) {
 	}
 	{
 		e.FieldStart("price")
-		e.Int(s.Price)
+		s.Price.Encode(e)
 	}
 	{
 		e.FieldStart("time")
-		e.Str(s.Time)
+		s.Time.Encode(e)
 	}
 }
 
@@ -3889,9 +3903,7 @@ func (s *RequestActivity) Decode(d *jx.Decoder) error {
 		case "address":
 			requiredBitSet[0] |= 1 << 0
 			if err := func() error {
-				v, err := d.Str()
-				s.Address = string(v)
-				if err != nil {
+				if err := s.Address.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -3913,9 +3925,7 @@ func (s *RequestActivity) Decode(d *jx.Decoder) error {
 		case "description":
 			requiredBitSet[0] |= 1 << 2
 			if err := func() error {
-				v, err := d.Str()
-				s.Description = string(v)
-				if err != nil {
+				if err := s.Description.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -3947,9 +3957,7 @@ func (s *RequestActivity) Decode(d *jx.Decoder) error {
 		case "price":
 			requiredBitSet[0] |= 1 << 5
 			if err := func() error {
-				v, err := d.Int()
-				s.Price = int(v)
-				if err != nil {
+				if err := s.Price.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -3959,9 +3967,7 @@ func (s *RequestActivity) Decode(d *jx.Decoder) error {
 		case "time":
 			requiredBitSet[0] |= 1 << 6
 			if err := func() error {
-				v, err := d.Str()
-				s.Time = string(v)
-				if err != nil {
+				if err := s.Time.Decode(d); err != nil {
 					return err
 				}
 				return nil

@@ -25,7 +25,7 @@ type FlightLeg struct {
 	DepartureDateTime civil.DateTime `json:"departureDateTime"`
 	ArrivalDateTime   civil.DateTime `json:"arrivalDateTime"`
 	DurationInMinutes int32          `json:"durationInMinutes"`
-	Aircraft          *string        `json:"aircraft"`
+	Aircraft          *string        `json:"aircraft" extensions:"nullable"`
 }
 
 type PNR struct {

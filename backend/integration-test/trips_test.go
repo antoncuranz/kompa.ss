@@ -5,26 +5,34 @@ import (
 	"kompass/integration-test/client/api"
 )
 
-func (suite *IntegrationTestSuite) TestGetTripOK() {
+func (suite *IntegrationTestSuite) TestGetTripsOK() {
 	// given
 	tripID := suite.CreateTrip()
 	defer suite.DeleteTrip(tripID)
 
 	// when
-	res, err := suite.api.GetTrip(suite.T().Context(), api.GetTripParams{TripID: tripID})
+	getAll, err := suite.api.GetTrips(suite.T().Context())
+	suite.NoError(err)
+	getByID, err := suite.api.GetTrip(suite.T().Context(), api.GetTripParams{TripID: tripID})
 	suite.NoError(err)
 
 	// then
-	trip := res.(*api.EntityTrip)
-	fmt.Println("Trip found: ", trip)
+	trips := getAll.(*api.GetTripsOKApplicationJSON)
+	suite.Len(*trips, 1)
+
+	_, ok := getByID.(*api.EntityTrip)
+	suite.True(ok)
 
 	// when (forbiddenUser)
-	res, err = suite.userApi(ForbiddenUser).GetTrip(suite.T().Context(), api.GetTripParams{TripID: tripID})
-	suite.NoError(err)
+	getAll, _ = suite.userApi(ForbiddenUser).GetTrips(suite.T().Context())
+	getByID, _ = suite.userApi(ForbiddenUser).GetTrip(suite.T().Context(), api.GetTripParams{TripID: tripID})
 
 	// then (forbiddenUser)
-	notFound := res.(*api.GetTripNotFound)
-	fmt.Println("Error message: ", notFound.Error)
+	trips = getAll.(*api.GetTripsOKApplicationJSON)
+	suite.Empty(*trips)
+
+	_, ok = getByID.(*api.EntityTrip)
+	suite.False(ok)
 }
 
 func (suite *IntegrationTestSuite) TestGetTripNotFound() {
