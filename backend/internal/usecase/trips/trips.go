@@ -17,16 +17,17 @@ func New(r repo.TripsRepo) *UseCase {
 	}
 }
 
-func (uc *UseCase) GetTripByID(ctx context.Context, id int32) (entity.Trip, error) {
-	return uc.repo.GetTripByID(ctx, id)
+func (uc *UseCase) GetTripByID(ctx context.Context, userID int32, id int32) (entity.Trip, error) {
+	return uc.repo.GetTripByID(ctx, userID, id)
 }
 
-func (uc *UseCase) GetTrips(ctx context.Context) ([]entity.Trip, error) {
-	return uc.repo.GetTrips(ctx)
+func (uc *UseCase) GetTrips(ctx context.Context, userID int32) ([]entity.Trip, error) {
+	return uc.repo.GetTrips(ctx, userID)
 }
 
-func (uc *UseCase) CreateTrip(ctx context.Context, trip request.Trip) (entity.Trip, error) {
+func (uc *UseCase) CreateTrip(ctx context.Context, userID int32, trip request.Trip) (entity.Trip, error) {
 	return uc.repo.CreateTrip(ctx, entity.Trip{
+		OwnerID:     userID,
 		Name:        trip.Name,
 		StartDate:   trip.StartDate,
 		EndDate:     trip.EndDate,
@@ -35,8 +36,9 @@ func (uc *UseCase) CreateTrip(ctx context.Context, trip request.Trip) (entity.Tr
 	})
 }
 
-func (uc *UseCase) UpdateTrip(ctx context.Context, tripID int32, trip request.Trip) error {
-	return uc.repo.UpdateTrip(ctx, entity.Trip{
+func (uc *UseCase) UpdateTrip(ctx context.Context, userID int32, tripID int32, trip request.Trip) error {
+	// TODO: check permissions
+	return uc.repo.UpdateTrip(ctx, userID, entity.Trip{
 		ID:          tripID,
 		Name:        trip.Name,
 		StartDate:   trip.StartDate,
@@ -46,6 +48,6 @@ func (uc *UseCase) UpdateTrip(ctx context.Context, tripID int32, trip request.Tr
 	})
 }
 
-func (uc *UseCase) DeleteTrip(ctx context.Context, tripID int32) error {
-	return uc.repo.DeleteTrip(ctx, tripID)
+func (uc *UseCase) DeleteTrip(ctx context.Context, userID int32, tripID int32) error {
+	return uc.repo.DeleteTrip(ctx, userID, tripID)
 }

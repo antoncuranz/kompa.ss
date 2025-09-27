@@ -17,6 +17,14 @@ func (suite *IntegrationTestSuite) TestGetTripOK() {
 	// then
 	trip := res.(*api.EntityTrip)
 	fmt.Println("Trip found: ", trip)
+
+	// when (forbiddenUser)
+	res, err = suite.userApi(ForbiddenUser).GetTrip(suite.T().Context(), api.GetTripParams{TripID: tripID})
+	suite.NoError(err)
+
+	// then (forbiddenUser)
+	notFound := res.(*api.GetTripNotFound)
+	fmt.Println("Error message: ", notFound.Error)
 }
 
 func (suite *IntegrationTestSuite) TestGetTripNotFound() {

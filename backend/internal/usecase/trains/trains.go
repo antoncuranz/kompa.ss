@@ -26,7 +26,7 @@ func (uc *UseCase) RetrieveLocation(ctx context.Context, query string) (entity.T
 	return uc.dbVendo.RetrieveLocation(ctx, query)
 }
 
-func (uc *UseCase) CreateTrainJourney(ctx context.Context, tripID int32, journeyRequest request.TrainJourney) (entity.Transportation, error) {
+func (uc *UseCase) CreateTrainJourney(ctx context.Context, userID int32, tripID int32, journeyRequest request.TrainJourney) (entity.Transportation, error) {
 	trainDetail, err := uc.dbVendo.RetrieveJourney(ctx, journeyRequest)
 	if err != nil {
 		return entity.Transportation{}, fmt.Errorf("failed to retrieve journey: %w", err)
@@ -35,7 +35,7 @@ func (uc *UseCase) CreateTrainJourney(ctx context.Context, tripID int32, journey
 	firstLeg := trainDetail.Legs[0]
 	lastLeg := trainDetail.Legs[len(trainDetail.Legs)-1]
 
-	transportation, err := uc.repo.SaveTransportation(ctx, entity.Transportation{
+	transportation, err := uc.repo.SaveTransportation(ctx, userID, entity.Transportation{
 		TripID:            tripID,
 		Type:              entity.TRAIN,
 		Origin:            firstLeg.Origin.Location,
@@ -49,7 +49,7 @@ func (uc *UseCase) CreateTrainJourney(ctx context.Context, tripID int32, journey
 		return entity.Transportation{}, err
 	}
 
-	_, err = uc.RetrieveAndPersistPolyline(ctx, transportation.ID, trainDetail.RefreshToken)
+	_, err = uc.retrieveAndPersistPolyline(ctx, userID, transportation.ID, trainDetail.RefreshToken)
 	if err != nil {
 		return entity.Transportation{}, fmt.Errorf("retrieve and process polyline: %w", err)
 	}
@@ -57,7 +57,7 @@ func (uc *UseCase) CreateTrainJourney(ctx context.Context, tripID int32, journey
 	return transportation, nil
 }
 
-func (uc *UseCase) RetrieveAndPersistPolyline(ctx context.Context, transportationID int32, refreshToken string) (*geojson.FeatureCollection, error) {
+func (uc *UseCase) retrieveAndPersistPolyline(ctx context.Context, userID int32, transportationID int32, refreshToken string) (*geojson.FeatureCollection, error) {
 	polylines, err := uc.dbVendo.RetrievePolylines(ctx, refreshToken)
 	if err != nil {
 		return nil, fmt.Errorf("retrieve polyline: %w", err)
@@ -88,7 +88,7 @@ func (uc *UseCase) RetrieveAndPersistPolyline(ctx context.Context, transportatio
 		))
 	}
 
-	err = uc.repo.SaveGeoJson(ctx, transportationID, featureCollection)
+	err = uc.repo.SaveGeoJson(ctx, userID, transportationID, featureCollection)
 	if err != nil {
 		return nil, fmt.Errorf("save geojson: %w", err)
 	}

@@ -23,16 +23,17 @@ type ActivitiesV1 struct {
 // @Param       trip_id path int true "Trip ID"
 // @Success     200 {object} []entity.Activity
 // @Failure     500 {object} response.Error
+// @Security    bearerauth
 // @Router      /trips/{trip_id}/activities [get]
 func (r *ActivitiesV1) getActivities(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
 	}
 
 	activities, err := r.uc.GetActivities(ctx.UserContext(), int32(tripID))
 	if err != nil {
-		return errorResponse(ctx, fmt.Errorf("get activities: %w", err))
+		return ErrorResponse(ctx, fmt.Errorf("get activities: %w", err))
 	}
 
 	return ctx.Status(http.StatusOK).JSON(activities)
@@ -46,20 +47,21 @@ func (r *ActivitiesV1) getActivities(ctx *fiber.Ctx) error {
 // @Param       activity_id path int true "Activity ID"
 // @Success     200 {object} entity.Activity
 // @Failure     500 {object} response.Error
+// @Security    bearerauth
 // @Router      /trips/{trip_id}/activities/{activity_id} [get]
 func (r *ActivitiesV1) getActivity(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
 	}
 	activityID, err := ctx.ParamsInt("activity_id")
 	if err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse activity_id: %w", err))
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse activity_id: %w", err))
 	}
 
 	activity, err := r.uc.GetActivityByID(ctx.UserContext(), int32(tripID), int32(activityID))
 	if err != nil {
-		return errorResponse(ctx, fmt.Errorf("get activity [id=%d]: %w", activityID, err))
+		return ErrorResponse(ctx, fmt.Errorf("get activity [id=%d]: %w", activityID, err))
 	}
 
 	return ctx.Status(http.StatusOK).JSON(activity)
@@ -74,21 +76,22 @@ func (r *ActivitiesV1) getActivity(ctx *fiber.Ctx) error {
 // @Param       request body request.Activity true "activity"
 // @Success     204
 // @Failure     500 {object} response.Error
+// @Security    bearerauth
 // @Router      /trips/{trip_id}/activities [post]
 func (r *ActivitiesV1) postActivity(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
 	}
 
 	body, err := ParseAndValidateRequestBody[request.Activity](ctx, r.v)
 	if err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
 	}
 
 	_, err = r.uc.CreateActivity(ctx.UserContext(), int32(tripID), *body)
 	if err != nil {
-		return errorResponse(ctx, fmt.Errorf("create activity: %w", err))
+		return ErrorResponse(ctx, fmt.Errorf("create activity: %w", err))
 	}
 
 	return ctx.SendStatus(http.StatusNoContent)
@@ -104,24 +107,25 @@ func (r *ActivitiesV1) postActivity(ctx *fiber.Ctx) error {
 // @Param       request body request.Activity true "activity"
 // @Success     204
 // @Failure     500 {object} response.Error
+// @Security    bearerauth
 // @Router      /trips/{trip_id}/activities/{activity_id} [put]
 func (r *ActivitiesV1) putActivity(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
 	}
 	activityID, err := ctx.ParamsInt("activity_id")
 	if err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse activity_id: %w", err))
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse activity_id: %w", err))
 	}
 
 	body, err := ParseAndValidateRequestBody[request.Activity](ctx, r.v)
 	if err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
 	}
 
 	if err := r.uc.UpdateActivity(ctx.UserContext(), int32(tripID), int32(activityID), *body); err != nil {
-		return errorResponse(ctx, fmt.Errorf("update activity with id %d: %w", activityID, err))
+		return ErrorResponse(ctx, fmt.Errorf("update activity with id %d: %w", activityID, err))
 	}
 
 	return ctx.SendStatus(http.StatusNoContent)
@@ -134,19 +138,20 @@ func (r *ActivitiesV1) putActivity(ctx *fiber.Ctx) error {
 // @Param       activity_id path int true "Activity ID"
 // @Success     204
 // @Failure     500 {object} response.Error
+// @Security    bearerauth
 // @Router      /trips/{trip_id}/activities/{activity_id} [delete]
 func (r *ActivitiesV1) deleteActivity(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
 	}
 	activityID, err := ctx.ParamsInt("activity_id")
 	if err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse activity_id: %w", err))
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse activity_id: %w", err))
 	}
 
 	if err := r.uc.DeleteActivity(ctx.UserContext(), int32(tripID), int32(activityID)); err != nil {
-		return errorResponse(ctx, fmt.Errorf("delete activity with id %d: %w", activityID, err))
+		return ErrorResponse(ctx, fmt.Errorf("delete activity with id %d: %w", activityID, err))
 	}
 
 	return ctx.SendStatus(http.StatusNoContent)

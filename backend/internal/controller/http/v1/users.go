@@ -22,12 +22,13 @@ type UsersV1 struct {
 // @Produce     json
 // @Success     200 {object} []entity.User
 // @Failure     500 {object} response.Error
+// @Security    bearerauth
 // @Router      /users [get]
 func (r *UsersV1) getUsers(ctx *fiber.Ctx) error {
 	users, err := r.uc.GetUsers(ctx.UserContext())
 	if err != nil {
 		r.log.Error(err, "http - v1 - getUsers")
-		return errorResponseWithStatus(ctx, http.StatusInternalServerError, fmt.Errorf("internal server error: %w", err))
+		return ErrorResponseWithStatus(ctx, http.StatusInternalServerError, fmt.Errorf("internal server error: %w", err))
 	}
 
 	return ctx.Status(http.StatusOK).JSON(users)
@@ -40,16 +41,17 @@ func (r *UsersV1) getUsers(ctx *fiber.Ctx) error {
 // @Param       user_id path int true "User ID"
 // @Success     200 {object} entity.User
 // @Failure     500 {object} response.Error
+// @Security    bearerauth
 // @Router      /users/{user_id} [get]
 func (r *UsersV1) getUser(ctx *fiber.Ctx) error {
 	userID, err := ctx.ParamsInt("user_id")
 	if err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse user_id: %w", err))
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse user_id: %w", err))
 	}
 
 	user, err := r.uc.GetUserByID(ctx.UserContext(), int32(userID))
 	if err != nil {
-		return errorResponseWithStatus(ctx, http.StatusNotFound, fmt.Errorf("unable to find user [id=%d]: %w", userID, err))
+		return ErrorResponseWithStatus(ctx, http.StatusNotFound, fmt.Errorf("unable to find user [id=%d]: %w", userID, err))
 	}
 
 	return ctx.Status(http.StatusOK).JSON(user)

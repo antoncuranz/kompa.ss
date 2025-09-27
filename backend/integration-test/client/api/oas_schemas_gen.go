@@ -6,6 +6,31 @@ import (
 	ht "github.com/ogen-go/ogen/http"
 )
 
+type Bearerauth struct {
+	Token string
+	Roles []string
+}
+
+// GetToken returns the value of Token.
+func (s *Bearerauth) GetToken() string {
+	return s.Token
+}
+
+// GetRoles returns the value of Roles.
+func (s *Bearerauth) GetRoles() []string {
+	return s.Roles
+}
+
+// SetToken sets the value of Token.
+func (s *Bearerauth) SetToken(val string) {
+	s.Token = val
+}
+
+// SetRoles sets the value of Roles.
+func (s *Bearerauth) SetRoles(val []string) {
+	s.Roles = val
+}
+
 // DeleteAccommodationNoContent is response for DeleteAccommodation operation.
 type DeleteAccommodationNoContent struct{}
 
@@ -856,6 +881,7 @@ type EntityTrip struct {
 	ID          int       `json:"id"`
 	ImageUrl    NilString `json:"imageUrl"`
 	Name        string    `json:"name"`
+	OwnerID     int       `json:"owner_id"`
 	StartDate   string    `json:"startDate"`
 }
 
@@ -882,6 +908,11 @@ func (s *EntityTrip) GetImageUrl() NilString {
 // GetName returns the value of Name.
 func (s *EntityTrip) GetName() string {
 	return s.Name
+}
+
+// GetOwnerID returns the value of OwnerID.
+func (s *EntityTrip) GetOwnerID() int {
+	return s.OwnerID
 }
 
 // GetStartDate returns the value of StartDate.
@@ -914,6 +945,11 @@ func (s *EntityTrip) SetName(val string) {
 	s.Name = val
 }
 
+// SetOwnerID sets the value of OwnerID.
+func (s *EntityTrip) SetOwnerID(val int) {
+	s.OwnerID = val
+}
+
 // SetStartDate sets the value of StartDate.
 func (s *EntityTrip) SetStartDate(val string) {
 	s.StartDate = val
@@ -924,13 +960,19 @@ func (*EntityTrip) postTripRes() {}
 
 // Ref: #/components/schemas/entity.User
 type EntityUser struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
+	ID     int    `json:"id"`
+	JwtSub string `json:"jwtSub"`
+	Name   string `json:"name"`
 }
 
 // GetID returns the value of ID.
 func (s *EntityUser) GetID() int {
 	return s.ID
+}
+
+// GetJwtSub returns the value of JwtSub.
+func (s *EntityUser) GetJwtSub() string {
+	return s.JwtSub
 }
 
 // GetName returns the value of Name.
@@ -941,6 +983,11 @@ func (s *EntityUser) GetName() string {
 // SetID sets the value of ID.
 func (s *EntityUser) SetID(val int) {
 	s.ID = val
+}
+
+// SetJwtSub sets the value of JwtSub.
+func (s *EntityUser) SetJwtSub(val string) {
+	s.JwtSub = val
 }
 
 // SetName sets the value of Name.

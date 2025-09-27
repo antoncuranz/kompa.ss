@@ -22,7 +22,7 @@ func New(r repo.TransportationRepo, a repo.AerodataboxWebAPI) *UseCase {
 	}
 }
 
-func (uc *UseCase) CreateFlight(ctx context.Context, tripID int32, flight request.Flight) (entity.Transportation, error) {
+func (uc *UseCase) CreateFlight(ctx context.Context, userID int32, tripID int32, flight request.Flight) (entity.Transportation, error) {
 	flightLegs, err := uc.retrieveFlightLegs(ctx, flight)
 	if err != nil {
 		return entity.Transportation{}, err
@@ -31,7 +31,7 @@ func (uc *UseCase) CreateFlight(ctx context.Context, tripID int32, flight reques
 	firstLeg := flightLegs[0]
 	lastLeg := flightLegs[len(flightLegs)-1]
 
-	transportation, err := uc.repo.SaveTransportation(ctx, entity.Transportation{
+	transportation, err := uc.repo.SaveTransportation(ctx, userID, entity.Transportation{
 		TripID:            tripID,
 		Type:              entity.PLANE,
 		Origin:            firstLeg.Origin.Location,
@@ -48,10 +48,10 @@ func (uc *UseCase) CreateFlight(ctx context.Context, tripID int32, flight reques
 		return entity.Transportation{}, err
 	}
 
-	return transportation, uc.SaveGeoJson(ctx, transportation)
+	return transportation, uc.SaveGeoJson(ctx, userID, transportation)
 }
 
-func (uc *UseCase) SaveGeoJson(ctx context.Context, transportation entity.Transportation) error {
+func (uc *UseCase) SaveGeoJson(ctx context.Context, userID int32, transportation entity.Transportation) error {
 
 	legs := transportation.FlightDetail.Legs
 
@@ -78,7 +78,7 @@ func (uc *UseCase) SaveGeoJson(ctx context.Context, transportation entity.Transp
 		))
 	}
 
-	err := uc.repo.SaveGeoJson(ctx, transportation.ID, featureCollection)
+	err := uc.repo.SaveGeoJson(ctx, userID, transportation.ID, featureCollection)
 	if err != nil {
 		return fmt.Errorf("save geojson: %w", err)
 	}
@@ -105,6 +105,6 @@ func (uc *UseCase) retrieveFlightLegs(ctx context.Context, flight request.Flight
 	return legs, nil
 }
 
-func (uc *UseCase) UpdateFlight(ctx context.Context, tripID int32, flightID int32, flight request.Flight) error {
+func (uc *UseCase) UpdateFlight(ctx context.Context, userID int32, tripID int32, flightID int32, flight request.Flight) error {
 	return fmt.Errorf("Not yet implemented")
 }

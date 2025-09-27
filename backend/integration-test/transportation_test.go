@@ -33,6 +33,14 @@ func (suite *IntegrationTestSuite) TestPostFlight() {
 	suite.True(ok)
 	suite.Len(flightDetail.Legs, 1)
 	suite.Equal("LH 717", flightDetail.Legs[0].FlightNumber)
+
+	// when (forbiddenUser)
+	res, err = suite.userApi(ForbiddenUser).GetAllTransportation(suite.T().Context(), api.GetAllTransportationParams{TripID: tripID})
+	suite.NoError(err)
+
+	// then (forbiddenUser)
+	allTransportation = res.(*api.GetAllTransportationOKApplicationJSON)
+	suite.Empty(*allTransportation)
 }
 
 func (suite *IntegrationTestSuite) TestPostTrainJourney() {

@@ -23,8 +23,8 @@ type (
 	}
 
 	Auth struct {
-		AuthHeader         string `env:"AUTH_HEADER" envDefault:"X-Auth-Request-Preferred-Username"`
-		AuthHeaderOverride string `env:"AUTH_HEADER_OVERRIDE"`
+		JwksUrl            string `env:"AUTH_JWKS_URL"`
+		NoAuthUserOverride string `env:"NOAUTH_USER_OVERRIDE"`
 	}
 
 	Log struct {

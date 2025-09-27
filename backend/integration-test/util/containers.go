@@ -24,15 +24,19 @@ const (
 	dbPassword     = "postgres"
 )
 
-func StartAllContainers(t testing.TB, applicationPort string) *wiremock.Client {
+func StartAllContainers(t testing.TB, applicationPort string, wiremockRule *wiremock.StubRule) *wiremock.Client {
 	t.Helper()
 
 	net, err := network.New(t.Context())
 	assert.NoError(t, err)
 
+	wiremockClient := startWiremockContainer(t, net)
+	err = wiremockClient.StubFor(wiremockRule)
+	assert.NoError(t, err)
+
 	dbConnectionString := startPostgresContainer(t, net)
 	startApplicationContainer(t, dbConnectionString, applicationPort, net)
-	return startWiremockContainer(t, net)
+	return wiremockClient
 }
 
 func startPostgresContainer(t testing.TB, net *testcontainers.DockerNetwork) string {
@@ -98,9 +102,10 @@ func startApplicationContainer(t testing.TB, dbConnectionString string, port str
 		ExposedPorts: []string{fmt.Sprintf("%s:%s", port, "8080")},
 		WaitingFor:   wait.ForListeningPort("8080").WithStartupTimeout(startupTimeout),
 		Env: map[string]string{
-			"PG_URL":      dbConnectionString,
-			"AEDBX_URL":   wiremockUrl + "/aedbx",
-			"DBVENDO_URL": wiremockUrl + "/dbvendo",
+			"PG_URL":        dbConnectionString,
+			"AUTH_JWKS_URL": wiremockUrl + "/auth/jwks.json",
+			"AEDBX_URL":     wiremockUrl + "/aedbx",
+			"DBVENDO_URL":   wiremockUrl + "/dbvendo",
 		},
 		Networks: []string{net.Name},
 		LogConsumerCfg: &testcontainers.LogConsumerConfig{

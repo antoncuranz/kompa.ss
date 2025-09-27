@@ -23,16 +23,17 @@ type TransportationV1 struct {
 // @Param       trip_id path int true "Trip ID"
 // @Success     200 {object} []entity.Transportation
 // @Failure     500 {object} response.Error
+// @Security    bearerauth
 // @Router      /trips/{trip_id}/transportation [get]
 func (r *TransportationV1) getAllTransportation(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse trip_id: %w", err))
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse trip_id: %w", err))
 	}
 
-	transportation, err := r.uc.GetAllTransportation(ctx.Context(), int32(tripID))
+	transportation, err := r.uc.GetAllTransportation(ctx.Context(), userIdFromCtx(ctx), int32(tripID))
 	if err != nil {
-		return errorResponse(ctx, fmt.Errorf("get all transportation: %w", err))
+		return ErrorResponse(ctx, fmt.Errorf("get all transportation: %w", err))
 	}
 
 	return ctx.Status(http.StatusOK).JSON(transportation)
@@ -47,20 +48,21 @@ func (r *TransportationV1) getAllTransportation(ctx *fiber.Ctx) error {
 // @Success     200 {object} entity.Transportation
 // @Failure     404 {object} response.Error
 // @Failure     500 {object} response.Error
+// @Security    bearerauth
 // @Router      /trips/{trip_id}/transportation/{transportation_id} [get]
 func (r *TransportationV1) getTransportation(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse trip_id: %w", err))
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse trip_id: %w", err))
 	}
 	transportationID, err := ctx.ParamsInt("transportation_id")
 	if err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse transportation_id: %w", err))
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse transportation_id: %w", err))
 	}
 
-	transportation, err := r.uc.GetTransportationByID(ctx.UserContext(), int32(tripID), int32(transportationID))
+	transportation, err := r.uc.GetTransportationByID(ctx.UserContext(), userIdFromCtx(ctx), int32(tripID), int32(transportationID))
 	if err != nil {
-		return errorResponse(ctx, fmt.Errorf("get transportation [id=%d]: %w", transportationID, err))
+		return ErrorResponse(ctx, fmt.Errorf("get transportation [id=%d]: %w", transportationID, err))
 	}
 
 	return ctx.Status(http.StatusOK).JSON(transportation)
@@ -74,19 +76,20 @@ func (r *TransportationV1) getTransportation(ctx *fiber.Ctx) error {
 // @Success     204
 // @Failure     404 {object} response.Error
 // @Failure     500 {object} response.Error
+// @Security    bearerauth
 // @Router      /trips/{trip_id}/transportation/{transportation_id} [delete]
 func (r *TransportationV1) deleteTransportation(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse trip_id: %w", err))
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse trip_id: %w", err))
 	}
 	transportationID, err := ctx.ParamsInt("transportation_id")
 	if err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse transportation_id: %w", err))
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse transportation_id: %w", err))
 	}
 
-	if err := r.uc.DeleteTransportation(ctx.UserContext(), int32(tripID), int32(transportationID)); err != nil {
-		return errorResponse(ctx, fmt.Errorf("delete transportation with id %d: %w", transportationID, err))
+	if err := r.uc.DeleteTransportation(ctx.UserContext(), userIdFromCtx(ctx), int32(tripID), int32(transportationID)); err != nil {
+		return ErrorResponse(ctx, fmt.Errorf("delete transportation with id %d: %w", transportationID, err))
 	}
 
 	return ctx.SendStatus(http.StatusNoContent)
@@ -99,16 +102,17 @@ func (r *TransportationV1) deleteTransportation(ctx *fiber.Ctx) error {
 // @Param       trip_id path int true "Trip ID"
 // @Success     200 {object} []geojson.FeatureCollection
 // @Failure     500 {object} response.Error
+// @Security    bearerauth
 // @Router      /trips/{trip_id}/transportation/geojson [get]
 func (r *TransportationV1) getGeoJson(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse trip_id: %w", err))
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse trip_id: %w", err))
 	}
 
-	geojson, err := r.uc.GetAllGeoJson(ctx.Context(), int32(tripID))
+	geojson, err := r.uc.GetAllGeoJson(ctx.Context(), userIdFromCtx(ctx), int32(tripID))
 	if err != nil {
-		return errorResponse(ctx, fmt.Errorf("get geojson: %w", err))
+		return ErrorResponse(ctx, fmt.Errorf("get geojson: %w", err))
 	}
 
 	return ctx.Status(http.StatusOK).JSON(geojson)

@@ -2381,18 +2381,23 @@ func (s *EntityTrip) encodeFields(e *jx.Encoder) {
 		e.Str(s.Name)
 	}
 	{
+		e.FieldStart("owner_id")
+		e.Int(s.OwnerID)
+	}
+	{
 		e.FieldStart("startDate")
 		e.Str(s.StartDate)
 	}
 }
 
-var jsonFieldsNameOfEntityTrip = [6]string{
+var jsonFieldsNameOfEntityTrip = [7]string{
 	0: "description",
 	1: "endDate",
 	2: "id",
 	3: "imageUrl",
 	4: "name",
-	5: "startDate",
+	5: "owner_id",
+	6: "startDate",
 }
 
 // Decode decodes EntityTrip from json.
@@ -2460,8 +2465,20 @@ func (s *EntityTrip) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"name\"")
 			}
-		case "startDate":
+		case "owner_id":
 			requiredBitSet[0] |= 1 << 5
+			if err := func() error {
+				v, err := d.Int()
+				s.OwnerID = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"owner_id\"")
+			}
+		case "startDate":
+			requiredBitSet[0] |= 1 << 6
 			if err := func() error {
 				v, err := d.Str()
 				s.StartDate = string(v)
@@ -2482,7 +2499,7 @@ func (s *EntityTrip) Decode(d *jx.Decoder) error {
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [1]uint8{
-		0b00111111,
+		0b01111111,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
@@ -2542,14 +2559,19 @@ func (s *EntityUser) encodeFields(e *jx.Encoder) {
 		e.Int(s.ID)
 	}
 	{
+		e.FieldStart("jwtSub")
+		e.Str(s.JwtSub)
+	}
+	{
 		e.FieldStart("name")
 		e.Str(s.Name)
 	}
 }
 
-var jsonFieldsNameOfEntityUser = [2]string{
+var jsonFieldsNameOfEntityUser = [3]string{
 	0: "id",
-	1: "name",
+	1: "jwtSub",
+	2: "name",
 }
 
 // Decode decodes EntityUser from json.
@@ -2573,8 +2595,20 @@ func (s *EntityUser) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"id\"")
 			}
-		case "name":
+		case "jwtSub":
 			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				v, err := d.Str()
+				s.JwtSub = string(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"jwtSub\"")
+			}
+		case "name":
+			requiredBitSet[0] |= 1 << 2
 			if err := func() error {
 				v, err := d.Str()
 				s.Name = string(v)
@@ -2595,7 +2629,7 @@ func (s *EntityUser) Decode(d *jx.Decoder) error {
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [1]uint8{
-		0b00000011,
+		0b00000111,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.

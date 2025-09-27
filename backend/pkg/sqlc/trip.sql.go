@@ -14,22 +14,35 @@ import (
 const deleteTripByID = `-- name: DeleteTripByID :exec
 DELETE
 FROM trip
-WHERE id = $1
+WHERE trip.owner_id = $2
+AND id = $1
 `
 
-func (q *Queries) DeleteTripByID(ctx context.Context, id int32) error {
-	_, err := q.db.Exec(ctx, deleteTripByID, id)
+type DeleteTripByIDParams struct {
+	ID      int32
+	OwnerID int32
+}
+
+func (q *Queries) DeleteTripByID(ctx context.Context, arg DeleteTripByIDParams) error {
+	_, err := q.db.Exec(ctx, deleteTripByID, arg.ID, arg.OwnerID)
 	return err
 }
 
 const getTripByID = `-- name: GetTripByID :one
-SELECT id, name, start_date, end_date, description, image_url
+SELECT trip.id, trip.name, trip.start_date, trip.end_date, trip.description, trip.image_url, trip.owner_id
 FROM trip
-WHERE id = $1
+LEFT JOIN permissions p ON trip.id = p.trip_id
+WHERE (trip.owner_id = $2 OR p.user_id = $2)
+AND id = $1
 `
 
-func (q *Queries) GetTripByID(ctx context.Context, id int32) (Trip, error) {
-	row := q.db.QueryRow(ctx, getTripByID, id)
+type GetTripByIDParams struct {
+	ID     int32
+	UserID int32
+}
+
+func (q *Queries) GetTripByID(ctx context.Context, arg GetTripByIDParams) (Trip, error) {
+	row := q.db.QueryRow(ctx, getTripByID, arg.ID, arg.UserID)
 	var i Trip
 	err := row.Scan(
 		&i.ID,
@@ -38,17 +51,20 @@ func (q *Queries) GetTripByID(ctx context.Context, id int32) (Trip, error) {
 		&i.EndDate,
 		&i.Description,
 		&i.ImageUrl,
+		&i.OwnerID,
 	)
 	return i, err
 }
 
 const getTrips = `-- name: GetTrips :many
-SELECT id, name, start_date, end_date, description, image_url
+SELECT trip.id, trip.name, trip.start_date, trip.end_date, trip.description, trip.image_url, trip.owner_id
 FROM trip
+LEFT JOIN permissions p ON trip.id = p.trip_id
+WHERE trip.owner_id = $1 OR p.user_id = $1
 `
 
-func (q *Queries) GetTrips(ctx context.Context) ([]Trip, error) {
-	rows, err := q.db.Query(ctx, getTrips)
+func (q *Queries) GetTrips(ctx context.Context, userID int32) ([]Trip, error) {
+	rows, err := q.db.Query(ctx, getTrips, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -63,6 +79,7 @@ func (q *Queries) GetTrips(ctx context.Context) ([]Trip, error) {
 			&i.EndDate,
 			&i.Description,
 			&i.ImageUrl,
+			&i.OwnerID,
 		); err != nil {
 			return nil, err
 		}
@@ -75,12 +92,13 @@ func (q *Queries) GetTrips(ctx context.Context) ([]Trip, error) {
 }
 
 const insertTrip = `-- name: InsertTrip :one
-INSERT INTO trip (name, start_date, end_date, description, image_url)
-VALUES ($1, $2, $3, $4, $5)
+INSERT INTO trip (owner_id, name, start_date, end_date, description, image_url)
+VALUES ($1, $2, $3, $4, $5, $6)
 RETURNING id
 `
 
 type InsertTripParams struct {
+	OwnerID     int32
 	Name        string
 	StartDate   civil.Date
 	EndDate     civil.Date
@@ -90,6 +108,7 @@ type InsertTripParams struct {
 
 func (q *Queries) InsertTrip(ctx context.Context, arg InsertTripParams) (int32, error) {
 	row := q.db.QueryRow(ctx, insertTrip,
+		arg.OwnerID,
 		arg.Name,
 		arg.StartDate,
 		arg.EndDate,
@@ -103,16 +122,18 @@ func (q *Queries) InsertTrip(ctx context.Context, arg InsertTripParams) (int32, 
 
 const updateTrip = `-- name: UpdateTrip :exec
 UPDATE trip
-SET name        = $2,
-    start_date  = $3,
-    end_date    = $4,
-    description = $5,
-    image_url   = $6
-WHERE id = $1
+SET name        = $3,
+    start_date  = $4,
+    end_date    = $5,
+    description = $6,
+    image_url   = $7
+WHERE trip.owner_id = $2
+AND id = $1
 `
 
 type UpdateTripParams struct {
 	ID          int32
+	OwnerID     int32
 	Name        string
 	StartDate   civil.Date
 	EndDate     civil.Date
@@ -123,6 +144,7 @@ type UpdateTripParams struct {
 func (q *Queries) UpdateTrip(ctx context.Context, arg UpdateTripParams) error {
 	_, err := q.db.Exec(ctx, updateTrip,
 		arg.ID,
+		arg.OwnerID,
 		arg.Name,
 		arg.StartDate,
 		arg.EndDate,

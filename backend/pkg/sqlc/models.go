@@ -6,6 +6,7 @@ package sqlc
 
 import (
 	"cloud.google.com/go/civil"
+	"github.com/google/uuid"
 )
 
 type Accommodation struct {
@@ -89,6 +90,13 @@ type Location struct {
 	Longitude float32
 }
 
+type Permission struct {
+	UserID        int32
+	TripID        int32
+	ReadSensitive bool
+	Write         bool
+}
+
 type TrainDetail struct {
 	TransportationID int32
 	RefreshToken     string
@@ -133,9 +141,11 @@ type Trip struct {
 	EndDate     civil.Date
 	Description *string
 	ImageUrl    *string
+	OwnerID     int32
 }
 
 type User struct {
-	ID   int32
-	Name string
+	ID     int32
+	Name   string
+	JwtSub uuid.UUID
 }

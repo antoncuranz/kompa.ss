@@ -7,10 +7,12 @@ package sqlc
 
 import (
 	"context"
+
+	"github.com/google/uuid"
 )
 
 const getUserByID = `-- name: GetUserByID :one
-SELECT id, name
+SELECT id, name, jwt_sub
 FROM "user"
 WHERE id = $1
 `
@@ -18,12 +20,25 @@ WHERE id = $1
 func (q *Queries) GetUserByID(ctx context.Context, id int32) (User, error) {
 	row := q.db.QueryRow(ctx, getUserByID, id)
 	var i User
-	err := row.Scan(&i.ID, &i.Name)
+	err := row.Scan(&i.ID, &i.Name, &i.JwtSub)
+	return i, err
+}
+
+const getUserByJwtSub = `-- name: GetUserByJwtSub :one
+SELECT id, name, jwt_sub
+FROM "user"
+WHERE jwt_sub = $1
+`
+
+func (q *Queries) GetUserByJwtSub(ctx context.Context, jwtSub uuid.UUID) (User, error) {
+	row := q.db.QueryRow(ctx, getUserByJwtSub, jwtSub)
+	var i User
+	err := row.Scan(&i.ID, &i.Name, &i.JwtSub)
 	return i, err
 }
 
 const getUsers = `-- name: GetUsers :many
-SELECT id, name
+SELECT id, name, jwt_sub
 FROM "user"
 `
 
@@ -36,7 +51,7 @@ func (q *Queries) GetUsers(ctx context.Context) ([]User, error) {
 	items := []User{}
 	for rows.Next() {
 		var i User
-		if err := rows.Scan(&i.ID, &i.Name); err != nil {
+		if err := rows.Scan(&i.ID, &i.Name, &i.JwtSub); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -45,4 +60,22 @@ func (q *Queries) GetUsers(ctx context.Context) ([]User, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+const insertUser = `-- name: InsertUser :one
+INSERT INTO "user" (name, jwt_sub)
+VALUES ($1, $2)
+RETURNING id
+`
+
+type InsertUserParams struct {
+	Name   string
+	JwtSub uuid.UUID
+}
+
+func (q *Queries) InsertUser(ctx context.Context, arg InsertUserParams) (int32, error) {
+	row := q.db.QueryRow(ctx, insertUser, arg.Name, arg.JwtSub)
+	var id int32
+	err := row.Scan(&id)
+	return id, err
 }

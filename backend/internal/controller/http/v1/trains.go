@@ -25,12 +25,13 @@ type TrainsV1 struct {
 // @Param       query query string true "station query"
 // @Success     200 {object} entity.TrainStation
 // @Failure     500 {object} response.Error
+// @Security    bearerauth
 // @Router      /trips/{trip_id}/trains/stations [get]
 func (r *TrainsV1) getTrainStation(ctx *fiber.Ctx) error {
 	query := ctx.Query("query")
 	location, err := r.uc.RetrieveLocation(ctx.Context(), query)
 	if err != nil {
-		return errorResponse(ctx, fmt.Errorf("retrieve location: %w", err))
+		return ErrorResponse(ctx, fmt.Errorf("retrieve location: %w", err))
 	}
 
 	return ctx.Status(http.StatusOK).JSON(location)
@@ -45,21 +46,22 @@ func (r *TrainsV1) getTrainStation(ctx *fiber.Ctx) error {
 // @Param       request body request.TrainJourney true "train journey"
 // @Success     200 {object} entity.Transportation
 // @Failure     500 {object} response.Error
+// @Security    bearerauth
 // @Router      /trips/{trip_id}/trains [post]
 func (r *TrainsV1) postTrainJourney(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
 	}
 
 	body, err := ParseAndValidateRequestBody[request.TrainJourney](ctx, r.v)
 	if err != nil {
-		return errorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse request body: %w", err))
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse request body: %w", err))
 	}
 
-	transportation, err := r.uc.CreateTrainJourney(ctx.Context(), int32(tripID), *body)
+	transportation, err := r.uc.CreateTrainJourney(ctx.Context(), userIdFromCtx(ctx), int32(tripID), *body)
 	if err != nil {
-		return errorResponse(ctx, fmt.Errorf("retrieve journey: %w", err))
+		return ErrorResponse(ctx, fmt.Errorf("retrieve journey: %w", err))
 	}
 
 	return ctx.Status(http.StatusOK).JSON(transportation)

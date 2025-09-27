@@ -289,6 +289,8 @@ components:
           type: string
         name:
           type: string
+        owner_id:
+          type: integer
         startDate:
           type: string
       required:
@@ -297,16 +299,20 @@ components:
       - id
       - imageUrl
       - name
+      - owner_id
       - startDate
       type: object
     entity.User:
       properties:
         id:
           type: integer
+        jwtSub:
+          type: string
         name:
           type: string
       required:
       - id
+      - jwtSub
       - name
       type: object
     request.Accommodation:
@@ -466,6 +472,11 @@ components:
       required:
       - attachments
       type: object
+  securitySchemes:
+    bearerauth:
+      bearerFormat: JWT
+      scheme: bearer
+      type: http
 externalDocs:
   description: ""
   url: ""
@@ -493,6 +504,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Get all trips
       tags:
       - trips
@@ -524,6 +537,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Add trip
       tags:
       - trips
@@ -558,6 +573,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Delete trip
       tags:
       - trips
@@ -595,6 +612,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Get trip by ID
       tags:
       - trips
@@ -635,6 +654,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Update trip
       tags:
       - trips
@@ -663,6 +684,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Get all accommodation
       tags:
       - accommodation
@@ -691,6 +714,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Add accommodation
       tags:
       - accommodation
@@ -719,6 +744,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Delete accommodation
       tags:
       - accommodation
@@ -750,6 +777,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Get accommodation by ID
       tags:
       - accommodation
@@ -784,6 +813,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Update accommodation
       tags:
       - accommodation
@@ -812,6 +843,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Get all activities
       tags:
       - activities
@@ -840,6 +873,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Add activity
       tags:
       - activities
@@ -868,6 +903,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Delete activity
       tags:
       - activities
@@ -899,6 +936,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Get activity by ID
       tags:
       - activities
@@ -933,6 +972,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Update activity
       tags:
       - activities
@@ -961,6 +1002,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Get all attachments
       tags:
       - attachments
@@ -989,6 +1032,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Add attachment
       tags:
       - attachments
@@ -1017,6 +1062,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Delete attachment
       tags:
       - attachments
@@ -1048,6 +1095,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Download attachment by ID
       tags:
       - attachments
@@ -1077,6 +1126,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Add flight
       tags:
       - flights
@@ -1112,6 +1163,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Update flight
       tags:
       - flights
@@ -1145,6 +1198,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Add train journey
       tags:
       - trains
@@ -1177,6 +1232,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Get train station
       tags:
       - trains
@@ -1205,6 +1262,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Get all Transportation
       tags:
       - transportation
@@ -1239,6 +1298,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Delete Transportation
       tags:
       - transportation
@@ -1276,6 +1337,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Get Transportation by ID
       tags:
       - transportation
@@ -1304,6 +1367,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Get GeoJson
       tags:
       - transportation
@@ -1325,6 +1390,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Get all users
       tags:
       - users
@@ -1351,6 +1418,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Internal Server Error
+      security:
+      - bearerauth: []
       summary: Get user by ID
       tags:
       - users

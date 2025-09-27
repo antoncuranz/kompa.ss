@@ -3,6 +3,8 @@ package usecase
 
 import (
 	"context"
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"github.com/paulmach/orb/geojson"
 	"kompass/internal/controller/http/v1/request"
 	"kompass/internal/entity"
@@ -26,32 +28,33 @@ type (
 	Users interface {
 		GetUsers(ctx context.Context) ([]entity.User, error)
 		GetUserByID(ctx context.Context, id int32) (entity.User, error)
+		GetUserByJwtSub(ctx context.Context, sub uuid.UUID) (entity.User, error)
+		CreateUserFromJwt(ctx context.Context, sub uuid.UUID, claims jwt.Claims) (entity.User, error)
 	}
 
 	Trips interface {
-		GetTrips(ctx context.Context) ([]entity.Trip, error)
-		GetTripByID(ctx context.Context, id int32) (entity.Trip, error)
-		CreateTrip(ctx context.Context, trip request.Trip) (entity.Trip, error)
-		UpdateTrip(ctx context.Context, tripID int32, trip request.Trip) error
-		DeleteTrip(ctx context.Context, tripID int32) error
+		GetTrips(ctx context.Context, userID int32) ([]entity.Trip, error)
+		GetTripByID(ctx context.Context, userID int32, id int32) (entity.Trip, error)
+		CreateTrip(ctx context.Context, userID int32, trip request.Trip) (entity.Trip, error)
+		UpdateTrip(ctx context.Context, userID int32, tripID int32, trip request.Trip) error
+		DeleteTrip(ctx context.Context, userID int32, tripID int32) error
 	}
 
 	Transportation interface {
-		GetAllTransportation(ctx context.Context, tripID int32) ([]entity.Transportation, error)
-		GetTransportationByID(ctx context.Context, tripID int32, transportationID int32) (entity.Transportation, error)
-		DeleteTransportation(ctx context.Context, tripID int32, transportationID int32) error
-		GetAllGeoJson(ctx context.Context, tripID int32) ([]geojson.FeatureCollection, error)
+		GetAllTransportation(ctx context.Context, userID int32, tripID int32) ([]entity.Transportation, error)
+		GetTransportationByID(ctx context.Context, userID int32, tripID int32, transportationID int32) (entity.Transportation, error)
+		DeleteTransportation(ctx context.Context, userID int32, tripID int32, transportationID int32) error
+		GetAllGeoJson(ctx context.Context, userID int32, tripID int32) ([]geojson.FeatureCollection, error)
 	}
 
 	Flights interface {
-		CreateFlight(ctx context.Context, tripID int32, flight request.Flight) (entity.Transportation, error)
-		UpdateFlight(ctx context.Context, tripID int32, flightID int32, flight request.Flight) error
+		CreateFlight(ctx context.Context, userID int32, tripID int32, flight request.Flight) (entity.Transportation, error)
+		UpdateFlight(ctx context.Context, userID int32, tripID int32, flightID int32, flight request.Flight) error
 	}
 
 	Trains interface {
 		RetrieveLocation(ctx context.Context, query string) (entity.TrainStation, error)
-		CreateTrainJourney(ctx context.Context, tripID int32, journey request.TrainJourney) (entity.Transportation, error)
-		RetrieveAndPersistPolyline(ctx context.Context, transportationID int32, refreshToken string) (*geojson.FeatureCollection, error)
+		CreateTrainJourney(ctx context.Context, userID int32, tripID int32, journey request.TrainJourney) (entity.Transportation, error)
 	}
 
 	Activities interface {
