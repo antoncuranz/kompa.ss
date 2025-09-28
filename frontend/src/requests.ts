@@ -4,26 +4,15 @@ import {
     Transportation,
     Trip,
 } from "@/types.ts";
-import React from "react";
+import {headers} from "next/headers";
 
 class UnauthorizedError extends Error {}
 
-export async function hideIfUnauthorized(func: () => Promise<React.ReactElement>) {
-  try {
-    return await func()
-  } catch (e: unknown) {
-    if (e instanceof UnauthorizedError)
-      return ""
-    else
-      throw e
-  }
-}
-
-const usernameHeader = "X-Auth-Request-Preferred-Username"
 
 async function fetchData(url: string) {
+  const authorizationHeader = "Authorization"
   const response = await fetch(process.env.BACKEND_URL + url, {
-    headers: {[usernameHeader]: await getCurrentUser()},
+    headers: {[authorizationHeader]: (await headers()).get(authorizationHeader)!},
     cache: "no-cache"
   })
   if (response.status == 401) {
@@ -32,10 +21,6 @@ async function fetchData(url: string) {
     throw new Error("Failed to fetch data");
   }
   return await response.json()
-}
-
-export async function getCurrentUser(): Promise<string> {
-  return "ant0n"
 }
 
 export async function fetchTrip(tripId: number) {
