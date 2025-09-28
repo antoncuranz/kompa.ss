@@ -31,10 +31,7 @@ func NewTransportationRepo(pg *postgres.Postgres, flights *FlightsRepo, trains *
 }
 
 func (r *TransportationRepo) GetAllTransportation(ctx context.Context, userID int32, tripID int32) ([]entity.Transportation, error) {
-	rows, err := r.Queries.GetAllTransportation(ctx, sqlc.GetAllTransportationParams{
-		TripID: tripID,
-		UserID: userID,
-	})
+	rows, err := r.Queries.GetAllTransportation(ctx, tripID)
 	if err != nil {
 		return []entity.Transportation{}, fmt.Errorf("get all transportation from db: %w", err)
 	}
@@ -150,10 +147,7 @@ func (r *TransportationRepo) DeleteTransportation(ctx context.Context, userID in
 }
 
 func (r *TransportationRepo) GetAllGeoJson(ctx context.Context, userID int32, tripID int32) ([]geojson.FeatureCollection, error) {
-	rows, err := r.Queries.GetAllGeoJson(ctx, sqlc.GetAllGeoJsonParams{
-		TripID: tripID,
-		UserID: userID,
-	})
+	rows, err := r.Queries.GetAllGeoJson(ctx, tripID)
 	if err != nil {
 		return nil, fmt.Errorf("get all geojson from db [t.id=%d]: %w", tripID, err)
 	}

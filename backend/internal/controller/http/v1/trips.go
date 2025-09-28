@@ -41,7 +41,7 @@ func (r *TripsV1) getTrips(ctx *fiber.Ctx) error {
 // @Param       trip_id path int true "Trip ID"
 // @Success     200 {object} entity.Trip
 // @Failure     400 {object} response.Error
-// @Failure     404 {object} response.Error
+// @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
 // @Router      /trips/{trip_id} [get]
@@ -91,8 +91,8 @@ func (r *TripsV1) postTrip(ctx *fiber.Ctx) error {
 // @Param       trip_id path int true "Trip ID"
 // @Param       request body request.Trip true "trip"
 // @Success     204
+// @Failure     403 {object} response.Error
 // @Failure     400 {object} response.Error
-// @Failure     404 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
 // @Router      /trips/{trip_id} [put]
@@ -120,7 +120,7 @@ func (r *TripsV1) putTrip(ctx *fiber.Ctx) error {
 // @Param       trip_id path int true "Trip ID"
 // @Success     204
 // @Failure     400 {object} response.Error
-// @Failure     404 {object} response.Error
+// @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
 // @Router      /trips/{trip_id} [delete]

@@ -48,9 +48,11 @@ func NewRouter(app *fiber.App, cfg *config.Config, useCases usecase.UseCases, lo
 	{
 		apiV1Group.Use(middleware.JwtMiddleware(cfg.Auth))
 		apiV1Group.Use(middleware.RetrieveOrCreateUserMiddleware(useCases.Users))
+
 		v1.NewUserRoutes(apiV1Group, useCases.Users, log)
 
-		tripsV1Group := v1.NewTripRoutes(apiV1Group, useCases.Trips, log)
+		authorization := middleware.TripAuthorization(useCases.Users)
+		tripsV1Group := v1.NewTripRoutes(apiV1Group, useCases.Trips, log, authorization)
 		{
 			v1.NewTransportationRoutes(tripsV1Group, useCases.Transportation, log)
 			v1.NewFlightRoutes(tripsV1Group, useCases.Flights, log)

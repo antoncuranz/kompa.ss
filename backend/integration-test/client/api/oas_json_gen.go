@@ -12,6 +12,272 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
+// Encode encodes DeleteAccommodationForbidden as json.
+func (s *DeleteAccommodationForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes DeleteAccommodationForbidden from json.
+func (s *DeleteAccommodationForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode DeleteAccommodationForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = DeleteAccommodationForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *DeleteAccommodationForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *DeleteAccommodationForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes DeleteAccommodationInternalServerError as json.
+func (s *DeleteAccommodationInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes DeleteAccommodationInternalServerError from json.
+func (s *DeleteAccommodationInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode DeleteAccommodationInternalServerError to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = DeleteAccommodationInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *DeleteAccommodationInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *DeleteAccommodationInternalServerError) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes DeleteActivityForbidden as json.
+func (s *DeleteActivityForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes DeleteActivityForbidden from json.
+func (s *DeleteActivityForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode DeleteActivityForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = DeleteActivityForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *DeleteActivityForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *DeleteActivityForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes DeleteActivityInternalServerError as json.
+func (s *DeleteActivityInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes DeleteActivityInternalServerError from json.
+func (s *DeleteActivityInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode DeleteActivityInternalServerError to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = DeleteActivityInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *DeleteActivityInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *DeleteActivityInternalServerError) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes DeleteAttachmentForbidden as json.
+func (s *DeleteAttachmentForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes DeleteAttachmentForbidden from json.
+func (s *DeleteAttachmentForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode DeleteAttachmentForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = DeleteAttachmentForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *DeleteAttachmentForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *DeleteAttachmentForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes DeleteAttachmentInternalServerError as json.
+func (s *DeleteAttachmentInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes DeleteAttachmentInternalServerError from json.
+func (s *DeleteAttachmentInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode DeleteAttachmentInternalServerError to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = DeleteAttachmentInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *DeleteAttachmentInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *DeleteAttachmentInternalServerError) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes DeleteTransportationForbidden as json.
+func (s *DeleteTransportationForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes DeleteTransportationForbidden from json.
+func (s *DeleteTransportationForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode DeleteTransportationForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = DeleteTransportationForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *DeleteTransportationForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *DeleteTransportationForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode encodes DeleteTransportationInternalServerError as json.
 func (s *DeleteTransportationInternalServerError) Encode(e *jx.Encoder) {
 	unwrapped := (*ResponseError)(s)
@@ -46,44 +312,6 @@ func (s *DeleteTransportationInternalServerError) MarshalJSON() ([]byte, error) 
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *DeleteTransportationInternalServerError) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes DeleteTransportationNotFound as json.
-func (s *DeleteTransportationNotFound) Encode(e *jx.Encoder) {
-	unwrapped := (*ResponseError)(s)
-
-	unwrapped.Encode(e)
-}
-
-// Decode decodes DeleteTransportationNotFound from json.
-func (s *DeleteTransportationNotFound) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode DeleteTransportationNotFound to nil")
-	}
-	var unwrapped ResponseError
-	if err := func() error {
-		if err := unwrapped.Decode(d); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = DeleteTransportationNotFound(unwrapped)
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *DeleteTransportationNotFound) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *DeleteTransportationNotFound) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -126,6 +354,44 @@ func (s *DeleteTripBadRequest) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
+// Encode encodes DeleteTripForbidden as json.
+func (s *DeleteTripForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes DeleteTripForbidden from json.
+func (s *DeleteTripForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode DeleteTripForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = DeleteTripForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *DeleteTripForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *DeleteTripForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode encodes DeleteTripInternalServerError as json.
 func (s *DeleteTripInternalServerError) Encode(e *jx.Encoder) {
 	unwrapped := (*ResponseError)(s)
@@ -164,17 +430,17 @@ func (s *DeleteTripInternalServerError) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
-// Encode encodes DeleteTripNotFound as json.
-func (s *DeleteTripNotFound) Encode(e *jx.Encoder) {
+// Encode encodes DownloadAttachmentForbidden as json.
+func (s *DownloadAttachmentForbidden) Encode(e *jx.Encoder) {
 	unwrapped := (*ResponseError)(s)
 
 	unwrapped.Encode(e)
 }
 
-// Decode decodes DeleteTripNotFound from json.
-func (s *DeleteTripNotFound) Decode(d *jx.Decoder) error {
+// Decode decodes DownloadAttachmentForbidden from json.
+func (s *DownloadAttachmentForbidden) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode DeleteTripNotFound to nil")
+		return errors.New("invalid: unable to decode DownloadAttachmentForbidden to nil")
 	}
 	var unwrapped ResponseError
 	if err := func() error {
@@ -185,19 +451,57 @@ func (s *DeleteTripNotFound) Decode(d *jx.Decoder) error {
 	}(); err != nil {
 		return errors.Wrap(err, "alias")
 	}
-	*s = DeleteTripNotFound(unwrapped)
+	*s = DownloadAttachmentForbidden(unwrapped)
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *DeleteTripNotFound) MarshalJSON() ([]byte, error) {
+func (s *DownloadAttachmentForbidden) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *DeleteTripNotFound) UnmarshalJSON(data []byte) error {
+func (s *DownloadAttachmentForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes DownloadAttachmentInternalServerError as json.
+func (s *DownloadAttachmentInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes DownloadAttachmentInternalServerError from json.
+func (s *DownloadAttachmentInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode DownloadAttachmentInternalServerError to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = DownloadAttachmentInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *DownloadAttachmentInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *DownloadAttachmentInternalServerError) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -2655,6 +2959,158 @@ func (s *EntityUser) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
+// Encode encodes GetAccommodationByIDForbidden as json.
+func (s *GetAccommodationByIDForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes GetAccommodationByIDForbidden from json.
+func (s *GetAccommodationByIDForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode GetAccommodationByIDForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = GetAccommodationByIDForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *GetAccommodationByIDForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *GetAccommodationByIDForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes GetAccommodationByIDInternalServerError as json.
+func (s *GetAccommodationByIDInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes GetAccommodationByIDInternalServerError from json.
+func (s *GetAccommodationByIDInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode GetAccommodationByIDInternalServerError to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = GetAccommodationByIDInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *GetAccommodationByIDInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *GetAccommodationByIDInternalServerError) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes GetActivitiesForbidden as json.
+func (s *GetActivitiesForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes GetActivitiesForbidden from json.
+func (s *GetActivitiesForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode GetActivitiesForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = GetActivitiesForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *GetActivitiesForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *GetActivitiesForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes GetActivitiesInternalServerError as json.
+func (s *GetActivitiesInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes GetActivitiesInternalServerError from json.
+func (s *GetActivitiesInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode GetActivitiesInternalServerError to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = GetActivitiesInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *GetActivitiesInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *GetActivitiesInternalServerError) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode encodes GetActivitiesOKApplicationJSON as json.
 func (s GetActivitiesOKApplicationJSON) Encode(e *jx.Encoder) {
 	unwrapped := []EntityActivity(s)
@@ -2701,6 +3157,158 @@ func (s GetActivitiesOKApplicationJSON) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *GetActivitiesOKApplicationJSON) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes GetActivityForbidden as json.
+func (s *GetActivityForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes GetActivityForbidden from json.
+func (s *GetActivityForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode GetActivityForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = GetActivityForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *GetActivityForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *GetActivityForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes GetActivityInternalServerError as json.
+func (s *GetActivityInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes GetActivityInternalServerError from json.
+func (s *GetActivityInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode GetActivityInternalServerError to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = GetActivityInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *GetActivityInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *GetActivityInternalServerError) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes GetAllAccommodationForbidden as json.
+func (s *GetAllAccommodationForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes GetAllAccommodationForbidden from json.
+func (s *GetAllAccommodationForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode GetAllAccommodationForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = GetAllAccommodationForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *GetAllAccommodationForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *GetAllAccommodationForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes GetAllAccommodationInternalServerError as json.
+func (s *GetAllAccommodationInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes GetAllAccommodationInternalServerError from json.
+func (s *GetAllAccommodationInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode GetAllAccommodationInternalServerError to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = GetAllAccommodationInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *GetAllAccommodationInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *GetAllAccommodationInternalServerError) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -2755,6 +3363,82 @@ func (s *GetAllAccommodationOKApplicationJSON) UnmarshalJSON(data []byte) error 
 	return s.Decode(d)
 }
 
+// Encode encodes GetAllTransportationForbidden as json.
+func (s *GetAllTransportationForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes GetAllTransportationForbidden from json.
+func (s *GetAllTransportationForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode GetAllTransportationForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = GetAllTransportationForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *GetAllTransportationForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *GetAllTransportationForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes GetAllTransportationInternalServerError as json.
+func (s *GetAllTransportationInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes GetAllTransportationInternalServerError from json.
+func (s *GetAllTransportationInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode GetAllTransportationInternalServerError to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = GetAllTransportationInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *GetAllTransportationInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *GetAllTransportationInternalServerError) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode encodes GetAllTransportationOKApplicationJSON as json.
 func (s GetAllTransportationOKApplicationJSON) Encode(e *jx.Encoder) {
 	unwrapped := []EntityTransportation(s)
@@ -2805,6 +3489,82 @@ func (s *GetAllTransportationOKApplicationJSON) UnmarshalJSON(data []byte) error
 	return s.Decode(d)
 }
 
+// Encode encodes GetAttachmentsForbidden as json.
+func (s *GetAttachmentsForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes GetAttachmentsForbidden from json.
+func (s *GetAttachmentsForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode GetAttachmentsForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = GetAttachmentsForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *GetAttachmentsForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *GetAttachmentsForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes GetAttachmentsInternalServerError as json.
+func (s *GetAttachmentsInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes GetAttachmentsInternalServerError from json.
+func (s *GetAttachmentsInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode GetAttachmentsInternalServerError to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = GetAttachmentsInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *GetAttachmentsInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *GetAttachmentsInternalServerError) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode encodes GetAttachmentsOKApplicationJSON as json.
 func (s GetAttachmentsOKApplicationJSON) Encode(e *jx.Encoder) {
 	unwrapped := []EntityAttachment(s)
@@ -2851,6 +3611,82 @@ func (s GetAttachmentsOKApplicationJSON) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *GetAttachmentsOKApplicationJSON) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes GetGeoJsonForbidden as json.
+func (s *GetGeoJsonForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes GetGeoJsonForbidden from json.
+func (s *GetGeoJsonForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode GetGeoJsonForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = GetGeoJsonForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *GetGeoJsonForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *GetGeoJsonForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes GetGeoJsonInternalServerError as json.
+func (s *GetGeoJsonInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes GetGeoJsonInternalServerError from json.
+func (s *GetGeoJsonInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode GetGeoJsonInternalServerError to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = GetGeoJsonInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *GetGeoJsonInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *GetGeoJsonInternalServerError) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -2907,6 +3743,120 @@ func (s *GetGeoJsonOKApplicationJSON) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
+// Encode encodes GetTrainStationForbidden as json.
+func (s *GetTrainStationForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes GetTrainStationForbidden from json.
+func (s *GetTrainStationForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode GetTrainStationForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = GetTrainStationForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *GetTrainStationForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *GetTrainStationForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes GetTrainStationInternalServerError as json.
+func (s *GetTrainStationInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes GetTrainStationInternalServerError from json.
+func (s *GetTrainStationInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode GetTrainStationInternalServerError to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = GetTrainStationInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *GetTrainStationInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *GetTrainStationInternalServerError) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes GetTransportationForbidden as json.
+func (s *GetTransportationForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes GetTransportationForbidden from json.
+func (s *GetTransportationForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode GetTransportationForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = GetTransportationForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *GetTransportationForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *GetTransportationForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode encodes GetTransportationInternalServerError as json.
 func (s *GetTransportationInternalServerError) Encode(e *jx.Encoder) {
 	unwrapped := (*ResponseError)(s)
@@ -2941,44 +3891,6 @@ func (s *GetTransportationInternalServerError) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *GetTransportationInternalServerError) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes GetTransportationNotFound as json.
-func (s *GetTransportationNotFound) Encode(e *jx.Encoder) {
-	unwrapped := (*ResponseError)(s)
-
-	unwrapped.Encode(e)
-}
-
-// Decode decodes GetTransportationNotFound from json.
-func (s *GetTransportationNotFound) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode GetTransportationNotFound to nil")
-	}
-	var unwrapped ResponseError
-	if err := func() error {
-		if err := unwrapped.Decode(d); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = GetTransportationNotFound(unwrapped)
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *GetTransportationNotFound) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *GetTransportationNotFound) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -3021,6 +3933,44 @@ func (s *GetTripBadRequest) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
+// Encode encodes GetTripForbidden as json.
+func (s *GetTripForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes GetTripForbidden from json.
+func (s *GetTripForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode GetTripForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = GetTripForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *GetTripForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *GetTripForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode encodes GetTripInternalServerError as json.
 func (s *GetTripInternalServerError) Encode(e *jx.Encoder) {
 	unwrapped := (*ResponseError)(s)
@@ -3055,44 +4005,6 @@ func (s *GetTripInternalServerError) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *GetTripInternalServerError) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes GetTripNotFound as json.
-func (s *GetTripNotFound) Encode(e *jx.Encoder) {
-	unwrapped := (*ResponseError)(s)
-
-	unwrapped.Encode(e)
-}
-
-// Decode decodes GetTripNotFound from json.
-func (s *GetTripNotFound) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode GetTripNotFound to nil")
-	}
-	var unwrapped ResponseError
-	if err := func() error {
-		if err := unwrapped.Decode(d); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = GetTripNotFound(unwrapped)
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *GetTripNotFound) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *GetTripNotFound) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -3431,6 +4343,386 @@ func (s *OptNilEntityTrainDetail) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
+// Encode encodes PostAccommodationForbidden as json.
+func (s *PostAccommodationForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes PostAccommodationForbidden from json.
+func (s *PostAccommodationForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PostAccommodationForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = PostAccommodationForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PostAccommodationForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PostAccommodationForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes PostAccommodationInternalServerError as json.
+func (s *PostAccommodationInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes PostAccommodationInternalServerError from json.
+func (s *PostAccommodationInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PostAccommodationInternalServerError to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = PostAccommodationInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PostAccommodationInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PostAccommodationInternalServerError) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes PostActivityForbidden as json.
+func (s *PostActivityForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes PostActivityForbidden from json.
+func (s *PostActivityForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PostActivityForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = PostActivityForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PostActivityForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PostActivityForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes PostActivityInternalServerError as json.
+func (s *PostActivityInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes PostActivityInternalServerError from json.
+func (s *PostActivityInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PostActivityInternalServerError to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = PostActivityInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PostActivityInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PostActivityInternalServerError) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes PostAttachmentForbidden as json.
+func (s *PostAttachmentForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes PostAttachmentForbidden from json.
+func (s *PostAttachmentForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PostAttachmentForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = PostAttachmentForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PostAttachmentForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PostAttachmentForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes PostAttachmentInternalServerError as json.
+func (s *PostAttachmentInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes PostAttachmentInternalServerError from json.
+func (s *PostAttachmentInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PostAttachmentInternalServerError to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = PostAttachmentInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PostAttachmentInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PostAttachmentInternalServerError) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes PostFlightForbidden as json.
+func (s *PostFlightForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes PostFlightForbidden from json.
+func (s *PostFlightForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PostFlightForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = PostFlightForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PostFlightForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PostFlightForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes PostFlightInternalServerError as json.
+func (s *PostFlightInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes PostFlightInternalServerError from json.
+func (s *PostFlightInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PostFlightInternalServerError to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = PostFlightInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PostFlightInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PostFlightInternalServerError) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes PostTrainJourneyForbidden as json.
+func (s *PostTrainJourneyForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes PostTrainJourneyForbidden from json.
+func (s *PostTrainJourneyForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PostTrainJourneyForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = PostTrainJourneyForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PostTrainJourneyForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PostTrainJourneyForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes PostTrainJourneyInternalServerError as json.
+func (s *PostTrainJourneyInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes PostTrainJourneyInternalServerError from json.
+func (s *PostTrainJourneyInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PostTrainJourneyInternalServerError to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = PostTrainJourneyInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PostTrainJourneyInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PostTrainJourneyInternalServerError) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode encodes PostTripBadRequest as json.
 func (s *PostTripBadRequest) Encode(e *jx.Encoder) {
 	unwrapped := (*ResponseError)(s)
@@ -3507,6 +4799,234 @@ func (s *PostTripInternalServerError) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
+// Encode encodes PutAccommodationForbidden as json.
+func (s *PutAccommodationForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes PutAccommodationForbidden from json.
+func (s *PutAccommodationForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PutAccommodationForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = PutAccommodationForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PutAccommodationForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PutAccommodationForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes PutAccommodationInternalServerError as json.
+func (s *PutAccommodationInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes PutAccommodationInternalServerError from json.
+func (s *PutAccommodationInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PutAccommodationInternalServerError to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = PutAccommodationInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PutAccommodationInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PutAccommodationInternalServerError) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes PutActivityForbidden as json.
+func (s *PutActivityForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes PutActivityForbidden from json.
+func (s *PutActivityForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PutActivityForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = PutActivityForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PutActivityForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PutActivityForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes PutActivityInternalServerError as json.
+func (s *PutActivityInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes PutActivityInternalServerError from json.
+func (s *PutActivityInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PutActivityInternalServerError to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = PutActivityInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PutActivityInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PutActivityInternalServerError) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes PutFlightForbidden as json.
+func (s *PutFlightForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes PutFlightForbidden from json.
+func (s *PutFlightForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PutFlightForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = PutFlightForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PutFlightForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PutFlightForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes PutFlightInternalServerError as json.
+func (s *PutFlightInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes PutFlightInternalServerError from json.
+func (s *PutFlightInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PutFlightInternalServerError to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = PutFlightInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PutFlightInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PutFlightInternalServerError) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode encodes PutTripBadRequest as json.
 func (s *PutTripBadRequest) Encode(e *jx.Encoder) {
 	unwrapped := (*ResponseError)(s)
@@ -3545,6 +5065,44 @@ func (s *PutTripBadRequest) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
+// Encode encodes PutTripForbidden as json.
+func (s *PutTripForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes PutTripForbidden from json.
+func (s *PutTripForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PutTripForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = PutTripForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PutTripForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PutTripForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode encodes PutTripInternalServerError as json.
 func (s *PutTripInternalServerError) Encode(e *jx.Encoder) {
 	unwrapped := (*ResponseError)(s)
@@ -3579,44 +5137,6 @@ func (s *PutTripInternalServerError) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *PutTripInternalServerError) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes PutTripNotFound as json.
-func (s *PutTripNotFound) Encode(e *jx.Encoder) {
-	unwrapped := (*ResponseError)(s)
-
-	unwrapped.Encode(e)
-}
-
-// Decode decodes PutTripNotFound from json.
-func (s *PutTripNotFound) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode PutTripNotFound to nil")
-	}
-	var unwrapped ResponseError
-	if err := func() error {
-		if err := unwrapped.Decode(d); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = PutTripNotFound(unwrapped)
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *PutTripNotFound) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *PutTripNotFound) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }

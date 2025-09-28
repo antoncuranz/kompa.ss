@@ -1,7 +1,6 @@
 package integration_test
 
 import (
-	"fmt"
 	"kompass/integration-test/client/api"
 )
 
@@ -43,6 +42,6 @@ func (suite *IntegrationTestSuite) TestGetTripNotFound() {
 	suite.NoError(err)
 
 	// then
-	trip := res.(*api.GetTripNotFound)
-	fmt.Println("Error message: ", trip.Error)
+	_, ok := res.(*api.GetTripForbidden)
+	suite.True(ok)
 }

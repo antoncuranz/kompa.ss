@@ -19,21 +19,22 @@ func NewUserRoutes(apiV1Group fiber.Router, uc usecase.Users, log logger.Interfa
 	}
 }
 
-func NewTripRoutes(apiV1Group fiber.Router, uc usecase.Trips, log logger.Interface) fiber.Router {
+func NewTripRoutes(apiV1Group fiber.Router, uc usecase.Trips, log logger.Interface, authorization func(c *fiber.Ctx) error) fiber.Router {
 	r := &TripsV1{
 		uc:  uc,
 		log: log,
 		v:   validator.New(validator.WithRequiredStructEnabled()),
 	}
 
-	tripsV1Group := apiV1Group.Group("/trips")
+	apiV1Group.Get("/trips", r.getTrips)
+	apiV1Group.Post("/trips", r.postTrip)
 
+	tripsV1Group := apiV1Group.Group("/trips/:trip_id")
+	tripsV1Group.Use(authorization)
 	{
-		tripsV1Group.Get("", r.getTrips)
-		tripsV1Group.Post("", r.postTrip)
-		tripsV1Group.Get("/:trip_id", r.getTrip)
-		tripsV1Group.Put("/:trip_id", r.putTrip)
-		tripsV1Group.Delete("/:trip_id", r.deleteTrip)
+		tripsV1Group.Get("", r.getTrip)
+		tripsV1Group.Put("", r.putTrip)
+		tripsV1Group.Delete("", r.deleteTrip)
 	}
 
 	return tripsV1Group
@@ -46,7 +47,7 @@ func NewTransportationRoutes(tripsV1Group fiber.Router, uc usecase.Transportatio
 		v:   validator.New(validator.WithRequiredStructEnabled()),
 	}
 
-	transportationV1Group := tripsV1Group.Group("/:trip_id/transportation")
+	transportationV1Group := tripsV1Group.Group("/transportation")
 
 	{
 		transportationV1Group.Get("", r.getAllTransportation)
@@ -59,7 +60,7 @@ func NewTransportationRoutes(tripsV1Group fiber.Router, uc usecase.Transportatio
 func NewFlightRoutes(tripsV1Group fiber.Router, uc usecase.Flights, log logger.Interface) {
 	r := &FlightsV1{uc: uc, log: log, v: validator.New(validator.WithRequiredStructEnabled())}
 
-	flightsV1Group := tripsV1Group.Group("/:trip_id/flights")
+	flightsV1Group := tripsV1Group.Group("/flights")
 
 	{
 		flightsV1Group.Post("", r.postFlight)
@@ -70,7 +71,7 @@ func NewFlightRoutes(tripsV1Group fiber.Router, uc usecase.Flights, log logger.I
 func NewTrainRoutes(apiV1Group fiber.Router, uc usecase.Trains, log logger.Interface) {
 	r := &TrainsV1{uc: uc, log: log, v: validator.New(validator.WithRequiredStructEnabled())}
 
-	trainsV1Group := apiV1Group.Group("/:trip_id/trains")
+	trainsV1Group := apiV1Group.Group("/trains")
 
 	{
 		trainsV1Group.Post("", r.postTrainJourney)
@@ -81,7 +82,7 @@ func NewTrainRoutes(apiV1Group fiber.Router, uc usecase.Trains, log logger.Inter
 func NewActivityRoutes(tripsV1Group fiber.Router, uc usecase.Activities, log logger.Interface) {
 	r := &ActivitiesV1{uc: uc, log: log, v: validator.New(validator.WithRequiredStructEnabled())}
 
-	activitiesV1Group := tripsV1Group.Group("/:trip_id/activities")
+	activitiesV1Group := tripsV1Group.Group("/activities")
 
 	{
 		activitiesV1Group.Get("", r.getActivities)
@@ -95,7 +96,7 @@ func NewActivityRoutes(tripsV1Group fiber.Router, uc usecase.Activities, log log
 func NewAccommodationRoutes(tripsV1Group fiber.Router, uc usecase.Accommodation, log logger.Interface) {
 	r := &AccommodationV1{uc: uc, log: log, v: validator.New(validator.WithRequiredStructEnabled())}
 
-	accommodationV1Group := tripsV1Group.Group("/:trip_id/accommodation")
+	accommodationV1Group := tripsV1Group.Group("/accommodation")
 
 	{
 		accommodationV1Group.Get("", r.getAllAccommodation)
@@ -109,7 +110,7 @@ func NewAccommodationRoutes(tripsV1Group fiber.Router, uc usecase.Accommodation,
 func NewAttachmentRoutes(tripsV1Group fiber.Router, uc usecase.Attachments, log logger.Interface) {
 	r := &AttachmentsV1{uc: uc, log: log, v: validator.New(validator.WithRequiredStructEnabled())}
 
-	attachmentsV1Group := tripsV1Group.Group("/:trip_id/attachments")
+	attachmentsV1Group := tripsV1Group.Group("/attachments")
 
 	{
 		attachmentsV1Group.Get("", r.getAttachments)

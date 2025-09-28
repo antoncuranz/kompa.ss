@@ -30,6 +30,9 @@ type (
 		GetUserByID(ctx context.Context, id int32) (entity.User, error)
 		GetUserByJwtSub(ctx context.Context, sub uuid.UUID) (entity.User, error)
 		CreateUserFromJwt(ctx context.Context, sub uuid.UUID, claims jwt.Claims) (entity.User, error)
+		HasReadPermission(ctx context.Context, userID, tripID int32) (bool, error)
+		HasWritePermission(ctx context.Context, userID, tripID int32) (bool, error)
+		IsTripOwner(ctx context.Context, userID int32, tripID int32) (bool, error)
 	}
 
 	Trips interface {

@@ -32,19 +32,11 @@ const getAllGeoJson = `-- name: GetAllGeoJson :many
 SELECT transportation_geojson.geojson
 FROM transportation_geojson
          JOIN transportation on transportation_geojson.transportation_id = transportation.id
-         JOIN trip on transportation.trip_id = trip.id
-         LEFT JOIN permissions p ON trip.id = p.trip_id
-WHERE (trip.owner_id = $2 OR p.user_id = $2)
-  AND transportation.trip_id = $1
+WHERE transportation.trip_id = $1
 `
 
-type GetAllGeoJsonParams struct {
-	TripID int32
-	UserID int32
-}
-
-func (q *Queries) GetAllGeoJson(ctx context.Context, arg GetAllGeoJsonParams) ([][]byte, error) {
-	rows, err := q.db.Query(ctx, getAllGeoJson, arg.TripID, arg.UserID)
+func (q *Queries) GetAllGeoJson(ctx context.Context, tripID int32) ([][]byte, error) {
+	rows, err := q.db.Query(ctx, getAllGeoJson, tripID)
 	if err != nil {
 		return nil, err
 	}
@@ -70,16 +62,8 @@ SELECT transportation.id, transportation.trip_id, transportation.type, transport
 FROM transportation
          JOIN location origin on transportation.origin_id = origin.id
          JOIN location destination on transportation.destination_id = destination.id
-         JOIN trip on transportation.trip_id = trip.id
-         LEFT JOIN permissions p ON trip.id = p.trip_id
-WHERE (trip.owner_id = $2 OR p.user_id = $2)
-  AND transportation.trip_id = $1
+WHERE transportation.trip_id = $1
 `
-
-type GetAllTransportationParams struct {
-	TripID int32
-	UserID int32
-}
 
 type GetAllTransportationRow struct {
 	Transportation Transportation
@@ -87,8 +71,8 @@ type GetAllTransportationRow struct {
 	Location_2     Location
 }
 
-func (q *Queries) GetAllTransportation(ctx context.Context, arg GetAllTransportationParams) ([]GetAllTransportationRow, error) {
-	rows, err := q.db.Query(ctx, getAllTransportation, arg.TripID, arg.UserID)
+func (q *Queries) GetAllTransportation(ctx context.Context, tripID int32) ([]GetAllTransportationRow, error) {
+	rows, err := q.db.Query(ctx, getAllTransportation, tripID)
 	if err != nil {
 		return nil, err
 	}
@@ -129,17 +113,13 @@ SELECT transportation.id, transportation.trip_id, transportation.type, transport
 FROM transportation
          JOIN location origin on transportation.origin_id = origin.id
          JOIN location destination on transportation.destination_id = destination.id
-         JOIN trip on transportation.trip_id = trip.id
-         LEFT JOIN permissions p ON trip.id = p.trip_id
-WHERE (trip.owner_id = $3 OR p.user_id = $3)
- AND transportation.trip_id = $1
- AND transportation.id = $2
+WHERE transportation.trip_id = $1
+  AND transportation.id = $2
 `
 
 type GetTransportationByIDParams struct {
 	TripID int32
 	ID     int32
-	UserID int32
 }
 
 type GetTransportationByIDRow struct {
@@ -149,7 +129,7 @@ type GetTransportationByIDRow struct {
 }
 
 func (q *Queries) GetTransportationByID(ctx context.Context, arg GetTransportationByIDParams) (GetTransportationByIDRow, error) {
-	row := q.db.QueryRow(ctx, getTransportationByID, arg.TripID, arg.ID, arg.UserID)
+	row := q.db.QueryRow(ctx, getTransportationByID, arg.TripID, arg.ID)
 	var i GetTransportationByIDRow
 	err := row.Scan(
 		&i.Transportation.ID,

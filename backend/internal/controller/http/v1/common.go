@@ -27,6 +27,10 @@ func ErrorResponse(ctx *fiber.Ctx, err error) error {
 	return ErrorResponseWithStatus(ctx, netHttp.StatusInternalServerError, err)
 }
 
+func ForbiddenResponse(ctx *fiber.Ctx) error {
+	return ErrorResponseWithStatus(ctx, netHttp.StatusForbidden, fmt.Errorf("forbidden"))
+}
+
 func ErrorResponseWithStatus(ctx *fiber.Ctx, code int, err error) error {
 	fmt.Println(err)
 	return ctx.Status(code).JSON(response.Error{Error: err.Error()})

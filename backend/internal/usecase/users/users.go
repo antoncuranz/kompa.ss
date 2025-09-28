@@ -39,6 +39,18 @@ func (uc *UseCase) CreateUserFromJwt(ctx context.Context, sub uuid.UUID, claims 
 	})
 }
 
+func (uc *UseCase) HasReadPermission(ctx context.Context, userID, tripID int32) (bool, error) {
+	return uc.repo.HasReadPermission(ctx, userID, tripID)
+}
+
+func (uc *UseCase) HasWritePermission(ctx context.Context, userID, tripID int32) (bool, error) {
+	return uc.repo.HasWritePermission(ctx, userID, tripID)
+}
+
+func (uc *UseCase) IsTripOwner(ctx context.Context, userID int32, tripID int32) (bool, error) {
+	return uc.repo.IsTripOwner(ctx, userID, tripID)
+}
+
 func parseString(mapClaims map[string]any, key string, defaultValue string) string {
 	raw, ok := mapClaims[key]
 	if !ok {

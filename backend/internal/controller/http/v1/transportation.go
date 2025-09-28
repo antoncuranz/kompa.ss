@@ -22,6 +22,7 @@ type TransportationV1 struct {
 // @Produce     json
 // @Param       trip_id path int true "Trip ID"
 // @Success     200 {object} []entity.Transportation
+// @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
 // @Router      /trips/{trip_id}/transportation [get]
@@ -46,7 +47,7 @@ func (r *TransportationV1) getAllTransportation(ctx *fiber.Ctx) error {
 // @Param       trip_id path int true "Trip ID"
 // @Param       transportation_id path int true "Transportation ID"
 // @Success     200 {object} entity.Transportation
-// @Failure     404 {object} response.Error
+// @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
 // @Router      /trips/{trip_id}/transportation/{transportation_id} [get]
@@ -74,7 +75,7 @@ func (r *TransportationV1) getTransportation(ctx *fiber.Ctx) error {
 // @Param       trip_id path int true "Trip ID"
 // @Param       transportation_id path int true "Transportation ID"
 // @Success     204
-// @Failure     404 {object} response.Error
+// @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
 // @Router      /trips/{trip_id}/transportation/{transportation_id} [delete]
@@ -101,6 +102,7 @@ func (r *TransportationV1) deleteTransportation(ctx *fiber.Ctx) error {
 // @Produce     json
 // @Param       trip_id path int true "Trip ID"
 // @Success     200 {object} []geojson.FeatureCollection
+// @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
 // @Router      /trips/{trip_id}/transportation/geojson [get]

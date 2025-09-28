@@ -24,6 +24,7 @@ type AttachmentsV1 struct {
 // @Produce     json
 // @Param       trip_id path int true "Trip ID"
 // @Success     200 {object} []entity.Attachment
+// @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
 // @Router      /trips/{trip_id}/attachments [get]
@@ -48,6 +49,7 @@ func (r *AttachmentsV1) getAttachments(ctx *fiber.Ctx) error {
 // @Param       trip_id path int true "Trip ID"
 // @Param       attachment_id path int true "Attachment ID"
 // @Success     200 {object} entity.Attachment
+// @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
 // @Router      /trips/{trip_id}/attachments/{attachment_id} [get]
@@ -90,6 +92,7 @@ type AttachmentsParam struct {
 // @Param       trip_id path int true "Trip ID"
 // @Param       attachments formData AttachmentsParam true "attachment"
 // @Success     204
+// @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
 // @Router      /trips/{trip_id}/attachments [post]
@@ -124,6 +127,7 @@ func (r *AttachmentsV1) postAttachment(ctx *fiber.Ctx) error {
 // @Param       trip_id path int true "Trip ID"
 // @Param       attachment_id path int true "Attachment ID"
 // @Success     204
+// @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
 // @Router      /trips/{trip_id}/attachments/{attachment_id} [delete]

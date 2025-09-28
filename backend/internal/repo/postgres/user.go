@@ -56,6 +56,27 @@ func (r *UserRepo) CreateUser(ctx context.Context, user entity.User) (entity.Use
 	return r.GetUserByID(ctx, userID)
 }
 
+func (r *UserRepo) HasReadPermission(ctx context.Context, userID, tripID int32) (bool, error) {
+	return r.Queries.HasReadPermission(ctx, sqlc.HasReadPermissionParams{
+		UserID: userID,
+		TripID: tripID,
+	})
+}
+
+func (r *UserRepo) HasWritePermission(ctx context.Context, userID, tripID int32) (bool, error) {
+	return r.Queries.HasWritePermission(ctx, sqlc.HasWritePermissionParams{
+		UserID: userID,
+		TripID: tripID,
+	})
+}
+
+func (r *UserRepo) IsTripOwner(ctx context.Context, userID int32, tripID int32) (bool, error) {
+	return r.Queries.IsTripOwner(ctx, sqlc.IsTripOwnerParams{
+		UserID: userID,
+		TripID: tripID,
+	})
+}
+
 func mapUsers(users []sqlc.User) []entity.User {
 	result := []entity.User{}
 	for _, user := range users {

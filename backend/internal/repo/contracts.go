@@ -17,6 +17,9 @@ type (
 		GetUserByID(ctx context.Context, id int32) (entity.User, error)
 		GetUserByJwtSub(ctx context.Context, sub uuid.UUID) (entity.User, error)
 		CreateUser(ctx context.Context, user entity.User) (entity.User, error)
+		HasReadPermission(ctx context.Context, userID, tripID int32) (bool, error)
+		HasWritePermission(ctx context.Context, userID, tripID int32) (bool, error)
+		IsTripOwner(ctx context.Context, userID int32, tripID int32) (bool, error)
 	}
 
 	TripsRepo interface {

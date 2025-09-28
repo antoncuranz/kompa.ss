@@ -62,6 +62,50 @@ func (q *Queries) GetUsers(ctx context.Context) ([]User, error) {
 	return items, nil
 }
 
+const hasReadPermission = `-- name: HasReadPermission :one
+SELECT EXISTS (
+    SELECT 1
+    FROM trip
+             LEFT JOIN permissions p ON trip.id = p.trip_id
+    WHERE (trip.owner_id = $1 OR p.user_id = $1)
+      AND id = $2
+)
+`
+
+type HasReadPermissionParams struct {
+	UserID int32
+	TripID int32
+}
+
+func (q *Queries) HasReadPermission(ctx context.Context, arg HasReadPermissionParams) (bool, error) {
+	row := q.db.QueryRow(ctx, hasReadPermission, arg.UserID, arg.TripID)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
+}
+
+const hasWritePermission = `-- name: HasWritePermission :one
+SELECT EXISTS (
+    SELECT 1
+    FROM trip
+             LEFT JOIN permissions p ON trip.id = p.trip_id
+    WHERE (trip.owner_id = $1 OR (p.user_id = $1 AND p.write is true))
+      AND id = $2
+)
+`
+
+type HasWritePermissionParams struct {
+	UserID int32
+	TripID int32
+}
+
+func (q *Queries) HasWritePermission(ctx context.Context, arg HasWritePermissionParams) (bool, error) {
+	row := q.db.QueryRow(ctx, hasWritePermission, arg.UserID, arg.TripID)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
+}
+
 const insertUser = `-- name: InsertUser :one
 INSERT INTO "user" (name, jwt_sub)
 VALUES ($1, $2)
@@ -78,4 +122,25 @@ func (q *Queries) InsertUser(ctx context.Context, arg InsertUserParams) (int32, 
 	var id int32
 	err := row.Scan(&id)
 	return id, err
+}
+
+const isTripOwner = `-- name: IsTripOwner :one
+SELECT EXISTS (
+    SELECT 1
+    FROM trip
+    WHERE trip.owner_id = $1
+      AND id = $2
+)
+`
+
+type IsTripOwnerParams struct {
+	UserID int32
+	TripID int32
+}
+
+func (q *Queries) IsTripOwner(ctx context.Context, arg IsTripOwnerParams) (bool, error) {
+	row := q.db.QueryRow(ctx, isTripOwner, arg.UserID, arg.TripID)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
 }

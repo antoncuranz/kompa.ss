@@ -39,11 +39,11 @@ func (suite *IntegrationTestSuite) TestPostAccommodation() {
 	getByID, _ := suite.userApi(ForbiddenUser).GetAccommodationByID(suite.T().Context(), api.GetAccommodationByIDParams{TripID: tripID, AccommodationID: accommodation.ID})
 
 	// then (forbiddenUser)
-	allAccommodation = getAll.(*api.GetAllAccommodationOKApplicationJSON)
-	suite.Empty(*allAccommodation)
+	_, ok := getAll.(*api.GetAllAccommodationForbidden)
+	suite.True(ok)
 
-	_, ok := getByID.(*api.EntityAccommodation)
-	suite.False(ok)
+	_, ok = getByID.(*api.GetAccommodationByIDForbidden)
+	suite.True(ok)
 }
 
 func (suite *IntegrationTestSuite) TestCreateAccommodationOutsideOfTripDates() {
@@ -64,8 +64,8 @@ func (suite *IntegrationTestSuite) TestCreateAccommodationOutsideOfTripDates() {
 	}, api.PostAccommodationParams{TripID: tripID})
 	suite.NoError(err)
 
-	_, ok := response.(*api.ResponseError)
-	suite.True(ok)
+	_, ok := response.(*api.PostAccommodationNoContent)
+	suite.False(ok)
 
 	// when
 	res, err := suite.api.GetActivities(suite.T().Context(), api.GetActivitiesParams{TripID: tripID})

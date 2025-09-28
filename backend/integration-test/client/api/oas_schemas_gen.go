@@ -31,20 +31,48 @@ func (s *Bearerauth) SetRoles(val []string) {
 	s.Roles = val
 }
 
+type DeleteAccommodationForbidden ResponseError
+
+func (*DeleteAccommodationForbidden) deleteAccommodationRes() {}
+
+type DeleteAccommodationInternalServerError ResponseError
+
+func (*DeleteAccommodationInternalServerError) deleteAccommodationRes() {}
+
 // DeleteAccommodationNoContent is response for DeleteAccommodation operation.
 type DeleteAccommodationNoContent struct{}
 
 func (*DeleteAccommodationNoContent) deleteAccommodationRes() {}
+
+type DeleteActivityForbidden ResponseError
+
+func (*DeleteActivityForbidden) deleteActivityRes() {}
+
+type DeleteActivityInternalServerError ResponseError
+
+func (*DeleteActivityInternalServerError) deleteActivityRes() {}
 
 // DeleteActivityNoContent is response for DeleteActivity operation.
 type DeleteActivityNoContent struct{}
 
 func (*DeleteActivityNoContent) deleteActivityRes() {}
 
+type DeleteAttachmentForbidden ResponseError
+
+func (*DeleteAttachmentForbidden) deleteAttachmentRes() {}
+
+type DeleteAttachmentInternalServerError ResponseError
+
+func (*DeleteAttachmentInternalServerError) deleteAttachmentRes() {}
+
 // DeleteAttachmentNoContent is response for DeleteAttachment operation.
 type DeleteAttachmentNoContent struct{}
 
 func (*DeleteAttachmentNoContent) deleteAttachmentRes() {}
+
+type DeleteTransportationForbidden ResponseError
+
+func (*DeleteTransportationForbidden) deleteTransportationRes() {}
 
 type DeleteTransportationInternalServerError ResponseError
 
@@ -55,13 +83,13 @@ type DeleteTransportationNoContent struct{}
 
 func (*DeleteTransportationNoContent) deleteTransportationRes() {}
 
-type DeleteTransportationNotFound ResponseError
-
-func (*DeleteTransportationNotFound) deleteTransportationRes() {}
-
 type DeleteTripBadRequest ResponseError
 
 func (*DeleteTripBadRequest) deleteTripRes() {}
+
+type DeleteTripForbidden ResponseError
+
+func (*DeleteTripForbidden) deleteTripRes() {}
 
 type DeleteTripInternalServerError ResponseError
 
@@ -72,9 +100,13 @@ type DeleteTripNoContent struct{}
 
 func (*DeleteTripNoContent) deleteTripRes() {}
 
-type DeleteTripNotFound ResponseError
+type DownloadAttachmentForbidden ResponseError
 
-func (*DeleteTripNotFound) deleteTripRes() {}
+func (*DownloadAttachmentForbidden) downloadAttachmentRes() {}
+
+type DownloadAttachmentInternalServerError ResponseError
+
+func (*DownloadAttachmentInternalServerError) downloadAttachmentRes() {}
 
 // Ref: #/components/schemas/entity.Accommodation
 type EntityAccommodation struct {
@@ -997,45 +1029,109 @@ func (s *EntityUser) SetName(val string) {
 
 func (*EntityUser) getUserRes() {}
 
+type GetAccommodationByIDForbidden ResponseError
+
+func (*GetAccommodationByIDForbidden) getAccommodationByIDRes() {}
+
+type GetAccommodationByIDInternalServerError ResponseError
+
+func (*GetAccommodationByIDInternalServerError) getAccommodationByIDRes() {}
+
+type GetActivitiesForbidden ResponseError
+
+func (*GetActivitiesForbidden) getActivitiesRes() {}
+
+type GetActivitiesInternalServerError ResponseError
+
+func (*GetActivitiesInternalServerError) getActivitiesRes() {}
+
 type GetActivitiesOKApplicationJSON []EntityActivity
 
 func (*GetActivitiesOKApplicationJSON) getActivitiesRes() {}
+
+type GetActivityForbidden ResponseError
+
+func (*GetActivityForbidden) getActivityRes() {}
+
+type GetActivityInternalServerError ResponseError
+
+func (*GetActivityInternalServerError) getActivityRes() {}
+
+type GetAllAccommodationForbidden ResponseError
+
+func (*GetAllAccommodationForbidden) getAllAccommodationRes() {}
+
+type GetAllAccommodationInternalServerError ResponseError
+
+func (*GetAllAccommodationInternalServerError) getAllAccommodationRes() {}
 
 type GetAllAccommodationOKApplicationJSON []EntityAccommodation
 
 func (*GetAllAccommodationOKApplicationJSON) getAllAccommodationRes() {}
 
+type GetAllTransportationForbidden ResponseError
+
+func (*GetAllTransportationForbidden) getAllTransportationRes() {}
+
+type GetAllTransportationInternalServerError ResponseError
+
+func (*GetAllTransportationInternalServerError) getAllTransportationRes() {}
+
 type GetAllTransportationOKApplicationJSON []EntityTransportation
 
 func (*GetAllTransportationOKApplicationJSON) getAllTransportationRes() {}
+
+type GetAttachmentsForbidden ResponseError
+
+func (*GetAttachmentsForbidden) getAttachmentsRes() {}
+
+type GetAttachmentsInternalServerError ResponseError
+
+func (*GetAttachmentsInternalServerError) getAttachmentsRes() {}
 
 type GetAttachmentsOKApplicationJSON []EntityAttachment
 
 func (*GetAttachmentsOKApplicationJSON) getAttachmentsRes() {}
 
+type GetGeoJsonForbidden ResponseError
+
+func (*GetGeoJsonForbidden) getGeoJsonRes() {}
+
+type GetGeoJsonInternalServerError ResponseError
+
+func (*GetGeoJsonInternalServerError) getGeoJsonRes() {}
+
 type GetGeoJsonOKApplicationJSON []string
 
 func (*GetGeoJsonOKApplicationJSON) getGeoJsonRes() {}
+
+type GetTrainStationForbidden ResponseError
+
+func (*GetTrainStationForbidden) getTrainStationRes() {}
+
+type GetTrainStationInternalServerError ResponseError
+
+func (*GetTrainStationInternalServerError) getTrainStationRes() {}
+
+type GetTransportationForbidden ResponseError
+
+func (*GetTransportationForbidden) getTransportationRes() {}
 
 type GetTransportationInternalServerError ResponseError
 
 func (*GetTransportationInternalServerError) getTransportationRes() {}
 
-type GetTransportationNotFound ResponseError
-
-func (*GetTransportationNotFound) getTransportationRes() {}
-
 type GetTripBadRequest ResponseError
 
 func (*GetTripBadRequest) getTripRes() {}
 
+type GetTripForbidden ResponseError
+
+func (*GetTripForbidden) getTripRes() {}
+
 type GetTripInternalServerError ResponseError
 
 func (*GetTripInternalServerError) getTripRes() {}
-
-type GetTripNotFound ResponseError
-
-func (*GetTripNotFound) getTripRes() {}
 
 type GetTripsOKApplicationJSON []EntityTrip
 
@@ -1306,25 +1402,65 @@ func (o OptNilEntityTrainDetail) Or(d EntityTrainDetail) EntityTrainDetail {
 	return d
 }
 
+type PostAccommodationForbidden ResponseError
+
+func (*PostAccommodationForbidden) postAccommodationRes() {}
+
+type PostAccommodationInternalServerError ResponseError
+
+func (*PostAccommodationInternalServerError) postAccommodationRes() {}
+
 // PostAccommodationNoContent is response for PostAccommodation operation.
 type PostAccommodationNoContent struct{}
 
 func (*PostAccommodationNoContent) postAccommodationRes() {}
+
+type PostActivityForbidden ResponseError
+
+func (*PostActivityForbidden) postActivityRes() {}
+
+type PostActivityInternalServerError ResponseError
+
+func (*PostActivityInternalServerError) postActivityRes() {}
 
 // PostActivityNoContent is response for PostActivity operation.
 type PostActivityNoContent struct{}
 
 func (*PostActivityNoContent) postActivityRes() {}
 
+type PostAttachmentForbidden ResponseError
+
+func (*PostAttachmentForbidden) postAttachmentRes() {}
+
+type PostAttachmentInternalServerError ResponseError
+
+func (*PostAttachmentInternalServerError) postAttachmentRes() {}
+
 // PostAttachmentNoContent is response for PostAttachment operation.
 type PostAttachmentNoContent struct{}
 
 func (*PostAttachmentNoContent) postAttachmentRes() {}
 
+type PostFlightForbidden ResponseError
+
+func (*PostFlightForbidden) postFlightRes() {}
+
+type PostFlightInternalServerError ResponseError
+
+func (*PostFlightInternalServerError) postFlightRes() {}
+
 // PostFlightNoContent is response for PostFlight operation.
 type PostFlightNoContent struct{}
 
 func (*PostFlightNoContent) postFlightRes() {}
+
+type PostTrainJourneyForbidden ResponseError
+
+func (*PostTrainJourneyForbidden) postTrainJourneyRes() {}
+
+type PostTrainJourneyInternalServerError ResponseError
+
+func (*PostTrainJourneyInternalServerError) postTrainJourneyRes() {}
 
 type PostTripBadRequest ResponseError
 
@@ -1334,15 +1470,39 @@ type PostTripInternalServerError ResponseError
 
 func (*PostTripInternalServerError) postTripRes() {}
 
+type PutAccommodationForbidden ResponseError
+
+func (*PutAccommodationForbidden) putAccommodationRes() {}
+
+type PutAccommodationInternalServerError ResponseError
+
+func (*PutAccommodationInternalServerError) putAccommodationRes() {}
+
 // PutAccommodationNoContent is response for PutAccommodation operation.
 type PutAccommodationNoContent struct{}
 
 func (*PutAccommodationNoContent) putAccommodationRes() {}
 
+type PutActivityForbidden ResponseError
+
+func (*PutActivityForbidden) putActivityRes() {}
+
+type PutActivityInternalServerError ResponseError
+
+func (*PutActivityInternalServerError) putActivityRes() {}
+
 // PutActivityNoContent is response for PutActivity operation.
 type PutActivityNoContent struct{}
 
 func (*PutActivityNoContent) putActivityRes() {}
+
+type PutFlightForbidden ResponseError
+
+func (*PutFlightForbidden) putFlightRes() {}
+
+type PutFlightInternalServerError ResponseError
+
+func (*PutFlightInternalServerError) putFlightRes() {}
 
 // PutFlightNoContent is response for PutFlight operation.
 type PutFlightNoContent struct{}
@@ -1353,6 +1513,10 @@ type PutTripBadRequest ResponseError
 
 func (*PutTripBadRequest) putTripRes() {}
 
+type PutTripForbidden ResponseError
+
+func (*PutTripForbidden) putTripRes() {}
+
 type PutTripInternalServerError ResponseError
 
 func (*PutTripInternalServerError) putTripRes() {}
@@ -1361,10 +1525,6 @@ func (*PutTripInternalServerError) putTripRes() {}
 type PutTripNoContent struct{}
 
 func (*PutTripNoContent) putTripRes() {}
-
-type PutTripNotFound ResponseError
-
-func (*PutTripNotFound) putTripRes() {}
 
 // Ref: #/components/schemas/request.Accommodation
 type RequestAccommodation struct {
@@ -1746,29 +1906,9 @@ func (s *ResponseError) SetError(val string) {
 	s.Error = val
 }
 
-func (*ResponseError) deleteAccommodationRes()  {}
-func (*ResponseError) deleteActivityRes()       {}
-func (*ResponseError) deleteAttachmentRes()     {}
-func (*ResponseError) downloadAttachmentRes()   {}
-func (*ResponseError) getAccommodationByIDRes() {}
-func (*ResponseError) getActivitiesRes()        {}
-func (*ResponseError) getActivityRes()          {}
-func (*ResponseError) getAllAccommodationRes()  {}
-func (*ResponseError) getAllTransportationRes() {}
-func (*ResponseError) getAttachmentsRes()       {}
-func (*ResponseError) getGeoJsonRes()           {}
-func (*ResponseError) getTrainStationRes()      {}
-func (*ResponseError) getTripsRes()             {}
-func (*ResponseError) getUserRes()              {}
-func (*ResponseError) getUsersRes()             {}
-func (*ResponseError) postAccommodationRes()    {}
-func (*ResponseError) postActivityRes()         {}
-func (*ResponseError) postAttachmentRes()       {}
-func (*ResponseError) postFlightRes()           {}
-func (*ResponseError) postTrainJourneyRes()     {}
-func (*ResponseError) putAccommodationRes()     {}
-func (*ResponseError) putActivityRes()          {}
-func (*ResponseError) putFlightRes()            {}
+func (*ResponseError) getTripsRes() {}
+func (*ResponseError) getUserRes()  {}
+func (*ResponseError) getUsersRes() {}
 
 // Ref: #/components/schemas/v1.AttachmentsParam
 type V1AttachmentsParamMultipart struct {

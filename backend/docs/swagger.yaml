@@ -581,12 +581,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Bad Request
-        "404":
+        "403":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/response.Error'
-          description: Not Found
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -620,12 +620,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Bad Request
-        "404":
+        "403":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/response.Error'
-          description: Not Found
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -662,12 +662,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Bad Request
-        "404":
+        "403":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/response.Error'
-          description: Not Found
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -698,6 +698,12 @@ paths:
                   $ref: '#/components/schemas/entity.Accommodation'
                 type: array
           description: OK
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -728,6 +734,12 @@ paths:
       responses:
         "204":
           description: No Content
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -758,6 +770,12 @@ paths:
       responses:
         "204":
           description: No Content
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -791,6 +809,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/entity.Accommodation'
           description: OK
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -827,6 +851,12 @@ paths:
       responses:
         "204":
           description: No Content
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -857,6 +887,12 @@ paths:
                   $ref: '#/components/schemas/entity.Activity'
                 type: array
           description: OK
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -887,6 +923,12 @@ paths:
       responses:
         "204":
           description: No Content
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -917,6 +959,12 @@ paths:
       responses:
         "204":
           description: No Content
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -950,6 +998,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/entity.Activity'
           description: OK
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -986,6 +1040,12 @@ paths:
       responses:
         "204":
           description: No Content
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -1016,6 +1076,12 @@ paths:
                   $ref: '#/components/schemas/entity.Attachment'
                 type: array
           description: OK
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -1046,6 +1112,12 @@ paths:
       responses:
         "204":
           description: No Content
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -1076,6 +1148,12 @@ paths:
       responses:
         "204":
           description: No Content
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -1109,6 +1187,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/entity.Attachment'
           description: OK
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -1140,6 +1224,12 @@ paths:
       responses:
         "204":
           description: No Content
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -1177,6 +1267,12 @@ paths:
       responses:
         "204":
           description: No Content
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -1212,6 +1308,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/entity.Transportation'
           description: OK
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -1246,6 +1348,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/entity.TrainStation'
           description: OK
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -1276,6 +1384,12 @@ paths:
                   $ref: '#/components/schemas/entity.Transportation'
                 type: array
           description: OK
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -1306,12 +1420,12 @@ paths:
       responses:
         "204":
           description: No Content
-        "404":
+        "403":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/response.Error'
-          description: Not Found
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -1345,12 +1459,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/entity.Transportation'
           description: OK
-        "404":
+        "403":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/response.Error'
-          description: Not Found
+          description: Forbidden
         "500":
           content:
             application/json:
@@ -1381,6 +1495,12 @@ paths:
                   type: string
                 type: array
           description: OK
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
         "500":
           content:
             application/json:

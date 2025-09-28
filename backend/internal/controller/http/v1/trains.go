@@ -24,6 +24,7 @@ type TrainsV1 struct {
 // @Param       trip_id path int true "Trip ID"
 // @Param       query query string true "station query"
 // @Success     200 {object} entity.TrainStation
+// @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
 // @Router      /trips/{trip_id}/trains/stations [get]
@@ -45,6 +46,7 @@ func (r *TrainsV1) getTrainStation(ctx *fiber.Ctx) error {
 // @Param       trip_id path int true "Trip ID"
 // @Param       request body request.TrainJourney true "train journey"
 // @Success     200 {object} entity.Transportation
+// @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
 // @Router      /trips/{trip_id}/trains [post]

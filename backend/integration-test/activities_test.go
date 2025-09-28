@@ -40,11 +40,11 @@ func (suite *IntegrationTestSuite) TestPostActivity() {
 	getByID, _ := suite.userApi(ForbiddenUser).GetActivity(suite.T().Context(), api.GetActivityParams{TripID: tripID, ActivityID: activity.ID})
 
 	// then (forbiddenUser)
-	activities = getAll.(*api.GetActivitiesOKApplicationJSON)
-	suite.Empty(*activities)
+	_, ok := getAll.(*api.GetActivitiesForbidden)
+	suite.True(ok)
 
-	_, ok := getByID.(*api.EntityActivity)
-	suite.False(ok)
+	_, ok = getByID.(*api.GetActivityForbidden)
+	suite.True(ok)
 }
 
 func (suite *IntegrationTestSuite) TestCreateActivityOutsideOfTripDates() {
@@ -63,8 +63,8 @@ func (suite *IntegrationTestSuite) TestCreateActivityOutsideOfTripDates() {
 	}, api.PostActivityParams{TripID: tripID})
 	suite.NoError(err)
 
-	_, ok := response.(*api.ResponseError)
-	suite.True(ok)
+	_, ok := response.(*api.PostActivityNoContent)
+	suite.False(ok)
 
 	// when
 	res, err := suite.api.GetActivities(suite.T().Context(), api.GetActivitiesParams{TripID: tripID})
