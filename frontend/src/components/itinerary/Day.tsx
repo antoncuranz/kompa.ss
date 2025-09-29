@@ -81,7 +81,7 @@ export default function Day({
       )}
 
       {dayData.transportation.map((transportation, idx) =>
-        <div key={idx} className="my-4">
+        <div key={idx} className="mt-4">
           {renderTransportation(transportation)}
         </div>
       )}
@@ -89,7 +89,7 @@ export default function Day({
       {nextDay && (hasNightTransportation ?
         <Separator className="relative bottom-5 z-0"/>
       :
-        <DaySeparator accomodation={dayData.accommodation} collapsedDays={collapsedDays} onAccommodationClick={onAccommodationClick}/>
+        <DaySeparator className="mt-4" accomodation={dayData.accommodation} collapsedDays={collapsedDays} onAccommodationClick={onAccommodationClick}/>
       )}
     </div>
   )
