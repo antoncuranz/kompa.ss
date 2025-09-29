@@ -18,8 +18,8 @@ func New(r repo.TransportationRepo) *UseCase {
 	}
 }
 
-func (uc *UseCase) GetAllTransportation(ctx context.Context, userID int32, tripID int32) ([]entity.Transportation, error) {
-	allTransportation, err := uc.repo.GetAllTransportation(ctx, userID, tripID)
+func (uc *UseCase) GetAllTransportation(ctx context.Context, tripID int32) ([]entity.Transportation, error) {
+	allTransportation, err := uc.repo.GetAllTransportation(ctx, tripID)
 	if err != nil {
 		return nil, fmt.Errorf("get all transportation: %w", err)
 	}
@@ -27,8 +27,8 @@ func (uc *UseCase) GetAllTransportation(ctx context.Context, userID int32, tripI
 	return allTransportation, nil
 }
 
-func (uc *UseCase) GetTransportationByID(ctx context.Context, userID int32, tripID int32, transportationID int32) (entity.Transportation, error) {
-	transportation, err := uc.repo.GetTransportationByID(ctx, userID, tripID, transportationID)
+func (uc *UseCase) GetTransportationByID(ctx context.Context, tripID int32, transportationID int32) (entity.Transportation, error) {
+	transportation, err := uc.repo.GetTransportationByID(ctx, tripID, transportationID)
 	if err != nil {
 		return entity.Transportation{}, fmt.Errorf("get transportation [id=%d]: %w", transportationID, err)
 	}
@@ -36,10 +36,10 @@ func (uc *UseCase) GetTransportationByID(ctx context.Context, userID int32, trip
 	return transportation, nil
 }
 
-func (uc *UseCase) DeleteTransportation(ctx context.Context, userID int32, tripID int32, transportationID int32) error {
-	return uc.repo.DeleteTransportation(ctx, userID, tripID, transportationID)
+func (uc *UseCase) DeleteTransportation(ctx context.Context, tripID int32, transportationID int32) error {
+	return uc.repo.DeleteTransportation(ctx, tripID, transportationID)
 }
 
-func (uc *UseCase) GetAllGeoJson(ctx context.Context, userID int32, tripID int32) ([]geojson.FeatureCollection, error) {
-	return uc.repo.GetAllGeoJson(ctx, userID, tripID)
+func (uc *UseCase) GetAllGeoJson(ctx context.Context, tripID int32) ([]geojson.FeatureCollection, error) {
+	return uc.repo.GetAllGeoJson(ctx, tripID)
 }

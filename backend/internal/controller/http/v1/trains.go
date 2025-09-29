@@ -61,7 +61,7 @@ func (r *TrainsV1) postTrainJourney(ctx *fiber.Ctx) error {
 		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse request body: %w", err))
 	}
 
-	transportation, err := r.uc.CreateTrainJourney(ctx.Context(), userIdFromCtx(ctx), int32(tripID), *body)
+	transportation, err := r.uc.CreateTrainJourney(ctx.Context(), int32(tripID), *body)
 	if err != nil {
 		return ErrorResponse(ctx, fmt.Errorf("retrieve journey: %w", err))
 	}

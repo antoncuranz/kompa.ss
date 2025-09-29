@@ -25,7 +25,7 @@ export default function FlightEntry({
     <Collapsible
       open={open}
       onOpenChange={setOpen}
-      className={cn("rounded-lg border mx-3 p-2 pl-4 pr-4 grid bg-background z-10 relative", className)}
+      className={cn("rounded-xl border mx-3 p-2 pl-4 pr-4 grid bg-background z-10 relative", className)}
     >
       <CollapsibleTrigger asChild>
         <div className="grid cursor-pointer w-full" style={{gridTemplateColumns: "1.5rem 1fr", columnGap: "0.5rem"}}>

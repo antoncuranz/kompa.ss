@@ -1,4 +1,5 @@
 @import "@fontsource/redacted-script";
+@import '@fontsource/inconsolata';
 
 @tailwind base;
   @tailwind components;
@@ -86,6 +87,10 @@ body {
 
 .redacted:not(:hover) {
   font-family: "Redacted Script";
+}
+
+.iconsolata {
+  font-family: 'Inconsolata', monospace;
 }
 
 .no-scrollbar {

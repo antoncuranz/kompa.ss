@@ -3,12 +3,14 @@
 import React, {useState} from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import {Layer, Map, Popup, Source} from "react-map-gl/mapbox";
-import type {Feature, FeatureCollection} from 'geojson';
+import type {Feature, FeatureCollection, GeoJsonProperties} from 'geojson';
 import RenderAfterMap from "@/components/card/RenderAfterMap.tsx";
-import {Accommodation, Activity} from "@/types.ts";
+import {Accommodation, Activity, GeoJsonPlane, GeoJsonTrain} from "@/types.ts";
 import {LngLat, MapMouseEvent} from "mapbox-gl";
 import {formatDateShort, formatTime} from "@/components/util.ts";
 import {useTheme} from "next-themes";
+import TrainPopup from "@/components/popup/TrainPopup.tsx";
+import FlightPopup from "@/components/popup/FlightPopup.tsx";
 
 export default function TheMap({
   activities, accommodation, geojson
@@ -75,58 +77,33 @@ export default function TheMap({
     }
   }
 
-  // function getFlightGeoJson(): FeatureCollection {
-  //     const features = transportation
-  //       .filter(transportation => transportation.type == TransportationType.Plane)
-  //       .map(transportation => transportation.flightDetail!)
-  //       .flatMap(flightDetail => flightDetail.legs)
-  //       .map(mapLegToFeature)
-  //
-  //   return {type: "FeatureCollection", features: features};
-  // }
-
-  // function mapLegToFeature(leg: FlightLeg): Feature {
-  //   return {
-  //     type: 'Feature',
-  //     geometry: {
-  //       type: 'LineString',
-  //       coordinates: [
-  //         [leg.origin.location!.longitude, leg.origin.location!.latitude],
-  //         [leg.destination.location!.longitude, leg.destination.location!.latitude],
-  //       ]
-  //     },
-  //     properties: {
-  //       "popupTitle": `✈️ Flight from ${leg.origin.municipality} to ${leg.destination.municipality}`,
-  //       "popupBody": leg.flightNumber,
-  //       "popupBodyRight": `${formatDateShort(leg.departureDateTime)} ${formatTime(leg.departureDateTime)} - ${formatTime(leg.arrivalDateTime)}` + (!isSameDay(leg.departureDateTime, leg.arrivalDateTime) ? " (+1)" : "")
-  //     }
-  //   }
-  // }
-
   function onMouseEnter(event: MapMouseEvent) {
     if (!event.features || event.features.length == 0)
       return
 
     const featureProperties = event.features.filter(feature =>
-        feature.properties && feature.properties["popupTitle"] && feature.properties["popupBody"]
+        feature.properties && feature.properties["type"]
     ).map(feature => feature.properties)
 
     setPopupInfo({
       lngLat: event.lngLat,
       children: featureProperties.map((properties, idx) =>
-          <div key={idx}>
-            <strong>{properties!["popupTitle"]}</strong>
-            {properties!["popupBody"] &&
-              <div className="flex">
-                <p className="flex-grow">{properties!["popupBody"]}</p>
-                {properties!["popupBodyRight"] &&
-                  <p className="ml-2">{properties!["popupBodyRight"]}</p>
-                }
-              </div>
-            }
-          </div>
+        <div key={idx}>
+          {renderTransportationProperties(properties)}
+        </div>
       )
     })
+  }
+
+  function renderTransportationProperties(props: GeoJsonProperties) {
+    switch (props!["type"]) {
+      case "PLANE":
+        return <FlightPopup properties={props as GeoJsonPlane}/>
+      case "TRAIN":
+        return <TrainPopup properties={props as GeoJsonTrain}/>
+      default:
+        return <></>
+    }
   }
 
   function getColorByType(fc: FeatureCollection) {
@@ -147,7 +124,7 @@ export default function TheMap({
         projection="globe"
         initialViewState={{latitude: 52.520007, longitude: 13.404954, zoom: 10}}
         config={{"basemap": {"lightPreset": getMapboxTheme()}}}
-        interactiveLayerIds={["activity", "accommodation", "flight"]}
+        interactiveLayerIds={geojson.map((_, idx) => "geojson" + idx).concat(["activity", "accommodation", "flight"])}
         onMouseEnter={onMouseEnter}
         onMouseMove={onMouseEnter}
         onMouseLeave={() => setPopupInfo(null)}
@@ -159,7 +136,7 @@ export default function TheMap({
                      paint={{"line-color": getColorByType(fc), "line-width": 5, "line-emissive-strength": 1}}
                      layout={{"line-cap": "round"}}
               />
-              <Layer type="circle"
+              <Layer type="circle" id={"geojson" + idx}
                      filter={["==", ["geometry-type"], "Point"]}
                      paint={{"circle-color": getColorByType(fc), "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
               />
@@ -177,22 +154,13 @@ export default function TheMap({
                  paint={{"circle-color": "#36bf00", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
           />
         </Source>
-        {/*<Source type="geojson" data={getFlightGeoJson()}>*/}
-        {/*  <Layer type="line"*/}
-        {/*         paint={{"line-color": "#007cbf", "line-width": 5, "line-emissive-strength": 1}}*/}
-        {/*         layout={{"line-cap": "round"}}*/}
-        {/*  />*/}
-        {/*  <Layer id="flight"*/}
-        {/*         type="circle"*/}
-        {/*         paint={{"circle-color": "#007cbf", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}*/}
-        {/*  />*/}
-        {/*</Source>*/}
         {popupInfo && (
             <Popup offset={10}
                    closeButton={false}
                    closeOnClick={false}
                    longitude={popupInfo.lngLat.lng}
                    latitude={popupInfo.lngLat.lat}
+                   maxWidth={undefined}
                    className="shadow-xl bg-background"
             >
               {popupInfo.children}

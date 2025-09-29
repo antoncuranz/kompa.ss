@@ -25,7 +25,7 @@ func (r *TripsRepo) GetTrips(ctx context.Context, userID int32) ([]entity.Trip, 
 	return mapTrips(trips), nil
 }
 
-func (r *TripsRepo) GetTripByID(ctx context.Context, userID int32, tripID int32) (entity.Trip, error) {
+func (r *TripsRepo) GetTripByID(ctx context.Context, tripID int32) (entity.Trip, error) {
 	trip, err := r.Queries.GetTripByID(ctx, tripID)
 	if err != nil {
 		return entity.Trip{}, fmt.Errorf("get trip [tripID=%d]: %w", tripID, err)
@@ -47,10 +47,10 @@ func (r *TripsRepo) CreateTrip(ctx context.Context, trip entity.Trip) (entity.Tr
 		return entity.Trip{}, fmt.Errorf("insert trip: %w", err)
 	}
 
-	return r.GetTripByID(ctx, trip.OwnerID, tripID)
+	return r.GetTripByID(ctx, tripID)
 }
 
-func (r *TripsRepo) UpdateTrip(ctx context.Context, userID int32, trip entity.Trip) error {
+func (r *TripsRepo) UpdateTrip(ctx context.Context, trip entity.Trip) error {
 	err := r.Queries.UpdateTrip(ctx, sqlc.UpdateTripParams{
 		ID:          trip.ID,
 		Name:        trip.Name,
@@ -66,7 +66,7 @@ func (r *TripsRepo) UpdateTrip(ctx context.Context, userID int32, trip entity.Tr
 	return nil
 }
 
-func (r *TripsRepo) DeleteTrip(ctx context.Context, userID int32, tripID int32) error {
+func (r *TripsRepo) DeleteTrip(ctx context.Context, tripID int32) error {
 	err := r.Queries.DeleteTripByID(ctx, tripID)
 	if err != nil {
 		return fmt.Errorf("delete trip: %w", err)

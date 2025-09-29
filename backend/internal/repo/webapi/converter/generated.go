@@ -39,7 +39,13 @@ func (c *TrainConverterImpl) ConvertLeg(source response.Leg) (entity.TrainLeg, e
 		return entityTrainLeg, err
 	}
 	entityTrainLeg.ArrivalDateTime = civilDateTime2
-	entityTrainLeg.LineName = source.Line.Name
+	var pString *string
+	if source.Line != nil {
+		pString = &source.Line.Name
+	}
+	if pString != nil {
+		entityTrainLeg.LineName = *pString
+	}
 	return entityTrainLeg, nil
 }
 func (c *TrainConverterImpl) ConvertLocation(source response.Location) entity.Location {

@@ -70,6 +70,11 @@ export function formatTime(time: string, lacksDatePrefix: boolean = false) {
   return date.getHours() + ":" + date.getMinutes().toString().padStart(2, "0")
 }
 
+export function formatTimePadded(time: string, lacksDatePrefix: boolean = false) {
+  const date = new Date(lacksDatePrefix ? "1970-01-01T" + time : time)
+  return date.getHours().toString().padStart(2, "0") + ":" + date.getMinutes().toString().padStart(2, "0")
+}
+
 export function formatAmount(amount: number|null, decimals = 2): string {
   if (amount == null) return ""
   const sign = amount < 0 ? "-" : ""

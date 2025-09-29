@@ -2,6 +2,7 @@
 package usecase
 
 import (
+	"cloud.google.com/go/civil"
 	"context"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
@@ -37,27 +38,28 @@ type (
 
 	Trips interface {
 		GetTrips(ctx context.Context, userID int32) ([]entity.Trip, error)
-		GetTripByID(ctx context.Context, userID int32, id int32) (entity.Trip, error)
+		GetTripByID(ctx context.Context, id int32) (entity.Trip, error)
 		CreateTrip(ctx context.Context, userID int32, trip request.Trip) (entity.Trip, error)
-		UpdateTrip(ctx context.Context, userID int32, tripID int32, trip request.Trip) error
-		DeleteTrip(ctx context.Context, userID int32, tripID int32) error
+		UpdateTrip(ctx context.Context, tripID int32, trip request.Trip) error
+		DeleteTrip(ctx context.Context, tripID int32) error
+		VerifyDatesInBounds(ctx context.Context, tripID int32, dates ...civil.Date) error
 	}
 
 	Transportation interface {
-		GetAllTransportation(ctx context.Context, userID int32, tripID int32) ([]entity.Transportation, error)
-		GetTransportationByID(ctx context.Context, userID int32, tripID int32, transportationID int32) (entity.Transportation, error)
-		DeleteTransportation(ctx context.Context, userID int32, tripID int32, transportationID int32) error
-		GetAllGeoJson(ctx context.Context, userID int32, tripID int32) ([]geojson.FeatureCollection, error)
+		GetAllTransportation(ctx context.Context, tripID int32) ([]entity.Transportation, error)
+		GetTransportationByID(ctx context.Context, tripID int32, transportationID int32) (entity.Transportation, error)
+		DeleteTransportation(ctx context.Context, tripID int32, transportationID int32) error
+		GetAllGeoJson(ctx context.Context, tripID int32) ([]geojson.FeatureCollection, error)
 	}
 
 	Flights interface {
-		CreateFlight(ctx context.Context, userID int32, tripID int32, flight request.Flight) (entity.Transportation, error)
-		UpdateFlight(ctx context.Context, userID int32, tripID int32, flightID int32, flight request.Flight) error
+		CreateFlight(ctx context.Context, tripID int32, flight request.Flight) (entity.Transportation, error)
+		UpdateFlight(ctx context.Context, tripID int32, flightID int32, flight request.Flight) error
 	}
 
 	Trains interface {
 		RetrieveLocation(ctx context.Context, query string) (entity.TrainStation, error)
-		CreateTrainJourney(ctx context.Context, userID int32, tripID int32, journey request.TrainJourney) (entity.Transportation, error)
+		CreateTrainJourney(ctx context.Context, tripID int32, journey request.TrainJourney) (entity.Transportation, error)
 	}
 
 	Activities interface {

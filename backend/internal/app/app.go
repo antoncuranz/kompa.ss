@@ -74,8 +74,8 @@ func createUseCases(cfg *config.Config, pg *postgres.Postgres) usecase.UseCases 
 	transportationUseCase := transportation.New(transportationRepo)
 	flightsUseCase := flights.New(transportationRepo, webapi.New(cfg.WebApi))
 	trainsUseCase := trains.New(transportationRepo, webapi.NewDbVendoWebAPI(cfg.WebApi))
-	activitiesUseCase := activities.New(persistent.NewActivitiesRepo(pg))
-	accommodationUseCase := accommodation.New(persistent.NewAccommodationRepo(pg))
+	activitiesUseCase := activities.New(persistent.NewActivitiesRepo(pg), tripsUseCase)
+	accommodationUseCase := accommodation.New(persistent.NewAccommodationRepo(pg), tripsUseCase)
 	attachmentsUseCase := attachments.New(persistent.NewAttachmentsRepo(pg))
 
 	return usecase.UseCases{

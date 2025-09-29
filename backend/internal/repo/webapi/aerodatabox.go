@@ -28,9 +28,9 @@ func New(config config.WebApi) *AerodataboxWebAPI {
 	}
 }
 
-func (a *AerodataboxWebAPI) RetrieveFlightLeg(ctx context.Context, date string, flightNumber string, origin *string) (entity.FlightLeg, error) {
+func (a *AerodataboxWebAPI) RetrieveFlightLeg(ctx context.Context, date civil.Date, flightNumber string, origin *string) (entity.FlightLeg, error) {
 	urlFormat := "%s/flights/number/%s/%s?dateLocalRole=Departure"
-	url := fmt.Sprintf(urlFormat, a.baseURL, flightNumber, date)
+	url := fmt.Sprintf(urlFormat, a.baseURL, flightNumber, date.String())
 
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {

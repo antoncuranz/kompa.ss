@@ -32,7 +32,7 @@ func (r *TransportationV1) getAllTransportation(ctx *fiber.Ctx) error {
 		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse trip_id: %w", err))
 	}
 
-	transportation, err := r.uc.GetAllTransportation(ctx.Context(), userIdFromCtx(ctx), int32(tripID))
+	transportation, err := r.uc.GetAllTransportation(ctx.Context(), int32(tripID))
 	if err != nil {
 		return ErrorResponse(ctx, fmt.Errorf("get all transportation: %w", err))
 	}
@@ -61,7 +61,7 @@ func (r *TransportationV1) getTransportation(ctx *fiber.Ctx) error {
 		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse transportation_id: %w", err))
 	}
 
-	transportation, err := r.uc.GetTransportationByID(ctx.UserContext(), userIdFromCtx(ctx), int32(tripID), int32(transportationID))
+	transportation, err := r.uc.GetTransportationByID(ctx.UserContext(), int32(tripID), int32(transportationID))
 	if err != nil {
 		return ErrorResponse(ctx, fmt.Errorf("get transportation [id=%d]: %w", transportationID, err))
 	}
@@ -89,7 +89,7 @@ func (r *TransportationV1) deleteTransportation(ctx *fiber.Ctx) error {
 		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse transportation_id: %w", err))
 	}
 
-	if err := r.uc.DeleteTransportation(ctx.UserContext(), userIdFromCtx(ctx), int32(tripID), int32(transportationID)); err != nil {
+	if err := r.uc.DeleteTransportation(ctx.UserContext(), int32(tripID), int32(transportationID)); err != nil {
 		return ErrorResponse(ctx, fmt.Errorf("delete transportation with id %d: %w", transportationID, err))
 	}
 
@@ -112,7 +112,7 @@ func (r *TransportationV1) getGeoJson(ctx *fiber.Ctx) error {
 		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse trip_id: %w", err))
 	}
 
-	geojson, err := r.uc.GetAllGeoJson(ctx.Context(), userIdFromCtx(ctx), int32(tripID))
+	geojson, err := r.uc.GetAllGeoJson(ctx.Context(), int32(tripID))
 	if err != nil {
 		return ErrorResponse(ctx, fmt.Errorf("get geojson: %w", err))
 	}

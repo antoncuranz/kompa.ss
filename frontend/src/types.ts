@@ -131,3 +131,34 @@ export type DayRenderData = {
   activities: Activity[];
   accommodation: Accommodation | undefined;
 };
+
+
+export type GeoJsonPlane = {
+  type: string;
+  fromMunicipality: string;
+  toMunicipality: string;
+  legs: string;
+}
+
+export type GeoJsonFlightLeg = {
+  flightNumber: string;
+  departureDateTime: string;
+  arrivalDateTime: string;
+  fromIata: string;
+  toIata: string;
+}
+
+export type GeoJsonTrain = {
+  type: string;
+  fromMunicipality: string;
+  toMunicipality: string;
+  legs: string;
+}
+
+export type GeoJsonTrainLeg = {
+  lineName: string;
+  departureDateTime: string;
+  arrivalDateTime: string;
+  fromStation: string;
+  toStation: string;
+}

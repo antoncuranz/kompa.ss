@@ -2,18 +2,22 @@ package accommodation
 
 import (
 	"context"
+	"fmt"
 	"kompass/internal/controller/http/v1/request"
 	"kompass/internal/entity"
 	"kompass/internal/repo"
+	"kompass/internal/usecase"
 )
 
 type UseCase struct {
-	repo repo.AccommodationRepo
+	repo  repo.AccommodationRepo
+	trips usecase.Trips
 }
 
-func New(r repo.AccommodationRepo) *UseCase {
+func New(r repo.AccommodationRepo, trips usecase.Trips) *UseCase {
 	return &UseCase{
-		repo: r,
+		repo:  r,
+		trips: trips,
 	}
 }
 
@@ -26,6 +30,10 @@ func (uc *UseCase) GetAllAccommodation(ctx context.Context, tripID int32) ([]ent
 }
 
 func (uc *UseCase) CreateAccommodation(ctx context.Context, tripID int32, accommodation request.Accommodation) (entity.Accommodation, error) {
+	if err := uc.trips.VerifyDatesInBounds(ctx, tripID, accommodation.DepartureDate, accommodation.ArrivalDate); err != nil {
+		return entity.Accommodation{}, fmt.Errorf("invalid date: %w", err)
+	}
+
 	return uc.repo.SaveAccommodation(ctx, entity.Accommodation{
 		TripID:        tripID,
 		Name:          accommodation.Name,

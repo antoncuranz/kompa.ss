@@ -2,6 +2,7 @@
 package repo
 
 import (
+	"cloud.google.com/go/civil"
 	"context"
 	"github.com/google/uuid"
 	"github.com/paulmach/orb/geojson"
@@ -24,19 +25,19 @@ type (
 
 	TripsRepo interface {
 		GetTrips(ctx context.Context, userID int32) ([]entity.Trip, error)
-		GetTripByID(ctx context.Context, userID int32, id int32) (entity.Trip, error)
+		GetTripByID(ctx context.Context, id int32) (entity.Trip, error)
 		CreateTrip(ctx context.Context, trip entity.Trip) (entity.Trip, error)
-		UpdateTrip(ctx context.Context, userID int32, trip entity.Trip) error
-		DeleteTrip(ctx context.Context, userID int32, tripID int32) error
+		UpdateTrip(ctx context.Context, trip entity.Trip) error
+		DeleteTrip(ctx context.Context, tripID int32) error
 	}
 
 	TransportationRepo interface {
-		GetAllTransportation(ctx context.Context, userID int32, tripID int32) ([]entity.Transportation, error)
-		GetTransportationByID(ctx context.Context, userID int32, tripID int32, id int32) (entity.Transportation, error)
-		SaveTransportation(ctx context.Context, userID int32, transportation entity.Transportation) (entity.Transportation, error)
-		DeleteTransportation(ctx context.Context, userID int32, tripID int32, flightID int32) error
-		GetAllGeoJson(ctx context.Context, userID int32, tripID int32) ([]geojson.FeatureCollection, error)
-		SaveGeoJson(ctx context.Context, userID int32, transportationID int32, geoJson *geojson.FeatureCollection) error
+		GetAllTransportation(ctx context.Context, tripID int32) ([]entity.Transportation, error)
+		GetTransportationByID(ctx context.Context, tripID int32, id int32) (entity.Transportation, error)
+		SaveTransportation(ctx context.Context, transportation entity.Transportation) (entity.Transportation, error)
+		DeleteTransportation(ctx context.Context, tripID int32, flightID int32) error
+		GetAllGeoJson(ctx context.Context, tripID int32) ([]geojson.FeatureCollection, error)
+		SaveGeoJson(ctx context.Context, transportationID int32, geoJson *geojson.FeatureCollection) error
 	}
 
 	ActivitiesRepo interface {
@@ -63,7 +64,7 @@ type (
 	}
 
 	AerodataboxWebAPI interface {
-		RetrieveFlightLeg(ctx context.Context, date string, flightNumber string, origin *string) (entity.FlightLeg, error)
+		RetrieveFlightLeg(ctx context.Context, date civil.Date, flightNumber string, origin *string) (entity.FlightLeg, error)
 	}
 
 	DbVendoWebAPI interface {

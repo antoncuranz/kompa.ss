@@ -26,7 +26,7 @@ func (uc *UseCase) RetrieveLocation(ctx context.Context, query string) (entity.T
 	return uc.dbVendo.RetrieveLocation(ctx, query)
 }
 
-func (uc *UseCase) CreateTrainJourney(ctx context.Context, userID int32, tripID int32, journeyRequest request.TrainJourney) (entity.Transportation, error) {
+func (uc *UseCase) CreateTrainJourney(ctx context.Context, tripID int32, journeyRequest request.TrainJourney) (entity.Transportation, error) {
 	trainDetail, err := uc.dbVendo.RetrieveJourney(ctx, journeyRequest)
 	if err != nil {
 		return entity.Transportation{}, fmt.Errorf("failed to retrieve journey: %w", err)
@@ -35,7 +35,7 @@ func (uc *UseCase) CreateTrainJourney(ctx context.Context, userID int32, tripID 
 	firstLeg := trainDetail.Legs[0]
 	lastLeg := trainDetail.Legs[len(trainDetail.Legs)-1]
 
-	transportation, err := uc.repo.SaveTransportation(ctx, userID, entity.Transportation{
+	transportation, err := uc.repo.SaveTransportation(ctx, entity.Transportation{
 		TripID:            tripID,
 		Type:              entity.TRAIN,
 		Origin:            firstLeg.Origin.Location,
@@ -49,7 +49,7 @@ func (uc *UseCase) CreateTrainJourney(ctx context.Context, userID int32, tripID 
 		return entity.Transportation{}, err
 	}
 
-	_, err = uc.retrieveAndPersistPolyline(ctx, userID, transportation.ID, trainDetail.RefreshToken)
+	_, err = uc.saveGeoJson(ctx, transportation)
 	if err != nil {
 		return entity.Transportation{}, fmt.Errorf("retrieve and process polyline: %w", err)
 	}
@@ -57,8 +57,10 @@ func (uc *UseCase) CreateTrainJourney(ctx context.Context, userID int32, tripID 
 	return transportation, nil
 }
 
-func (uc *UseCase) retrieveAndPersistPolyline(ctx context.Context, userID int32, transportationID int32, refreshToken string) (*geojson.FeatureCollection, error) {
-	polylines, err := uc.dbVendo.RetrievePolylines(ctx, refreshToken)
+func (uc *UseCase) saveGeoJson(ctx context.Context, transportation entity.Transportation) (*geojson.FeatureCollection, error) {
+	legs := transportation.TrainDetail.Legs
+
+	polylines, err := uc.dbVendo.RetrievePolylines(ctx, transportation.TrainDetail.RefreshToken)
 	if err != nil {
 		return nil, fmt.Errorf("retrieve polyline: %w", err)
 	}
@@ -69,29 +71,65 @@ func (uc *UseCase) retrieveAndPersistPolyline(ctx context.Context, userID int32,
 	featureCollection := geojson.NewFeatureCollection()
 	featureCollection.ExtraMembers = map[string]interface{}{"transportationType": "TRAIN"}
 
-	// start point
-	featureCollection.Append(geojson.NewFeature(
-		polylines[0].Features[0].Geometry.(orb.Point),
-	))
+	stationByID := map[string]entity.TrainStation{}
+	legsByStation := map[string][]entity.TrainLeg{}
 
 	for _, polyline := range polylines {
-		// line
 		lineString := orb.LineString{}
 		for _, feature := range polyline.Features {
 			lineString = append(lineString, feature.Geometry.(orb.Point))
 		}
 		featureCollection.Append(geojson.NewFeature(lineString))
-
-		// intermediate/end point
-		featureCollection.Append(geojson.NewFeature(
-			polyline.Features[len(polyline.Features)-1].Geometry.(orb.Point),
-		))
 	}
 
-	err = uc.repo.SaveGeoJson(ctx, userID, transportationID, featureCollection)
+	for _, leg := range legs {
+		stationByID[leg.Origin.ID] = leg.Origin
+		stationByID[leg.Destination.ID] = leg.Destination
+		legsByStation[leg.Origin.ID] = append(legsByStation[leg.Origin.ID], leg)
+		legsByStation[leg.Destination.ID] = append(legsByStation[leg.Destination.ID], leg)
+	}
+
+	from := legs[0].Origin.Name
+	to := legs[len(legs)-1].Destination.Name
+
+	for stationID, legs := range legsByStation {
+		location := stationByID[stationID].Location
+		featureCollection.Append(featureWithProperties(from, to, location, legs))
+	}
+
+	err = uc.repo.SaveGeoJson(ctx, transportation.ID, featureCollection)
 	if err != nil {
 		return nil, fmt.Errorf("save geojson: %w", err)
 	}
 
 	return featureCollection, nil
+}
+
+func featureWithProperties(fromMunicipality string, toMunicipality string, location entity.Location, legs []entity.TrainLeg) *geojson.Feature {
+	feature := geojson.NewFeature(locationToPoint(location))
+
+	feature.Properties["type"] = "TRAIN"
+	feature.Properties["fromMunicipality"] = fromMunicipality
+	feature.Properties["toMunicipality"] = toMunicipality
+
+	var legProperties []map[string]interface{}
+	for _, leg := range legs {
+		legProperties = append(legProperties, map[string]interface{}{
+			"lineName":          leg.LineName,
+			"departureDateTime": leg.DepartureDateTime,
+			"arrivalDateTime":   leg.ArrivalDateTime,
+			"fromStation":       leg.Origin.Name,
+			"toStation":         leg.Destination.Name,
+		})
+	}
+	feature.Properties["legs"] = legProperties
+
+	return feature
+}
+
+func locationToPoint(location entity.Location) orb.Point {
+	return orb.Point{
+		float64(location.Longitude),
+		float64(location.Latitude),
+	}
 }

@@ -40,7 +40,7 @@ func (r *FlightsV1) postFlight(ctx *fiber.Ctx) error {
 		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
 	}
 
-	_, err = r.uc.CreateFlight(ctx.UserContext(), userIdFromCtx(ctx), int32(tripID), *body)
+	_, err = r.uc.CreateFlight(ctx.UserContext(), int32(tripID), *body)
 	if err != nil {
 		return ErrorResponse(ctx, fmt.Errorf("create flight: %w", err))
 	}
@@ -76,7 +76,7 @@ func (r *FlightsV1) putFlight(ctx *fiber.Ctx) error {
 		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
 	}
 
-	if err := r.uc.UpdateFlight(ctx.UserContext(), userIdFromCtx(ctx), int32(tripID), int32(flightID), *body); err != nil {
+	if err := r.uc.UpdateFlight(ctx.UserContext(), int32(tripID), int32(flightID), *body); err != nil {
 		return ErrorResponse(ctx, fmt.Errorf("update flight with id %d: %w", flightID, err))
 	}
 

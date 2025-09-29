@@ -52,7 +52,9 @@ func (a *DbVendoWebAPI) RetrievePolylines(ctx context.Context, refreshToken stri
 	featureCollections := []geojson.FeatureCollection{}
 
 	for _, leg := range rsp.Journey.Legs {
-		featureCollections = append(featureCollections, leg.Polyline)
+		if leg.Polyline != nil {
+			featureCollections = append(featureCollections, *leg.Polyline)
+		}
 	}
 
 	return featureCollections, nil
@@ -69,7 +71,7 @@ func (a *DbVendoWebAPI) RetrieveJourney(ctx context.Context, request request.Tra
 
 	journey, ok := checkJourneys(journeys.Journeys, request)
 	if ok {
-		return a.c.ConvertJourney(journey)
+		return a.convertJourney(journey)
 	}
 
 	for range MaxRetries {
@@ -80,7 +82,7 @@ func (a *DbVendoWebAPI) RetrieveJourney(ctx context.Context, request request.Tra
 
 		journey, ok := checkJourneys(journeys.Journeys, request)
 		if ok {
-			return a.c.ConvertJourney(journey)
+			return a.convertJourney(journey)
 		}
 	}
 
@@ -101,16 +103,43 @@ func (a *DbVendoWebAPI) retrieveJourneysLaterThan(ctx context.Context, journey r
 	return RequestAndParseJsonBody[response.JourneysResponse](ctx, "GET", url, nil)
 }
 
+func (a *DbVendoWebAPI) convertJourney(source response.Journey) (entity.TrainDetail, error) {
+	legs := []entity.TrainLeg{}
+
+	for _, leg := range source.Legs {
+		if leg.Line == nil {
+			continue
+		}
+
+		convertedLeg, err := a.c.ConvertLeg(leg)
+		if err != nil {
+			return entity.TrainDetail{}, err
+		}
+		legs = append(legs, convertedLeg)
+	}
+
+	return entity.TrainDetail{
+		RefreshToken: source.RefreshToken,
+		Legs:         legs,
+	}, nil
+}
+
 func checkJourneys(journeys []response.Journey, request request.TrainJourney) (response.Journey, bool) {
 journeyLoop:
 	for _, journey := range journeys {
-		if len(journey.Legs) != len(request.TrainNumbers) {
-			continue journeyLoop
-		}
+		requestLegIdx := 0
 
-		for i, leg := range journey.Legs {
-			if !equalIgnoringWhitespaceAndCase(leg.Line.Name, request.TrainNumbers[i]) {
+		for _, leg := range journey.Legs {
+			if leg.Line == nil {
+				continue
+			}
+
+			if !equalIgnoringWhitespaceAndCase(leg.Line.Name, request.TrainNumbers[requestLegIdx]) {
 				continue journeyLoop
+			}
+
+			if requestLegIdx = requestLegIdx + 1; requestLegIdx == len(request.TrainNumbers) {
+				return journey, true
 			}
 		}
 

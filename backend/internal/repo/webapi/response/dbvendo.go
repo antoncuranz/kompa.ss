@@ -23,13 +23,13 @@ type Line struct {
 }
 
 type Leg struct {
-	TripID           string                    `json:"tripId"`
-	Origin           StationOrStop             `json:"origin"`
-	Destination      StationOrStop             `json:"destination"`
-	PlannedDeparture string                    `json:"plannedDeparture"`
-	PlannedArrival   string                    `json:"plannedArrival"`
-	Line             Line                      `json:"line"`
-	Polyline         geojson.FeatureCollection `json:"polyline,omitempty" validate:"optional" extensions:"nullable"`
+	TripID           string                     `json:"tripId"`
+	Origin           StationOrStop              `json:"origin"`
+	Destination      StationOrStop              `json:"destination"`
+	PlannedDeparture string                     `json:"plannedDeparture"`
+	PlannedArrival   string                     `json:"plannedArrival"`
+	Line             *Line                      `json:"line" validate:"optional" extensions:"nullable"`
+	Polyline         *geojson.FeatureCollection `json:"polyline,omitempty" validate:"optional" extensions:"nullable"`
 }
 
 type Journey struct {

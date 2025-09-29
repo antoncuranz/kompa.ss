@@ -30,7 +30,7 @@ func NewTransportationRepo(pg *postgres.Postgres, flights *FlightsRepo, trains *
 	}
 }
 
-func (r *TransportationRepo) GetAllTransportation(ctx context.Context, userID int32, tripID int32) ([]entity.Transportation, error) {
+func (r *TransportationRepo) GetAllTransportation(ctx context.Context, tripID int32) ([]entity.Transportation, error) {
 	rows, err := r.Queries.GetAllTransportation(ctx, tripID)
 	if err != nil {
 		return []entity.Transportation{}, fmt.Errorf("get all transportation from db: %w", err)
@@ -63,7 +63,7 @@ func (r *TransportationRepo) GetAllTransportation(ctx context.Context, userID in
 	return result, nil
 }
 
-func (r *TransportationRepo) GetTransportationByID(ctx context.Context, userID int32, tripID int32, transportationID int32) (entity.Transportation, error) {
+func (r *TransportationRepo) GetTransportationByID(ctx context.Context, tripID int32, transportationID int32) (entity.Transportation, error) {
 	row, err := r.Queries.GetTransportationByID(ctx, sqlc.GetTransportationByIDParams{TripID: tripID, ID: transportationID})
 	if err != nil {
 		return entity.Transportation{}, fmt.Errorf("get transportation [id=%d] from db: %w", transportationID, err)
@@ -92,7 +92,7 @@ func (r *TransportationRepo) GetTransportationByID(ctx context.Context, userID i
 	return transportation, nil
 }
 
-func (r *TransportationRepo) SaveTransportation(ctx context.Context, userID int32, transportation entity.Transportation) (entity.Transportation, error) {
+func (r *TransportationRepo) SaveTransportation(ctx context.Context, transportation entity.Transportation) (entity.Transportation, error) {
 
 	tx, err := r.Db.Begin(ctx)
 	if err != nil {
@@ -139,14 +139,14 @@ func (r *TransportationRepo) SaveTransportation(ctx context.Context, userID int3
 		return entity.Transportation{}, fmt.Errorf("commit tx: %w", err)
 	}
 
-	return r.GetTransportationByID(ctx, userID, transportation.TripID, transportationID)
+	return r.GetTransportationByID(ctx, transportation.TripID, transportationID)
 }
 
-func (r *TransportationRepo) DeleteTransportation(ctx context.Context, userID int32, tripID int32, transportationID int32) error {
+func (r *TransportationRepo) DeleteTransportation(ctx context.Context, tripID int32, transportationID int32) error {
 	return r.Queries.DeleteTransportationByID(ctx, sqlc.DeleteTransportationByIDParams{TripID: tripID, ID: transportationID})
 }
 
-func (r *TransportationRepo) GetAllGeoJson(ctx context.Context, userID int32, tripID int32) ([]geojson.FeatureCollection, error) {
+func (r *TransportationRepo) GetAllGeoJson(ctx context.Context, tripID int32) ([]geojson.FeatureCollection, error) {
 	rows, err := r.Queries.GetAllGeoJson(ctx, tripID)
 	if err != nil {
 		return nil, fmt.Errorf("get all geojson from db [t.id=%d]: %w", tripID, err)
@@ -163,7 +163,7 @@ func (r *TransportationRepo) GetAllGeoJson(ctx context.Context, userID int32, tr
 	return allGeoJson, nil
 }
 
-func (r *TransportationRepo) SaveGeoJson(ctx context.Context, userID int32, transportationID int32, geoJson *geojson.FeatureCollection) error {
+func (r *TransportationRepo) SaveGeoJson(ctx context.Context, transportationID int32, geoJson *geojson.FeatureCollection) error {
 	marshalledGeoJson, err := geoJson.MarshalJSON()
 	if err != nil {
 		return fmt.Errorf("marshal geojson: %w", err)

@@ -81,7 +81,7 @@ export default function Day({
       )}
 
       {dayData.transportation.map((transportation, idx) =>
-        <div key={idx}>
+        <div key={idx} className="my-4">
           {renderTransportation(transportation)}
         </div>
       )}

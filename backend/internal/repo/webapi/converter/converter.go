@@ -11,13 +11,13 @@ import (
 // goverter:extend ParseTimestamp
 type TrainConverter interface {
 	ConvertJourney(source response.Journey) (entity.TrainDetail, error)
-
 	// goverter:ignore ID
 	// goverter:map PlannedDeparture DepartureDateTime
 	// goverter:map PlannedArrival ArrivalDateTime
 	// goverter:map Line.Name LineName
-	// goverter:ignore DurationInMinutes
+	// goverter:useZeroValueOnPointerInconsistency
 	// TODO!
+	// goverter:ignore DurationInMinutes
 	ConvertLeg(source response.Leg) (entity.TrainLeg, error)
 
 	ConvertStation(source response.StationOrStop) entity.TrainStation

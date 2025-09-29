@@ -1,11 +1,14 @@
 package request
 
-import "kompass/internal/entity"
+import (
+	"cloud.google.com/go/civil"
+	"kompass/internal/entity"
+)
 
 type FlightLeg struct {
-	Date          string  `json:"date"          example:"2026-01-30"`
-	FlightNumber  string  `json:"flightNumber"  example:"EK412"`
-	OriginAirport *string `json:"originAirport" extensions:"nullable" example:"SYD"`
+	Date          civil.Date `json:"date"          example:"2026-01-30"`
+	FlightNumber  string     `json:"flightNumber"  example:"EK412"`
+	OriginAirport *string    `json:"originAirport" extensions:"nullable" example:"SYD"`
 }
 
 type Flight struct {
