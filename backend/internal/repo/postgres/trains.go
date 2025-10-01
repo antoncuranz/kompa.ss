@@ -76,12 +76,14 @@ func (r *TrainsRepo) SaveTrainDetail(ctx context.Context, qtx *sqlc.Queries, tra
 
 	for _, leg := range train.Legs {
 		_, err := qtx.InsertTrainLeg(ctx, sqlc.InsertTrainLegParams{
-			TransportationID: transportationID,
-			Origin:           leg.Origin.ID,
-			Destination:      leg.Destination.ID,
-			DepartureTime:    leg.DepartureDateTime,
-			ArrivalTime:      leg.ArrivalDateTime,
-			LineName:         leg.LineName,
+			TransportationID:  transportationID,
+			Origin:            leg.Origin.ID,
+			Destination:       leg.Destination.ID,
+			DepartureTime:     leg.DepartureDateTime,
+			ArrivalTime:       leg.ArrivalDateTime,
+			DurationInMinutes: leg.DurationInMinutes,
+			LineName:          leg.LineName,
+			OperatorName:      leg.OperatorName,
 		})
 		if err != nil {
 			return fmt.Errorf("insert leg: %w", err)

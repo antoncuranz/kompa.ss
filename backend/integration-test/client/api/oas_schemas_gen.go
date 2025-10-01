@@ -675,6 +675,7 @@ type EntityTrainLeg struct {
 	DurationInMinutes int                `json:"durationInMinutes"`
 	ID                int                `json:"id"`
 	LineName          string             `json:"lineName"`
+	OperatorName      string             `json:"operatorName"`
 	Origin            EntityTrainStation `json:"origin"`
 }
 
@@ -706,6 +707,11 @@ func (s *EntityTrainLeg) GetID() int {
 // GetLineName returns the value of LineName.
 func (s *EntityTrainLeg) GetLineName() string {
 	return s.LineName
+}
+
+// GetOperatorName returns the value of OperatorName.
+func (s *EntityTrainLeg) GetOperatorName() string {
+	return s.OperatorName
 }
 
 // GetOrigin returns the value of Origin.
@@ -741,6 +747,11 @@ func (s *EntityTrainLeg) SetID(val int) {
 // SetLineName sets the value of LineName.
 func (s *EntityTrainLeg) SetLineName(val string) {
 	s.LineName = val
+}
+
+// SetOperatorName sets the value of OperatorName.
+func (s *EntityTrainLeg) SetOperatorName(val string) {
+	s.OperatorName = val
 }
 
 // SetOrigin sets the value of Origin.
@@ -1786,10 +1797,11 @@ func (s *RequestFlightLeg) SetOriginAirport(val NilString) {
 
 // Ref: #/components/schemas/request.TrainJourney
 type RequestTrainJourney struct {
-	DepartureDate string   `json:"departureDate"`
-	FromStationId string   `json:"fromStationId"`
-	ToStationId   string   `json:"toStationId"`
-	TrainNumbers  []string `json:"trainNumbers"`
+	DepartureDate string    `json:"departureDate"`
+	FromStationId string    `json:"fromStationId"`
+	ToStationId   string    `json:"toStationId"`
+	TrainNumbers  []string  `json:"trainNumbers"`
+	ViaStationId  NilString `json:"viaStationId"`
 }
 
 // GetDepartureDate returns the value of DepartureDate.
@@ -1812,6 +1824,11 @@ func (s *RequestTrainJourney) GetTrainNumbers() []string {
 	return s.TrainNumbers
 }
 
+// GetViaStationId returns the value of ViaStationId.
+func (s *RequestTrainJourney) GetViaStationId() NilString {
+	return s.ViaStationId
+}
+
 // SetDepartureDate sets the value of DepartureDate.
 func (s *RequestTrainJourney) SetDepartureDate(val string) {
 	s.DepartureDate = val
@@ -1830,6 +1847,11 @@ func (s *RequestTrainJourney) SetToStationId(val string) {
 // SetTrainNumbers sets the value of TrainNumbers.
 func (s *RequestTrainJourney) SetTrainNumbers(val []string) {
 	s.TrainNumbers = val
+}
+
+// SetViaStationId sets the value of ViaStationId.
+func (s *RequestTrainJourney) SetViaStationId(val NilString) {
+	s.ViaStationId = val
 }
 
 // Ref: #/components/schemas/request.Trip

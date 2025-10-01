@@ -103,13 +103,15 @@ type TrainDetail struct {
 }
 
 type TrainLeg struct {
-	ID               int32
-	TransportationID int32
-	Origin           string
-	Destination      string
-	DepartureTime    civil.DateTime
-	ArrivalTime      civil.DateTime
-	LineName         string
+	ID                int32
+	TransportationID  int32
+	Origin            string
+	Destination       string
+	DepartureTime     civil.DateTime
+	ArrivalTime       civil.DateTime
+	LineName          string
+	DurationInMinutes int32
+	OperatorName      string
 }
 
 type TrainStation struct {

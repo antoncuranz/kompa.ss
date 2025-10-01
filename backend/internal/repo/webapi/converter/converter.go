@@ -15,6 +15,7 @@ type TrainConverter interface {
 	// goverter:map PlannedDeparture DepartureDateTime
 	// goverter:map PlannedArrival ArrivalDateTime
 	// goverter:map Line.Name LineName
+	// goverter:map Line.Operator.Name OperatorName
 	// goverter:useZeroValueOnPointerInconsistency
 	// TODO!
 	// goverter:ignore DurationInMinutes

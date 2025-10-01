@@ -18,6 +18,19 @@ export default function TrainEntry({
 }){
   const [open, setOpen] = useState<boolean>(false)
 
+  function logoFromOperatorName(operatorName: string): string {
+    const lowerOperatorName = operatorName.toLowerCase()
+    if (lowerOperatorName.startsWith("db")) {
+      return "https://assets.static-bahn.de/dam/jcr:47b6ca20-95d9-4102-bc5a-6ebb5634f009/db-logo.svg"
+    } else if (lowerOperatorName.startsWith("schweiz")) {
+      return "https://digital.sbb.ch/assets/images/brand/signet.svg"
+    } else if (lowerOperatorName.startsWith("österreich")) {
+      return "https://upload.wikimedia.org/wikipedia/commons/5/5e/Logo_%C3%96BB.svg"
+    // } else if (lowerOperatorName.startsWith("trenitalia")) {
+    }
+    return ""
+  }
+
   return (
     <Collapsible
       open={open}
@@ -55,9 +68,11 @@ export default function TrainEntry({
             <p className="text-sm text-muted-foreground">Duration: {formatDurationMinutes(trainLeg.durationInMinutes)}</p>
             <p>{formatTime(trainLeg.arrivalDateTime)} {trainLeg.destination.name}</p>
           </div>
-          <img src={"https://assets.static-bahn.de/dam/jcr:47b6ca20-95d9-4102-bc5a-6ebb5634f009/db-logo.svg"} className="h-4 mt-0 m-auto relative top-1" alt="LH"/>
+          <div className="flex items-center">
+            <img src={logoFromOperatorName(trainLeg.operatorName)} className="h-auto w-full" alt=""/>
+          </div>
           <div>
-            <span className="text-sm text-muted-foreground">DB - {trainLeg.lineName}</span>
+            <span className="text-sm text-muted-foreground">{trainLeg.operatorName} - {trainLeg.lineName}</span>
             <div className="flex float-right">
               <Button variant="secondary" className="ml-2 p-2 h-6" onClick={onInfoBtnClick}>
                 <SquarePen className="w-3.5 h-3.5"/>

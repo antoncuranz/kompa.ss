@@ -118,6 +118,7 @@ export type TrainLeg = {
   arrivalDateTime: string;
   durationInMinutes: number;
   lineName: string;
+  operatorName: string;
 };
 
 export type TrainStation = {

@@ -46,6 +46,13 @@ func (c *TrainConverterImpl) ConvertLeg(source response.Leg) (entity.TrainLeg, e
 	if pString != nil {
 		entityTrainLeg.LineName = *pString
 	}
+	var pString2 *string
+	if source.Line != nil {
+		pString2 = &source.Line.Operator.Name
+	}
+	if pString2 != nil {
+		entityTrainLeg.OperatorName = *pString2
+	}
 	return entityTrainLeg, nil
 }
 func (c *TrainConverterImpl) ConvertLocation(source response.Location) entity.Location {

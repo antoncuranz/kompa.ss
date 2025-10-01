@@ -9,7 +9,10 @@ import (
 	"kompass/internal/entity"
 	"kompass/internal/repo/webapi/converter"
 	"kompass/internal/repo/webapi/response"
+	"net/url"
+	"strconv"
 	"strings"
+	"time"
 )
 
 type DbVendoWebAPI struct {
@@ -60,11 +63,10 @@ func (a *DbVendoWebAPI) RetrievePolylines(ctx context.Context, refreshToken stri
 	return featureCollections, nil
 }
 
-const JourneyUrlFormatBase = "%s/journeys?from=%s&to=%s&transfers=%d&results=10"
 const MaxRetries = 10
 
 func (a *DbVendoWebAPI) RetrieveJourney(ctx context.Context, request request.TrainJourney) (entity.TrainDetail, error) {
-	journeys, err := a.retrieveJourneysInitial(ctx, request)
+	journeys, err := RequestAndParseJsonBody[response.JourneysResponse](ctx, "GET", a.journeyUrl(request, nil), nil)
 	if err != nil {
 		return entity.TrainDetail{}, fmt.Errorf("retrieveJourneysInitial: %w", err)
 	}
@@ -75,7 +77,7 @@ func (a *DbVendoWebAPI) RetrieveJourney(ctx context.Context, request request.Tra
 	}
 
 	for range MaxRetries {
-		journeys, err = a.retrieveJourneysLaterThan(ctx, request, journeys.LaterRef)
+		journeys, err = RequestAndParseJsonBody[response.JourneysResponse](ctx, "GET", a.journeyUrl(request, &journeys.LaterRef), nil)
 		if err != nil {
 			return entity.TrainDetail{}, fmt.Errorf("retrieveJourneysLaterThan: %w", err)
 		}
@@ -89,18 +91,22 @@ func (a *DbVendoWebAPI) RetrieveJourney(ctx context.Context, request request.Tra
 	return entity.TrainDetail{}, fmt.Errorf("no journeys found after %d tries", MaxRetries)
 }
 
-func (a *DbVendoWebAPI) retrieveJourneysInitial(ctx context.Context, journey request.TrainJourney) (*response.JourneysResponse, error) {
-	urlFormat := JourneyUrlFormatBase + "&departure=%s"
-	url := fmt.Sprintf(urlFormat, a.baseURL, journey.FromStationID, journey.ToStationID, len(journey.TrainNumbers), journey.DepartureDate)
-
-	return RequestAndParseJsonBody[response.JourneysResponse](ctx, "GET", url, nil)
-}
-
-func (a *DbVendoWebAPI) retrieveJourneysLaterThan(ctx context.Context, journey request.TrainJourney, laterRef string) (*response.JourneysResponse, error) {
-	urlFormat := JourneyUrlFormatBase + "&laterThan=%s"
-	url := fmt.Sprintf(urlFormat, a.baseURL, journey.FromStationID, journey.ToStationID, len(journey.TrainNumbers), laterRef)
-
-	return RequestAndParseJsonBody[response.JourneysResponse](ctx, "GET", url, nil)
+func (a *DbVendoWebAPI) journeyUrl(journey request.TrainJourney, laterThan *string) string {
+	params := url.Values{
+		"from":      {journey.FromStationID},
+		"to":        {journey.ToStationID},
+		"transfers": {strconv.Itoa(len(journey.TrainNumbers) - 1)},
+		"results":   {"10"},
+	}
+	if laterThan != nil {
+		params.Add("laterThan", *laterThan)
+	} else {
+		params.Add("departure", journey.DepartureDate.String())
+	}
+	if journey.ViaStationID != nil {
+		params.Add("via", *journey.ViaStationID)
+	}
+	return a.baseURL + "/journeys?" + params.Encode()
 }
 
 func (a *DbVendoWebAPI) convertJourney(source response.Journey) (entity.TrainDetail, error) {
@@ -115,6 +121,9 @@ func (a *DbVendoWebAPI) convertJourney(source response.Journey) (entity.TrainDet
 		if err != nil {
 			return entity.TrainDetail{}, err
 		}
+		from := convertedLeg.DepartureDateTime.In(time.UTC)
+		to := convertedLeg.ArrivalDateTime.In(time.UTC)
+		convertedLeg.DurationInMinutes = int32(to.Sub(from).Minutes())
 		legs = append(legs, convertedLeg)
 	}
 

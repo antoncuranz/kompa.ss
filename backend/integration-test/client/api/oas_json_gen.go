@@ -2065,19 +2065,24 @@ func (s *EntityTrainLeg) encodeFields(e *jx.Encoder) {
 		e.Str(s.LineName)
 	}
 	{
+		e.FieldStart("operatorName")
+		e.Str(s.OperatorName)
+	}
+	{
 		e.FieldStart("origin")
 		s.Origin.Encode(e)
 	}
 }
 
-var jsonFieldsNameOfEntityTrainLeg = [7]string{
+var jsonFieldsNameOfEntityTrainLeg = [8]string{
 	0: "arrivalDateTime",
 	1: "departureDateTime",
 	2: "destination",
 	3: "durationInMinutes",
 	4: "id",
 	5: "lineName",
-	6: "origin",
+	6: "operatorName",
+	7: "origin",
 }
 
 // Decode decodes EntityTrainLeg from json.
@@ -2159,8 +2164,20 @@ func (s *EntityTrainLeg) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"lineName\"")
 			}
-		case "origin":
+		case "operatorName":
 			requiredBitSet[0] |= 1 << 6
+			if err := func() error {
+				v, err := d.Str()
+				s.OperatorName = string(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"operatorName\"")
+			}
+		case "origin":
+			requiredBitSet[0] |= 1 << 7
 			if err := func() error {
 				if err := s.Origin.Decode(d); err != nil {
 					return err
@@ -2179,7 +2196,7 @@ func (s *EntityTrainLeg) Decode(d *jx.Decoder) error {
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [1]uint8{
-		0b01111111,
+		0b11111111,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
@@ -5855,13 +5872,18 @@ func (s *RequestTrainJourney) encodeFields(e *jx.Encoder) {
 		}
 		e.ArrEnd()
 	}
+	{
+		e.FieldStart("viaStationId")
+		s.ViaStationId.Encode(e)
+	}
 }
 
-var jsonFieldsNameOfRequestTrainJourney = [4]string{
+var jsonFieldsNameOfRequestTrainJourney = [5]string{
 	0: "departureDate",
 	1: "fromStationId",
 	2: "toStationId",
 	3: "trainNumbers",
+	4: "viaStationId",
 }
 
 // Decode decodes RequestTrainJourney from json.
@@ -5929,6 +5951,16 @@ func (s *RequestTrainJourney) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"trainNumbers\"")
 			}
+		case "viaStationId":
+			requiredBitSet[0] |= 1 << 4
+			if err := func() error {
+				if err := s.ViaStationId.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"viaStationId\"")
+			}
 		default:
 			return d.Skip()
 		}
@@ -5939,7 +5971,7 @@ func (s *RequestTrainJourney) Decode(d *jx.Decoder) error {
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [1]uint8{
-		0b00001111,
+		0b00011111,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.

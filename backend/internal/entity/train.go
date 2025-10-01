@@ -16,6 +16,7 @@ type TrainLeg struct {
 	ArrivalDateTime   civil.DateTime `json:"arrivalDateTime"`
 	DurationInMinutes int32          `json:"durationInMinutes"`
 	LineName          string         `json:"lineName"`
+	OperatorName      string         `json:"operatorName"`
 }
 
 type TrainDetail struct {

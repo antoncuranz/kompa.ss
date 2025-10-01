@@ -16,10 +16,16 @@ type StationOrStop struct {
 }
 
 type Line struct {
-	ID          string `json:"id"`
-	FahrtNr     string `json:"fahrtNr"`
-	Name        string `json:"name"`
-	ProductCode string `json:"productCode"`
+	ID          string   `json:"id"`
+	FahrtNr     string   `json:"fahrtNr"`
+	Name        string   `json:"name"`
+	ProductCode string   `json:"productCode"`
+	Operator    Operator `json:"operator"`
+}
+
+type Operator struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
 }
 
 type Leg struct {

@@ -27,6 +27,6 @@ VALUES ($1, $2, $3)
 ON CONFLICT DO NOTHING;
 
 -- name: InsertTrainLeg :one
-INSERT INTO train_leg (transportation_id, origin, destination, departure_time, arrival_time, line_name)
-VALUES ($1, $2, $3, $4, $5, $6)
+INSERT INTO train_leg (transportation_id, origin, destination, departure_time, arrival_time, duration_in_minutes, line_name, operator_name)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 RETURNING id;

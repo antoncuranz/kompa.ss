@@ -218,6 +218,8 @@ components:
           type: integer
         lineName:
           type: string
+        operatorName:
+          type: string
         origin:
           $ref: '#/components/schemas/entity.TrainStation'
       required:
@@ -227,6 +229,7 @@ components:
       - durationInMinutes
       - id
       - lineName
+      - operatorName
       - origin
       type: object
     entity.TrainStation:
@@ -446,11 +449,16 @@ components:
             type: string
           type: array
           uniqueItems: false
+        viaStationId:
+          example: "8596008"
+          nullable: true
+          type: string
       required:
       - departureDate
       - fromStationId
       - toStationId
       - trainNumbers
+      - viaStationId
       type: object
     request.Trip:
       properties:

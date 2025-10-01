@@ -25,7 +25,7 @@ func (q *Queries) GetTrainDetailByTransportationID(ctx context.Context, transpor
 }
 
 const getTrainLegsByTransportationID = `-- name: GetTrainLegsByTransportationID :many
-SELECT train_leg.id, train_leg.transportation_id, train_leg.origin, train_leg.destination, train_leg.departure_time, train_leg.arrival_time, train_leg.line_name,
+SELECT train_leg.id, train_leg.transportation_id, train_leg.origin, train_leg.destination, train_leg.departure_time, train_leg.arrival_time, train_leg.line_name, train_leg.duration_in_minutes, train_leg.operator_name,
        origin.id, origin.name, origin.location_id,
        destination.id, destination.name, destination.location_id,
        origin_location.id, origin_location.latitude, origin_location.longitude,
@@ -64,6 +64,8 @@ func (q *Queries) GetTrainLegsByTransportationID(ctx context.Context, transporta
 			&i.TrainLeg.DepartureTime,
 			&i.TrainLeg.ArrivalTime,
 			&i.TrainLeg.LineName,
+			&i.TrainLeg.DurationInMinutes,
+			&i.TrainLeg.OperatorName,
 			&i.TrainStation.ID,
 			&i.TrainStation.Name,
 			&i.TrainStation.LocationID,
@@ -103,18 +105,20 @@ func (q *Queries) InsertTrainDetail(ctx context.Context, arg InsertTrainDetailPa
 }
 
 const insertTrainLeg = `-- name: InsertTrainLeg :one
-INSERT INTO train_leg (transportation_id, origin, destination, departure_time, arrival_time, line_name)
-VALUES ($1, $2, $3, $4, $5, $6)
+INSERT INTO train_leg (transportation_id, origin, destination, departure_time, arrival_time, duration_in_minutes, line_name, operator_name)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 RETURNING id
 `
 
 type InsertTrainLegParams struct {
-	TransportationID int32
-	Origin           string
-	Destination      string
-	DepartureTime    civil.DateTime
-	ArrivalTime      civil.DateTime
-	LineName         string
+	TransportationID  int32
+	Origin            string
+	Destination       string
+	DepartureTime     civil.DateTime
+	ArrivalTime       civil.DateTime
+	DurationInMinutes int32
+	LineName          string
+	OperatorName      string
 }
 
 func (q *Queries) InsertTrainLeg(ctx context.Context, arg InsertTrainLegParams) (int32, error) {
@@ -124,7 +128,9 @@ func (q *Queries) InsertTrainLeg(ctx context.Context, arg InsertTrainLegParams) 
 		arg.Destination,
 		arg.DepartureTime,
 		arg.ArrivalTime,
+		arg.DurationInMinutes,
 		arg.LineName,
+		arg.OperatorName,
 	)
 	var id int32
 	err := row.Scan(&id)

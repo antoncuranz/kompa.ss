@@ -78,7 +78,9 @@ func ConvertTrainLeg(c TrainConverter, leg sqlc.GetTrainLegsByTransportationIDRo
 		Destination:       ConvertTrainStation(c, leg.TrainStation_2, leg.Location_2),
 		DepartureDateTime: leg.TrainLeg.DepartureTime,
 		ArrivalDateTime:   leg.TrainLeg.ArrivalTime,
+		DurationInMinutes: leg.TrainLeg.DurationInMinutes,
 		LineName:          leg.TrainLeg.LineName,
+		OperatorName:      leg.TrainLeg.OperatorName,
 	}
 }
 
