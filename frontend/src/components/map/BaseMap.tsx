@@ -28,6 +28,7 @@ export default function BaseMap({
         projection="globe"
         initialViewState={{latitude: initialCoordinates?.latitude ?? fallbackLat, longitude: initialCoordinates?.longitude ?? fallbackLon, zoom: 10}}
         // config={{"basemap": {"lightPreset": getMapboxTheme()}}}
+        style={{background: "#04162a"}}
         {...props}
     >
       <RenderAfterMap theme={getMapboxTheme()}>
