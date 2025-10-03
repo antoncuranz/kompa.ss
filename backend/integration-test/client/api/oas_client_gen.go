@@ -189,7 +189,7 @@ type Invoker interface {
 	// Update flight.
 	//
 	// PUT /trips/{trip_id}/flights/{flight_id}
-	PutFlight(ctx context.Context, request *RequestFlight, params PutFlightParams) (PutFlightRes, error)
+	PutFlight(ctx context.Context, params PutFlightParams) (PutFlightRes, error)
 	// PutTrip invokes putTrip operation.
 	//
 	// Update trip.
@@ -2781,12 +2781,12 @@ func (c *Client) sendPutActivity(ctx context.Context, request *RequestActivity, 
 // Update flight.
 //
 // PUT /trips/{trip_id}/flights/{flight_id}
-func (c *Client) PutFlight(ctx context.Context, request *RequestFlight, params PutFlightParams) (PutFlightRes, error) {
-	res, err := c.sendPutFlight(ctx, request, params)
+func (c *Client) PutFlight(ctx context.Context, params PutFlightParams) (PutFlightRes, error) {
+	res, err := c.sendPutFlight(ctx, params)
 	return res, err
 }
 
-func (c *Client) sendPutFlight(ctx context.Context, request *RequestFlight, params PutFlightParams) (res PutFlightRes, err error) {
+func (c *Client) sendPutFlight(ctx context.Context, params PutFlightParams) (res PutFlightRes, err error) {
 
 	u := uri.Clone(c.requestURL(ctx))
 	var pathParts [4]string
@@ -2833,9 +2833,6 @@ func (c *Client) sendPutFlight(ctx context.Context, request *RequestFlight, para
 	r, err := ht.NewRequest(ctx, "PUT", u)
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
-	}
-	if err := encodePutFlightRequest(request, r); err != nil {
-		return res, errors.Wrap(err, "encode request")
 	}
 
 	{

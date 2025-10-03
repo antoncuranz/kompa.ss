@@ -22,6 +22,18 @@ INSERT INTO flight_leg (transportation_id, origin, destination, airline, flight_
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 RETURNING id;
 
+-- name: UpdateFlightLeg :exec
+UPDATE flight_leg
+SET origin              = $2,
+    destination         = $3,
+    airline             = $4,
+    flight_number       = $5,
+    departure_time      = $6,
+    arrival_time        = $7,
+    duration_in_minutes = $8,
+    aircraft            = $9
+WHERE id = $1;
+
 -- name: InsertAirport :exec
 INSERT INTO airport (iata, name, municipality, location_id)
 VALUES ($1, $2, $3, $4)

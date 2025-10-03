@@ -87,7 +87,7 @@ export default function TripDialogContent({
       <Form id="trip-form" form={form} onSubmit={form.handleSubmit(onSubmit)}>
         <FormField control={form.control} name="name" label="Name"
                    render={({field}) =>
-                       <Input placeholder="My new Activity" {...field} />
+                       <Input data-1p-ignore placeholder="My awesome Trip" {...field} />
                    }
         />
         <RowContainer>

@@ -8,6 +8,7 @@ import (
 	"github.com/paulmach/orb/geojson"
 	"kompass/internal/controller/http/v1/request"
 	"kompass/internal/entity"
+	"kompass/pkg/sqlc"
 )
 
 //go:generate mockgen -source=contracts.go -destination=../usecase/mocks_repo_test.go -package=usecase_test
@@ -38,6 +39,12 @@ type (
 		DeleteTransportation(ctx context.Context, tripID int32, flightID int32) error
 		GetAllGeoJson(ctx context.Context, tripID int32) ([]geojson.FeatureCollection, error)
 		SaveGeoJson(ctx context.Context, transportationID int32, geoJson *geojson.FeatureCollection) error
+	}
+
+	FlightsRepo interface {
+		GetFlightDetail(ctx context.Context, transportationID int32) (entity.FlightDetail, error)
+		SaveFlightDetail(ctx context.Context, qtx *sqlc.Queries, transportationID int32, flight entity.FlightDetail) error
+		UpdateFlightLegs(ctx context.Context, flightLegs []entity.FlightLeg) error
 	}
 
 	ActivitiesRepo interface {

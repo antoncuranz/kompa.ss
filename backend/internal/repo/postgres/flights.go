@@ -43,8 +43,65 @@ func (r *FlightsRepo) GetFlightDetail(ctx context.Context, transportationID int3
 }
 
 func (r *FlightsRepo) SaveFlightDetail(ctx context.Context, qtx *sqlc.Queries, transportationID int32, flight entity.FlightDetail) error {
+	err := r.saveAirports(ctx, qtx, flight.Legs)
+	if err != nil {
+		return fmt.Errorf("save airports: %w", err)
+	}
+
+	err = r.saveFlightLegs(ctx, qtx, transportationID, flight)
+	if err != nil {
+		return fmt.Errorf("save flight legs: %w", err)
+	}
+
+	err = r.savePNRs(ctx, qtx, transportationID, flight)
+	if err != nil {
+		return fmt.Errorf("save pnrs: %w", err)
+	}
+
+	return nil
+}
+
+func (r *FlightsRepo) UpdateFlightLegs(ctx context.Context, flightLegs []entity.FlightLeg) error {
+	tx, err := r.Db.Begin(ctx)
+	if err != nil {
+		return fmt.Errorf("begin tx: %w", err)
+	}
+	defer tx.Rollback(ctx)
+	qtx := r.Queries.WithTx(tx)
+
+	err = r.saveAirports(ctx, r.Queries, flightLegs)
+	if err != nil {
+		return fmt.Errorf("save airports: %w", err)
+	}
+
+	for _, leg := range flightLegs {
+		err := qtx.UpdateFlightLeg(ctx, sqlc.UpdateFlightLegParams{
+			ID:                leg.ID,
+			Origin:            leg.Origin.Iata,
+			Destination:       leg.Destination.Iata,
+			Airline:           leg.Airline,
+			FlightNumber:      leg.FlightNumber,
+			DepartureTime:     leg.DepartureDateTime,
+			ArrivalTime:       leg.ArrivalDateTime,
+			DurationInMinutes: leg.DurationInMinutes,
+			Aircraft:          leg.Aircraft,
+		})
+		if err != nil {
+			return fmt.Errorf("update flight leg [id=%d]: %w", leg.ID, err)
+		}
+	}
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		return fmt.Errorf("commit tx: %w", err)
+	}
+
+	return nil
+}
+
+func (r *FlightsRepo) saveAirports(ctx context.Context, qtx *sqlc.Queries, flightLegs []entity.FlightLeg) error {
 	airportSet := make(map[string]entity.Airport)
-	for _, leg := range flight.Legs {
+	for _, leg := range flightLegs {
 		airportSet[leg.Origin.Iata] = leg.Origin
 		airportSet[leg.Destination.Iata] = leg.Destination
 	}
@@ -67,6 +124,10 @@ func (r *FlightsRepo) SaveFlightDetail(ctx context.Context, qtx *sqlc.Queries, t
 		}
 	}
 
+	return nil
+}
+
+func (r *FlightsRepo) saveFlightLegs(ctx context.Context, qtx *sqlc.Queries, transportationID int32, flight entity.FlightDetail) error {
 	for _, leg := range flight.Legs {
 		_, err := qtx.InsertFlightLeg(ctx, sqlc.InsertFlightLegParams{
 			TransportationID:  transportationID,
@@ -84,6 +145,10 @@ func (r *FlightsRepo) SaveFlightDetail(ctx context.Context, qtx *sqlc.Queries, t
 		}
 	}
 
+	return nil
+}
+
+func (r *FlightsRepo) savePNRs(ctx context.Context, qtx *sqlc.Queries, transportationID int32, flight entity.FlightDetail) error {
 	for _, pnr := range flight.PNRs {
 		_, err := qtx.InsertPNR(ctx, sqlc.InsertPNRParams{
 			TransportationID: transportationID,

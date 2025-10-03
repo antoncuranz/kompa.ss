@@ -186,3 +186,43 @@ func (q *Queries) InsertPNR(ctx context.Context, arg InsertPNRParams) (int32, er
 	err := row.Scan(&id)
 	return id, err
 }
+
+const updateFlightLeg = `-- name: UpdateFlightLeg :exec
+UPDATE flight_leg
+SET origin              = $2,
+    destination         = $3,
+    airline             = $4,
+    flight_number       = $5,
+    departure_time      = $6,
+    arrival_time        = $7,
+    duration_in_minutes = $8,
+    aircraft            = $9
+WHERE id = $1
+`
+
+type UpdateFlightLegParams struct {
+	ID                int32
+	Origin            string
+	Destination       string
+	Airline           string
+	FlightNumber      string
+	DepartureTime     civil.DateTime
+	ArrivalTime       civil.DateTime
+	DurationInMinutes int32
+	Aircraft          *string
+}
+
+func (q *Queries) UpdateFlightLeg(ctx context.Context, arg UpdateFlightLegParams) error {
+	_, err := q.db.Exec(ctx, updateFlightLeg,
+		arg.ID,
+		arg.Origin,
+		arg.Destination,
+		arg.Airline,
+		arg.FlightNumber,
+		arg.DepartureTime,
+		arg.ArrivalTime,
+		arg.DurationInMinutes,
+		arg.Aircraft,
+	)
+	return err
+}

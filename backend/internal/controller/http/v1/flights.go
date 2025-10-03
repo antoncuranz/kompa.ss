@@ -51,11 +51,8 @@ func (r *FlightsV1) postFlight(ctx *fiber.Ctx) error {
 // @Summary     Update flight
 // @ID          putFlight
 // @Tags  	    flights
-// @Accept      json
-// @Produce     json
 // @Param       trip_id path int true "Trip ID"
 // @Param       flight_id path int true "Flight ID"
-// @Param       request body request.Flight true "flight"
 // @Success     204
 // @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
@@ -71,12 +68,7 @@ func (r *FlightsV1) putFlight(ctx *fiber.Ctx) error {
 		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse flight_id: %w", err))
 	}
 
-	body, err := ParseAndValidateRequestBody[request.Flight](ctx, r.v)
-	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
-	}
-
-	if err := r.uc.UpdateFlight(ctx.UserContext(), int32(tripID), int32(flightID), *body); err != nil {
+	if err := r.uc.UpdateFlight(ctx.UserContext(), int32(tripID), int32(flightID)); err != nil {
 		return ErrorResponse(ctx, fmt.Errorf("update flight with id %d: %w", flightID, err))
 	}
 

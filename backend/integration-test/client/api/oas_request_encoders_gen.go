@@ -141,20 +141,6 @@ func encodePutActivityRequest(
 	return nil
 }
 
-func encodePutFlightRequest(
-	req *RequestFlight,
-	r *http.Request,
-) error {
-	const contentType = "application/json"
-	e := new(jx.Encoder)
-	{
-		req.Encode(e)
-	}
-	encoded := e.Bytes()
-	ht.SetBody(r, bytes.NewReader(encoded), contentType)
-	return nil
-}
-
 func encodePutTripRequest(
 	req *RequestTrip,
 	r *http.Request,

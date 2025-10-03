@@ -34,7 +34,7 @@ export default function FlightDialogContent({
   trip: Trip
   flight?: Transportation | null
 }) {
-  const [edit, setEdit] = useState<boolean>(flight == null)
+  const [edit] = useState<boolean>(flight == null)
   const {onClose} = useDialogContext()
 
   function mapLegsOrDefault(flightLegs: FlightLeg[]|undefined) {
@@ -104,6 +104,16 @@ export default function FlightDialogContent({
     if (response.ok)
       onClose(true)
     else toast("Error deleting Flight", {
+      description: await response.text()
+    })
+  }
+
+  async function onUpdateButtonClick() {
+    const response = await fetch("/api/v1/trips/" + trip.id + "/flights/" + flight!.id, {method: "PUT"})
+
+    if (response.ok)
+      onClose(true)
+    else toast("Error updating Flight", {
       description: await response.text()
     })
   }
@@ -224,8 +234,8 @@ export default function FlightDialogContent({
             <Button variant="destructive" className="w-full text-base" onClick={onDeleteButtonClick}>
               Delete
             </Button>
-            <Button variant="secondary" className="w-full text-base" disabled onClick={() => setEdit(true)}>
-              Edit
+            <Button variant="secondary" className="w-full text-base" onClick={onUpdateButtonClick}>
+              Refresh Data
             </Button>
           </>
         }

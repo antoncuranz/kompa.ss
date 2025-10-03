@@ -54,7 +54,7 @@ type (
 
 	Flights interface {
 		CreateFlight(ctx context.Context, tripID int32, flight request.Flight) (entity.Transportation, error)
-		UpdateFlight(ctx context.Context, tripID int32, flightID int32, flight request.Flight) error
+		UpdateFlight(ctx context.Context, tripID int32, flightID int32) error
 	}
 
 	Trains interface {

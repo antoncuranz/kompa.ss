@@ -1269,13 +1269,6 @@ paths:
         required: true
         schema:
           type: integer
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/request.Flight'
-        description: flight
-        required: true
       responses:
         "204":
           description: No Content
