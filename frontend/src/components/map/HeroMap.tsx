@@ -1,7 +1,7 @@
 "use client"
 
 import React, {useState} from "react";
-import {Layer, Popup, Source} from "react-map-gl/mapbox";
+import {Layer, Popup, Source} from "react-map-gl/maplibre";
 import type {Feature, FeatureCollection, GeoJsonProperties} from 'geojson';
 import {
   Accommodation,
@@ -78,7 +78,7 @@ export default function HeroMap({
     }
   }
 
-  function onMouseEnter(event: MapMouseEvent) {
+  function onMouseEnter(event: MapLayerMouseEvent) {
     if (!event.features || event.features.length == 0)
       return
 
