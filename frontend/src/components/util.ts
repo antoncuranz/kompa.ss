@@ -75,7 +75,7 @@ export function formatTimePadded(time: string, lacksDatePrefix: boolean = false)
   return date.getHours().toString().padStart(2, "0") + ":" + date.getMinutes().toString().padStart(2, "0")
 }
 
-export function formatAmount(amount: number|null, decimals = 2): string {
+export function formatAmount(amount: number|null|undefined, decimals = 2): string {
   if (amount == null) return ""
   const sign = amount < 0 ? "-" : ""
   let result = sign + Math.abs(amount / Math.pow(10, decimals) >> 0).toString().padStart(1, "0")

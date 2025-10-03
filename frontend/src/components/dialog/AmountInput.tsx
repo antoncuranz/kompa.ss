@@ -1,46 +1,40 @@
 import {FocusEvent, useEffect, useState} from 'react'
 import {Input} from "@/components/ui/input.tsx";
-import {useToast} from "@/components/ui/use-toast.ts";
 import {formatAmount} from "@/components/util.ts";
 import {cn} from "@/lib/utils.ts";
+import {ControllerRenderProps, FieldValues} from "react-hook-form";
+import {toast} from "sonner";
 
-interface Props {
-  amount: number|null,
-  updateAmount: (newAmount: number|null) => void,
-  className?: string,
-  disabled?: boolean,
-  readOnly?: boolean,
-  decimals?: number,
-  id?: string,
+export default function AmountInput({
+  onChange, onBlur, value, disabled, name, ref,
+  decimals = 2, placeholder, className, readOnly = false
+}: ControllerRenderProps<FieldValues, string> & {
+  decimals?: number
   placeholder?: string,
-  warnPredicate?: (value: number|null) => boolean
-}
-
-const AmountInput = ({amount, updateAmount, className, disabled = false, readOnly = false, decimals = 2, id, placeholder, warnPredicate}: Props) => {
+  readOnly?: boolean,
+  className?: string,
+}) {
   const [stringAmount, setStringAmount] = useState("")
-  const [warning, setWarning] = useState(false)
-  const { toast } = useToast();
 
   useEffect(() => {
     updateAmountInternal()
-  }, [amount]);
+  }, [value]);
   function updateAmountInternal() {
-    setWarning(amount != null && warnPredicate != null && warnPredicate(amount))
-    setStringAmount(formatAmount(amount, decimals))
+    setStringAmount(formatAmount(value, decimals))
   }
 
-  function onBlur(event: FocusEvent<HTMLInputElement>) {
+  function onBlurLocal(event: FocusEvent<HTMLInputElement>) {
     const newAmount = event.target.value
 
     try {
-      const newValue = newAmount ? parseMonetaryValue(newAmount) : null
-      updateAmount(newValue)
+      const newValue = newAmount ? parseMonetaryValue(newAmount) : undefined
+      onChange(newValue)
       setStringAmount(formatAmount(newValue, decimals))
-      setWarning(newValue != null && warnPredicate != null && warnPredicate(newValue))
     } catch {
-      toast({title: "Unable to parse amount"})
+      toast("Unable to parse amount")
       updateAmountInternal()
     }
+    onBlur()
   }
 
   function parseMonetaryValue(valueString: string) {
@@ -61,9 +55,15 @@ const AmountInput = ({amount, updateAmount, className, disabled = false, readOnl
   }
 
   return (
-    <Input id={id} value={stringAmount} placeholder={placeholder} onChange={e => setStringAmount(e.target.value)}
-           onBlur={onBlur} className={cn(className, "text-right", warning && "text-yellow-600")} disabled={disabled} readOnly={readOnly}/>
+    <Input ref={ref}
+           name={name}
+           value={stringAmount}
+           placeholder={placeholder}
+           onChange={e => setStringAmount(e.target.value)}
+           onBlur={onBlurLocal}
+           className={cn(className, "text-right")}
+           disabled={disabled}
+           readOnly={readOnly}
+    />
   )
 }
-
-export default AmountInput

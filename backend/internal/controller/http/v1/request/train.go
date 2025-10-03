@@ -8,4 +8,5 @@ type TrainJourney struct {
 	TrainNumbers  []string   `json:"trainNumbers"  example:"ICE707"`
 	DepartureDate civil.Date `json:"departureDate" example:"2025-09-20"`
 	ViaStationID  *string    `json:"viaStationId"  example:"8596008" extensions:"nullable"`
+	Price         *int32     `json:"price" extensions:"nullable"`
 }

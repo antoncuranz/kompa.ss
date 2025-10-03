@@ -1,6 +1,6 @@
 import type {Metadata, Viewport} from 'next'
 import '../index.css'
-import {Toaster} from "@/components/ui/toaster.tsx";
+import {Toaster} from "@/components/ui/sonner.tsx";
 import {ThemeProvider} from "@/components/provider/ThemeProvider.tsx";
 
 export const metadata: Metadata = {

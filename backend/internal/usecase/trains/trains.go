@@ -42,7 +42,7 @@ func (uc *UseCase) CreateTrainJourney(ctx context.Context, tripID int32, journey
 		Destination:       lastLeg.Destination.Location,
 		DepartureDateTime: firstLeg.DepartureDateTime,
 		ArrivalDateTime:   lastLeg.ArrivalDateTime,
-		Price:             nil,
+		Price:             journeyRequest.Price,
 		TrainDetail:       &trainDetail,
 	})
 	if err != nil {

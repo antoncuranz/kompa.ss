@@ -5861,6 +5861,10 @@ func (s *RequestTrainJourney) encodeFields(e *jx.Encoder) {
 		e.Str(s.FromStationId)
 	}
 	{
+		e.FieldStart("price")
+		s.Price.Encode(e)
+	}
+	{
 		e.FieldStart("toStationId")
 		e.Str(s.ToStationId)
 	}
@@ -5878,12 +5882,13 @@ func (s *RequestTrainJourney) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfRequestTrainJourney = [5]string{
+var jsonFieldsNameOfRequestTrainJourney = [6]string{
 	0: "departureDate",
 	1: "fromStationId",
-	2: "toStationId",
-	3: "trainNumbers",
-	4: "viaStationId",
+	2: "price",
+	3: "toStationId",
+	4: "trainNumbers",
+	5: "viaStationId",
 }
 
 // Decode decodes RequestTrainJourney from json.
@@ -5919,8 +5924,18 @@ func (s *RequestTrainJourney) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"fromStationId\"")
 			}
-		case "toStationId":
+		case "price":
 			requiredBitSet[0] |= 1 << 2
+			if err := func() error {
+				if err := s.Price.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"price\"")
+			}
+		case "toStationId":
+			requiredBitSet[0] |= 1 << 3
 			if err := func() error {
 				v, err := d.Str()
 				s.ToStationId = string(v)
@@ -5932,7 +5947,7 @@ func (s *RequestTrainJourney) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"toStationId\"")
 			}
 		case "trainNumbers":
-			requiredBitSet[0] |= 1 << 3
+			requiredBitSet[0] |= 1 << 4
 			if err := func() error {
 				s.TrainNumbers = make([]string, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
@@ -5952,7 +5967,7 @@ func (s *RequestTrainJourney) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"trainNumbers\"")
 			}
 		case "viaStationId":
-			requiredBitSet[0] |= 1 << 4
+			requiredBitSet[0] |= 1 << 5
 			if err := func() error {
 				if err := s.ViaStationId.Decode(d); err != nil {
 					return err
@@ -5971,7 +5986,7 @@ func (s *RequestTrainJourney) Decode(d *jx.Decoder) error {
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [1]uint8{
-		0b00011111,
+		0b00111111,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.

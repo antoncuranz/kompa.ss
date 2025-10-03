@@ -439,6 +439,9 @@ components:
         fromStationId:
           example: "8011113"
           type: string
+        price:
+          nullable: true
+          type: integer
         toStationId:
           example: "8000261"
           type: string
@@ -456,6 +459,7 @@ components:
       required:
       - departureDate
       - fromStationId
+      - price
       - toStationId
       - trainNumbers
       - viaStationId

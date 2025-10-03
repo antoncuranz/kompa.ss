@@ -13,13 +13,15 @@ export default function Day({
   nextDay,
   onActivityClick = () => {},
   onAccommodationClick = () => {},
-  onFlightClick = () => {}
+  onFlightClick = () => {},
+  onTrainClick = () => {}
 }: {
   dayData: DayRenderData
   nextDay: string
   onActivityClick?: (activity: Activity) => void;
   onAccommodationClick?: (accommodation: Accommodation | undefined) => void;
   onFlightClick?: (flight: Transportation) => void;
+  onTrainClick?: (train: Transportation) => void;
 }) {
 
   const collapsedDays = nextDay ? getDaysBetween(dayData.day, nextDay).length-2 : 0
@@ -62,7 +64,7 @@ export default function Day({
 
     return filteredLegs.map((leg, idx) =>
         <div key={idx}>
-          <TrainEntry trainLeg={leg}/>
+          <TrainEntry trainLeg={leg} onInfoBtnClick={() => onTrainClick(transportation)}/>
           {filteredLegs.length > idx + 1 &&
             <span className="mx-3 text-sm text-muted-foreground">
               {formatDuration(leg.arrivalDateTime, filteredLegs[idx+1].departureDateTime)} Layover

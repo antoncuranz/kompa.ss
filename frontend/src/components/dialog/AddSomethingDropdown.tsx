@@ -1,47 +1,21 @@
 "use client"
 
 import React, {useState} from "react";
-import {useRouter} from "next/navigation";
 import {Trip} from "@/types.ts";
-import ActivityDialog from "@/components/dialog/ActivityDialog.tsx";
 import {DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigger} from "@/components/ui/dropdown-menu.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {PlaneTakeoff} from "lucide-react";
-import AccommodationDialog from "@/components/dialog/AccommodationDialog.tsx";
-import FlightDialog from "@/components/dialog/FlightDialog.tsx";
-import TrainDialog from "@/components/dialog/TrainDialog.tsx";
+import AccommodationDialogContent from "@/components/dialog/AccommodationDialogContent.tsx";
+import FlightDialogContent from "@/components/dialog/FlightDialogContent.tsx";
+import TrainDialogContent from "@/components/dialog/TrainDialogContent.tsx";
+import ActivityDialogContent from "@/components/dialog/ActivityDialogContent.tsx";
+import {Dialog} from "@/components/dialog/Dialog.tsx";
 
 export default function AddSomethingDropdown({trip}: {trip: Trip}) {
   const [activityDialogOpen, setActivityDialogOpen] = useState(false)
   const [accommodationDialogOpen, setAccommodationDialogOpen] = useState(false)
   const [flightDialogOpen, setFlightDialogOpen] = useState(false)
   const [trainDialogOpen, setTrainDialogOpen] = useState(false)
-
-  const router = useRouter()
-
-  function onActivityDialogClose(needsUpdate: boolean) {
-    setActivityDialogOpen(false)
-    if (needsUpdate)
-      router.refresh()
-  }
-
-  function onAccommodationDialogClose(needsUpdate: boolean) {
-    setAccommodationDialogOpen(false)
-    if (needsUpdate)
-      router.refresh()
-  }
-
-  function onFlightDialogClose(needsUpdate: boolean) {
-    setFlightDialogOpen(false)
-    if (needsUpdate)
-      router.refresh()
-  }
-
-  function onTrainDialogClose(needsUpdate: boolean) {
-    setTrainDialogOpen(false)
-    if (needsUpdate)
-      router.refresh()
-  }
 
   return (
     <div>
@@ -69,10 +43,18 @@ export default function AddSomethingDropdown({trip}: {trip: Trip}) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <ActivityDialog key={"act-" + activityDialogOpen} trip={trip} open={activityDialogOpen} onClose={onActivityDialogClose}/>
-      <AccommodationDialog key={"acc-" + accommodationDialogOpen} trip={trip} open={accommodationDialogOpen} onClose={onAccommodationDialogClose}/>
-      <FlightDialog key={"flight-" + flightDialogOpen} trip={trip} open={flightDialogOpen} onClose={onFlightDialogClose}/>
-      <TrainDialog key={"train-" + flightDialogOpen} trip={trip} open={trainDialogOpen} onClose={onTrainDialogClose}/>
+      <Dialog open={activityDialogOpen} setOpen={setActivityDialogOpen}>
+        <ActivityDialogContent trip={trip}/>
+      </Dialog>
+      <Dialog open={accommodationDialogOpen} setOpen={setAccommodationDialogOpen}>
+        <AccommodationDialogContent trip={trip}/>
+      </Dialog>
+      <Dialog open={flightDialogOpen} setOpen={setFlightDialogOpen}>
+        <FlightDialogContent trip={trip}/>
+      </Dialog>
+      <Dialog open={trainDialogOpen} setOpen={setTrainDialogOpen}>
+        <TrainDialogContent trip={trip}/>
+      </Dialog>
     </div>
   )
 }

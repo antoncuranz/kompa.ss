@@ -1799,6 +1799,7 @@ func (s *RequestFlightLeg) SetOriginAirport(val NilString) {
 type RequestTrainJourney struct {
 	DepartureDate string    `json:"departureDate"`
 	FromStationId string    `json:"fromStationId"`
+	Price         NilInt    `json:"price"`
 	ToStationId   string    `json:"toStationId"`
 	TrainNumbers  []string  `json:"trainNumbers"`
 	ViaStationId  NilString `json:"viaStationId"`
@@ -1812,6 +1813,11 @@ func (s *RequestTrainJourney) GetDepartureDate() string {
 // GetFromStationId returns the value of FromStationId.
 func (s *RequestTrainJourney) GetFromStationId() string {
 	return s.FromStationId
+}
+
+// GetPrice returns the value of Price.
+func (s *RequestTrainJourney) GetPrice() NilInt {
+	return s.Price
 }
 
 // GetToStationId returns the value of ToStationId.
@@ -1837,6 +1843,11 @@ func (s *RequestTrainJourney) SetDepartureDate(val string) {
 // SetFromStationId sets the value of FromStationId.
 func (s *RequestTrainJourney) SetFromStationId(val string) {
 	s.FromStationId = val
+}
+
+// SetPrice sets the value of Price.
+func (s *RequestTrainJourney) SetPrice(val NilInt) {
+	s.Price = val
 }
 
 // SetToStationId sets the value of ToStationId.

@@ -1,23 +1,23 @@
 import {Input} from "@/components/ui/input.tsx";
-import {useToast} from "@/components/ui/use-toast.ts";
 import {Button} from "@/components/ui/button.tsx";
 import {Pencil, Search} from "lucide-react";
 import {cn} from "@/lib/utils.ts";
-import {useState} from "react";
+import {useState, useTransition} from "react";
 import {TrainStation} from "@/types.ts";
+import {toast} from "sonner";
+import {ControllerRenderProps, FieldValues} from "react-hook-form";
+import {Spinner} from "@/components/ui/shadcn-io/spinner";
 
 export default function TrainStationInput({
-  station, updateStation, placeholder, className, readOnly
-}: {
-  station: TrainStation | null,
-  updateStation: (newStation: TrainStation|null) => void,
+  onChange, onBlur, value, disabled, name, ref,
+  placeholder, className
+}: ControllerRenderProps<FieldValues, string> & {
   placeholder?: string,
   className?: string,
-  readOnly?: boolean,
 }) {
-  const { toast } = useToast();
-  const [edit, setEdit] = useState<boolean>(station == null)
-  const [text, setText] = useState<string>(station?.name ?? "")
+  const [edit, setEdit] = useState<boolean>(value == undefined)
+  const [text, setText] = useState<string>(value?.name ?? "")
+  const [isLoading, startTransition] = useTransition();
 
   async function searchForStationUsingApi() {
     const query = text.replace(" ", "-")
@@ -26,34 +26,39 @@ export default function TrainStationInput({
 
     if (response.ok) {
       const json = await response.json()
-      updateStation(json as TrainStation)
+      const station = json as TrainStation
+      onChange(station)
       setEdit(false)
-    } else toast({
-      title: "No stations found",
+    } else toast("No stations found", {
       description: await response.text()
     })
   }
 
   async function onButtonClick() {
     if (edit) {
-      await searchForStationUsingApi()
+      startTransition(async () => await searchForStationUsingApi())
     } else {
-      setText(station?.name ?? "")
+      setText(value?.name ?? "")
+      onChange(undefined)
       setEdit(true)
-      updateStation(null)
     }
+    onBlur()
   }
 
   return (
       <div className={cn("", className)}>
         <div className="flex gap-2">
-          <Input value={edit ? text : station?.name ?? ""}
+          <Input ref={ref}
+                 name={name}
+                 value={edit ? text : value?.name ?? ""}
                  onChange={e => edit && setText(e.target.value)}
                  placeholder={placeholder}
-                 readOnly={readOnly}/>
-          {!readOnly &&
-            <Button variant="secondary" onClick={onButtonClick}>
-              {edit ?
+                 disabled={disabled}/>
+          {!disabled &&
+            <Button type="button" variant="secondary" onClick={onButtonClick} disabled={isLoading}>
+              { isLoading ?
+                <Spinner className="h-4 w-4" variant="pinwheel"/>
+              : edit ?
                 <Search className="h-4 w-4"/>
               :
                 <Pencil className="h-4 w-4"/>

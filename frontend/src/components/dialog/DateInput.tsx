@@ -5,17 +5,16 @@ import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.t
 import {format} from "date-fns";
 import {Calendar} from "@/components/ui/calendar.tsx";
 import {Matcher} from "react-day-picker";
-import {dateFromString, dateToString, getNextDay} from "@/components/util.ts";
+import {dateFromString, getNextDay} from "@/components/util.ts";
+import {ControllerRenderProps, FieldValues} from "react-hook-form";
 
 export default function DateInput({
-  date, updateDate, startDate, excludeStartDate, endDate, readOnly
-}: {
-  date: string | null
-  updateDate: (newDate: string) => void
+  onChange, onBlur, value, disabled, name, ref,
+  startDate, excludeStartDate, endDate
+}: ControllerRenderProps<FieldValues, string> & {
   startDate?: string | null
   excludeStartDate?: boolean | null
   endDate?: string | null
-  readOnly?: boolean
 }) {
 
   function getMatcher(): Matcher | undefined {
@@ -39,26 +38,33 @@ export default function DateInput({
     return excludeStartDate ? getNextDay(startDate) : startDate
   }
 
+  function onSelect(value: Date) {
+    onChange(value)
+    onBlur()
+  }
+
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
+            ref={ref}
+            name={name}
             variant="secondary"
             className={cn(
-                "col-span-3 justify-start text-left font-normal disabled:opacity-1",
-                !date && "text-muted-foreground"
+                "col-span-3 justify-start text-left font-normal disabled:opacity-1 w-full",
+                !value && "text-muted-foreground"
             )}
-            disabled={readOnly}
+            disabled={disabled}
         >
           <CalendarIcon className="mr-2 h-4 w-4"/>
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
+          {value ? format(value, "PP") : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0 rounded-2xl overflow-hidden shadow-lg">
         <Calendar
             mode="single"
-            selected={date ? dateFromString(date) : undefined}
-            onSelect={date => updateDate(dateToString(date))}
+            selected={value}
+            onSelect={onSelect}
             startMonth={startDate ? dateFromString(getAdjustedStartDate()!) : undefined}
             endMonth={endDate ? dateFromString(endDate) : undefined}
             disabled={getMatcher()}
