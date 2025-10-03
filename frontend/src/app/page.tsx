@@ -8,7 +8,7 @@ import NewTripCard from "@/components/card/NewTripCard.tsx";
 
 export default async function Page() {
 
-  const fallbackColors = ["#0081A7", "#00AFB9", "#FED9B7", "#F07167"]
+  const fallbackColors = ["#0081A7", "#459f00", "#FED9B7", "#F07167"]
 
   const cards = (await fetchTrips()).map((trip, idx) => (
       <Link key={trip.id} href={"/" + trip.id + "/itinerary"}>

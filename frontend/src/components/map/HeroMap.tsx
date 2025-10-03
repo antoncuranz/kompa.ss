@@ -41,6 +41,7 @@ export default function HeroMap({
         coordinates: [activity.location!.longitude, activity.location!.latitude],
       },
       properties: {
+        "type": "ACTIVITY",
         "popupTitle": activity.name,
         "popupBody": formatDateShort(activity.date) + (activity.time ? " " + formatTime(activity.time) : "")
       }
@@ -63,8 +64,9 @@ export default function HeroMap({
         coordinates: [accommodation.location!.longitude, accommodation.location!.latitude],
       },
       properties: {
+        "type": "ACCOMMODATION",
         "popupTitle": `🛏️ ${accommodation.name}`,
-        "popupBody": `${formatDateShort(accommodation.arrivalDate)} - ${formatDateShort(accommodation.departureDate)}`,
+        "popupBody": `${formatDateShort(accommodation.arrivalDate)}-${formatDateShort(accommodation.departureDate)}`,
       }
     }
   }
@@ -81,20 +83,27 @@ export default function HeroMap({
       lngLat: event.lngLat,
       children: featureProperties.map((properties, idx) =>
         <div key={idx}>
-          {renderTransportationProperties(properties)}
+          {renderPopupContent(properties)}
         </div>
       )
     })
   }
 
-  function renderTransportationProperties(props: GeoJsonProperties) {
+  function renderPopupContent(props: GeoJsonProperties) {
     switch (props!["type"]) {
       case "PLANE":
         return <FlightPopup properties={props as GeoJsonPlane}/>
       case "TRAIN":
         return <TrainPopup properties={props as GeoJsonTrain}/>
       default:
-        return <></>
+        return (
+          <div className="text-sm">
+            <strong>{props!["popupTitle"]}</strong>
+            <div className="iconsolata grid grid-cols-[auto_auto_1fr] gap-x-2">
+              {props!["popupBody"]}
+            </div>
+          </div>
+        )
     }
   }
 
@@ -131,13 +140,13 @@ export default function HeroMap({
       <Source type="geojson" data={getAccommodationGeoJson()}>
         <Layer id="accommodation"
                type="circle"
-               paint={{"circle-color": "#f1b216", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
+               paint={{"circle-color": "#f4b682", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
         />
       </Source>
       <Source type="geojson" data={getActivityGeoJson()}>
         <Layer id="activity"
                type="circle"
-               paint={{"circle-color": "#36bf00", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
+               paint={{"circle-color": "#59B900", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
         />
       </Source>
       {popupInfo && (

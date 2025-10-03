@@ -24,12 +24,7 @@ export default function MiniMap({
 
   return (
     <BaseMap initialCoordinates={value} onClick={onClick}>
-      {value &&
-        <Marker
-            longitude={value.longitude}
-            latitude={value.latitude}
-        />
-      }
+      {value && <Marker longitude={value.longitude} latitude={value.latitude}/>}
       {children}
     </BaseMap>
   )
