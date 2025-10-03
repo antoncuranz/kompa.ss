@@ -13,6 +13,7 @@ import {isoDate, optionalString} from "@/schemas.ts";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import DateInput from "@/components/dialog/DateInput.tsx";
+import {Spinner} from "@/components/ui/shadcn-io/spinner";
 
 const formSchema = z.object({
   name: z.string().nonempty("Required"),
@@ -41,6 +42,7 @@ export default function TripDialogContent({
     },
     disabled: !edit
   })
+  const { isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     let response
@@ -113,8 +115,8 @@ export default function TripDialogContent({
       </Form>
       <DialogFooter>
         {edit ?
-          <Button form="trip-form" type="submit" className="w-full text-base">
-            Save
+          <Button form="trip-form" type="submit" className="w-full text-base" disabled={isSubmitting}>
+            {isSubmitting ? <Spinner variant="pinwheel"/> : "Save"}
           </Button>
         :
           <>

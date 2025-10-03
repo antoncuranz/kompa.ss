@@ -16,9 +16,9 @@ export function optionalNumberString(params?: string | core.$ZodStringParams) {
 
 export function optionalLocation() {
   return z.object({
-    latitude: optionalNumberString(),
-    longitude: optionalNumberString()
-  }).transform(x => (x.latitude && x.longitude) ? x : undefined)
+    latitude: z.number(),
+    longitude: z.number()
+  }).transform(x => (x.latitude && x.longitude) ? x : undefined).optional()
 }
 
 export function trainStation(params?: string | core.$ZodObjectParams) {

@@ -36,7 +36,7 @@ const Form = <
 }) => {
   return (
     <FormProvider {...form}>
-      <form id={id} onSubmit={onSubmit} className={cn("py-4 overflow-y-auto space-y-2 [&>div]:px-6", className)}>
+      <form id={id} onSubmit={onSubmit} className={cn("py-4 overflow-y-auto space-y-2 [&>div]:px-4", className)}>
         {children}
       </form>
     </FormProvider>

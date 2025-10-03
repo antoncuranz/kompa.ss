@@ -14,6 +14,11 @@ export type Location = {
   longitude: number;
 }
 
+export type Coordinates = {
+  latitude: number;
+  longitude: number;
+}
+
 export type Activity = {
   id: number;
   tripId: number;

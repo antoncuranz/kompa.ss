@@ -15,6 +15,8 @@ import {dateFromString} from "@/components/util.ts";
 import AmountInput from "@/components/dialog/AmountInput.tsx";
 import AddressInput from "@/components/dialog/AddressInput.tsx";
 import DateInput from "@/components/dialog/DateInput.tsx";
+import LocationInput from "@/components/dialog/LocationInput.tsx";
+import {Spinner} from "@/components/ui/shadcn-io/spinner";
 
 const formSchema = z.object({
   name: z.string().nonempty("Required"),
@@ -44,13 +46,11 @@ export default function AccommodationDialogContent({
       departureDate: accommodation?.departureDate ? dateFromString(accommodation.departureDate) : undefined,
       price: accommodation?.price ?? undefined,
       address: accommodation?.address ?? "",
-      location: {
-        latitude: accommodation?.location?.latitude.toString() ?? "",
-        longitude: accommodation?.location?.longitude.toString() ?? ""
-      }
+      location: accommodation?.location ?? undefined
     },
     disabled: !edit
   })
+  const { isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     let response
@@ -95,7 +95,7 @@ export default function AccommodationDialogContent({
       <Form id="accommodation-form" form={form} onSubmit={form.handleSubmit(onSubmit)}>
         <FormField control={form.control} name="name" label="Name"
                    render={({field}) =>
-                       <Input placeholder="My new Activity" {...field} />
+                       <Input data-1p-ignore {...field} />
                    }
         />
         <RowContainer>
@@ -124,28 +124,20 @@ export default function AccommodationDialogContent({
                    render={({field}) =>
                        <AddressInput
                            {...field}
-                           updateLatitude={lat => form.setValue("location.latitude", String(lat))}
-                           updateLongitude={lon => form.setValue("location.longitude", String(lon))}
+                           updateCoordinates={coords => form.setValue("location", coords)}
                        />
                    }
         />
-        <RowContainer>
-          <FormField control={form.control} name="location.latitude" label="Latitude"
-                     render={({field}) =>
-                         <Input {...field} readOnly={true}/>
-                     }
-          />
-          <FormField control={form.control} name="location.longitude" label="Longitude"
-                     render={({field}) =>
-                         <Input {...field} readOnly={true}/>
-                     }
-          />
-        </RowContainer>
+        <FormField control={form.control} name="location" label="Coordinates"
+                   render={({field}) =>
+                       <LocationInput {...field}/>
+                   }
+        />
       </Form>
       <DialogFooter>
         {edit ?
-          <Button form="accommodation-form" type="submit" className="w-full text-base">
-            Save
+          <Button form="accommodation-form" type="submit" className="w-full text-base" disabled={isSubmitting}>
+            {isSubmitting ? <Spinner variant="pinwheel"/> : "Save"}
           </Button>
         :
           <>

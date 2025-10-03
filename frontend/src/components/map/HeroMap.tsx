@@ -2,30 +2,22 @@
 
 import React, {useState} from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
-import {Layer, Map, Popup, Source} from "react-map-gl/mapbox";
+import {Layer, Popup, Source} from "react-map-gl/mapbox";
 import type {Feature, FeatureCollection, GeoJsonProperties} from 'geojson';
-import RenderAfterMap from "@/components/card/RenderAfterMap.tsx";
 import {Accommodation, Activity, GeoJsonPlane, GeoJsonTrain} from "@/types.ts";
 import {LngLat, MapMouseEvent} from "mapbox-gl";
 import {formatDateShort, formatTime} from "@/components/util.ts";
-import {useTheme} from "next-themes";
 import TrainPopup from "@/components/popup/TrainPopup.tsx";
 import FlightPopup from "@/components/popup/FlightPopup.tsx";
+import BaseMap from "@/components/map/BaseMap.tsx";
 
-export default function TheMap({
+export default function HeroMap({
   activities, accommodation, geojson
 }: {
   activities: Activity[],
   accommodation: Accommodation[],
   geojson: GeoJSON.FeatureCollection[],
 }) {
-  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
-
-  const {resolvedTheme} = useTheme()
-
-  function getMapboxTheme() {
-    return resolvedTheme == "dark" ? "night" : "day"
-  }
 
   type PopupInfo = {
     lngLat: LngLat;
@@ -118,55 +110,48 @@ export default function TheMap({
   }
 
   return (
-    <Map
-        mapboxAccessToken={mapboxToken}
-        mapStyle="mapbox://styles/mapbox/standard"
-        projection="globe"
-        initialViewState={{latitude: 52.520007, longitude: 13.404954, zoom: 10}}
-        config={{"basemap": {"lightPreset": getMapboxTheme()}}}
+    <BaseMap
         interactiveLayerIds={geojson.map((_, idx) => "geojson" + idx).concat(["activity", "accommodation", "flight"])}
         onMouseEnter={onMouseEnter}
         onMouseMove={onMouseEnter}
         onMouseLeave={() => setPopupInfo(null)}
     >
-      <RenderAfterMap theme={getMapboxTheme()}>
-        {geojson.map((fc, idx) =>
-            <Source key={idx} type="geojson" data={fc}>
-              <Layer type="line"
-                     paint={{"line-color": getColorByType(fc), "line-width": 5, "line-emissive-strength": 1}}
-                     layout={{"line-cap": "round"}}
-              />
-              <Layer type="circle" id={"geojson" + idx}
-                     filter={["==", ["geometry-type"], "Point"]}
-                     paint={{"circle-color": getColorByType(fc), "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
-              />
-            </Source>
-        )}
-        <Source type="geojson" data={getAccommodationGeoJson()}>
-          <Layer id="accommodation"
-                 type="circle"
-                 paint={{"circle-color": "#f1b216", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
-          />
-        </Source>
-        <Source type="geojson" data={getActivityGeoJson()}>
-          <Layer id="activity"
-                 type="circle"
-                 paint={{"circle-color": "#36bf00", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
-          />
-        </Source>
-        {popupInfo && (
-            <Popup offset={10}
-                   closeButton={false}
-                   closeOnClick={false}
-                   longitude={popupInfo.lngLat.lng}
-                   latitude={popupInfo.lngLat.lat}
-                   maxWidth={undefined}
-                   className="shadow-xl bg-background"
-            >
-              {popupInfo.children}
-            </Popup>
-        )}
-      </RenderAfterMap>
-    </Map>
+      {geojson.map((fc, idx) =>
+          <Source key={idx} type="geojson" data={fc}>
+            <Layer type="line"
+                   paint={{"line-color": getColorByType(fc), "line-width": 5, "line-emissive-strength": 1}}
+                   layout={{"line-cap": "round"}}
+            />
+            <Layer type="circle" id={"geojson" + idx}
+                   filter={["==", ["geometry-type"], "Point"]}
+                   paint={{"circle-color": getColorByType(fc), "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
+            />
+          </Source>
+      )}
+      <Source type="geojson" data={getAccommodationGeoJson()}>
+        <Layer id="accommodation"
+               type="circle"
+               paint={{"circle-color": "#f1b216", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
+        />
+      </Source>
+      <Source type="geojson" data={getActivityGeoJson()}>
+        <Layer id="activity"
+               type="circle"
+               paint={{"circle-color": "#36bf00", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
+        />
+      </Source>
+      {popupInfo && (
+          <Popup offset={10}
+                 closeButton={false}
+                 closeOnClick={false}
+                 longitude={popupInfo.lngLat.lng}
+                 latitude={popupInfo.lngLat.lat}
+                 maxWidth={undefined}
+                 className="shadow-xl bg-background"
+          >
+            {popupInfo.children}
+          </Popup>
+      )}
+    </BaseMap>
   )
 }

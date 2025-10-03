@@ -53,7 +53,7 @@ export default function TrainStationInput({
                  value={edit ? text : value?.name ?? ""}
                  onChange={e => edit && setText(e.target.value)}
                  placeholder={placeholder}
-                 disabled={disabled}/>
+                 disabled={disabled || isLoading}/>
           {!disabled &&
             <Button type="button" variant="secondary" onClick={onButtonClick} disabled={isLoading}>
               { isLoading ?

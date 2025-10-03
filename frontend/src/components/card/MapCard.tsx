@@ -2,7 +2,7 @@ import React from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Card from "@/components/card/Card.tsx";
 import {fetchAccommodation, fetchActivities, fetchGeoJson} from "@/requests.ts";
-import TheMap from "@/components/card/TheMap.tsx";
+import HeroMap from "@/components/map/HeroMap.tsx";
 
 export default async function MapCard({
   tripId, className
@@ -16,7 +16,7 @@ export default async function MapCard({
 
   return (
     <Card className={className}>
-      <TheMap activities={activities} accommodation={accommodation} geojson={geojson}/>
+      <HeroMap activities={activities} accommodation={accommodation} geojson={geojson}/>
     </Card>
   )
 }

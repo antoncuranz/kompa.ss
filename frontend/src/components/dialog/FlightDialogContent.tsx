@@ -14,6 +14,7 @@ import {dateFromString} from "@/components/util.ts";
 import {Form, FormField} from "@/components/ui/form.tsx";
 import AmountInput from "@/components/dialog/AmountInput.tsx";
 import DateInput from "@/components/dialog/DateInput.tsx";
+import {Spinner} from "@/components/ui/shadcn-io/spinner";
 
 const formSchema = z.object({
   legs: z.array(z.object({
@@ -59,6 +60,7 @@ export default function FlightDialogContent({
     },
     disabled: !edit
   })
+  const { isSubmitting } = form.formState;
 
   const legsArray = useFieldArray({
     control: form.control,
@@ -214,8 +216,8 @@ export default function FlightDialogContent({
       </Form>
       <DialogFooter>
         {edit ?
-          <Button form="flight-form" type="submit" className="w-full text-base">
-            Save
+          <Button form="flight-form" type="submit" className="w-full text-base" disabled={isSubmitting}>
+            {isSubmitting ? <Spinner variant="pinwheel"/> : "Save"}
           </Button>
         :
           <>
