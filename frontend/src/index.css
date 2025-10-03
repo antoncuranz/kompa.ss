@@ -185,14 +185,15 @@ body {
   scrollbar-width: none;
 }
 
-.mapboxgl-ctrl-bottom-left, .mapboxgl-ctrl-bottom-right, .mapboxgl-popup-tip {
+.mapboxgl-popup-tip, .maplibregl-popup-tip {
   display: none;
 }
 
-.mapboxgl-popup, .mapboxgl-popup-content {
+.mapboxgl-popup, .mapboxgl-popup-content, .maplibregl-popup, .maplibregl-popup-content {
   border-radius: 1rem !important;
 }
-.mapboxgl-popup-content {
+
+.mapboxgl-popup-content, .maplibregl-popup-content {
   padding: 1rem !important;
   background: none !important;
 }

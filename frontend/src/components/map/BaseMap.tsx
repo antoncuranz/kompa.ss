@@ -1,11 +1,16 @@
 "use client"
 
 import React from "react";
-import "mapbox-gl/dist/mapbox-gl.css";
-import {Map, MapProps} from "react-map-gl/mapbox";
+import {Map as MaplibreMap} from "react-map-gl/maplibre";
+import {Map as MapboxMap} from "react-map-gl/mapbox";
 import {useTheme} from "next-themes";
 import {Coordinates} from "@/types.ts";
-import RenderAfterMap from "@/components/card/RenderAfterMap.tsx";
+import RenderAfterMap from "@/components/map/RenderAfterMap.tsx";
+import {isMapbox, mapboxToken, MapProps, mapStyle} from "@/components/map/common.tsx";
+
+// TODO: make dynamic:
+import "mapbox-gl/dist/mapbox-gl.css";
+import "maplibre-gl/dist/maplibre-gl.css";
 
 export default function BaseMap({
   children, initialCoordinates, ...props
@@ -13,28 +18,41 @@ export default function BaseMap({
   children: React.ReactNode | React.ReactNode[]
   initialCoordinates?: Coordinates|undefined,
 }) {
-  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
-  const fallbackLat = 52.520007
-  const fallbackLon = 13.404954
-
   const {resolvedTheme} = useTheme()
 
   function getMapboxTheme() {
     return resolvedTheme == "dark" ? "night" : "day"
   }
 
+  const commonOptions = {
+    initialViewState: {latitude: initialCoordinates?.latitude ?? 52.520007, longitude: initialCoordinates?.longitude ?? 13.404954, zoom: 10},
+    style: {background: "#04162a"}
+  }
+
   return (
-    <Map
-        mapboxAccessToken={mapboxToken}
-        mapStyle="mapbox://styles/mapbox/standard"
-        projection="globe"
-        initialViewState={{latitude: initialCoordinates?.latitude ?? fallbackLat, longitude: initialCoordinates?.longitude ?? fallbackLon, zoom: 10}}
-        config={{"basemap": {"lightPreset": getMapboxTheme()}}}
-        {...props}
-    >
-      <RenderAfterMap theme={getMapboxTheme()}>
-        {children}
-      </RenderAfterMap>
-    </Map>
+    isMapbox ?
+      <MapboxMap
+          mapboxAccessToken={mapboxToken}
+          mapStyle={mapStyle ?? "mapbox://styles/mapbox/standard"}
+          config={{"basemap": {"lightPreset": getMapboxTheme()}}}
+          projection="globe"
+          {...commonOptions}
+          {...props}
+      >
+        <RenderAfterMap theme={getMapboxTheme()}>
+          {children}
+        </RenderAfterMap>
+      </MapboxMap>
+    :
+      <MaplibreMap
+          mapStyle={mapStyle ?? "https://tiles.versatiles.org/assets/styles/colorful/style.json"}
+          projection="globe"
+          {...commonOptions}
+          {...props}
+      >
+        <RenderAfterMap>
+          {children}
+        </RenderAfterMap>
+      </MaplibreMap>
   )
 }

@@ -1,8 +1,8 @@
 import {getTransportationTypeEmoji, Transportation} from "@/types.ts";
 import React, {MouseEvent, MouseEventHandler} from "react";
 import {formatTime} from "../util";
-import {useMap} from "react-map-gl/mapbox";
 import {ChevronRight} from "lucide-react";
+import {useMap} from "@/components/map/common.tsx";
 
 export default function TransportationEntry({
   transportation, onClick
