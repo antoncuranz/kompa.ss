@@ -1,10 +1,10 @@
 "use client"
 
 import React, {useEffect, useState} from "react";
-import {useMap} from "react-map-gl/mapbox";
+import {useMap} from "react-map-gl/maplibre";
 
 export default function RenderAfterMap({
-  theme, children
+  children
 }: {
   theme: string,
   children: React.ReactNode,
@@ -12,9 +12,9 @@ export default function RenderAfterMap({
   const map = useMap()
   const [canRender, setCanRender] = useState(false)
 
-  useEffect(() => {
-    map.current?.setConfigProperty("basemap", "lightPreset", theme);
-  }, [map, theme])
+  // useEffect(() => {
+  //   map.current?.setConfigProperty("basemap", "lightPreset", theme);
+  // }, [map, theme])
 
   useEffect(() => {
     map.current?.on('load', () => setCanRender(true))

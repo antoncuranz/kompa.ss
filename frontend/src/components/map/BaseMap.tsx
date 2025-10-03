@@ -1,8 +1,8 @@
 "use client"
 
 import React from "react";
-import "mapbox-gl/dist/mapbox-gl.css";
-import {Map, MapProps} from "react-map-gl/mapbox";
+import "maplibre-gl/dist/maplibre-gl.css";
+import {Map, MapProps} from "react-map-gl/maplibre";
 import {useTheme} from "next-themes";
 import {Coordinates} from "@/types.ts";
 import RenderAfterMap from "@/components/card/RenderAfterMap.tsx";
@@ -13,7 +13,6 @@ export default function BaseMap({
   children: React.ReactNode | React.ReactNode[]
   initialCoordinates?: Coordinates|undefined,
 }) {
-  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
   const fallbackLat = 52.520007
   const fallbackLon = 13.404954
 
@@ -25,11 +24,10 @@ export default function BaseMap({
 
   return (
     <Map
-        mapboxAccessToken={mapboxToken}
-        mapStyle="mapbox://styles/mapbox/standard"
+        mapStyle="https://api.maptiler.com/maps/basic-v2/style.json?key=SNIP"
         projection="globe"
         initialViewState={{latitude: initialCoordinates?.latitude ?? fallbackLat, longitude: initialCoordinates?.longitude ?? fallbackLon, zoom: 10}}
-        config={{"basemap": {"lightPreset": getMapboxTheme()}}}
+        // config={{"basemap": {"lightPreset": getMapboxTheme()}}}
         {...props}
     >
       <RenderAfterMap theme={getMapboxTheme()}>

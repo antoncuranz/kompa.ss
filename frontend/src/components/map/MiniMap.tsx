@@ -1,9 +1,8 @@
 "use client"
 
 import React from "react";
-import "mapbox-gl/dist/mapbox-gl.css";
-import {Marker} from "react-map-gl/mapbox";
-import {MapMouseEvent} from "mapbox-gl";
+import {Marker} from "react-map-gl/maplibre";
+import {MapMouseEvent} from "maplibre-gl";
 import {Coordinates} from "@/types.ts";
 import BaseMap from "@/components/map/BaseMap.tsx";
 

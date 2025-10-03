@@ -1,11 +1,10 @@
 "use client"
 
 import React, {useState} from "react";
-import "mapbox-gl/dist/mapbox-gl.css";
-import {Layer, Popup, Source} from "react-map-gl/mapbox";
+import {Layer, Popup, Source} from "react-map-gl/maplibre";
 import type {Feature, FeatureCollection, GeoJsonProperties} from 'geojson';
 import {Accommodation, Activity, GeoJsonPlane, GeoJsonTrain} from "@/types.ts";
-import {LngLat, MapMouseEvent} from "mapbox-gl";
+import {LngLat, MapLayerMouseEvent} from "maplibre-gl";
 import {formatDateShort, formatTime} from "@/components/util.ts";
 import TrainPopup from "@/components/popup/TrainPopup.tsx";
 import FlightPopup from "@/components/popup/FlightPopup.tsx";
@@ -71,7 +70,7 @@ export default function HeroMap({
     }
   }
 
-  function onMouseEnter(event: MapMouseEvent) {
+  function onMouseEnter(event: MapLayerMouseEvent) {
     if (!event.features || event.features.length == 0)
       return
 
@@ -128,25 +127,25 @@ export default function HeroMap({
       {geojson.map((fc, idx) =>
           <Source key={idx} type="geojson" data={fc}>
             <Layer type="line"
-                   paint={{"line-color": getColorByType(fc), "line-width": 5, "line-emissive-strength": 1}}
+                   paint={{"line-color": getColorByType(fc), "line-width": 5}}
                    layout={{"line-cap": "round"}}
             />
             <Layer type="circle" id={"geojson" + idx}
                    filter={["==", ["geometry-type"], "Point"]}
-                   paint={{"circle-color": getColorByType(fc), "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
+                   paint={{"circle-color": getColorByType(fc), "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3}}
             />
           </Source>
       )}
       <Source type="geojson" data={getAccommodationGeoJson()}>
         <Layer id="accommodation"
                type="circle"
-               paint={{"circle-color": "#f4b682", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
+               paint={{"circle-color": "#f4b682", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3}}
         />
       </Source>
       <Source type="geojson" data={getActivityGeoJson()}>
         <Layer id="activity"
                type="circle"
-               paint={{"circle-color": "#59B900", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
+               paint={{"circle-color": "#59B900", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3}}
         />
       </Source>
       {popupInfo && (
