@@ -9,6 +9,7 @@ import (
 	"kompass/internal/usecase/activities"
 	"kompass/internal/usecase/attachments"
 	"kompass/internal/usecase/flights"
+	"kompass/internal/usecase/geocoding"
 	"kompass/internal/usecase/trains"
 	"kompass/internal/usecase/transportation"
 	"kompass/internal/usecase/trips"
@@ -78,9 +79,11 @@ func createUseCases(cfg *config.Config, pg *postgres.Postgres) usecase.UseCases 
 	activitiesUseCase := activities.New(persistent.NewActivitiesRepo(pg), tripsUseCase)
 	accommodationUseCase := accommodation.New(persistent.NewAccommodationRepo(pg), tripsUseCase)
 	attachmentsUseCase := attachments.New(persistent.NewAttachmentsRepo(pg))
+	geocodingUseCase := geocoding.New(trainsUseCase, webapi.NewOpenRouteServiceWebAPI(cfg.WebApi))
 
 	return usecase.UseCases{
 		Users:          usersUseCase,
+		Geocoding:      geocodingUseCase,
 		Trips:          tripsUseCase,
 		Transportation: transportationUseCase,
 		Flights:        flightsUseCase,

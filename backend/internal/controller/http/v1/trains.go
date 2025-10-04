@@ -17,27 +17,6 @@ type TrainsV1 struct {
 	v   *validator.Validate
 }
 
-// @Summary     Get train station
-// @ID          getTrainStation
-// @Tags  	    trains
-// @Produce     json
-// @Param       trip_id path int true "Trip ID"
-// @Param       query query string true "station query"
-// @Success     200 {object} entity.TrainStation
-// @Failure     403 {object} response.Error
-// @Failure     500 {object} response.Error
-// @Security    bearerauth
-// @Router      /trips/{trip_id}/trains/stations [get]
-func (r *TrainsV1) getTrainStation(ctx *fiber.Ctx) error {
-	query := ctx.Query("query")
-	location, err := r.uc.RetrieveLocation(ctx.Context(), query)
-	if err != nil {
-		return ErrorResponse(ctx, fmt.Errorf("retrieve location: %w", err))
-	}
-
-	return ctx.Status(http.StatusOK).JSON(location)
-}
-
 // @Summary     Add train journey
 // @ID          postTrainJourney
 // @Tags  	    trains

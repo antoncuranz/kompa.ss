@@ -1,5 +1,4 @@
 import React from "react";
-import "mapbox-gl/dist/mapbox-gl.css";
 import Card from "@/components/card/Card.tsx";
 import {fetchAccommodation, fetchActivities, fetchGeoJson} from "@/requests.ts";
 import HeroMap from "@/components/map/HeroMap.tsx";

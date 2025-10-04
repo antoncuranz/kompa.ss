@@ -1,7 +1,6 @@
 "use client"
 
 import React, {useState} from "react";
-import "mapbox-gl/dist/mapbox-gl.css";
 import {Layer, Popup, Source} from "react-map-gl/mapbox";
 import type {Feature, FeatureCollection, GeoJsonProperties} from 'geojson';
 import {Accommodation, Activity, GeoJsonPlane, GeoJsonTrain} from "@/types.ts";

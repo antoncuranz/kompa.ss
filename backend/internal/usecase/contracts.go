@@ -7,6 +7,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/paulmach/orb/geojson"
+	"github.com/valyala/fasthttp"
 	"kompass/internal/controller/http/v1/request"
 	"kompass/internal/entity"
 	"mime/multipart"
@@ -17,6 +18,7 @@ import (
 type (
 	UseCases struct {
 		Users          Users
+		Geocoding      Geocoding
 		Trips          Trips
 		Flights        Flights
 		Trains         Trains
@@ -34,6 +36,11 @@ type (
 		HasReadPermission(ctx context.Context, userID, tripID int32) (bool, error)
 		HasWritePermission(ctx context.Context, userID, tripID int32) (bool, error)
 		IsTripOwner(ctx context.Context, userID int32, tripID int32) (bool, error)
+	}
+
+	Geocoding interface {
+		LookupLocation(ctx *fasthttp.RequestCtx, query string) (entity.GeocodeLocation, error)
+		LookupTrainStation(ctx context.Context, query string) (entity.TrainStation, error)
 	}
 
 	Trips interface {
@@ -58,7 +65,7 @@ type (
 	}
 
 	Trains interface {
-		RetrieveLocation(ctx context.Context, query string) (entity.TrainStation, error)
+		LookupTrainStation(ctx context.Context, query string) (entity.TrainStation, error)
 		CreateTrainJourney(ctx context.Context, tripID int32, journey request.TrainJourney) (entity.Transportation, error)
 	}
 

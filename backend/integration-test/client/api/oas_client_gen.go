@@ -100,11 +100,17 @@ type Invoker interface {
 	//
 	// GET /trips/{trip_id}/transportation/geojson
 	GetGeoJson(ctx context.Context, params GetGeoJsonParams) (GetGeoJsonRes, error)
+	// GetLocation invokes getLocation operation.
+	//
+	// Lookup location.
+	//
+	// GET /geocoding/location
+	GetLocation(ctx context.Context, params GetLocationParams) (GetLocationRes, error)
 	// GetTrainStation invokes getTrainStation operation.
 	//
-	// Get train station.
+	// Lookup train station.
 	//
-	// GET /trips/{trip_id}/trains/stations
+	// GET /geocoding/station
 	GetTrainStation(ctx context.Context, params GetTrainStationParams) (GetTrainStationRes, error)
 	// GetTransportation invokes getTransportation operation.
 	//
@@ -1508,11 +1514,97 @@ func (c *Client) sendGetGeoJson(ctx context.Context, params GetGeoJsonParams) (r
 	return result, nil
 }
 
+// GetLocation invokes getLocation operation.
+//
+// Lookup location.
+//
+// GET /geocoding/location
+func (c *Client) GetLocation(ctx context.Context, params GetLocationParams) (GetLocationRes, error) {
+	res, err := c.sendGetLocation(ctx, params)
+	return res, err
+}
+
+func (c *Client) sendGetLocation(ctx context.Context, params GetLocationParams) (res GetLocationRes, err error) {
+
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/geocoding/location"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	q := uri.NewQueryEncoder()
+	{
+		// Encode "query" parameter.
+		cfg := uri.QueryParameterEncodingConfig{
+			Name:    "query",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
+			return e.EncodeValue(conv.StringToString(params.Query))
+		}); err != nil {
+			return res, errors.Wrap(err, "encode query")
+		}
+	}
+	u.RawQuery = q.Values().Encode()
+
+	r, err := ht.NewRequest(ctx, "GET", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	{
+		type bitset = [1]uint8
+		var satisfied bitset
+		{
+
+			switch err := c.securityBearerauth(ctx, GetLocationOperation, r); {
+			case err == nil: // if NO error
+				satisfied[0] |= 1 << 0
+			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
+				// Skip this security.
+			default:
+				return res, errors.Wrap(err, "security \"Bearerauth\"")
+			}
+		}
+
+		if ok := func() bool {
+		nextRequirement:
+			for _, requirement := range []bitset{
+				{0b00000001},
+			} {
+				for i, mask := range requirement {
+					if satisfied[i]&mask != mask {
+						continue nextRequirement
+					}
+				}
+				return true
+			}
+			return false
+		}(); !ok {
+			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+		}
+	}
+
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeGetLocationResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // GetTrainStation invokes getTrainStation operation.
 //
-// Get train station.
+// Lookup train station.
 //
-// GET /trips/{trip_id}/trains/stations
+// GET /geocoding/station
 func (c *Client) GetTrainStation(ctx context.Context, params GetTrainStationParams) (GetTrainStationRes, error) {
 	res, err := c.sendGetTrainStation(ctx, params)
 	return res, err
@@ -1521,27 +1613,8 @@ func (c *Client) GetTrainStation(ctx context.Context, params GetTrainStationPara
 func (c *Client) sendGetTrainStation(ctx context.Context, params GetTrainStationParams) (res GetTrainStationRes, err error) {
 
 	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [3]string
-	pathParts[0] = "/trips/"
-	{
-		// Encode "trip_id" parameter.
-		e := uri.NewPathEncoder(uri.PathEncoderConfig{
-			Param:   "trip_id",
-			Style:   uri.PathStyleSimple,
-			Explode: false,
-		})
-		if err := func() error {
-			return e.EncodeValue(conv.IntToString(params.TripID))
-		}(); err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		encoded, err := e.Result()
-		if err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		pathParts[1] = encoded
-	}
-	pathParts[2] = "/trains/stations"
+	var pathParts [1]string
+	pathParts[0] = "/geocoding/station"
 	uri.AddPathParts(u, pathParts[:]...)
 
 	q := uri.NewQueryEncoder()

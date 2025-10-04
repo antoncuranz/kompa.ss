@@ -22,8 +22,8 @@ func New(r repo.TransportationRepo, a repo.DbVendoWebAPI) *UseCase {
 	}
 }
 
-func (uc *UseCase) RetrieveLocation(ctx context.Context, query string) (entity.TrainStation, error) {
-	return uc.dbVendo.RetrieveLocation(ctx, query)
+func (uc *UseCase) LookupTrainStation(ctx context.Context, query string) (entity.TrainStation, error) {
+	return uc.dbVendo.LookupTrainStation(ctx, query)
 }
 
 func (uc *UseCase) CreateTrainJourney(ctx context.Context, tripID int32, journeyRequest request.TrainJourney) (entity.Transportation, error) {

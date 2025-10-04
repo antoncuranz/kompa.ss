@@ -19,6 +19,17 @@ func NewUserRoutes(apiV1Group fiber.Router, uc usecase.Users, log logger.Interfa
 	}
 }
 
+func NewGeocodingRoutes(apiV1Group fiber.Router, uc usecase.Geocoding, log logger.Interface) {
+	r := &GeocodingV1{uc: uc, log: log, v: validator.New(validator.WithRequiredStructEnabled())}
+
+	serviceV1Group := apiV1Group.Group("/geocoding")
+
+	{
+		serviceV1Group.Get("/location", r.getLocation)
+		serviceV1Group.Get("/station", r.getTrainStation)
+	}
+}
+
 func NewTripRoutes(apiV1Group fiber.Router, uc usecase.Trips, log logger.Interface, authorization func(c *fiber.Ctx) error) fiber.Router {
 	r := &TripsV1{
 		uc:  uc,
@@ -75,7 +86,6 @@ func NewTrainRoutes(apiV1Group fiber.Router, uc usecase.Trains, log logger.Inter
 
 	{
 		trainsV1Group.Post("", r.postTrainJourney)
-		trainsV1Group.Get("/stations", r.getTrainStation)
 	}
 }
 

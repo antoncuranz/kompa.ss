@@ -53,6 +53,10 @@ type GetGeoJsonRes interface {
 	getGeoJsonRes()
 }
 
+type GetLocationRes interface {
+	getLocationRes()
+}
+
 type GetTrainStationRes interface {
 	getTrainStationRes()
 }

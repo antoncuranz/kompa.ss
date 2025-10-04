@@ -45,9 +45,11 @@ type (
 	}
 
 	WebApi struct {
-		AerodataboxBaseURL string `env:"AEDBX_URL" envDefault:"https://aerodatabox.p.rapidapi.com"`
-		AerodataboxApiKey  string `env:"AEDBX_APIKEY"`
-		DbVendoBaseURL     string `env:"DBVENDO_URL"`
+		AerodataboxBaseURL      string `env:"AEDBX_URL" envDefault:"https://aerodatabox.p.rapidapi.com"`
+		AerodataboxApiKey       string `env:"AEDBX_APIKEY"`
+		DbVendoBaseURL          string `env:"DBVENDO_URL"`
+		OpenRouteServiceBaseURL string `env:"ORS_URL" envDefault:"https://api.openrouteservice.org"`
+		OpenRouteServiceApiKey  string `env:"ORS_APIKEY"`
 	}
 )
 

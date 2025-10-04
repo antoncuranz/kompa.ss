@@ -94,10 +94,14 @@ type GetGeoJsonParams struct {
 	TripID int
 }
 
+// GetLocationParams is parameters of getLocation operation.
+type GetLocationParams struct {
+	// Location query.
+	Query string
+}
+
 // GetTrainStationParams is parameters of getTrainStation operation.
 type GetTrainStationParams struct {
-	// Trip ID.
-	TripID int
 	// Station query.
 	Query string
 }

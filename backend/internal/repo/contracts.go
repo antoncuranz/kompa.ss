@@ -75,8 +75,12 @@ type (
 	}
 
 	DbVendoWebAPI interface {
-		RetrieveLocation(ctx context.Context, query string) (entity.TrainStation, error)
+		LookupTrainStation(ctx context.Context, query string) (entity.TrainStation, error)
 		RetrieveJourney(ctx context.Context, journey request.TrainJourney) (entity.TrainDetail, error)
 		RetrievePolylines(ctx context.Context, refreshToken string) ([]geojson.FeatureCollection, error)
+	}
+
+	OpenRouteServiceWebAPI interface {
+		LookupLocation(ctx context.Context, query string) (entity.GeocodeLocation, error)
 	}
 )

@@ -17,25 +17,21 @@ export default function AddressInput({
 }) {
   const [isLoading, startTransition] = useTransition();
 
-  async function searchForAddressUsingMapbox() {
-    const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
-    const url = encodeURI("https://api.mapbox.com/search/geocode/v6/forward?q=" + value + "&access_token=" + mapboxToken)
+  async function searchForLocationUsingGeocodeApi() {
+    const url = encodeURI("/api/v1/geocoding/location?query=" + value)
+    const response = await fetch(url)
 
-    const response = await fetch(url, {method: "GET"})
     if (response.ok) {
-      const json = await response.json()
-      if (json["features"].length > 0) {
-        const properties = json["features"][0]["properties"]
-        onChange(properties["full_address"])
-        updateCoordinates(properties["coordinates"])
-      } else toast("Error finding address. Please try a different format")
+      const geocodeLocation = await response.json()
+      onChange(geocodeLocation["label"])
+      updateCoordinates(geocodeLocation)
     } else toast("Error looking up address", {
       description: await response.text()
     })
   }
 
   function onClick() {
-    startTransition(async () => await searchForAddressUsingMapbox())
+    startTransition(async () => await searchForLocationUsingGeocodeApi())
   }
 
   return (

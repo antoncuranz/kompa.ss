@@ -27,11 +27,11 @@ func NewDbVendoWebAPI(config config.WebApi) *DbVendoWebAPI {
 	}
 }
 
-func (a *DbVendoWebAPI) RetrieveLocation(ctx context.Context, query string) (entity.TrainStation, error) {
+func (a *DbVendoWebAPI) LookupTrainStation(ctx context.Context, query string) (entity.TrainStation, error) {
 	urlFormat := "%s/locations?query=%s&poi=false"
-	url := fmt.Sprintf(urlFormat, a.baseURL, query)
+	locationsUrl := fmt.Sprintf(urlFormat, a.baseURL, url.QueryEscape(query))
 
-	results, err := RequestAndParseJsonBody[[]response.StationOrStop](ctx, "GET", url, nil)
+	results, err := RequestAndParseJsonBody[[]response.StationOrStop](ctx, "GET", locationsUrl, nil)
 	if err != nil {
 		return entity.TrainStation{}, fmt.Errorf("requestAndParseJsonBody: %w", err)
 	}

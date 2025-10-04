@@ -50,6 +50,7 @@ func NewRouter(app *fiber.App, cfg *config.Config, useCases usecase.UseCases, lo
 		apiV1Group.Use(middleware.RetrieveOrCreateUserMiddleware(useCases.Users))
 
 		v1.NewUserRoutes(apiV1Group, useCases.Users, log)
+		v1.NewGeocodingRoutes(apiV1Group, useCases.Geocoding, log)
 
 		authorization := middleware.TripAuthorization(useCases.Users)
 		tripsV1Group := v1.NewTripRoutes(apiV1Group, useCases.Trips, log, authorization)

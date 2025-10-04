@@ -19,9 +19,8 @@ export default function TrainStationInput({
   const [text, setText] = useState<string>(value?.name ?? "")
   const [isLoading, startTransition] = useTransition();
 
-  async function searchForStationUsingApi() {
-    const query = text.replace(" ", "-")
-    const url = encodeURI("/api/v1/trips/1/trains/stations?query=" + query)
+  async function searchForStationUsingGeocodeApi() {
+    const url = encodeURI("/api/v1/geocoding/station?query=" + text)
     const response = await fetch(url)
 
     if (response.ok) {
@@ -36,7 +35,7 @@ export default function TrainStationInput({
 
   async function onButtonClick() {
     if (edit) {
-      startTransition(async () => await searchForStationUsingApi())
+      startTransition(async () => await searchForStationUsingGeocodeApi())
     } else {
       setText(value?.name ?? "")
       onChange(undefined)

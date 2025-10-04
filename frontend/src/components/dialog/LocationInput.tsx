@@ -24,13 +24,13 @@ export default function LocationInput({
   return (
       <div className={cn("", className)}>
         <div className="flex gap-2">
-          <Input value={value?.latitude ?? ""}
-                 disabled={true}
-                 placeholder="Latitude"
-          />
           <Input value={value?.longitude ?? ""}
                  disabled={true}
                  placeholder="Longitude"
+          />
+          <Input value={value?.latitude ?? ""}
+                 disabled={true}
+                 placeholder="Latitude"
           />
           {!disabled &&
             <Button type="button" variant="secondary" onClick={() => setMapDialogOpen(true)}>

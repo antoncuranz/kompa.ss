@@ -1116,14 +1116,6 @@ type GetGeoJsonOKApplicationJSON []string
 
 func (*GetGeoJsonOKApplicationJSON) getGeoJsonRes() {}
 
-type GetTrainStationForbidden ResponseError
-
-func (*GetTrainStationForbidden) getTrainStationRes() {}
-
-type GetTrainStationInternalServerError ResponseError
-
-func (*GetTrainStationInternalServerError) getTrainStationRes() {}
-
 type GetTransportationForbidden ResponseError
 
 func (*GetTransportationForbidden) getTransportationRes() {}
@@ -1196,6 +1188,8 @@ func (o NilEntityLocation) Or(d EntityLocation) EntityLocation {
 	}
 	return d
 }
+
+func (*NilEntityLocation) getLocationRes() {}
 
 // NewNilInt returns new NilInt with value set to v.
 func NewNilInt(v int) NilInt {
@@ -1939,9 +1933,11 @@ func (s *ResponseError) SetError(val string) {
 	s.Error = val
 }
 
-func (*ResponseError) getTripsRes() {}
-func (*ResponseError) getUserRes()  {}
-func (*ResponseError) getUsersRes() {}
+func (*ResponseError) getLocationRes()     {}
+func (*ResponseError) getTrainStationRes() {}
+func (*ResponseError) getTripsRes()        {}
+func (*ResponseError) getUserRes()         {}
+func (*ResponseError) getUsersRes()        {}
 
 // Ref: #/components/schemas/v1.AttachmentsParam
 type V1AttachmentsParamMultipart struct {
