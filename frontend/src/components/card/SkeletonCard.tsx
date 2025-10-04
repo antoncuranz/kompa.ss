@@ -14,7 +14,7 @@ export default function SkeletonCard({
       <div className="flex flex-col h-full sm:p-2 rounded-2xl sm:rounded-3xl">
         {title &&
             <div className="flex flex-row p-3 sm:pb-5">
-                <h3 className="flex-grow font-semibold text-xl/[2rem] sm:text-2xl">{title}</h3>
+                <h3 className="grow font-semibold text-xl/[2rem] sm:text-2xl">{title}</h3>
             </div>
         }
         <div className="h-full rounded-2xl no-scrollbar overflow-hidden overflow-y-scroll">

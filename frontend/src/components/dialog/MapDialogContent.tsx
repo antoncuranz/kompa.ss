@@ -22,7 +22,7 @@ export default function MapDialogContent({
   return (
     <>
       <DialogTitle className="hidden">Map Dialog</DialogTitle>
-      <div className="h-[40rem] max-h-full rounded-2xl overflow-hidden">
+      <div className="h-160 max-h-full rounded-2xl overflow-hidden">
         <MiniMap value={coordinates} onChange={setCoordinates}>
           {coordinates &&
             <div className="p-4 absolute bottom-0 w-full">

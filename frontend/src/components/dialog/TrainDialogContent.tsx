@@ -160,7 +160,7 @@ export default function TrainDialogContent({
         </RowContainer>
 
         <div className="flex">
-          <h3 className="font-semibold mb-2 flex-grow">Train Legs</h3>
+          <h3 className="font-semibold mb-2 grow">Train Legs</h3>
           {edit &&
             <div>
               {trainNumbersArray.fields.length > 1 ?

@@ -19,11 +19,11 @@ export default function Card({
 }) {
 
   return (
-    <div className={cn("w-full rounded-2xl sm:rounded-3xl shadow-xl shadow-black/[0.1] dark:shadow-white/[0.05]", className)} onClick={onClick}>
+    <div className={cn("w-full rounded-2xl sm:rounded-3xl shadow-xl shadow-black/10 dark:shadow-white/5", className)} onClick={onClick}>
       <GlowContainer className="flex flex-col h-full sm:p-2 rounded-2xl sm:rounded-3xl">
         {(title || headerSlot) &&
           <div className="flex flex-row p-3 sm:pb-5 border-b">
-            <div className="flex-grow text-xl/[2rem] sm:text-2xl">
+            <div className="grow text-xl/[2rem] sm:text-2xl">
               <span className="font-semibold mr-2">{title}</span>
               <span>{subtitle}</span>
             </div>

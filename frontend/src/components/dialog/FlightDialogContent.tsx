@@ -146,7 +146,7 @@ export default function FlightDialogContent({
       </DialogHeader>
       <Form id="flight-form" form={form} onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex">
-          <h3 className="font-semibold mb-2 flex-grow">Flight Legs</h3>
+          <h3 className="font-semibold mb-2 grow">Flight Legs</h3>
           {edit &&
             <div>
               {legsArray.fields.length > 1 ?
@@ -182,7 +182,7 @@ export default function FlightDialogContent({
         )}
 
         <div className="flex">
-          <h3 className="font-semibold mb-2 flex-grow">PNRs</h3>
+          <h3 className="font-semibold mb-2 grow">PNRs</h3>
           {edit &&
             <div>
               {pnrsArray.fields.length > 0 ?

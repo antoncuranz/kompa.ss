@@ -11,7 +11,7 @@ export default async function Page( {
 }) {
   const tripId = parseInt((await params).slug)
 
-  const itineraryClasses = "lg:max-w-[48rem] lg:min-w-[38rem]"
+  const itineraryClasses = "lg:max-w-3xl lg:min-w-152"
   const mapClasses = "hidden lg:block"
 
   return (

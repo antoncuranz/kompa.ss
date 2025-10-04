@@ -12,13 +12,13 @@ export default async function Page() {
 
   const cards = (await fetchTrips()).map((trip, idx) => (
       <Link key={trip.id} href={"/" + trip.id + "/itinerary"}>
-        <Card className="h-80 w-56 md:h-[40rem] md:w-96">
+        <Card className="h-80 w-56 md:h-160 md:w-96">
           <div className="relative h-full w-full">
             {trip.imageUrl &&
-              <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-full bg-gradient-to-b from-black/50 via-transparent to-transparent" />
+              <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-full bg-linear-to-b from-black/50 via-transparent to-transparent" />
             }
             <div className="relative z-40 p-8">
-              <div className="mt-2 max-w-xs text-left font-sans text-xl font-semibold [text-wrap:balance] text-white md:text-3xl">
+              <div className="mt-2 max-w-xs text-left font-sans text-xl font-semibold text-balance text-white md:text-3xl">
                 {trip.name}
               </div>
             </div>
@@ -37,7 +37,7 @@ export default async function Page() {
   return (
     <>
       <Navigation/>
-      <main id="root" className="w-full relative z-[1]" style={{height: "calc(100dvh - 4rem)"}}>
+      <main id="root" className="w-full relative z-1" style={{height: "calc(100dvh - 4rem)"}}>
         <div className="flex h-full gap-4">
           <div className="w-full h-full py-6">
             <h2 className="max-w-7xl pl-4 mx-auto text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
