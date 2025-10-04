@@ -1,11 +1,11 @@
 import React from "react";
 import {formatTimePadded} from "@/components/util.ts";
-import {GeoJsonPlane, GeoJsonFlightLeg} from "@/types.ts";
+import {GeoJsonFlight, GeoJsonFlightLeg} from "@/types.ts";
 
 export default function FlightPopup({
   properties
 }: {
-  properties: GeoJsonPlane
+  properties: GeoJsonFlight
 }) {
 
   const legs = JSON.parse(properties.legs) as GeoJsonFlightLeg[]

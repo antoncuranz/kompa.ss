@@ -26,7 +26,7 @@ export default function MapDialogContent({
         <MiniMap value={coordinates} onChange={setCoordinates}>
           {coordinates &&
             <div className="p-4 absolute bottom-0 w-full">
-              <Button type="button" className="w-full text-base" onClick={() => onClick()}>
+              <Button className="w-full text-base" onClick={() => onClick()}>
                 Select Location
               </Button>
             </div>

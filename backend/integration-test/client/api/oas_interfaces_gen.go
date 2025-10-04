@@ -101,6 +101,10 @@ type PostTrainJourneyRes interface {
 	postTrainJourneyRes()
 }
 
+type PostTransportationRes interface {
+	postTransportationRes()
+}
+
 type PostTripRes interface {
 	postTripRes()
 }

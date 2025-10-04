@@ -11,18 +11,18 @@ import (
 
 type UseCase struct {
 	trains usecase.Trains
-	orm    repo.OpenRouteServiceWebAPI
+	ors    repo.OpenRouteServiceWebAPI
 }
 
-func New(trains usecase.Trains, orm repo.OpenRouteServiceWebAPI) *UseCase {
+func New(trains usecase.Trains, ors repo.OpenRouteServiceWebAPI) *UseCase {
 	return &UseCase{
 		trains: trains,
-		orm:    orm,
+		ors:    ors,
 	}
 }
 
 func (uc *UseCase) LookupLocation(ctx *fasthttp.RequestCtx, query string) (entity.GeocodeLocation, error) {
-	location, err := uc.orm.LookupLocation(ctx, query)
+	location, err := uc.ors.LookupLocation(ctx, query)
 	if err != nil {
 		return entity.GeocodeLocation{}, fmt.Errorf("lookup location: %w", err)
 	}

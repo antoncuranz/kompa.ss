@@ -44,7 +44,7 @@ func (r *TransportationRepo) GetAllTransportation(ctx context.Context, tripID in
 			Destination:    row.Location_2,
 		})
 
-		if transportation.Type == entity.PLANE {
+		if transportation.Type == entity.FLIGHT {
 			flightDetail, err := r.flights.GetFlightDetail(ctx, transportation.ID)
 			if err != nil {
 				return []entity.Transportation{}, fmt.Errorf("get flightDetail [t.id=%d]: %w", transportation.ID, err)
@@ -75,7 +75,7 @@ func (r *TransportationRepo) GetTransportationByID(ctx context.Context, tripID i
 		Destination:    row.Location_2,
 	})
 
-	if transportation.Type == entity.PLANE {
+	if transportation.Type == entity.FLIGHT {
 		flightDetail, err := r.flights.GetFlightDetail(ctx, transportation.ID)
 		if err != nil {
 			return entity.Transportation{}, fmt.Errorf("get flightDetail [t.id=%d]: %w", transportation.ID, err)

@@ -2,6 +2,7 @@ package v1
 
 import (
 	"fmt"
+	"kompass/internal/controller/http/v1/request"
 	"kompass/internal/usecase"
 	"kompass/pkg/logger"
 	"net/http"
@@ -14,6 +15,37 @@ type TransportationV1 struct {
 	uc  usecase.Transportation
 	log logger.Interface
 	v   *validator.Validate
+}
+
+// @Summary     Add transportation
+// @ID          postTransportation
+// @Tags  	    transportation
+// @Accept      json
+// @Produce     json
+// @Param       trip_id path int true "Trip ID"
+// @Param       request body request.Transportation true "transportation"
+// @Success     204
+// @Failure     403 {object} response.Error
+// @Failure     500 {object} response.Error
+// @Security    bearerauth
+// @Router      /trips/{trip_id}/transportation [post]
+func (r *TransportationV1) postTransportation(ctx *fiber.Ctx) error {
+	tripID, err := ctx.ParamsInt("trip_id")
+	if err != nil {
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
+	}
+
+	body, err := ParseAndValidateRequestBody[request.Transportation](ctx, r.v)
+	if err != nil {
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
+	}
+
+	_, err = r.uc.CreateTransportation(ctx.UserContext(), int32(tripID), *body)
+	if err != nil {
+		return ErrorResponse(ctx, fmt.Errorf("create transportation: %w", err))
+	}
+
+	return ctx.SendStatus(http.StatusNoContent)
 }
 
 // @Summary     Get all Transportation

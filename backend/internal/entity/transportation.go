@@ -7,14 +7,15 @@ import (
 type TransportationType string
 
 const (
-	PLANE TransportationType = "PLANE"
-	TRAIN TransportationType = "TRAIN"
-	BUS   TransportationType = "BUS"
-	CAR   TransportationType = "CAR"
-	BIKE  TransportationType = "BIKE"
-	FOOT  TransportationType = "FOOT"
-	BOAT  TransportationType = "BOAT"
-	OTHER TransportationType = "OTHER"
+	FLIGHT TransportationType = "FLIGHT"
+	TRAIN  TransportationType = "TRAIN"
+	BUS    TransportationType = "BUS"
+	CAR    TransportationType = "CAR"
+	FERRY  TransportationType = "FERRY"
+	BOAT   TransportationType = "BOAT"
+	BIKE   TransportationType = "BIKE"
+	HIKE   TransportationType = "HIKE"
+	OTHER  TransportationType = "OTHER"
 )
 
 func (t TransportationType) String() string {
@@ -32,4 +33,11 @@ type Transportation struct {
 	Price             *int32             `json:"price" extensions:"nullable"`
 	FlightDetail      *FlightDetail      `json:"flightDetail,omitempty" validate:"optional" extensions:"nullable"`
 	TrainDetail       *TrainDetail       `json:"trainDetail,omitempty" validate:"optional" extensions:"nullable"`
+	//GenericDetail     *GenericDetail     `json:"genericDetail,omitempty" validate:"optional" extensions:"nullable"`
+}
+
+type GenericDetail struct {
+	Name               string `json:"name"`
+	OriginAddress      string `json:"originAddress"`
+	DestinationAddress string `json:"destinationAddress"`
 }

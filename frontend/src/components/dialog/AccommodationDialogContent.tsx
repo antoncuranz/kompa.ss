@@ -7,7 +7,7 @@ import {Textarea} from "@/components/ui/textarea.tsx";
 import {RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
 import {toast} from "sonner";
 import {z} from "zod"
-import {isoDate, optionalLocation, optionalString} from "@/schemas.ts";
+import {isoDate, location, optionalString} from "@/schemas.ts";
 import {Form, FormField} from "@/components/ui/form"
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -25,7 +25,7 @@ const formSchema = z.object({
   departureDate: isoDate("Required"),
   price: z.number().optional(),
   address: optionalString(),
-  location: optionalLocation()
+  location: location().optional()
 })
 
 export default function AccommodationDialogContent({

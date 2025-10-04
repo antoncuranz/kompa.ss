@@ -1467,6 +1467,19 @@ type PostTrainJourneyInternalServerError ResponseError
 
 func (*PostTrainJourneyInternalServerError) postTrainJourneyRes() {}
 
+type PostTransportationForbidden ResponseError
+
+func (*PostTransportationForbidden) postTransportationRes() {}
+
+type PostTransportationInternalServerError ResponseError
+
+func (*PostTransportationInternalServerError) postTransportationRes() {}
+
+// PostTransportationNoContent is response for PostTransportation operation.
+type PostTransportationNoContent struct{}
+
+func (*PostTransportationNoContent) postTransportationRes() {}
+
 type PostTripBadRequest ResponseError
 
 func (*PostTripBadRequest) postTripRes() {}
@@ -1857,6 +1870,120 @@ func (s *RequestTrainJourney) SetTrainNumbers(val []string) {
 // SetViaStationId sets the value of ViaStationId.
 func (s *RequestTrainJourney) SetViaStationId(val NilString) {
 	s.ViaStationId = val
+}
+
+// Ref: #/components/schemas/request.Transportation
+type RequestTransportation struct {
+	ArrivalDateTime    string            `json:"arrivalDateTime"`
+	DepartureDateTime  string            `json:"departureDateTime"`
+	Destination        NilEntityLocation `json:"destination"`
+	DestinationAddress NilString         `json:"destinationAddress"`
+	Name               string            `json:"name"`
+	Origin             NilEntityLocation `json:"origin"`
+	OriginAddress      NilString         `json:"originAddress"`
+	Price              NilInt            `json:"price"`
+	TripId             int               `json:"tripId"`
+	Type               string            `json:"type"`
+}
+
+// GetArrivalDateTime returns the value of ArrivalDateTime.
+func (s *RequestTransportation) GetArrivalDateTime() string {
+	return s.ArrivalDateTime
+}
+
+// GetDepartureDateTime returns the value of DepartureDateTime.
+func (s *RequestTransportation) GetDepartureDateTime() string {
+	return s.DepartureDateTime
+}
+
+// GetDestination returns the value of Destination.
+func (s *RequestTransportation) GetDestination() NilEntityLocation {
+	return s.Destination
+}
+
+// GetDestinationAddress returns the value of DestinationAddress.
+func (s *RequestTransportation) GetDestinationAddress() NilString {
+	return s.DestinationAddress
+}
+
+// GetName returns the value of Name.
+func (s *RequestTransportation) GetName() string {
+	return s.Name
+}
+
+// GetOrigin returns the value of Origin.
+func (s *RequestTransportation) GetOrigin() NilEntityLocation {
+	return s.Origin
+}
+
+// GetOriginAddress returns the value of OriginAddress.
+func (s *RequestTransportation) GetOriginAddress() NilString {
+	return s.OriginAddress
+}
+
+// GetPrice returns the value of Price.
+func (s *RequestTransportation) GetPrice() NilInt {
+	return s.Price
+}
+
+// GetTripId returns the value of TripId.
+func (s *RequestTransportation) GetTripId() int {
+	return s.TripId
+}
+
+// GetType returns the value of Type.
+func (s *RequestTransportation) GetType() string {
+	return s.Type
+}
+
+// SetArrivalDateTime sets the value of ArrivalDateTime.
+func (s *RequestTransportation) SetArrivalDateTime(val string) {
+	s.ArrivalDateTime = val
+}
+
+// SetDepartureDateTime sets the value of DepartureDateTime.
+func (s *RequestTransportation) SetDepartureDateTime(val string) {
+	s.DepartureDateTime = val
+}
+
+// SetDestination sets the value of Destination.
+func (s *RequestTransportation) SetDestination(val NilEntityLocation) {
+	s.Destination = val
+}
+
+// SetDestinationAddress sets the value of DestinationAddress.
+func (s *RequestTransportation) SetDestinationAddress(val NilString) {
+	s.DestinationAddress = val
+}
+
+// SetName sets the value of Name.
+func (s *RequestTransportation) SetName(val string) {
+	s.Name = val
+}
+
+// SetOrigin sets the value of Origin.
+func (s *RequestTransportation) SetOrigin(val NilEntityLocation) {
+	s.Origin = val
+}
+
+// SetOriginAddress sets the value of OriginAddress.
+func (s *RequestTransportation) SetOriginAddress(val NilString) {
+	s.OriginAddress = val
+}
+
+// SetPrice sets the value of Price.
+func (s *RequestTransportation) SetPrice(val NilInt) {
+	s.Price = val
+}
+
+// SetTripId sets the value of TripId.
+func (s *RequestTransportation) SetTripId(val int) {
+	s.TripId = val
+}
+
+// SetType sets the value of Type.
+func (s *RequestTransportation) SetType(val string) {
+	s.Type = val
 }
 
 // Ref: #/components/schemas/request.Trip

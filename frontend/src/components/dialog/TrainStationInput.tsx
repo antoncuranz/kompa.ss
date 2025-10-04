@@ -54,7 +54,7 @@ export default function TrainStationInput({
                  placeholder={placeholder}
                  disabled={disabled || isLoading}/>
           {!disabled &&
-            <Button type="button" variant="secondary" onClick={onButtonClick} disabled={isLoading}>
+            <Button variant="secondary" onClick={onButtonClick} disabled={isLoading}>
               { isLoading ?
                 <Spinner className="h-4 w-4" variant="pinwheel"/>
               : edit ?

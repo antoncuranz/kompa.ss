@@ -281,13 +281,14 @@ components:
     entity.TransportationType:
       type: string
       x-enum-varnames:
-      - PLANE
+      - FLIGHT
       - TRAIN
       - BUS
       - CAR
-      - BIKE
-      - FOOT
+      - FERRY
       - BOAT
+      - BIKE
+      - HIKE
       - OTHER
     entity.Trip:
       properties:
@@ -463,6 +464,53 @@ components:
       - toStationId
       - trainNumbers
       - viaStationId
+      type: object
+    request.Transportation:
+      properties:
+        arrivalDateTime:
+          type: string
+        departureDateTime:
+          type: string
+        destination:
+          $ref: '#/components/schemas/entity.Location'
+        destinationAddress:
+          nullable: true
+          type: string
+        name:
+          type: string
+        origin:
+          $ref: '#/components/schemas/entity.Location'
+        originAddress:
+          nullable: true
+          type: string
+        price:
+          nullable: true
+          type: integer
+        tripId:
+          type: integer
+        type:
+          type: string
+          x-enum-varnames:
+          - FLIGHT
+          - TRAIN
+          - BUS
+          - CAR
+          - FERRY
+          - BOAT
+          - BIKE
+          - HIKE
+          - OTHER
+      required:
+      - arrivalDateTime
+      - departureDateTime
+      - destination
+      - destinationAddress
+      - name
+      - origin
+      - originAddress
+      - price
+      - tripId
+      - type
       type: object
     request.Trip:
       properties:
@@ -1420,6 +1468,42 @@ paths:
       security:
       - bearerauth: []
       summary: Get all Transportation
+      tags:
+      - transportation
+    post:
+      operationId: postTransportation
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request.Transportation'
+        description: transportation
+        required: true
+      responses:
+        "204":
+          description: No Content
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Internal Server Error
+      security:
+      - bearerauth: []
+      summary: Add transportation
       tags:
       - transportation
   /trips/{trip_id}/transportation/{transportation_id}:

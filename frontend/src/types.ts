@@ -46,14 +46,41 @@ export type Accommodation = {
 };
 
 export enum TransportationType {
-  Plane = "PLANE",
+  Plane = "PLANE", // deprecated
+  Flight = "FLIGHT",
   Train = "TRAIN",
   Bus   = "BUS",
+  Ferry  = "FERRY",
   Boat  = "BOAT",
   Bike  = "BIKE",
   Car   = "CAR",
-  Foot  = "FOOT",
+  Hike  = "HIKE",
   Other = "OTHER",
+}
+
+export function getTransportationTypeEmoji(type: TransportationType) {
+  switch (type) {
+    case TransportationType.Plane:
+    case TransportationType.Flight:
+      return "✈️"
+    case TransportationType.Train:
+      return "🚇"
+    case TransportationType.Bus:
+      return "🚌"
+    case TransportationType.Car:
+      return "🚗"
+    case TransportationType.Ferry:
+      return "⛴️"
+    case TransportationType.Boat:
+      return "⛵️"
+    case TransportationType.Bike:
+      return "🚲"
+    case TransportationType.Hike:
+      return "🥾"
+    case TransportationType.Other:
+    default:
+      return "🛸"
+  }
 }
 
 export type Transportation = {
@@ -139,8 +166,8 @@ export type DayRenderData = {
 };
 
 
-export type GeoJsonPlane = {
-  type: string;
+export type GeoJsonFlight = {
+  type: TransportationType;
   fromMunicipality: string;
   toMunicipality: string;
   legs: string;
@@ -155,7 +182,7 @@ export type GeoJsonFlightLeg = {
 }
 
 export type GeoJsonTrain = {
-  type: string;
+  type: TransportationType;
   fromMunicipality: string;
   toMunicipality: string;
   legs: string;
@@ -167,4 +194,11 @@ export type GeoJsonTrainLeg = {
   arrivalDateTime: string;
   fromStation: string;
   toStation: string;
+}
+
+export type GeoJsonTransportation = {
+  type: TransportationType;
+  name: string;
+  departureDateTime: string;
+  arrivalDateTime: string;
 }

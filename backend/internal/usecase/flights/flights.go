@@ -36,7 +36,7 @@ func (uc *UseCase) CreateFlight(ctx context.Context, tripID int32, flight reques
 
 	transportation, err := uc.transportationRepo.SaveTransportation(ctx, entity.Transportation{
 		TripID:            tripID,
-		Type:              entity.PLANE,
+		Type:              entity.FLIGHT,
 		Origin:            firstLeg.Origin.Location,
 		Destination:       lastLeg.Destination.Location,
 		DepartureDateTime: firstLeg.DepartureDateTime,
@@ -59,7 +59,7 @@ func (uc *UseCase) saveGeoJson(ctx context.Context, transportation entity.Transp
 	legs := transportation.FlightDetail.Legs
 
 	featureCollection := geojson.NewFeatureCollection()
-	featureCollection.ExtraMembers = map[string]interface{}{"transportationType": "PLANE"}
+	featureCollection.ExtraMembers = map[string]interface{}{"transportationType": "FLIGHT"}
 
 	airportByIata := map[string]entity.Airport{}
 	legsByAirport := map[string][]entity.FlightLeg{}
@@ -96,7 +96,7 @@ func (uc *UseCase) saveGeoJson(ctx context.Context, transportation entity.Transp
 func featureWithProperties(fromMunicipality string, toMunicipality string, location entity.Location, legs []entity.FlightLeg) *geojson.Feature {
 	feature := geojson.NewFeature(locationToPoint(location))
 
-	feature.Properties["type"] = "PLANE"
+	feature.Properties["type"] = "FLIGHT"
 	feature.Properties["fromMunicipality"] = fromMunicipality
 	feature.Properties["toMunicipality"] = toMunicipality
 

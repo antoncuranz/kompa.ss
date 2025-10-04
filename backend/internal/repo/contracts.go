@@ -82,5 +82,6 @@ type (
 
 	OpenRouteServiceWebAPI interface {
 		LookupLocation(ctx context.Context, query string) (entity.GeocodeLocation, error)
+		LookupDirections(ctx context.Context, start entity.Location, end entity.Location) (*geojson.FeatureCollection, error)
 	}
 )

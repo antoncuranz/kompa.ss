@@ -33,7 +33,7 @@ export default function LocationInput({
                  placeholder="Latitude"
           />
           {!disabled &&
-            <Button type="button" variant="secondary" onClick={() => setMapDialogOpen(true)}>
+            <Button variant="secondary" onClick={() => setMapDialogOpen(true)}>
               <Map className="h-4 w-4"/>
             </Button>
           }

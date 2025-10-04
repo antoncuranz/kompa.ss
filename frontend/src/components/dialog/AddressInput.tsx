@@ -46,7 +46,7 @@ export default function AddressInput({
                  data-1p-ignore
           />
           {!disabled &&
-            <Button type="button" variant="secondary" onClick={onClick} disabled={isLoading}>
+            <Button variant="secondary" onClick={onClick} disabled={isLoading}>
               { isLoading ?
                 <Spinner className="h-4 w-4" variant="pinwheel"/>
               :

@@ -31,6 +31,7 @@ const (
 	PostAttachmentOperation       OperationName = "PostAttachment"
 	PostFlightOperation           OperationName = "PostFlight"
 	PostTrainJourneyOperation     OperationName = "PostTrainJourney"
+	PostTransportationOperation   OperationName = "PostTransportation"
 	PostTripOperation             OperationName = "PostTrip"
 	PutAccommodationOperation     OperationName = "PutAccommodation"
 	PutActivityOperation          OperationName = "PutActivity"

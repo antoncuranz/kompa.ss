@@ -150,13 +150,13 @@ export default function FlightDialogContent({
           {edit &&
             <div>
               {legsArray.fields.length > 1 ?
-                <Button type="button" variant="ghost" className="p-2 h-auto rounded-full" onClick={() => deleteLeg()}>
+                <Button variant="ghost" className="p-2 h-auto rounded-full" onClick={() => deleteLeg()}>
                   <Minus className="h-4 w-4"/>
                 </Button>
                 :
                 <div/>
               }
-              <Button type="button" variant="ghost" className="p-2 h-auto rounded-full" onClick={() => addLeg()}>
+              <Button variant="ghost" className="p-2 h-auto rounded-full" onClick={() => addLeg()}>
                 <Plus className="w-4 h-4"/>
               </Button>
             </div>
@@ -186,13 +186,13 @@ export default function FlightDialogContent({
           {edit &&
             <div>
               {pnrsArray.fields.length > 0 ?
-                <Button type="button" variant="ghost" className="p-2 h-auto rounded-full" onClick={() => deletePnr()}>
+                <Button variant="ghost" className="p-2 h-auto rounded-full" onClick={() => deletePnr()}>
                   <Minus className="h-4 w-4"/>
                 </Button>
                 :
                 <div/>
               }
-              <Button type="button" variant="ghost" className="p-2 h-auto rounded-full" onClick={() => addPnr()}>
+              <Button variant="ghost" className="p-2 h-auto rounded-full" onClick={() => addPnr()}>
                 <Plus className="w-4 h-4"/>
               </Button>
             </div>

@@ -13,7 +13,7 @@ func (suite *IntegrationTestSuite) TestCrudFlight() {
 	flight := suite.postAndRetrieveFlight(tripID)
 
 	// then (post)
-	suite.Equal(api.EntityTransportationType("PLANE"), flight.Type)
+	suite.Equal(api.EntityTransportationType("FLIGHT"), flight.Type)
 
 	flightDetail, ok := flight.FlightDetail.Get()
 	suite.True(ok)

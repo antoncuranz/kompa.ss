@@ -64,7 +64,7 @@ export const RowContainer = ({
   children: React.ReactNode;
 }) => {
   return (
-      <div className="mb-4 grid md:grid-cols-2 gap-2">
+      <div className="grid md:grid-cols-2 gap-2">
         {children}
       </div>
   );

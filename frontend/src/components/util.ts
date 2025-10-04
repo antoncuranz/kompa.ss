@@ -4,6 +4,12 @@ export function dateFromString(timestamp: string) {
   return new Date(date.getTime() + userTimezoneOffset);
 }
 
+export function dateTimeToString(date: Date) {
+  const offset = date.getTimezoneOffset()
+  const offsetDate = new Date(date.getTime() - (offset*60*1000))
+  return offsetDate.toISOString().split('Z')[0]
+}
+
 export function dateToString(date: Date) {
   const offset = date.getTimezoneOffset()
   const offsetDate = new Date(date.getTime() - (offset*60*1000))
@@ -84,7 +90,6 @@ export function formatAmount(amount: number|null|undefined, decimals = 2): strin
   return result
 }
 
-export function nullIfEmpty(value: string) {
-  const trimmedValue = value.trim()
-  return trimmedValue.length != 0 ? trimmedValue : null;
+export function titleCase(value: string) {
+  return value.charAt(0) + value.slice(1).toLowerCase()
 }

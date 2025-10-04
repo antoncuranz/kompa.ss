@@ -156,6 +156,12 @@ type PostTrainJourneyParams struct {
 	TripID int
 }
 
+// PostTransportationParams is parameters of postTransportation operation.
+type PostTransportationParams struct {
+	// Trip ID.
+	TripID int
+}
+
 // PutAccommodationParams is parameters of putAccommodation operation.
 type PutAccommodationParams struct {
 	// Trip ID.

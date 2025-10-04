@@ -70,16 +70,17 @@ func Run(cfg *config.Config) {
 func createUseCases(cfg *config.Config, pg *postgres.Postgres) usecase.UseCases {
 	flightsRepo := persistent.NewFlightsRepo(pg)
 	transportationRepo := persistent.NewTransportationRepo(pg, flightsRepo, persistent.NewTrainsRepo(pg))
+	ors := webapi.NewOpenRouteServiceWebAPI(cfg.WebApi)
 
 	usersUseCase := users.New(persistent.NewUserRepo(pg))
 	tripsUseCase := trips.New(persistent.NewTripsRepo(pg))
-	transportationUseCase := transportation.New(transportationRepo)
+	transportationUseCase := transportation.New(transportationRepo, ors)
 	flightsUseCase := flights.New(transportationRepo, flightsRepo, webapi.New(cfg.WebApi))
 	trainsUseCase := trains.New(transportationRepo, webapi.NewDbVendoWebAPI(cfg.WebApi))
 	activitiesUseCase := activities.New(persistent.NewActivitiesRepo(pg), tripsUseCase)
 	accommodationUseCase := accommodation.New(persistent.NewAccommodationRepo(pg), tripsUseCase)
 	attachmentsUseCase := attachments.New(persistent.NewAttachmentsRepo(pg))
-	geocodingUseCase := geocoding.New(trainsUseCase, webapi.NewOpenRouteServiceWebAPI(cfg.WebApi))
+	geocodingUseCase := geocoding.New(trainsUseCase, ors)
 
 	return usecase.UseCases{
 		Users:          usersUseCase,

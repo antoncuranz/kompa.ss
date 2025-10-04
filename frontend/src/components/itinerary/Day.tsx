@@ -7,6 +7,7 @@ import ActivityEntry from "@/components/itinerary/ActivityEntry.tsx";
 import {Accommodation, Activity, DayRenderData, Transportation, TransportationType} from "@/types.ts";
 import {Separator} from "@/components/ui/separator.tsx";
 import TrainEntry from "@/components/itinerary/TrainEntry.tsx";
+import TransportationEntry from "@/components/itinerary/TransportationEntry.tsx";
 
 export default function Day({
   dayData,
@@ -14,7 +15,8 @@ export default function Day({
   onActivityClick = () => {},
   onAccommodationClick = () => {},
   onFlightClick = () => {},
-  onTrainClick = () => {}
+  onTrainClick = () => {},
+  onTransportationClick = () => {}
 }: {
   dayData: DayRenderData
   nextDay: string
@@ -22,6 +24,7 @@ export default function Day({
   onAccommodationClick?: (accommodation: Accommodation | undefined) => void;
   onFlightClick?: (flight: Transportation) => void;
   onTrainClick?: (train: Transportation) => void;
+  onTransportationClick?: (transportation: Transportation) => void;
 }) {
 
   const collapsedDays = nextDay ? getDaysBetween(dayData.day, nextDay).length-2 : 0
@@ -31,12 +34,14 @@ export default function Day({
 
   function renderTransportation(transportation: Transportation) {
     switch (transportation.type) {
-      case TransportationType.Plane:
+      case TransportationType.Plane: // deprecated
+      case TransportationType.Flight:
         return renderFlight(transportation)
       case TransportationType.Train:
         return renderTrain(transportation)
       default:
-        return <></>
+        return isSameDay(transportation.departureDateTime, dayData.day) &&
+            <TransportationEntry transportation={transportation} onClick={() => onTransportationClick(transportation)}/>
     }
   }
 

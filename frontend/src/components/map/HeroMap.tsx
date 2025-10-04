@@ -3,12 +3,13 @@
 import React, {useState} from "react";
 import {Layer, Popup, Source} from "react-map-gl/mapbox";
 import type {Feature, FeatureCollection, GeoJsonProperties} from 'geojson';
-import {Accommodation, Activity, GeoJsonPlane, GeoJsonTrain} from "@/types.ts";
+import {Accommodation, Activity, GeoJsonFlight, GeoJsonTrain, GeoJsonTransportation} from "@/types.ts";
 import {LngLat, MapMouseEvent} from "mapbox-gl";
 import {formatDateShort, formatTime} from "@/components/util.ts";
 import TrainPopup from "@/components/popup/TrainPopup.tsx";
 import FlightPopup from "@/components/popup/FlightPopup.tsx";
 import BaseMap from "@/components/map/BaseMap.tsx";
+import TransportationPopup from "../popup/TransportationPopup";
 
 export default function HeroMap({
   activities, accommodation, geojson
@@ -90,19 +91,23 @@ export default function HeroMap({
 
   function renderPopupContent(props: GeoJsonProperties) {
     switch (props!["type"]) {
-      case "PLANE":
-        return <FlightPopup properties={props as GeoJsonPlane}/>
+      case "ACTIVITY":
+      case "ACCOMMODATION":
+        return (
+            <div className="text-sm">
+              <strong>{props!["popupTitle"]}</strong>
+              <div className="iconsolata grid grid-cols-[auto_auto_1fr] gap-x-2">
+                {props!["popupBody"]}
+              </div>
+            </div>
+        )
+      case "PLANE": // deprecated
+      case "FLIGHT":
+        return <FlightPopup properties={props as GeoJsonFlight}/>
       case "TRAIN":
         return <TrainPopup properties={props as GeoJsonTrain}/>
       default:
-        return (
-          <div className="text-sm">
-            <strong>{props!["popupTitle"]}</strong>
-            <div className="iconsolata grid grid-cols-[auto_auto_1fr] gap-x-2">
-              {props!["popupBody"]}
-            </div>
-          </div>
-        )
+        return <TransportationPopup properties={props as GeoJsonTransportation}/>
     }
   }
 
@@ -111,9 +116,16 @@ export default function HeroMap({
     const type = fc["transportationType"] as string
 
     switch (type) {
-      case "PLANE": return "#007cbf"
-      case "TRAIN": return "#ec0016"
-      default: return "black"
+      case "PLANE": // deprecated
+      case "FLIGHT":
+        return "#007cbf"
+      case "TRAIN":
+        return "#ec0016"
+      case "FERRY":
+      case "BOAT":
+        return "#01428c"
+      default:
+        return "purple"
     }
   }
 

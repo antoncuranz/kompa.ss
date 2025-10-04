@@ -28,7 +28,7 @@ export default function FlightEntry({
       className={cn("rounded-xl border mx-3 p-2 pl-4 pr-4 grid bg-background z-10 relative", className)}
     >
       <CollapsibleTrigger asChild>
-        <div className="grid cursor-pointer w-full" style={{gridTemplateColumns: "1.5rem 1fr", columnGap: "0.5rem"}}>
+        <div className="grid grid-cols-[1.5rem_1fr] gap-2 cursor-pointer w-full">
           <span className="mt-0 m-auto">✈️</span>
           <div className="flex overflow-hidden whitespace-nowrap w-full">
             <span className="overflow-hidden text-ellipsis w-full">

@@ -14,7 +14,7 @@ import AmountInput from "@/components/dialog/AmountInput.tsx";
 import AddressInput from "@/components/dialog/AddressInput.tsx";
 import {dateFromString} from "@/components/util.ts";
 import {RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
-import {isoDate, optionalLocation, optionalString} from "@/schemas";
+import {isoDate, location, optionalString} from "@/schemas";
 import {toast} from "sonner";
 import LocationInput from "@/components/dialog/LocationInput.tsx";
 import {Spinner} from "@/components/ui/shadcn-io/spinner";
@@ -25,7 +25,7 @@ const formSchema = z.object({
   date: isoDate("Required"),
   price: z.number().optional(),
   address: optionalString(),
-  location: optionalLocation()
+  location: location().optional()
 })
 
 export default function ActivityDialogContent({

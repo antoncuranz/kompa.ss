@@ -51,7 +51,7 @@ export default function DateInput({
             name={name}
             variant="secondary"
             className={cn(
-                "col-span-3 justify-start text-left font-normal disabled:opacity-1 w-full",
+                "col-span-3 justify-start text-left font-normal disabled:opacity-1 w-full focus:ring-2",
                 !value && "text-muted-foreground"
             )}
             disabled={disabled}
@@ -62,6 +62,7 @@ export default function DateInput({
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0 rounded-2xl overflow-hidden shadow-lg">
         <Calendar
+            ISOWeek
             mode="single"
             selected={value}
             onSelect={onSelect}

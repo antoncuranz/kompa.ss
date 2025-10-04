@@ -43,3 +43,17 @@ func (a *OpenRouteServiceWebAPI) LookupLocation(ctx context.Context, query strin
 		Longitude: float32(point[0]),
 	}, nil
 }
+
+const DirectionsProfile = "driving-car"
+
+func (a *OpenRouteServiceWebAPI) LookupDirections(ctx context.Context, start entity.Location, end entity.Location) (*geojson.FeatureCollection, error) {
+	urlFormat := "%s/v2/directions/%s?api_key=%s&start=%f,%f&end=%f,%f"
+	directionsUrl := fmt.Sprintf(urlFormat, a.baseURL, DirectionsProfile, a.apiKey, start.Longitude, start.Latitude, end.Longitude, end.Latitude)
+
+	featureCollection, err := RequestAndParseJsonBody[geojson.FeatureCollection](ctx, "GET", directionsUrl, nil)
+	if err != nil {
+		return nil, fmt.Errorf("requestAndParseJsonBody: %w", err)
+	}
+
+	return featureCollection, nil
+}

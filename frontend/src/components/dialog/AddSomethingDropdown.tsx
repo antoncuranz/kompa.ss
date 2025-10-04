@@ -10,12 +10,14 @@ import FlightDialogContent from "@/components/dialog/FlightDialogContent.tsx";
 import TrainDialogContent from "@/components/dialog/TrainDialogContent.tsx";
 import ActivityDialogContent from "@/components/dialog/ActivityDialogContent.tsx";
 import {Dialog} from "@/components/dialog/Dialog.tsx";
+import TransportationDialogContent from "@/components/dialog/TransportationDialogContent.tsx";
 
 export default function AddSomethingDropdown({trip}: {trip: Trip}) {
   const [activityDialogOpen, setActivityDialogOpen] = useState(false)
   const [accommodationDialogOpen, setAccommodationDialogOpen] = useState(false)
   const [flightDialogOpen, setFlightDialogOpen] = useState(false)
   const [trainDialogOpen, setTrainDialogOpen] = useState(false)
+  const [transportationDialogOpen, setTransportationDialogOpen] = useState(false)
 
   return (
     <div>
@@ -41,6 +43,9 @@ export default function AddSomethingDropdown({trip}: {trip: Trip}) {
           <DropdownMenuItem onClick={() => setTrainDialogOpen(true)}>
             Add Train
           </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTransportationDialogOpen(true)}>
+            Add Transportation
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <Dialog open={activityDialogOpen} setOpen={setActivityDialogOpen}>
@@ -54,6 +59,9 @@ export default function AddSomethingDropdown({trip}: {trip: Trip}) {
       </Dialog>
       <Dialog open={trainDialogOpen} setOpen={setTrainDialogOpen}>
         <TrainDialogContent trip={trip}/>
+      </Dialog>
+      <Dialog open={transportationDialogOpen} setOpen={setTransportationDialogOpen}>
+        <TransportationDialogContent trip={trip}/>
       </Dialog>
     </div>
   )
