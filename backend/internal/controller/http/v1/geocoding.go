@@ -29,7 +29,7 @@ func (r *GeocodingV1) getLocation(ctx *fiber.Ctx) error {
 	query := ctx.Query("query")
 	location, err := r.uc.LookupLocation(ctx.Context(), query)
 	if err != nil {
-		return ErrorResponse(ctx, fmt.Errorf("lookup trainstation: %w", err))
+		return fmt.Errorf("lookup trainstation: %w", err)
 	}
 
 	return ctx.Status(http.StatusOK).JSON(location)
@@ -48,7 +48,7 @@ func (r *GeocodingV1) getTrainStation(ctx *fiber.Ctx) error {
 	query := ctx.Query("query")
 	location, err := r.uc.LookupTrainStation(ctx.Context(), query)
 	if err != nil {
-		return ErrorResponse(ctx, fmt.Errorf("lookup trainstation: %w", err))
+		return fmt.Errorf("lookup trainstation: %w", err)
 	}
 
 	return ctx.Status(http.StatusOK).JSON(location)

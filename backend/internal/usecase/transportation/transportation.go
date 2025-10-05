@@ -43,12 +43,25 @@ func (uc *UseCase) CreateTransportation(ctx context.Context, tripID int32, reque
 }
 
 func (uc *UseCase) UpdateTransportation(ctx context.Context, tripID int32, transportationID int32, request request.Transportation) (entity.Transportation, error) {
+	existing, err := uc.repo.GetTransportationByID(ctx, tripID, transportationID)
+	if err != nil {
+		return entity.Transportation{}, fmt.Errorf("get existing transportation: %w", err)
+	}
+
 	transportation, err := uc.repo.SaveTransportation(ctx, entity.Transportation{
-		ID:                transportationID,
-		TripID:            tripID,
-		Type:              request.Type,
-		Origin:            request.Origin,
-		Destination:       request.Destination,
+		ID:     transportationID,
+		TripID: tripID,
+		Type:   request.Type,
+		Origin: entity.Location{
+			ID:        existing.Origin.ID,
+			Latitude:  request.Origin.Latitude,
+			Longitude: request.Origin.Longitude,
+		},
+		Destination: entity.Location{
+			ID:        existing.Destination.ID,
+			Latitude:  request.Destination.Latitude,
+			Longitude: request.Destination.Longitude,
+		},
 		DepartureDateTime: request.DepartureDateTime,
 		ArrivalDateTime:   request.ArrivalDateTime,
 		Price:             request.Price,
@@ -59,7 +72,7 @@ func (uc *UseCase) UpdateTransportation(ctx context.Context, tripID int32, trans
 		},
 	})
 	if err != nil {
-		return entity.Transportation{}, err
+		return entity.Transportation{}, fmt.Errorf("update transportation: %w", err)
 	}
 
 	return transportation, uc.saveGeoJson(ctx, transportation)

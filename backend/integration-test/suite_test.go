@@ -42,8 +42,8 @@ func (suite *IntegrationTestSuite) userApi(user util.UserName) *api.Client {
 	return app
 }
 
-func (suite *IntegrationTestSuite) CreateTrip() int {
-	res, err := suite.api.PostTrip(suite.T().Context(), &api.RequestTrip{
+func (suite *IntegrationTestSuite) CreateTripUser(user util.UserName) int {
+	res, err := suite.userApi(user).PostTrip(suite.T().Context(), &api.RequestTrip{
 		Name:        "Test Trip",
 		Description: api.NewNilString("This is a test"),
 		StartDate:   "2025-01-01",
@@ -56,11 +56,19 @@ func (suite *IntegrationTestSuite) CreateTrip() int {
 	return trip.ID
 }
 
-func (suite *IntegrationTestSuite) DeleteTrip(tripID int) {
-	_, err := suite.api.DeleteTrip(suite.T().Context(), api.DeleteTripParams{
+func (suite *IntegrationTestSuite) CreateTrip() int {
+	return suite.CreateTripUser(DefaultUser)
+}
+
+func (suite *IntegrationTestSuite) DeleteTripUser(user util.UserName, tripID int) {
+	_, err := suite.userApi(user).DeleteTrip(suite.T().Context(), api.DeleteTripParams{
 		TripID: tripID,
 	})
 	suite.NoError(err)
+}
+
+func (suite *IntegrationTestSuite) DeleteTrip(tripID int) {
+	suite.DeleteTripUser(DefaultUser, tripID)
 }
 
 func TestIntegrationTestSuite(t *testing.T) {

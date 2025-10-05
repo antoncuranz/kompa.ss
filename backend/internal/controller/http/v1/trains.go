@@ -32,17 +32,17 @@ type TrainsV1 struct {
 func (r *TrainsV1) postTrainJourney(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "unable to parse trip_id")
 	}
 
 	body, err := ParseAndValidateRequestBody[request.TrainJourney](ctx, r.v)
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse request body: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "parse request body")
 	}
 
 	transportation, err := r.uc.CreateTrainJourney(ctx.Context(), int32(tripID), *body)
 	if err != nil {
-		return ErrorResponse(ctx, fmt.Errorf("retrieve journey: %w", err))
+		return fmt.Errorf("retrieve journey: %w", err)
 	}
 
 	return ctx.Status(http.StatusOK).JSON(transportation)

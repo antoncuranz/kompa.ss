@@ -2,12 +2,16 @@ package postgres
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"github.com/gofiber/fiber/v2"
+	"github.com/jackc/pgx/v5"
 	"github.com/paulmach/orb/geojson"
 	"kompass/internal/entity"
 	"kompass/internal/repo/postgres/converter"
 	"kompass/pkg/postgres"
 	"kompass/pkg/sqlc"
+	"net/http"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -51,6 +55,9 @@ func (r *TransportationRepo) GetAllTransportation(ctx context.Context, tripID in
 func (r *TransportationRepo) GetTransportationByID(ctx context.Context, tripID int32, transportationID int32) (entity.Transportation, error) {
 	row, err := r.Queries.GetTransportationByID(ctx, sqlc.GetTransportationByIDParams{TripID: tripID, ID: transportationID})
 	if err != nil {
+		if errors.Is(pgx.ErrNoRows, err) {
+			return entity.Transportation{}, fiber.NewError(http.StatusNotFound, "transportation not found")
+		}
 		return entity.Transportation{}, fmt.Errorf("get transportation [id=%d] from db: %w", transportationID, err)
 	}
 

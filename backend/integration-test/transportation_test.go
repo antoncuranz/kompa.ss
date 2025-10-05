@@ -1,118 +1,97 @@
 package integration_test
 
 import (
+	"context"
 	"kompass/integration-test/client/api"
 )
 
-func (suite *IntegrationTestSuite) TestCrudFlight() {
+func (suite *IntegrationTestSuite) TestCrudTransportation() {
+	// TODO
+}
+
+func (suite *IntegrationTestSuite) TestTransportationNotFound() {
 	// given
 	tripID := suite.CreateTrip()
 	defer suite.DeleteTrip(tripID)
-
-	// when (post)
-	flight := suite.postAndRetrieveFlight(tripID)
-
-	// then (post)
-	suite.Equal(api.EntityTransportationType("FLIGHT"), flight.Type)
-
-	flightDetail, ok := flight.FlightDetail.Get()
-	suite.True(ok)
-	suite.Len(flightDetail.Legs, 1)
-	suite.Equal("LH 717", flightDetail.Legs[0].FlightNumber)
-	suite.Equal("Boeing 747-8", flightDetail.Legs[0].Aircraft.Value)
-	suite.Equal("2026-02-01T12:35:00", flightDetail.Legs[0].DepartureDateTime)
-	suite.Equal("2026-02-01T19:00:00", flightDetail.Legs[0].ArrivalDateTime)
-
-	// when (put)
-	updatedFlight := suite.putAndRetrieveFlight(tripID, flight.ID)
-
-	// then (put)
-	updatedDetail, ok := updatedFlight.FlightDetail.Get()
-	suite.True(ok)
-	suite.Len(flightDetail.Legs, 1)
-	suite.Equal("Boeing 747-400", updatedDetail.Legs[0].Aircraft.Value)
-	suite.Equal("2026-02-01T12:40:00", updatedFlight.DepartureDateTime)
-	suite.Equal("2026-02-01T12:40:00", updatedDetail.Legs[0].DepartureDateTime)
-	suite.Equal("2026-02-01T19:15:00", updatedFlight.ArrivalDateTime)
-	suite.Equal("2026-02-01T19:15:00", updatedDetail.Legs[0].ArrivalDateTime)
-
-	// when (forbiddenUser)
-	getAll, _ := suite.userApi(ForbiddenUser).GetAllTransportation(suite.T().Context(), api.GetAllTransportationParams{TripID: tripID})
-	getByID, _ := suite.userApi(ForbiddenUser).GetTransportation(suite.T().Context(), api.GetTransportationParams{TripID: tripID, TransportationID: flight.ID})
-	updateByID, _ := suite.userApi(ForbiddenUser).PutFlight(suite.T().Context(), api.PutFlightParams{TripID: tripID, FlightID: flight.ID})
-	deleteByID, _ := suite.userApi(ForbiddenUser).DeleteTransportation(suite.T().Context(), api.DeleteTransportationParams{TripID: tripID, TransportationID: flight.ID})
-
-	// then (forbiddenUser)
-	_, ok = getAll.(*api.GetAllTransportationForbidden)
-	suite.True(ok)
-	_, ok = getByID.(*api.GetTransportationForbidden)
-	suite.True(ok)
-	_, ok = updateByID.(*api.PutFlightForbidden)
-	suite.True(ok)
-	_, ok = deleteByID.(*api.DeleteTransportationForbidden)
-	suite.True(ok)
-}
-
-func (suite *IntegrationTestSuite) postAndRetrieveFlight(tripID int) api.EntityTransportation {
-	postRes, err := suite.api.PostFlight(suite.T().Context(), &api.RequestFlight{
-		Legs: []api.RequestFlightLeg{{
-			Date:          "2026-02-01",
-			FlightNumber:  "LH717",
-			OriginAirport: api.NilString{Null: true},
-		}},
-	}, api.PostFlightParams{TripID: tripID})
-	suite.NoError(err)
-	_, ok := postRes.(*api.PostFlightNoContent)
-	suite.True(ok)
-
-	getRes, err := suite.api.GetAllTransportation(suite.T().Context(), api.GetAllTransportationParams{TripID: tripID})
-	suite.NoError(err)
-	allTransportation := getRes.(*api.GetAllTransportationOKApplicationJSON)
-	suite.Len(*allTransportation, 1)
-
-	return (*allTransportation)[0]
-}
-
-func (suite *IntegrationTestSuite) putAndRetrieveFlight(tripID int, flightID int) api.EntityTransportation {
-	putRes, err := suite.api.PutFlight(suite.T().Context(), api.PutFlightParams{TripID: tripID, FlightID: flightID})
-	suite.NoError(err)
-	_, ok := putRes.(*api.PutFlightNoContent)
-	suite.True(ok)
-
-	getRes, err := suite.api.GetTransportation(suite.T().Context(), api.GetTransportationParams{TripID: tripID, TransportationID: flightID})
-	suite.NoError(err)
-	flight, ok := getRes.(*api.EntityTransportation)
-	suite.True(ok)
-
-	return *flight
-}
-
-func (suite *IntegrationTestSuite) TestPostTrainJourney() {
-	// given
-	tripID := suite.CreateTrip()
-	defer suite.DeleteTrip(tripID)
-
-	_, err := suite.api.PostTrainJourney(suite.T().Context(), &api.RequestTrainJourney{
-		DepartureDate: "2025-09-20",
-		FromStationId: "8011113",
-		ToStationId:   "8000261",
-		TrainNumbers:  []string{"ICE707"},
-	}, api.PostTrainJourneyParams{TripID: tripID})
-	suite.NoError(err)
 
 	// when
-	res, err := suite.api.GetAllTransportation(suite.T().Context(), api.GetAllTransportationParams{TripID: tripID})
-	suite.NoError(err)
+	res, err := suite.api.GetTransportation(suite.T().Context(), api.GetTransportationParams{
+		TripID:           tripID,
+		TransportationID: 404,
+	})
 
 	// then
-	allTransportation := res.(*api.GetAllTransportationOKApplicationJSON)
-	suite.Len(*allTransportation, 1)
+	suite.NoError(err)
+	suite.IsType(api.GetTransportationNotFound{}, res)
+}
 
-	flight := (*allTransportation)[0]
-	suite.Equal(api.EntityTransportationType("TRAIN"), flight.Type)
+func (suite *IntegrationTestSuite) TestForbiddenUserPermissions() {
+	// given
+	actualTripID := suite.CreateTrip()
+	defer suite.DeleteTrip(actualTripID)
+	flight := suite.postAndRetrieveFlight(actualTripID)
 
-	trainDetail, ok := flight.TrainDetail.Get()
-	suite.True(ok)
-	suite.Len(trainDetail.Legs, 1)
-	suite.Equal("ICE 707", trainDetail.Legs[0].LineName)
+	otherTripID := suite.CreateTripUser(ForbiddenUser)
+	defer suite.DeleteTripUser(ForbiddenUser, otherTripID)
+
+	var tests = []struct {
+		name             string
+		apiCall          func(ctx context.Context, client *api.Client) (interface{}, error)
+		expectedResponse interface{}
+	}{
+		{"actualTripID getAll",
+			func(ctx context.Context, client *api.Client) (interface{}, error) {
+				return client.GetAllTransportation(ctx, api.GetAllTransportationParams{TripID: actualTripID})
+			},
+			&api.GetAllTransportationForbidden{},
+		},
+		{"actualTripID getByID",
+			func(ctx context.Context, client *api.Client) (interface{}, error) {
+				return client.GetTransportation(ctx, api.GetTransportationParams{TripID: actualTripID, TransportationID: flight.ID})
+			},
+			&api.GetTransportationForbidden{},
+		},
+		{"actualTripID putByID",
+			func(ctx context.Context, client *api.Client) (interface{}, error) {
+				return client.PutFlight(ctx, api.PutFlightParams{TripID: actualTripID, FlightID: flight.ID})
+			},
+			&api.PutFlightForbidden{},
+		},
+		{"actualTripID deleteByID",
+			func(ctx context.Context, client *api.Client) (interface{}, error) {
+				return client.DeleteTransportation(ctx, api.DeleteTransportationParams{TripID: actualTripID, TransportationID: flight.ID})
+			},
+			&api.DeleteTransportationForbidden{},
+		},
+		// TODO: in the following cases, a 404 should be ok
+		{"otherTripID getByID",
+			func(ctx context.Context, client *api.Client) (interface{}, error) {
+				return client.GetTransportation(ctx, api.GetTransportationParams{TripID: otherTripID, TransportationID: flight.ID})
+			},
+			&api.GetTransportationForbidden{},
+		},
+		{"otherTripID putByID",
+			func(ctx context.Context, client *api.Client) (interface{}, error) {
+				return client.PutFlight(ctx, api.PutFlightParams{TripID: otherTripID, FlightID: flight.ID})
+			},
+			&api.PutFlightForbidden{},
+		},
+		{"otherTripID deleteByID",
+			func(ctx context.Context, client *api.Client) (interface{}, error) {
+				return client.DeleteTransportation(ctx, api.DeleteTransportationParams{TripID: otherTripID, TransportationID: flight.ID})
+			},
+			&api.DeleteTransportationForbidden{},
+		},
+	}
+
+	for _, test := range tests {
+		suite.Run(test.name, func() {
+			// when
+			response, err := test.apiCall(suite.T().Context(), suite.userApi(ForbiddenUser))
+
+			// then
+			suite.NoError(err)
+			suite.IsType(test.expectedResponse, response)
+		})
+	}
 }

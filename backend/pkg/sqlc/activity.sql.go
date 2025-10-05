@@ -170,6 +170,7 @@ type UpdateActivityParams struct {
 	Price       *int32
 }
 
+// TODO: check tripID!
 func (q *Queries) UpdateActivity(ctx context.Context, arg UpdateActivityParams) error {
 	_, err := q.db.Exec(ctx, updateActivity,
 		arg.ID,

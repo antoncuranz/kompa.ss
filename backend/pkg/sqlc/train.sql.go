@@ -140,7 +140,6 @@ func (q *Queries) InsertTrainLeg(ctx context.Context, arg InsertTrainLegParams) 
 const insertTrainStation = `-- name: InsertTrainStation :exec
 INSERT INTO train_station (id, name, location_id)
 VALUES ($1, $2, $3)
-ON CONFLICT DO NOTHING
 `
 
 type InsertTrainStationParams struct {
@@ -152,4 +151,19 @@ type InsertTrainStationParams struct {
 func (q *Queries) InsertTrainStation(ctx context.Context, arg InsertTrainStationParams) error {
 	_, err := q.db.Exec(ctx, insertTrainStation, arg.ID, arg.Name, arg.LocationID)
 	return err
+}
+
+const trainStationExists = `-- name: TrainStationExists :one
+SELECT EXISTS (
+    SELECT 1
+    FROM train_station
+    WHERE id = $1
+)
+`
+
+func (q *Queries) TrainStationExists(ctx context.Context, id string) (bool, error) {
+	row := q.db.QueryRow(ctx, trainStationExists, id)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
 }

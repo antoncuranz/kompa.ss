@@ -3,6 +3,7 @@ package app
 
 import (
 	"fmt"
+	"kompass/internal/controller/http/v1/response"
 	"kompass/internal/repo/webapi"
 	"kompass/internal/usecase"
 	"kompass/internal/usecase/accommodation"
@@ -30,7 +31,6 @@ import (
 	"kompass/pkg/logger"
 )
 
-// Run creates objects via constructors.
 func Run(cfg *config.Config) {
 	log := logger.New(cfg.Log.Level)
 
@@ -45,7 +45,11 @@ func Run(cfg *config.Config) {
 	useCases := createUseCases(cfg, pg)
 
 	// HTTP Server
-	httpServer := httpserver.New(httpserver.Port(cfg.HTTP.Port), httpserver.Prefork(cfg.HTTP.UsePreforkMode))
+	httpServer := httpserver.New(
+		httpserver.Port(cfg.HTTP.Port),
+		httpserver.Prefork(cfg.HTTP.UsePreforkMode),
+		httpserver.ErrorHandler(response.ErrorHandler),
+	)
 	http.NewRouter(httpServer.App, cfg, useCases, log)
 	httpServer.Start()
 

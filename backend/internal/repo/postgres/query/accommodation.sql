@@ -16,6 +16,7 @@ INSERT INTO accommodation (trip_id, location_id, name, arrival_date, departure_d
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
 RETURNING id;
 
+-- TODO: check tripID!
 -- name: UpdateAccommodation :exec
 UPDATE accommodation
 SET location_id    = $2,

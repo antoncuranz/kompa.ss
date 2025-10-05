@@ -20,9 +20,9 @@ export default function Navigation({
               <Link href={"/" + tripId + "/itinerary"}>
                   <span className="text-muted-foreground transition-colors hover:text-foreground">Itinerary</span>
               </Link>
-              <Link href={"/" + tripId + "/cost"}>
-                  <span className="text-muted-foreground transition-colors hover:text-foreground">Cost</span>
-              </Link>
+              {/*<Link href={"/" + tripId + "/cost"}>*/}
+              {/*    <span className="text-muted-foreground transition-colors hover:text-foreground">Cost</span>*/}
+              {/*</Link>*/}
               <Link href={"/" + tripId + "/map"}>
                   <span className="text-muted-foreground transition-colors hover:text-foreground">Map</span>
               </Link>

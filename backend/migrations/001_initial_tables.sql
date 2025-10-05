@@ -26,7 +26,7 @@ create table activity
 (
     id             serial primary key,
     trip_id        integer not null references trip on delete cascade,
-    location_id    integer references location on delete set null,
+    location_id    integer references location,
     name           varchar(255) not null,
     date           date not null,
     time           time,

@@ -15,6 +15,7 @@ WHERE trip_id = $1
 INSERT INTO activity (trip_id, location_id, name, date, time, address, description, price)
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id;
 
+-- TODO: check tripID!
 -- name: UpdateActivity :exec
 UPDATE activity
 SET location_id = $2,

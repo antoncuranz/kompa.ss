@@ -1172,6 +1172,10 @@ type GetTransportationInternalServerError ResponseError
 
 func (*GetTransportationInternalServerError) getTransportationRes() {}
 
+type GetTransportationNotFound ResponseError
+
+func (*GetTransportationNotFound) getTransportationRes() {}
+
 type GetTripBadRequest ResponseError
 
 func (*GetTripBadRequest) getTripRes() {}
@@ -1512,6 +1516,69 @@ func (o OptNilEntityTrainDetail) Get() (v EntityTrainDetail, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptNilEntityTrainDetail) Or(d EntityTrainDetail) EntityTrainDetail {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptNilString returns new OptNilString with value set to v.
+func NewOptNilString(v string) OptNilString {
+	return OptNilString{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptNilString is optional nullable string.
+type OptNilString struct {
+	Value string
+	Set   bool
+	Null  bool
+}
+
+// IsSet returns true if OptNilString was set.
+func (o OptNilString) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptNilString) Reset() {
+	var v string
+	o.Value = v
+	o.Set = false
+	o.Null = false
+}
+
+// SetTo sets value to v.
+func (o *OptNilString) SetTo(v string) {
+	o.Set = true
+	o.Null = false
+	o.Value = v
+}
+
+// IsNull returns true if value is Null.
+func (o OptNilString) IsNull() bool { return o.Null }
+
+// SetToNull sets value to null.
+func (o *OptNilString) SetToNull() {
+	o.Set = true
+	o.Null = true
+	var v string
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptNilString) Get() (v string, ok bool) {
+	if o.Null {
+		return v, false
+	}
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptNilString) Or(d string) string {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -2171,12 +2238,23 @@ func (s *RequestTrip) SetStartDate(val string) {
 
 // Ref: #/components/schemas/response.Error
 type ResponseError struct {
-	Error string `json:"error"`
+	Detail OptNilString `json:"detail"`
+	Error  string       `json:"error"`
+}
+
+// GetDetail returns the value of Detail.
+func (s *ResponseError) GetDetail() OptNilString {
+	return s.Detail
 }
 
 // GetError returns the value of Error.
 func (s *ResponseError) GetError() string {
 	return s.Error
+}
+
+// SetDetail sets the value of Detail.
+func (s *ResponseError) SetDetail(val OptNilString) {
+	s.Detail = val
 }
 
 // SetError sets the value of Error.

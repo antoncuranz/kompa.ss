@@ -21,10 +21,16 @@ WHERE transportation_id = $1;
 INSERT INTO train_detail (transportation_id, refresh_token)
 VALUES ($1, $2);
 
+-- name: TrainStationExists :one
+SELECT EXISTS (
+    SELECT 1
+    FROM train_station
+    WHERE id = $1
+);
+
 -- name: InsertTrainStation :exec
 INSERT INTO train_station (id, name, location_id)
-VALUES ($1, $2, $3)
-ON CONFLICT DO NOTHING;
+VALUES ($1, $2, $3);
 
 -- name: InsertTrainLeg :one
 INSERT INTO train_leg (transportation_id, origin, destination, departure_time, arrival_time, duration_in_minutes, line_name, operator_name)

@@ -31,12 +31,12 @@ type AttachmentsV1 struct {
 func (r *AttachmentsV1) getAttachments(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "unable to parse trip_id")
 	}
 
 	attachments, err := r.uc.GetAttachments(ctx.UserContext(), int32(tripID))
 	if err != nil {
-		return ErrorResponse(ctx, fmt.Errorf("get attachments: %w", err))
+		return fmt.Errorf("get attachments: %w", err)
 	}
 
 	return ctx.Status(http.StatusOK).JSON(attachments)
@@ -56,16 +56,16 @@ func (r *AttachmentsV1) getAttachments(ctx *fiber.Ctx) error {
 func (r *AttachmentsV1) downloadAttachment(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "unable to parse trip_id")
 	}
 	attachmentID, err := ctx.ParamsInt("attachment_id")
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse attachment_id: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "unable to parse attachment_id")
 	}
 
 	attachment, err := r.uc.GetAttachmentByID(ctx.UserContext(), int32(tripID), int32(attachmentID))
 	if err != nil {
-		return ErrorResponse(ctx, fmt.Errorf("get attachment [id=%d]: %w", attachmentID, err))
+		return fmt.Errorf("get attachment [id=%d]: %w", attachmentID, err)
 	}
 
 	ctx.Set("Content-Type", determineContentType(attachment.Name))
@@ -99,7 +99,7 @@ type AttachmentsParam struct {
 func (r *AttachmentsV1) postAttachment(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "unable to parse trip_id")
 	}
 
 	form, err := ctx.MultipartForm()
@@ -114,7 +114,7 @@ func (r *AttachmentsV1) postAttachment(ctx *fiber.Ctx) error {
 
 		_, err = r.uc.CreateAttachment(ctx.UserContext(), int32(tripID), file)
 		if err != nil {
-			return ErrorResponse(ctx, fmt.Errorf("create attachment: %w", err))
+			return fmt.Errorf("create attachment: %w", err)
 		}
 	}
 
@@ -134,15 +134,15 @@ func (r *AttachmentsV1) postAttachment(ctx *fiber.Ctx) error {
 func (r *AttachmentsV1) deleteAttachment(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "unable to parse trip_id")
 	}
 	attachmentID, err := ctx.ParamsInt("attachment_id")
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse attachment_id: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "unable to parse attachment_id")
 	}
 
 	if err := r.uc.DeleteAttachment(ctx.UserContext(), int32(tripID), int32(attachmentID)); err != nil {
-		return ErrorResponse(ctx, fmt.Errorf("delete attachment with id %d: %w", attachmentID, err))
+		return fmt.Errorf("delete attachment with id %d: %w", attachmentID, err)
 	}
 
 	return ctx.SendStatus(http.StatusNoContent)

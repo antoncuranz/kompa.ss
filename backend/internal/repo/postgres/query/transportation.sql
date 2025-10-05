@@ -22,6 +22,7 @@ INSERT INTO transportation (trip_id, type, origin_id, destination_id, departure_
 VALUES ($1, $2, $3, $4, $5, $6, $7)
 RETURNING id;
 
+-- TODO: check tripID!
 -- name: UpdateTransportation :exec
 UPDATE transportation
 SET type           = $2,

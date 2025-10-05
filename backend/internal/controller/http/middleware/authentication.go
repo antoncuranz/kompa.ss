@@ -7,7 +7,6 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"kompass/config"
-	v1 "kompass/internal/controller/http/v1"
 	"kompass/internal/usecase"
 )
 
@@ -46,18 +45,18 @@ func RetrieveOrCreateUserMiddleware(uc usecase.Users) func(c *fiber.Ctx) error {
 		claims := token.Claims
 		sub, err := claims.GetSubject()
 		if err != nil {
-			return v1.ErrorResponse(ctx, fmt.Errorf("get subject from claims: %w", err))
+			return fmt.Errorf("get subject from claims: %w", err)
 		}
 		subUuid, err := uuid.Parse(sub)
 		if err != nil {
-			return v1.ErrorResponse(ctx, fmt.Errorf("parse sub as uuid: %w", err))
+			return fmt.Errorf("parse sub as uuid: %w", err)
 		}
 
 		user, err := uc.GetUserByJwtSub(ctx.UserContext(), subUuid)
 		if err != nil {
 			user, err = uc.CreateUserFromJwt(ctx.UserContext(), subUuid, claims)
 			if err != nil {
-				return v1.ErrorResponse(ctx, fmt.Errorf("create user from claims: %w", err))
+				return fmt.Errorf("create user from claims: %w", err)
 			}
 		}
 

@@ -1,6 +1,7 @@
 package httpserver
 
 import (
+	"github.com/gofiber/fiber/v2"
 	"net"
 	"time"
 )
@@ -40,5 +41,12 @@ func WriteTimeout(timeout time.Duration) Option {
 func ShutdownTimeout(timeout time.Duration) Option {
 	return func(s *Server) {
 		s.shutdownTimeout = timeout
+	}
+}
+
+// ShutdownTimeout -.
+func ErrorHandler(errorHandler fiber.ErrorHandler) Option {
+	return func(s *Server) {
+		s.errorHandler = errorHandler
 	}
 }

@@ -60,6 +60,14 @@ func (r *TrainsRepo) CreateTrainDetail(ctx context.Context, qtx *sqlc.Queries, t
 	for id := range trainStationSet {
 		trainStation := trainStationSet[id]
 
+		exists, err := qtx.TrainStationExists(ctx, id)
+		if err != nil {
+			return fmt.Errorf("check trainStation exists: %w", err)
+		}
+		if exists {
+			continue
+		}
+
 		locationId, err := SaveLocation(ctx, qtx, trainStation.Location)
 		if err != nil {
 			return fmt.Errorf("save location: %w", err)

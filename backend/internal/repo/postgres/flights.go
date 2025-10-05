@@ -109,6 +109,14 @@ func (r *FlightsRepo) saveAirports(ctx context.Context, qtx *sqlc.Queries, fligh
 	for iata := range airportSet {
 		airport := airportSet[iata]
 
+		exists, err := qtx.AirportExists(ctx, airport.Iata)
+		if err != nil {
+			return fmt.Errorf("check airport exists: %w", err)
+		}
+		if exists {
+			continue
+		}
+
 		locationId, err := SaveLocation(ctx, qtx, airport.Location)
 		if err != nil {
 			return fmt.Errorf("save location: %w", err)

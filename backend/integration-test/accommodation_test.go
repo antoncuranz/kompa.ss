@@ -35,15 +35,14 @@ func (suite *IntegrationTestSuite) TestPostAccommodation() {
 	suite.Equal(25000, accommodation.Price.Value)
 
 	// when (forbiddenUser)
-	getAll, _ = suite.userApi(ForbiddenUser).GetAllAccommodation(suite.T().Context(), api.GetAllAccommodationParams{TripID: tripID})
-	getByID, _ := suite.userApi(ForbiddenUser).GetAccommodationByID(suite.T().Context(), api.GetAccommodationByIDParams{TripID: tripID, AccommodationID: accommodation.ID})
+	getAll, err = suite.userApi(ForbiddenUser).GetAllAccommodation(suite.T().Context(), api.GetAllAccommodationParams{TripID: tripID})
+	suite.NoError(err)
+	getByID, err := suite.userApi(ForbiddenUser).GetAccommodationByID(suite.T().Context(), api.GetAccommodationByIDParams{TripID: tripID, AccommodationID: accommodation.ID})
+	suite.NoError(err)
 
 	// then (forbiddenUser)
-	_, ok := getAll.(*api.GetAllAccommodationForbidden)
-	suite.True(ok)
-
-	_, ok = getByID.(*api.GetAccommodationByIDForbidden)
-	suite.True(ok)
+	suite.IsType(&api.GetAllAccommodationForbidden{}, getAll)
+	suite.IsType(&api.GetAccommodationByIDForbidden{}, getByID)
 }
 
 func (suite *IntegrationTestSuite) TestCreateAccommodationOutsideOfTripDates() {
@@ -64,8 +63,7 @@ func (suite *IntegrationTestSuite) TestCreateAccommodationOutsideOfTripDates() {
 	}, api.PostAccommodationParams{TripID: tripID})
 	suite.NoError(err)
 
-	_, ok := response.(*api.PostAccommodationNoContent)
-	suite.False(ok)
+	suite.IsNotType(&api.PostAccommodationNoContent{}, response)
 
 	// when
 	res, err := suite.api.GetActivities(suite.T().Context(), api.GetActivitiesParams{TripID: tripID})

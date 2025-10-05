@@ -73,6 +73,8 @@ func (uc *UseCase) UpdateFlight(ctx context.Context, tripID int32, flightID int3
 		return err
 	}
 
+	// TODO: update PNRs and transportation base properties (locations, times, price)
+
 	return uc.saveGeoJson(ctx, transportation)
 }
 

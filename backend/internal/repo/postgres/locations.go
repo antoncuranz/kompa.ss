@@ -41,21 +41,20 @@ func GetLocationIDOrNilByAccommodationID(ctx context.Context, queries *sqlc.Quer
 }
 
 func UpsertOrDeleteLocation(ctx context.Context, queries *sqlc.Queries, existingLocationId *int32, location *entity.Location) (*int32, error) {
-	var locationId *int32
-
 	if location != nil {
+		location.ID = *existingLocationId
 		savedLocationID, err := SaveLocation(ctx, queries, *location)
 		if err != nil {
 			return nil, fmt.Errorf("save location: %w", err)
 		}
-		locationId = &savedLocationID
+		return &savedLocationID, nil
 	} else if existingLocationId != nil {
 		if err := DeleteLocation(ctx, queries, *existingLocationId); err != nil {
 			return nil, fmt.Errorf("delete location: %w", err)
 		}
 	}
 
-	return locationId, nil
+	return nil, nil
 }
 
 func UpdateLocation(ctx context.Context, queries *sqlc.Queries, locationID int32, location entity.Location) error {

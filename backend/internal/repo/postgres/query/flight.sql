@@ -34,10 +34,16 @@ SET origin              = $2,
     aircraft            = $9
 WHERE id = $1;
 
+-- name: AirportExists :one
+SELECT EXISTS (
+    SELECT 1
+    FROM airport
+    WHERE iata = $1
+);
+
 -- name: InsertAirport :exec
 INSERT INTO airport (iata, name, municipality, location_id)
-VALUES ($1, $2, $3, $4)
-ON CONFLICT DO NOTHING;
+VALUES ($1, $2, $3, $4);
 
 -- name: InsertPNR :one
 INSERT INTO flight_pnr (transportation_id, airline, pnr)

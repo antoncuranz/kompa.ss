@@ -11,6 +11,21 @@ import (
 	"cloud.google.com/go/civil"
 )
 
+const airportExists = `-- name: AirportExists :one
+SELECT EXISTS (
+    SELECT 1
+    FROM airport
+    WHERE iata = $1
+)
+`
+
+func (q *Queries) AirportExists(ctx context.Context, iata string) (bool, error) {
+	row := q.db.QueryRow(ctx, airportExists, iata)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
+}
+
 const getFlightLegsByTransportationID = `-- name: GetFlightLegsByTransportationID :many
 SELECT flight_leg.id, flight_leg.transportation_id, flight_leg.origin, flight_leg.destination, flight_leg.airline, flight_leg.flight_number, flight_leg.departure_time, flight_leg.arrival_time, flight_leg.duration_in_minutes, flight_leg.aircraft,
        origin.iata, origin.name, origin.municipality, origin.location_id,
@@ -113,7 +128,6 @@ func (q *Queries) GetPnrsByTransportationID(ctx context.Context, transportationI
 const insertAirport = `-- name: InsertAirport :exec
 INSERT INTO airport (iata, name, municipality, location_id)
 VALUES ($1, $2, $3, $4)
-ON CONFLICT DO NOTHING
 `
 
 type InsertAirportParams struct {

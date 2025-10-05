@@ -183,6 +183,7 @@ type UpdateAccommodationParams struct {
 	Price         *int32
 }
 
+// TODO: check tripID!
 func (q *Queries) UpdateAccommodation(ctx context.Context, arg UpdateAccommodationParams) error {
 	_, err := q.db.Exec(ctx, updateAccommodation,
 		arg.ID,

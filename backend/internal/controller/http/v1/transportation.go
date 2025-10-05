@@ -32,17 +32,17 @@ type TransportationV1 struct {
 func (r *TransportationV1) postTransportation(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "unable to parse trip_id")
 	}
 
 	body, err := ParseAndValidateRequestBody[request.Transportation](ctx, r.v)
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "invalid request body")
 	}
 
 	_, err = r.uc.CreateTransportation(ctx.UserContext(), int32(tripID), *body)
 	if err != nil {
-		return ErrorResponse(ctx, fmt.Errorf("create transportation: %w", err))
+		return fmt.Errorf("create transportation: %w", err)
 	}
 
 	return ctx.SendStatus(http.StatusNoContent)
@@ -64,20 +64,20 @@ func (r *TransportationV1) postTransportation(ctx *fiber.Ctx) error {
 func (r *TransportationV1) putTransportation(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "unable to parse trip_id")
 	}
 	transportationID, err := ctx.ParamsInt("transportation_id")
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse transportation_id: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "unable to parse transportation_id")
 	}
 
 	body, err := ParseAndValidateRequestBody[request.Transportation](ctx, r.v)
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "invalid request body")
 	}
 
 	if _, err := r.uc.UpdateTransportation(ctx.UserContext(), int32(tripID), int32(transportationID), *body); err != nil {
-		return ErrorResponse(ctx, fmt.Errorf("update transportation with id %d: %w", transportationID, err))
+		return fmt.Errorf("update transportation with id %d: %w", transportationID, err)
 	}
 
 	return ctx.SendStatus(http.StatusNoContent)
@@ -96,12 +96,12 @@ func (r *TransportationV1) putTransportation(ctx *fiber.Ctx) error {
 func (r *TransportationV1) getAllTransportation(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse trip_id: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "parse trip_id")
 	}
 
 	transportation, err := r.uc.GetAllTransportation(ctx.Context(), int32(tripID))
 	if err != nil {
-		return ErrorResponse(ctx, fmt.Errorf("get all transportation: %w", err))
+		return fmt.Errorf("get all transportation: %w", err)
 	}
 
 	return ctx.Status(http.StatusOK).JSON(transportation)
@@ -115,22 +115,23 @@ func (r *TransportationV1) getAllTransportation(ctx *fiber.Ctx) error {
 // @Param       transportation_id path int true "Transportation ID"
 // @Success     200 {object} entity.Transportation
 // @Failure     403 {object} response.Error
+// @Failure     404 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
 // @Router      /trips/{trip_id}/transportation/{transportation_id} [get]
 func (r *TransportationV1) getTransportation(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse trip_id: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "unable to parse trip_id")
 	}
 	transportationID, err := ctx.ParamsInt("transportation_id")
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse transportation_id: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "unable to parse transportation_id")
 	}
 
 	transportation, err := r.uc.GetTransportationByID(ctx.UserContext(), int32(tripID), int32(transportationID))
 	if err != nil {
-		return ErrorResponse(ctx, fmt.Errorf("get transportation [id=%d]: %w", transportationID, err))
+		return fmt.Errorf("get transportation [id=%d]: %w", transportationID, err)
 	}
 
 	return ctx.Status(http.StatusOK).JSON(transportation)
@@ -149,15 +150,15 @@ func (r *TransportationV1) getTransportation(ctx *fiber.Ctx) error {
 func (r *TransportationV1) deleteTransportation(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse trip_id: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "parse trip_id")
 	}
 	transportationID, err := ctx.ParamsInt("transportation_id")
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse transportation_id: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "parse transportation_id")
 	}
 
 	if err := r.uc.DeleteTransportation(ctx.UserContext(), int32(tripID), int32(transportationID)); err != nil {
-		return ErrorResponse(ctx, fmt.Errorf("delete transportation with id %d: %w", transportationID, err))
+		return fmt.Errorf("delete transportation with id %d: %w", transportationID, err)
 	}
 
 	return ctx.SendStatus(http.StatusNoContent)
@@ -176,12 +177,12 @@ func (r *TransportationV1) deleteTransportation(ctx *fiber.Ctx) error {
 func (r *TransportationV1) getGeoJson(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("parse trip_id: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "parse trip_id")
 	}
 
 	geojson, err := r.uc.GetAllGeoJson(ctx.Context(), int32(tripID))
 	if err != nil {
-		return ErrorResponse(ctx, fmt.Errorf("get geojson: %w", err))
+		return fmt.Errorf("get geojson: %w", err)
 	}
 
 	return ctx.Status(http.StatusOK).JSON(geojson)

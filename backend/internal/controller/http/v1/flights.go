@@ -32,17 +32,17 @@ type FlightsV1 struct {
 func (r *FlightsV1) postFlight(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "unable to parse trip_id")
 	}
 
 	body, err := ParseAndValidateRequestBody[request.Flight](ctx, r.v)
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "invalid request body")
 	}
 
 	_, err = r.uc.CreateFlight(ctx.UserContext(), int32(tripID), *body)
 	if err != nil {
-		return ErrorResponse(ctx, fmt.Errorf("create flight: %w", err))
+		return fmt.Errorf("create flight: %w", err)
 	}
 
 	return ctx.SendStatus(http.StatusNoContent)
@@ -61,15 +61,15 @@ func (r *FlightsV1) postFlight(ctx *fiber.Ctx) error {
 func (r *FlightsV1) putFlight(ctx *fiber.Ctx) error {
 	tripID, err := ctx.ParamsInt("trip_id")
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "unable to parse trip_id")
 	}
 	flightID, err := ctx.ParamsInt("flight_id")
 	if err != nil {
-		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse flight_id: %w", err))
+		return fiber.NewError(http.StatusBadRequest, "unable to parse flight_id")
 	}
 
 	if err := r.uc.UpdateFlight(ctx.UserContext(), int32(tripID), int32(flightID)); err != nil {
-		return ErrorResponse(ctx, fmt.Errorf("update flight with id %d: %w", flightID, err))
+		return fmt.Errorf("update flight with id %d: %w", flightID, err)
 	}
 
 	return ctx.SendStatus(http.StatusNoContent)

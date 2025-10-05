@@ -25,6 +25,7 @@ type Server struct {
 	readTimeout     time.Duration
 	writeTimeout    time.Duration
 	shutdownTimeout time.Duration
+	errorHandler    fiber.ErrorHandler
 }
 
 // New -.
@@ -36,6 +37,7 @@ func New(opts ...Option) *Server {
 		readTimeout:     _defaultReadTimeout,
 		writeTimeout:    _defaultWriteTimeout,
 		shutdownTimeout: _defaultShutdownTimeout,
+		errorHandler:    fiber.DefaultErrorHandler,
 	}
 
 	// Custom options
@@ -49,6 +51,7 @@ func New(opts ...Option) *Server {
 		WriteTimeout:   s.writeTimeout,
 		JSONDecoder:    json.Unmarshal,
 		JSONEncoder:    json.Marshal,
+		ErrorHandler:   s.errorHandler,
 		ReadBufferSize: 8192,
 	})
 
