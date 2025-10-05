@@ -1,6 +1,6 @@
 import {getTransportationTypeEmoji, Transportation} from "@/types.ts";
 import React, {MouseEventHandler} from "react";
-import {formatTime, titleCase} from "../util";
+import {formatTime} from "../util";
 
 export default function TransportationEntry({
   transportation, onClick
@@ -15,7 +15,7 @@ export default function TransportationEntry({
         <span className="mt-0 m-auto text-2xl leading-[1.3rem] h-6">{getTransportationTypeEmoji(transportation.type)}</span>
         <div className="flex overflow-hidden whitespace-nowrap w-full">
           <span className="overflow-hidden text-ellipsis w-full">
-            {formatTime(transportation.departureDateTime)}-{formatTime(transportation.arrivalDateTime)} {titleCase(transportation.type)}
+            {formatTime(transportation.departureDateTime)}-{formatTime(transportation.arrivalDateTime)} {transportation.genericDetail?.name}
           </span>
         </div>
       </div>

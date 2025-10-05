@@ -43,14 +43,14 @@ type (
 
 	FlightsRepo interface {
 		GetFlightDetail(ctx context.Context, transportationID int32) (entity.FlightDetail, error)
-		SaveFlightDetail(ctx context.Context, qtx *sqlc.Queries, transportationID int32, flight entity.FlightDetail) error
+		CreateFlightDetail(ctx context.Context, qtx *sqlc.Queries, transportationID int32, flight entity.FlightDetail) error
 		UpdateFlightLegs(ctx context.Context, flightLegs []entity.FlightLeg) error
 	}
 
 	ActivitiesRepo interface {
 		GetActivities(ctx context.Context, tripID int32) ([]entity.Activity, error)
 		GetActivityByID(ctx context.Context, tripID int32, activityID int32) (entity.Activity, error)
-		SaveActivity(ctx context.Context, activity entity.Activity) (entity.Activity, error)
+		CreateActivity(ctx context.Context, activity entity.Activity) (entity.Activity, error)
 		UpdateActivity(ctx context.Context, activity entity.Activity) error
 		DeleteActivity(ctx context.Context, tripID int32, activityID int32) error
 	}
@@ -58,7 +58,7 @@ type (
 	AccommodationRepo interface {
 		GetAllAccommodation(ctx context.Context, tripID int32) ([]entity.Accommodation, error)
 		GetAccommodationByID(ctx context.Context, tripID int32, id int32) (entity.Accommodation, error)
-		SaveAccommodation(ctx context.Context, accommodation entity.Accommodation) (entity.Accommodation, error)
+		CreateAccommodation(ctx context.Context, accommodation entity.Accommodation) (entity.Accommodation, error)
 		UpdateAccommodation(ctx context.Context, accommodation entity.Accommodation) error
 		DeleteAccommodation(ctx context.Context, tripID int32, accommodationID int32) error
 	}
@@ -66,7 +66,7 @@ type (
 	AttachmentsRepo interface {
 		GetAttachments(ctx context.Context, tripID int32) ([]entity.Attachment, error)
 		GetAttachmentByID(ctx context.Context, tripID int32, attachmentID int32) (entity.Attachment, error)
-		SaveAttachment(ctx context.Context, attachment entity.Attachment) (entity.Attachment, error)
+		CreateAttachment(ctx context.Context, attachment entity.Attachment) (entity.Attachment, error)
 		DeleteAttachment(ctx context.Context, tripID int32, attachmentID int32) error
 	}
 
@@ -82,6 +82,6 @@ type (
 
 	OpenRouteServiceWebAPI interface {
 		LookupLocation(ctx context.Context, query string) (entity.GeocodeLocation, error)
-		LookupDirections(ctx context.Context, start entity.Location, end entity.Location) (*geojson.FeatureCollection, error)
+		LookupDirections(ctx context.Context, start entity.Location, end entity.Location, transportatinoType entity.TransportationType) (*geojson.FeatureCollection, error)
 	}
 )

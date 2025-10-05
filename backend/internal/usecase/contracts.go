@@ -53,7 +53,8 @@ type (
 	}
 
 	Transportation interface {
-		CreateTransportation(ctx context.Context, tripID int32, flight request.Transportation) (entity.Transportation, error)
+		CreateTransportation(ctx context.Context, tripID int32, transportation request.Transportation) (entity.Transportation, error)
+		UpdateTransportation(ctx context.Context, tripID int32, transportationID int32, transportation request.Transportation) (entity.Transportation, error)
 		GetAllTransportation(ctx context.Context, tripID int32) ([]entity.Transportation, error)
 		GetTransportationByID(ctx context.Context, tripID int32, transportationID int32) (entity.Transportation, error)
 		DeleteTransportation(ctx context.Context, tripID int32, transportationID int32) error

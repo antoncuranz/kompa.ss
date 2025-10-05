@@ -38,24 +38,9 @@ func (r *TransportationRepo) GetAllTransportation(ctx context.Context, tripID in
 
 	result := []entity.Transportation{}
 	for _, row := range rows {
-		transportation := r.c.ConvertTransportation(converter.ConvertTransportationParams{
-			Transportation: row.Transportation,
-			Origin:         row.Location,
-			Destination:    row.Location_2,
-		})
-
-		if transportation.Type == entity.FLIGHT {
-			flightDetail, err := r.flights.GetFlightDetail(ctx, transportation.ID)
-			if err != nil {
-				return []entity.Transportation{}, fmt.Errorf("get flightDetail [t.id=%d]: %w", transportation.ID, err)
-			}
-			transportation.FlightDetail = &flightDetail
-		} else if transportation.Type == entity.TRAIN {
-			trainDetail, err := r.trains.GetTrainDetail(ctx, transportation.ID)
-			if err != nil {
-				return []entity.Transportation{}, fmt.Errorf("get trainDetail [t.id=%d]: %w", transportation.ID, err)
-			}
-			transportation.TrainDetail = &trainDetail
+		transportation, err := r.convertTransportationRow(ctx, row.Transportation, row.Location, row.Location_2)
+		if err != nil {
+			return []entity.Transportation{}, fmt.Errorf("convert row to transportation: %w", err)
 		}
 
 		result = append(result, transportation)
@@ -69,31 +54,15 @@ func (r *TransportationRepo) GetTransportationByID(ctx context.Context, tripID i
 		return entity.Transportation{}, fmt.Errorf("get transportation [id=%d] from db: %w", transportationID, err)
 	}
 
-	transportation := r.c.ConvertTransportation(converter.ConvertTransportationParams{
-		Transportation: row.Transportation,
-		Origin:         row.Location,
-		Destination:    row.Location_2,
-	})
-
-	if transportation.Type == entity.FLIGHT {
-		flightDetail, err := r.flights.GetFlightDetail(ctx, transportation.ID)
-		if err != nil {
-			return entity.Transportation{}, fmt.Errorf("get flightDetail [t.id=%d]: %w", transportation.ID, err)
-		}
-		transportation.FlightDetail = &flightDetail
-	} else if transportation.Type == entity.TRAIN {
-		trainDetail, err := r.trains.GetTrainDetail(ctx, transportation.ID)
-		if err != nil {
-			return entity.Transportation{}, fmt.Errorf("get trainDetail [t.id=%d]: %w", transportation.ID, err)
-		}
-		transportation.TrainDetail = &trainDetail
+	transportation, err := r.convertTransportationRow(ctx, row.Transportation, row.Location, row.Location_2)
+	if err != nil {
+		return entity.Transportation{}, fmt.Errorf("convert row to transportation: %w", err)
 	}
 
 	return transportation, nil
 }
 
 func (r *TransportationRepo) SaveTransportation(ctx context.Context, transportation entity.Transportation) (entity.Transportation, error) {
-
 	tx, err := r.Db.Begin(ctx)
 	if err != nil {
 		return entity.Transportation{}, fmt.Errorf("begin tx: %w", err)
@@ -110,27 +79,28 @@ func (r *TransportationRepo) SaveTransportation(ctx context.Context, transportat
 		return entity.Transportation{}, fmt.Errorf("save destination location: %w", err)
 	}
 
-	transportationID, err := qtx.InsertTransportation(ctx, sqlc.InsertTransportationParams{
-		TripID:        transportation.TripID,
-		Type:          transportation.Type.String(),
-		OriginID:      originId,
-		DestinationID: destinationId,
-		DepartureTime: transportation.DepartureDateTime,
-		ArrivalTime:   transportation.ArrivalDateTime,
-		Price:         transportation.Price,
-	})
+	transportationID, err := r.saveTransportation(ctx, qtx, transportation, originId, destinationId)
 	if err != nil {
-		return entity.Transportation{}, fmt.Errorf("insert transportation: %w", err)
+		return entity.Transportation{}, fmt.Errorf("save transportation: %w", err)
 	}
 
-	if transportation.FlightDetail != nil {
-		if err := r.flights.SaveFlightDetail(ctx, qtx, transportationID, *transportation.FlightDetail); err != nil {
-			return entity.Transportation{}, fmt.Errorf("save flight detail: %w", err)
+	if transportation.GenericDetail != nil {
+		if err := r.saveGenericDetail(ctx, qtx, transportationID, *transportation.GenericDetail); err != nil {
+			return entity.Transportation{}, fmt.Errorf("save generic detail: %w", err)
 		}
 	}
-	if transportation.TrainDetail != nil {
-		if err := r.trains.SaveTrainDetail(ctx, qtx, transportationID, *transportation.TrainDetail); err != nil {
-			return entity.Transportation{}, fmt.Errorf("save train detail: %w", err)
+
+	// it is not possible to update flight or train detail via the transportation api yet
+	if transportation.ID == 0 {
+		if transportation.FlightDetail != nil {
+			if err := r.flights.CreateFlightDetail(ctx, qtx, transportationID, *transportation.FlightDetail); err != nil {
+				return entity.Transportation{}, fmt.Errorf("save flight detail: %w", err)
+			}
+		}
+		if transportation.TrainDetail != nil {
+			if err := r.trains.CreateTrainDetail(ctx, qtx, transportationID, *transportation.TrainDetail); err != nil {
+				return entity.Transportation{}, fmt.Errorf("save train detail: %w", err)
+			}
 		}
 	}
 
@@ -138,7 +108,6 @@ func (r *TransportationRepo) SaveTransportation(ctx context.Context, transportat
 	if err != nil {
 		return entity.Transportation{}, fmt.Errorf("commit tx: %w", err)
 	}
-
 	return r.GetTransportationByID(ctx, transportation.TripID, transportationID)
 }
 
@@ -169,8 +138,84 @@ func (r *TransportationRepo) SaveGeoJson(ctx context.Context, transportationID i
 		return fmt.Errorf("marshal geojson: %w", err)
 	}
 
-	return r.Queries.InsertGeoJson(ctx, sqlc.InsertGeoJsonParams{
+	return r.Queries.UpsertGeoJson(ctx, sqlc.UpsertGeoJsonParams{
 		TransportationID: transportationID,
 		Geojson:          marshalledGeoJson,
 	})
+}
+
+func (r *TransportationRepo) saveTransportation(ctx context.Context, queries *sqlc.Queries, transportation entity.Transportation, originID int32, destinationID int32) (int32, error) {
+	if transportation.ID != 0 {
+		return transportation.ID, queries.UpdateTransportation(ctx, sqlc.UpdateTransportationParams{
+			ID:            transportation.ID,
+			Type:          transportation.Type.String(),
+			OriginID:      originID,
+			DestinationID: destinationID,
+			DepartureTime: transportation.DepartureDateTime,
+			ArrivalTime:   transportation.ArrivalDateTime,
+			Price:         transportation.Price,
+		})
+	} else {
+		return queries.InsertTransportation(ctx, sqlc.InsertTransportationParams{
+			TripID:        transportation.TripID,
+			Type:          transportation.Type.String(),
+			OriginID:      originID,
+			DestinationID: destinationID,
+			DepartureTime: transportation.DepartureDateTime,
+			ArrivalTime:   transportation.ArrivalDateTime,
+			Price:         transportation.Price,
+		})
+	}
+}
+
+func (r *TransportationRepo) convertTransportationRow(ctx context.Context, transportation sqlc.Transportation, origin sqlc.Location, destination sqlc.Location) (entity.Transportation, error) {
+	converted := r.c.ConvertTransportation(converter.ConvertTransportationParams{
+		Transportation: transportation,
+		Origin:         origin,
+		Destination:    destination,
+	})
+
+	if converted.Type == entity.FLIGHT {
+		flightDetail, err := r.flights.GetFlightDetail(ctx, converted.ID)
+		if err != nil {
+			return entity.Transportation{}, fmt.Errorf("get flightDetail [t.id=%d]: %w", converted.ID, err)
+		}
+		converted.FlightDetail = &flightDetail
+	} else if converted.Type == entity.TRAIN {
+		trainDetail, err := r.trains.GetTrainDetail(ctx, converted.ID)
+		if err != nil {
+			return entity.Transportation{}, fmt.Errorf("get trainDetail [t.id=%d]: %w", converted.ID, err)
+		}
+		converted.TrainDetail = &trainDetail
+	} else {
+		genericDetail, err := r.getGenericDetail(ctx, converted.ID)
+		if err != nil {
+			return entity.Transportation{}, fmt.Errorf("get genericDetail [t.id=%d]: %w", converted.ID, err)
+		}
+		converted.GenericDetail = &genericDetail
+	}
+
+	return converted, nil
+}
+
+func (r *TransportationRepo) saveGenericDetail(ctx context.Context, qtx *sqlc.Queries, transportationID int32, detail entity.GenericDetail) error {
+	return qtx.UpsertGenericTransportationDetail(ctx, sqlc.UpsertGenericTransportationDetailParams{
+		TransportationID:   transportationID,
+		Name:               detail.Name,
+		OriginAddress:      detail.OriginAddress,
+		DestinationAddress: detail.DestinationAddress,
+	})
+}
+
+func (r *TransportationRepo) getGenericDetail(ctx context.Context, transportationID int32) (entity.GenericDetail, error) {
+	row, err := r.Queries.GetGenericDetailByTransportationID(ctx, transportationID)
+	if err != nil {
+		return entity.GenericDetail{}, fmt.Errorf("get generic detail: %w", err)
+	}
+
+	return entity.GenericDetail{
+		Name:               row.Name,
+		OriginAddress:      row.OriginAddress,
+		DestinationAddress: row.DestinationAddress,
+	}, err
 }

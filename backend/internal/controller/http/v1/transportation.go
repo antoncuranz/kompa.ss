@@ -48,6 +48,41 @@ func (r *TransportationV1) postTransportation(ctx *fiber.Ctx) error {
 	return ctx.SendStatus(http.StatusNoContent)
 }
 
+// @Summary     Update transportation
+// @ID          putTransportation
+// @Tags  	    transportation
+// @Accept      json
+// @Produce     json
+// @Param       trip_id path int true "Trip ID"
+// @Param       transportation_id path int true "Transportation ID"
+// @Param       request body request.Transportation true "transportation"
+// @Success     204
+// @Failure     403 {object} response.Error
+// @Failure     500 {object} response.Error
+// @Security    bearerauth
+// @Router      /trips/{trip_id}/transportation/{transportation_id} [put]
+func (r *TransportationV1) putTransportation(ctx *fiber.Ctx) error {
+	tripID, err := ctx.ParamsInt("trip_id")
+	if err != nil {
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse trip_id: %w", err))
+	}
+	transportationID, err := ctx.ParamsInt("transportation_id")
+	if err != nil {
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("unable to parse transportation_id: %w", err))
+	}
+
+	body, err := ParseAndValidateRequestBody[request.Transportation](ctx, r.v)
+	if err != nil {
+		return ErrorResponseWithStatus(ctx, http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
+	}
+
+	if _, err := r.uc.UpdateTransportation(ctx.UserContext(), int32(tripID), int32(transportationID), *body); err != nil {
+		return ErrorResponse(ctx, fmt.Errorf("update transportation with id %d: %w", transportationID, err))
+	}
+
+	return ctx.SendStatus(http.StatusNoContent)
+}
+
 // @Summary     Get all Transportation
 // @ID          getAllTransportation
 // @Tags  	    transportation

@@ -34,7 +34,7 @@ func (uc *UseCase) CreateActivity(ctx context.Context, tripID int32, activity re
 		return entity.Activity{}, fmt.Errorf("invalid date: %w", err)
 	}
 
-	return uc.repo.SaveActivity(ctx, entity.Activity{
+	return uc.repo.CreateActivity(ctx, entity.Activity{
 		TripID:      tripID,
 		Name:        activity.Name,
 		Date:        activity.Date,

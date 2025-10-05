@@ -22,6 +22,29 @@ INSERT INTO transportation (trip_id, type, origin_id, destination_id, departure_
 VALUES ($1, $2, $3, $4, $5, $6, $7)
 RETURNING id;
 
+-- name: UpdateTransportation :exec
+UPDATE transportation
+SET type           = $2,
+    origin_id      = $3,
+    destination_id = $4,
+    departure_time = $5,
+    arrival_time   = $6,
+    price          = $7
+WHERE id = $1;
+
+-- name: UpsertGenericTransportationDetail :exec
+INSERT INTO transportation_generic (transportation_id, name, origin_address, destination_address)
+VALUES ($1, $2, $3, $4)
+ON CONFLICT(transportation_id) DO UPDATE SET
+    name = $2,
+    origin_address = $3,
+    destination_address = $4;
+
+-- name: GetGenericDetailByTransportationID :one
+SELECT *
+FROM transportation_generic
+WHERE transportation_id = $1;
+
 -- name: DeleteTransportationByID :exec
 DELETE
 FROM transportation
@@ -34,9 +57,8 @@ FROM transportation_geojson
          JOIN transportation on transportation_geojson.transportation_id = transportation.id
 WHERE transportation.trip_id = $1;
 
--- name: InsertGeoJson :exec
+-- name: UpsertGeoJson :exec
 INSERT INTO transportation_geojson (transportation_id, geojson)
 VALUES ($1, $2)
-    ON CONFLICT(transportation_id)
-DO UPDATE SET
+ON CONFLICT(transportation_id) DO UPDATE SET
     geojson = $2;

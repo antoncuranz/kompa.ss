@@ -39,7 +39,7 @@ func (r *AccommodationRepo) GetAccommodationByID(ctx context.Context, tripID int
 	return mapAccommodation(row.Accommodation, mapLocationLeftJoin(row.ID, row.Latitude, row.Longitude)), nil
 }
 
-func (r *AccommodationRepo) SaveAccommodation(ctx context.Context, accommodation entity.Accommodation) (entity.Accommodation, error) {
+func (r *AccommodationRepo) CreateAccommodation(ctx context.Context, accommodation entity.Accommodation) (entity.Accommodation, error) {
 	tx, err := r.Db.Begin(ctx)
 	if err != nil {
 		return entity.Accommodation{}, fmt.Errorf("begin tx: %w", err)

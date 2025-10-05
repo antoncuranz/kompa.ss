@@ -1,7 +1,5 @@
 export function dateFromString(timestamp: string) {
-  const date = new Date(timestamp)
-  const userTimezoneOffset = date.getTimezoneOffset() * 60000;
-  return new Date(date.getTime() + userTimezoneOffset);
+  return new Date(timestamp)
 }
 
 export function dateTimeToString(date: Date) {

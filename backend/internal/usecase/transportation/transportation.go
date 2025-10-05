@@ -3,8 +3,6 @@ package transportation
 import (
 	"context"
 	"fmt"
-	"github.com/paulmach/orb"
-	"github.com/paulmach/orb/geojson"
 	"kompass/internal/controller/http/v1/request"
 	"kompass/internal/entity"
 	"kompass/internal/repo"
@@ -23,7 +21,6 @@ func New(r repo.TransportationRepo, ors repo.OpenRouteServiceWebAPI) *UseCase {
 }
 
 func (uc *UseCase) CreateTransportation(ctx context.Context, tripID int32, request request.Transportation) (entity.Transportation, error) {
-
 	transportation, err := uc.repo.SaveTransportation(ctx, entity.Transportation{
 		TripID:            tripID,
 		Type:              request.Type,
@@ -32,6 +29,11 @@ func (uc *UseCase) CreateTransportation(ctx context.Context, tripID int32, reque
 		DepartureDateTime: request.DepartureDateTime,
 		ArrivalDateTime:   request.ArrivalDateTime,
 		Price:             request.Price,
+		GenericDetail: &entity.GenericDetail{
+			Name:               request.Name,
+			OriginAddress:      request.OriginAddress,
+			DestinationAddress: request.DestinationAddress,
+		},
 	})
 	if err != nil {
 		return entity.Transportation{}, err
@@ -40,39 +42,27 @@ func (uc *UseCase) CreateTransportation(ctx context.Context, tripID int32, reque
 	return transportation, uc.saveGeoJson(ctx, transportation)
 }
 
-func (uc *UseCase) saveGeoJson(ctx context.Context, transportation entity.Transportation) error {
-	featureCollection, err := uc.ors.LookupDirections(ctx, transportation.Origin, transportation.Destination)
+func (uc *UseCase) UpdateTransportation(ctx context.Context, tripID int32, transportationID int32, request request.Transportation) (entity.Transportation, error) {
+	transportation, err := uc.repo.SaveTransportation(ctx, entity.Transportation{
+		ID:                transportationID,
+		TripID:            tripID,
+		Type:              request.Type,
+		Origin:            request.Origin,
+		Destination:       request.Destination,
+		DepartureDateTime: request.DepartureDateTime,
+		ArrivalDateTime:   request.ArrivalDateTime,
+		Price:             request.Price,
+		GenericDetail: &entity.GenericDetail{
+			Name:               request.Name,
+			OriginAddress:      request.OriginAddress,
+			DestinationAddress: request.DestinationAddress,
+		},
+	})
 	if err != nil {
-		return fmt.Errorf("lookup directions: %w", err)
+		return entity.Transportation{}, err
 	}
 
-	featureCollection.ExtraMembers = map[string]interface{}{"transportationType": transportation.Type}
-	featureCollection.Append(featureWithProperties(transportation.Origin, transportation))
-	featureCollection.Append(featureWithProperties(transportation.Destination, transportation))
-
-	err = uc.repo.SaveGeoJson(ctx, transportation.ID, featureCollection)
-	if err != nil {
-		return fmt.Errorf("save geojson: %w", err)
-	}
-	return nil
-}
-
-func featureWithProperties(location entity.Location, transportation entity.Transportation) *geojson.Feature {
-	feature := geojson.NewFeature(locationToPoint(location))
-
-	feature.Properties["type"] = transportation.Type
-	feature.Properties["name"] = "[TODO] Transportation.Name"
-	feature.Properties["departureDateTime"] = transportation.DepartureDateTime
-	feature.Properties["arrivalDateTime"] = transportation.ArrivalDateTime
-
-	return feature
-}
-
-func locationToPoint(location entity.Location) orb.Point {
-	return orb.Point{
-		float64(location.Longitude),
-		float64(location.Latitude),
-	}
+	return transportation, uc.saveGeoJson(ctx, transportation)
 }
 
 func (uc *UseCase) GetAllTransportation(ctx context.Context, tripID int32) ([]entity.Transportation, error) {
@@ -95,8 +85,4 @@ func (uc *UseCase) GetTransportationByID(ctx context.Context, tripID int32, tran
 
 func (uc *UseCase) DeleteTransportation(ctx context.Context, tripID int32, transportationID int32) error {
 	return uc.repo.DeleteTransportation(ctx, tripID, transportationID)
-}
-
-func (uc *UseCase) GetAllGeoJson(ctx context.Context, tripID int32) ([]geojson.FeatureCollection, error) {
-	return uc.repo.GetAllGeoJson(ctx, tripID)
 }

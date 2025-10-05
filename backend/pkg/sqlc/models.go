@@ -131,6 +131,13 @@ type Transportation struct {
 	Price         *int32
 }
 
+type TransportationGeneric struct {
+	TransportationID   int32
+	Name               string
+	OriginAddress      *string
+	DestinationAddress *string
+}
+
 type TransportationGeojson struct {
 	TransportationID int32
 	Geojson          []byte

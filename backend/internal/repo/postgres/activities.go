@@ -39,7 +39,7 @@ func (r *ActivitiesRepo) GetActivityByID(ctx context.Context, tripID int32, acti
 	return mapActivity(row.Activity, mapLocationLeftJoin(row.ID, row.Latitude, row.Longitude)), nil
 }
 
-func (r *ActivitiesRepo) SaveActivity(ctx context.Context, activity entity.Activity) (entity.Activity, error) {
+func (r *ActivitiesRepo) CreateActivity(ctx context.Context, activity entity.Activity) (entity.Activity, error) {
 	tx, err := r.Db.Begin(ctx)
 	if err != nil {
 		return entity.Activity{}, fmt.Errorf("begin tx: %w", err)

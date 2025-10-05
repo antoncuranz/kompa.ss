@@ -7,7 +7,6 @@ import {Form, FormField} from "@/components/ui/form"
 import {z} from "zod"
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import DateInput from "@/components/dialog/DateInput.tsx";
 import AmountInput from "@/components/dialog/AmountInput.tsx";
 import AddressInput from "@/components/dialog/AddressInput.tsx";
 import {dateFromString, titleCase} from "@/components/util.ts";
@@ -18,6 +17,7 @@ import LocationInput from "@/components/dialog/LocationInput.tsx";
 import {Spinner} from "@/components/ui/shadcn-io/spinner";
 import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select"
 import {Separator} from "@/components/ui/separator.tsx";
+import DateTimeInput from "@/components/dialog/DateTimeInput.tsx";
 
 const formSchema = z.object({
   name: z.string().nonempty("Required"),
@@ -43,15 +43,15 @@ export default function TransportationDialogContent({
   const form = useForm<z.input<typeof formSchema>, unknown, z.output<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "", //transportation?.name ?? "",
+      name: transportation?.genericDetail?.name ?? "",
       type: transportation?.type ?? "",
       price: transportation?.price ?? undefined,
       departureDateTime: transportation?.departureDateTime ? dateFromString(transportation.departureDateTime) : undefined,
       arrivalDateTime: transportation?.arrivalDateTime ? dateFromString(transportation.arrivalDateTime) : undefined,
       origin: transportation?.origin ?? undefined,
       destination: transportation?.destination ?? undefined,
-      originAddress: "", //transportation?.address ?? "",
-      destinationAddress: "", //transportation?.address ?? "",
+      originAddress: transportation?.genericDetail?.originAddress ?? "",
+      destinationAddress: transportation?.genericDetail?.destinationAddress ?? "",
     },
     disabled: !edit
   })
@@ -61,6 +61,7 @@ export default function TransportationDialogContent({
     console.log(values)
     console.log(JSON.stringify(values))
 
+    // return
     let response
     if (transportation != null) {
       response = await fetch("/api/v1/trips/" + trip.id + "/transportation/" + transportation?.id, {
@@ -84,7 +85,7 @@ export default function TransportationDialogContent({
   }
 
   async function onDeleteButtonClick() {
-    const response = await fetch("/api/v1/trips/" + trip.id + "/activities/" + transportation!.id, {method: "DELETE"})
+    const response = await fetch("/api/v1/trips/" + trip.id + "/transportation/" + transportation!.id, {method: "DELETE"})
 
     if (response.ok)
       onClose(true)
@@ -109,13 +110,14 @@ export default function TransportationDialogContent({
         <RowContainer>
           <FormField control={form.control} name="type" label="Type"
                      render={({field}) =>
-                         <Select name={field.name} onValueChange={field.onChange} defaultValue={field.value}>
-                           <SelectTrigger>
+                         <Select name={field.name} onValueChange={field.onChange} defaultValue={field.value} disabled={field.disabled}>
+                           <SelectTrigger className="disabled:opacity-100">
                              <SelectValue placeholder="Select type"/>
                            </SelectTrigger>
                            <SelectContent>
                              <SelectGroup>
-                               {Object.values(TransportationType).map(type =>
+                               {[TransportationType.Bus, TransportationType.Ferry, TransportationType.Boat, TransportationType.Bike,
+                                 TransportationType.Car, TransportationType.Hike, TransportationType.Other].map(type =>
                                  <SelectItem key={type} value={type}>
                                    {getTransportationTypeEmoji(type)} {titleCase(type)}
                                  </SelectItem>
@@ -134,7 +136,7 @@ export default function TransportationDialogContent({
         <Separator className="mt-4 mb-2"/>
         <FormField control={form.control} name="departureDateTime" label="Departure Time"
                    render={({field}) =>
-                       <DateInput startDate={trip.startDate} endDate={trip.endDate} {...field}/>
+                       <DateTimeInput startDate={trip.startDate} endDate={trip.endDate} {...field}/>
                    }
         />
         <FormField control={form.control} name="originAddress" label="Origin Address"
@@ -151,9 +153,9 @@ export default function TransportationDialogContent({
                    }
         />
         <Separator className="mt-4 mb-2"/>
-        <FormField control={form.control} name="arrivalDateTime" label="Arrival Date"
+        <FormField control={form.control} name="arrivalDateTime" label="Arrival Time"
                    render={({field}) =>
-                       <DateInput startDate={trip.startDate} endDate={trip.endDate} {...field}/>
+                       <DateTimeInput startDate={trip.startDate} endDate={trip.endDate} {...field}/>
                    }
         />
         <FormField control={form.control} name="destinationAddress" label="Destination Address"

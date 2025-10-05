@@ -19,7 +19,7 @@ type TransportationConverter interface {
 	// goverter:map Transportation.DepartureTime DepartureDateTime
 	// goverter:map Transportation.ArrivalTime ArrivalDateTime
 	// goverter:map Transportation.Price Price
-	// goverter:ignore FlightDetail TrainDetail
+	// goverter:ignore FlightDetail TrainDetail GenericDetail
 	ConvertTransportation(source ConvertTransportationParams) entity.Transportation
 }
 

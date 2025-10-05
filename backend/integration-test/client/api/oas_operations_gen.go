@@ -36,5 +36,6 @@ const (
 	PutAccommodationOperation     OperationName = "PutAccommodation"
 	PutActivityOperation          OperationName = "PutActivity"
 	PutFlightOperation            OperationName = "PutFlight"
+	PutTransportationOperation    OperationName = "PutTransportation"
 	PutTripOperation              OperationName = "PutTrip"
 )

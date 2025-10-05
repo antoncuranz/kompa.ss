@@ -567,6 +567,43 @@ func (s *EntityFlightLeg) SetOrigin(val EntityAirport) {
 	s.Origin = val
 }
 
+// Ref: #/components/schemas/entity.GenericDetail
+type EntityGenericDetail struct {
+	DestinationAddress NilString `json:"destinationAddress"`
+	Name               string    `json:"name"`
+	OriginAddress      NilString `json:"originAddress"`
+}
+
+// GetDestinationAddress returns the value of DestinationAddress.
+func (s *EntityGenericDetail) GetDestinationAddress() NilString {
+	return s.DestinationAddress
+}
+
+// GetName returns the value of Name.
+func (s *EntityGenericDetail) GetName() string {
+	return s.Name
+}
+
+// GetOriginAddress returns the value of OriginAddress.
+func (s *EntityGenericDetail) GetOriginAddress() NilString {
+	return s.OriginAddress
+}
+
+// SetDestinationAddress sets the value of DestinationAddress.
+func (s *EntityGenericDetail) SetDestinationAddress(val NilString) {
+	s.DestinationAddress = val
+}
+
+// SetName sets the value of Name.
+func (s *EntityGenericDetail) SetName(val string) {
+	s.Name = val
+}
+
+// SetOriginAddress sets the value of OriginAddress.
+func (s *EntityGenericDetail) SetOriginAddress(val NilString) {
+	s.OriginAddress = val
+}
+
 // Ref: #/components/schemas/entity.Location
 type EntityLocation struct {
 	ID        int     `json:"id"`
@@ -800,16 +837,17 @@ func (*EntityTrainStation) getTrainStationRes() {}
 
 // Ref: #/components/schemas/entity.Transportation
 type EntityTransportation struct {
-	ArrivalDateTime   string                   `json:"arrivalDateTime"`
-	DepartureDateTime string                   `json:"departureDateTime"`
-	Destination       NilEntityLocation        `json:"destination"`
-	FlightDetail      OptNilEntityFlightDetail `json:"flightDetail"`
-	ID                int                      `json:"id"`
-	Origin            NilEntityLocation        `json:"origin"`
-	Price             NilInt                   `json:"price"`
-	TrainDetail       OptNilEntityTrainDetail  `json:"trainDetail"`
-	TripId            int                      `json:"tripId"`
-	Type              EntityTransportationType `json:"type"`
+	ArrivalDateTime   string                    `json:"arrivalDateTime"`
+	DepartureDateTime string                    `json:"departureDateTime"`
+	Destination       NilEntityLocation         `json:"destination"`
+	FlightDetail      OptNilEntityFlightDetail  `json:"flightDetail"`
+	GenericDetail     OptNilEntityGenericDetail `json:"genericDetail"`
+	ID                int                       `json:"id"`
+	Origin            NilEntityLocation         `json:"origin"`
+	Price             NilInt                    `json:"price"`
+	TrainDetail       OptNilEntityTrainDetail   `json:"trainDetail"`
+	TripId            int                       `json:"tripId"`
+	Type              EntityTransportationType  `json:"type"`
 }
 
 // GetArrivalDateTime returns the value of ArrivalDateTime.
@@ -830,6 +868,11 @@ func (s *EntityTransportation) GetDestination() NilEntityLocation {
 // GetFlightDetail returns the value of FlightDetail.
 func (s *EntityTransportation) GetFlightDetail() OptNilEntityFlightDetail {
 	return s.FlightDetail
+}
+
+// GetGenericDetail returns the value of GenericDetail.
+func (s *EntityTransportation) GetGenericDetail() OptNilEntityGenericDetail {
+	return s.GenericDetail
 }
 
 // GetID returns the value of ID.
@@ -880,6 +923,11 @@ func (s *EntityTransportation) SetDestination(val NilEntityLocation) {
 // SetFlightDetail sets the value of FlightDetail.
 func (s *EntityTransportation) SetFlightDetail(val OptNilEntityFlightDetail) {
 	s.FlightDetail = val
+}
+
+// SetGenericDetail sets the value of GenericDetail.
+func (s *EntityTransportation) SetGenericDetail(val OptNilEntityGenericDetail) {
+	s.GenericDetail = val
 }
 
 // SetID sets the value of ID.
@@ -1344,6 +1392,69 @@ func (o OptNilEntityFlightDetail) Or(d EntityFlightDetail) EntityFlightDetail {
 	return d
 }
 
+// NewOptNilEntityGenericDetail returns new OptNilEntityGenericDetail with value set to v.
+func NewOptNilEntityGenericDetail(v EntityGenericDetail) OptNilEntityGenericDetail {
+	return OptNilEntityGenericDetail{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptNilEntityGenericDetail is optional nullable EntityGenericDetail.
+type OptNilEntityGenericDetail struct {
+	Value EntityGenericDetail
+	Set   bool
+	Null  bool
+}
+
+// IsSet returns true if OptNilEntityGenericDetail was set.
+func (o OptNilEntityGenericDetail) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptNilEntityGenericDetail) Reset() {
+	var v EntityGenericDetail
+	o.Value = v
+	o.Set = false
+	o.Null = false
+}
+
+// SetTo sets value to v.
+func (o *OptNilEntityGenericDetail) SetTo(v EntityGenericDetail) {
+	o.Set = true
+	o.Null = false
+	o.Value = v
+}
+
+// IsNull returns true if value is Null.
+func (o OptNilEntityGenericDetail) IsNull() bool { return o.Null }
+
+// SetToNull sets value to null.
+func (o *OptNilEntityGenericDetail) SetToNull() {
+	o.Set = true
+	o.Null = true
+	var v EntityGenericDetail
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptNilEntityGenericDetail) Get() (v EntityGenericDetail, ok bool) {
+	if o.Null {
+		return v, false
+	}
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptNilEntityGenericDetail) Or(d EntityGenericDetail) EntityGenericDetail {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptNilEntityTrainDetail returns new OptNilEntityTrainDetail with value set to v.
 func NewOptNilEntityTrainDetail(v EntityTrainDetail) OptNilEntityTrainDetail {
 	return OptNilEntityTrainDetail{
@@ -1526,6 +1637,19 @@ func (*PutFlightInternalServerError) putFlightRes() {}
 type PutFlightNoContent struct{}
 
 func (*PutFlightNoContent) putFlightRes() {}
+
+type PutTransportationForbidden ResponseError
+
+func (*PutTransportationForbidden) putTransportationRes() {}
+
+type PutTransportationInternalServerError ResponseError
+
+func (*PutTransportationInternalServerError) putTransportationRes() {}
+
+// PutTransportationNoContent is response for PutTransportation operation.
+type PutTransportationNoContent struct{}
+
+func (*PutTransportationNoContent) putTransportationRes() {}
 
 type PutTripBadRequest ResponseError
 

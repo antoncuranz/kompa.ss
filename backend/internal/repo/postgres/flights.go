@@ -42,18 +42,18 @@ func (r *FlightsRepo) GetFlightDetail(ctx context.Context, transportationID int3
 	}, nil
 }
 
-func (r *FlightsRepo) SaveFlightDetail(ctx context.Context, qtx *sqlc.Queries, transportationID int32, flight entity.FlightDetail) error {
+func (r *FlightsRepo) CreateFlightDetail(ctx context.Context, qtx *sqlc.Queries, transportationID int32, flight entity.FlightDetail) error {
 	err := r.saveAirports(ctx, qtx, flight.Legs)
 	if err != nil {
 		return fmt.Errorf("save airports: %w", err)
 	}
 
-	err = r.saveFlightLegs(ctx, qtx, transportationID, flight)
+	err = r.createFlightLegs(ctx, qtx, transportationID, flight)
 	if err != nil {
 		return fmt.Errorf("save flight legs: %w", err)
 	}
 
-	err = r.savePNRs(ctx, qtx, transportationID, flight)
+	err = r.createPNRs(ctx, qtx, transportationID, flight)
 	if err != nil {
 		return fmt.Errorf("save pnrs: %w", err)
 	}
@@ -127,7 +127,7 @@ func (r *FlightsRepo) saveAirports(ctx context.Context, qtx *sqlc.Queries, fligh
 	return nil
 }
 
-func (r *FlightsRepo) saveFlightLegs(ctx context.Context, qtx *sqlc.Queries, transportationID int32, flight entity.FlightDetail) error {
+func (r *FlightsRepo) createFlightLegs(ctx context.Context, qtx *sqlc.Queries, transportationID int32, flight entity.FlightDetail) error {
 	for _, leg := range flight.Legs {
 		_, err := qtx.InsertFlightLeg(ctx, sqlc.InsertFlightLegParams{
 			TransportationID:  transportationID,
@@ -148,7 +148,7 @@ func (r *FlightsRepo) saveFlightLegs(ctx context.Context, qtx *sqlc.Queries, tra
 	return nil
 }
 
-func (r *FlightsRepo) savePNRs(ctx context.Context, qtx *sqlc.Queries, transportationID int32, flight entity.FlightDetail) error {
+func (r *FlightsRepo) createPNRs(ctx context.Context, qtx *sqlc.Queries, transportationID int32, flight entity.FlightDetail) error {
 	for _, pnr := range flight.PNRs {
 		_, err := qtx.InsertPNR(ctx, sqlc.InsertPNRParams{
 			TransportationID: transportationID,

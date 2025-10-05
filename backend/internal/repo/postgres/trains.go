@@ -42,7 +42,7 @@ func (r *TrainsRepo) GetTrainDetail(ctx context.Context, transportationID int32)
 	}, nil
 }
 
-func (r *TrainsRepo) SaveTrainDetail(ctx context.Context, qtx *sqlc.Queries, transportationID int32, train entity.TrainDetail) error {
+func (r *TrainsRepo) CreateTrainDetail(ctx context.Context, qtx *sqlc.Queries, transportationID int32, train entity.TrainDetail) error {
 	err := qtx.InsertTrainDetail(ctx, sqlc.InsertTrainDetailParams{
 		TransportationID: transportationID,
 		RefreshToken:     train.RefreshToken,

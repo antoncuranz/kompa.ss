@@ -44,11 +44,10 @@ func (a *OpenRouteServiceWebAPI) LookupLocation(ctx context.Context, query strin
 	}, nil
 }
 
-const DirectionsProfile = "driving-car"
-
-func (a *OpenRouteServiceWebAPI) LookupDirections(ctx context.Context, start entity.Location, end entity.Location) (*geojson.FeatureCollection, error) {
+func (a *OpenRouteServiceWebAPI) LookupDirections(ctx context.Context, start entity.Location, end entity.Location, transportatinoType entity.TransportationType) (*geojson.FeatureCollection, error) {
+	profile := getProfileByTransportationType(transportatinoType)
 	urlFormat := "%s/v2/directions/%s?api_key=%s&start=%f,%f&end=%f,%f"
-	directionsUrl := fmt.Sprintf(urlFormat, a.baseURL, DirectionsProfile, a.apiKey, start.Longitude, start.Latitude, end.Longitude, end.Latitude)
+	directionsUrl := fmt.Sprintf(urlFormat, a.baseURL, profile, a.apiKey, start.Longitude, start.Latitude, end.Longitude, end.Latitude)
 
 	featureCollection, err := RequestAndParseJsonBody[geojson.FeatureCollection](ctx, "GET", directionsUrl, nil)
 	if err != nil {
@@ -56,4 +55,15 @@ func (a *OpenRouteServiceWebAPI) LookupDirections(ctx context.Context, start ent
 	}
 
 	return featureCollection, nil
+}
+
+func getProfileByTransportationType(transportatinoType entity.TransportationType) string {
+	switch transportatinoType {
+	case entity.BIKE:
+		return "cycling-regular"
+	case entity.HIKE:
+		return "foot-hiking"
+	default:
+		return "driving-car"
+	}
 }

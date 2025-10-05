@@ -121,6 +121,10 @@ type PutFlightRes interface {
 	putFlightRes()
 }
 
+type PutTransportationRes interface {
+	putTransportationRes()
+}
+
 type PutTripRes interface {
 	putTripRes()
 }

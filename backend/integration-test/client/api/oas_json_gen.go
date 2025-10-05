@@ -1649,6 +1649,132 @@ func (s *EntityFlightLeg) UnmarshalJSON(data []byte) error {
 }
 
 // Encode implements json.Marshaler.
+func (s *EntityGenericDetail) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *EntityGenericDetail) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("destinationAddress")
+		s.DestinationAddress.Encode(e)
+	}
+	{
+		e.FieldStart("name")
+		e.Str(s.Name)
+	}
+	{
+		e.FieldStart("originAddress")
+		s.OriginAddress.Encode(e)
+	}
+}
+
+var jsonFieldsNameOfEntityGenericDetail = [3]string{
+	0: "destinationAddress",
+	1: "name",
+	2: "originAddress",
+}
+
+// Decode decodes EntityGenericDetail from json.
+func (s *EntityGenericDetail) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode EntityGenericDetail to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "destinationAddress":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				if err := s.DestinationAddress.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"destinationAddress\"")
+			}
+		case "name":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				v, err := d.Str()
+				s.Name = string(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"name\"")
+			}
+		case "originAddress":
+			requiredBitSet[0] |= 1 << 2
+			if err := func() error {
+				if err := s.OriginAddress.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"originAddress\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode EntityGenericDetail")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000111,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfEntityGenericDetail) {
+					name = jsonFieldsNameOfEntityGenericDetail[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *EntityGenericDetail) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *EntityGenericDetail) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
 func (s *EntityLocation) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
@@ -2398,6 +2524,12 @@ func (s *EntityTransportation) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
+		if s.GenericDetail.Set {
+			e.FieldStart("genericDetail")
+			s.GenericDetail.Encode(e)
+		}
+	}
+	{
 		e.FieldStart("id")
 		e.Int(s.ID)
 	}
@@ -2425,17 +2557,18 @@ func (s *EntityTransportation) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfEntityTransportation = [10]string{
-	0: "arrivalDateTime",
-	1: "departureDateTime",
-	2: "destination",
-	3: "flightDetail",
-	4: "id",
-	5: "origin",
-	6: "price",
-	7: "trainDetail",
-	8: "tripId",
-	9: "type",
+var jsonFieldsNameOfEntityTransportation = [11]string{
+	0:  "arrivalDateTime",
+	1:  "departureDateTime",
+	2:  "destination",
+	3:  "flightDetail",
+	4:  "genericDetail",
+	5:  "id",
+	6:  "origin",
+	7:  "price",
+	8:  "trainDetail",
+	9:  "tripId",
+	10: "type",
 }
 
 // Decode decodes EntityTransportation from json.
@@ -2491,8 +2624,18 @@ func (s *EntityTransportation) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"flightDetail\"")
 			}
+		case "genericDetail":
+			if err := func() error {
+				s.GenericDetail.Reset()
+				if err := s.GenericDetail.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"genericDetail\"")
+			}
 		case "id":
-			requiredBitSet[0] |= 1 << 4
+			requiredBitSet[0] |= 1 << 5
 			if err := func() error {
 				v, err := d.Int()
 				s.ID = int(v)
@@ -2504,7 +2647,7 @@ func (s *EntityTransportation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"id\"")
 			}
 		case "origin":
-			requiredBitSet[0] |= 1 << 5
+			requiredBitSet[0] |= 1 << 6
 			if err := func() error {
 				if err := s.Origin.Decode(d); err != nil {
 					return err
@@ -2514,7 +2657,7 @@ func (s *EntityTransportation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"origin\"")
 			}
 		case "price":
-			requiredBitSet[0] |= 1 << 6
+			requiredBitSet[0] |= 1 << 7
 			if err := func() error {
 				if err := s.Price.Decode(d); err != nil {
 					return err
@@ -2534,7 +2677,7 @@ func (s *EntityTransportation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"trainDetail\"")
 			}
 		case "tripId":
-			requiredBitSet[1] |= 1 << 0
+			requiredBitSet[1] |= 1 << 1
 			if err := func() error {
 				v, err := d.Int()
 				s.TripId = int(v)
@@ -2546,7 +2689,7 @@ func (s *EntityTransportation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"tripId\"")
 			}
 		case "type":
-			requiredBitSet[1] |= 1 << 1
+			requiredBitSet[1] |= 1 << 2
 			if err := func() error {
 				if err := s.Type.Decode(d); err != nil {
 					return err
@@ -2565,8 +2708,8 @@ func (s *EntityTransportation) Decode(d *jx.Decoder) error {
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [2]uint8{
-		0b01110111,
-		0b00000011,
+		0b11100111,
+		0b00000110,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
@@ -4235,6 +4378,55 @@ func (s *OptNilEntityFlightDetail) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
+// Encode encodes EntityGenericDetail as json.
+func (o OptNilEntityGenericDetail) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	if o.Null {
+		e.Null()
+		return
+	}
+	o.Value.Encode(e)
+}
+
+// Decode decodes EntityGenericDetail from json.
+func (o *OptNilEntityGenericDetail) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptNilEntityGenericDetail to nil")
+	}
+	if d.Next() == jx.Null {
+		if err := d.Null(); err != nil {
+			return err
+		}
+
+		var v EntityGenericDetail
+		o.Value = v
+		o.Set = true
+		o.Null = true
+		return nil
+	}
+	o.Set = true
+	o.Null = false
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptNilEntityGenericDetail) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptNilEntityGenericDetail) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode encodes EntityTrainDetail as json.
 func (o OptNilEntityTrainDetail) Encode(e *jx.Encoder) {
 	if !o.Set {
@@ -5040,6 +5232,82 @@ func (s *PutFlightInternalServerError) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *PutFlightInternalServerError) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes PutTransportationForbidden as json.
+func (s *PutTransportationForbidden) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes PutTransportationForbidden from json.
+func (s *PutTransportationForbidden) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PutTransportationForbidden to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = PutTransportationForbidden(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PutTransportationForbidden) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PutTransportationForbidden) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes PutTransportationInternalServerError as json.
+func (s *PutTransportationInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ResponseError)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes PutTransportationInternalServerError from json.
+func (s *PutTransportationInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PutTransportationInternalServerError to nil")
+	}
+	var unwrapped ResponseError
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = PutTransportationInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PutTransportationInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PutTransportationInternalServerError) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }

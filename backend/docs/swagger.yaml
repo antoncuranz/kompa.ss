@@ -161,6 +161,22 @@ components:
       - id
       - origin
       type: object
+    entity.GenericDetail:
+      nullable: true
+      properties:
+        destinationAddress:
+          nullable: true
+          type: string
+        name:
+          type: string
+        originAddress:
+          nullable: true
+          type: string
+      required:
+      - destinationAddress
+      - name
+      - originAddress
+      type: object
     entity.Location:
       nullable: true
       properties:
@@ -255,6 +271,8 @@ components:
           $ref: '#/components/schemas/entity.Location'
         flightDetail:
           $ref: '#/components/schemas/entity.FlightDetail'
+        genericDetail:
+          $ref: '#/components/schemas/entity.GenericDetail'
         id:
           type: integer
         origin:
@@ -1579,6 +1597,48 @@ paths:
       security:
       - bearerauth: []
       summary: Get Transportation by ID
+      tags:
+      - transportation
+    put:
+      operationId: putTransportation
+      parameters:
+      - description: Trip ID
+        in: path
+        name: trip_id
+        required: true
+        schema:
+          type: integer
+      - description: Transportation ID
+        in: path
+        name: transportation_id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request.Transportation'
+        description: transportation
+        required: true
+      responses:
+        "204":
+          description: No Content
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Internal Server Error
+      security:
+      - bearerauth: []
+      summary: Update transportation
       tags:
       - transportation
   /trips/{trip_id}/transportation/geojson:

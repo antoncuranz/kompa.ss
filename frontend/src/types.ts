@@ -95,6 +95,7 @@ export type Transportation = {
   price: number | null;
   flightDetail: FlightDetail | null;
   trainDetail: TrainDetail | null;
+  genericDetail: GenericDetail | null;
 };
 
 export type FlightDetail = {
@@ -158,13 +159,18 @@ export type TrainStation = {
   name: string;
 }
 
+export type GenericDetail = {
+  name: string;
+  originAddress: string|null;
+  destinationAddress: string|null;
+};
+
 export type DayRenderData = {
   day: string;
   transportation: Transportation[];
   activities: Activity[];
   accommodation: Accommodation | undefined;
 };
-
 
 export type GeoJsonFlight = {
   type: TransportationType;

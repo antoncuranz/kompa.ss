@@ -36,7 +36,7 @@ func (uc *UseCase) CreateAttachment(ctx context.Context, tripID int32, fileHeade
 	if err != nil {
 		return entity.Attachment{}, fmt.Errorf("read file: %w", err)
 	}
-	return uc.repo.SaveAttachment(ctx, entity.Attachment{
+	return uc.repo.CreateAttachment(ctx, entity.Attachment{
 		TripID: tripID,
 		Name:   fileHeader.Filename,
 		Blob:   fileBytes,

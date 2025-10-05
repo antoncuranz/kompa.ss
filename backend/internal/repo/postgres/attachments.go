@@ -39,7 +39,7 @@ func (r *AttachmentsRepo) GetAttachmentByID(ctx context.Context, tripID int32, a
 	return mapAttachment(attachment), nil
 }
 
-func (r *AttachmentsRepo) SaveAttachment(ctx context.Context, attachment entity.Attachment) (entity.Attachment, error) {
+func (r *AttachmentsRepo) CreateAttachment(ctx context.Context, attachment entity.Attachment) (entity.Attachment, error) {
 	attachmentId, err := r.Queries.InsertAttachment(ctx, sqlc.InsertAttachmentParams{
 		TripID: attachment.TripID,
 		Name:   attachment.Name,

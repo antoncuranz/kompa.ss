@@ -8,6 +8,7 @@ import FlightDialogContent from "@/components/dialog/FlightDialogContent.tsx";
 import ActivityDialogContent from "@/components/dialog/ActivityDialogContent.tsx";
 import {Dialog} from "@/components/dialog/Dialog.tsx";
 import TrainDialogContent from "@/components/dialog/TrainDialogContent.tsx";
+import TransportationDialogContent from "@/components/dialog/TransportationDialogContent.tsx";
 
 export default function Itinerary({
   trip, dataByDays
@@ -26,6 +27,9 @@ export default function Itinerary({
 
   const [trainDialogOpen, setTrainDialogOpen] = useState(false)
   const [dialogTrain, setDialogTrain] = useState<Transportation|null>()
+
+  const [transportationDialogOpen, setTransportationDialogOpen] = useState(false)
+  const [dialogTransportation, setDialogTransportation] = useState<Transportation|null>()
 
   function onActivityClick(activity: Activity) {
     setDialogActivity(activity)
@@ -47,6 +51,11 @@ export default function Itinerary({
     setTrainDialogOpen(true)
   }
 
+  function onTransportationClick(transportation: Transportation) {
+    setDialogTransportation(transportation)
+    setTransportationDialogOpen(true)
+  }
+
   return (
     <>
       {dataByDays.map((dayData, idx) =>
@@ -55,6 +64,7 @@ export default function Itinerary({
              onAccommodationClick={onAccommodationClick}
              onFlightClick={onFlightClick}
              onTrainClick={onTrainClick}
+             onTransportationClick={onTransportationClick}
         />
       )}
       <Dialog open={activityDialogOpen} setOpen={setActivityDialogOpen}>
@@ -68,6 +78,9 @@ export default function Itinerary({
       </Dialog>
       <Dialog open={trainDialogOpen} setOpen={setTrainDialogOpen}>
         <TrainDialogContent trip={trip} train={dialogTrain}/>
+      </Dialog>
+      <Dialog open={transportationDialogOpen} setOpen={setTransportationDialogOpen}>
+        <TransportationDialogContent trip={trip} transportation={dialogTransportation}/>
       </Dialog>
     </>
   )

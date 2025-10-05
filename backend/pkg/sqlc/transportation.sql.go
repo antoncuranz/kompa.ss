@@ -106,6 +106,24 @@ func (q *Queries) GetAllTransportation(ctx context.Context, tripID int32) ([]Get
 	return items, nil
 }
 
+const getGenericDetailByTransportationID = `-- name: GetGenericDetailByTransportationID :one
+SELECT transportation_id, name, origin_address, destination_address
+FROM transportation_generic
+WHERE transportation_id = $1
+`
+
+func (q *Queries) GetGenericDetailByTransportationID(ctx context.Context, transportationID int32) (TransportationGeneric, error) {
+	row := q.db.QueryRow(ctx, getGenericDetailByTransportationID, transportationID)
+	var i TransportationGeneric
+	err := row.Scan(
+		&i.TransportationID,
+		&i.Name,
+		&i.OriginAddress,
+		&i.DestinationAddress,
+	)
+	return i, err
+}
+
 const getTransportationByID = `-- name: GetTransportationByID :one
 SELECT transportation.id, transportation.trip_id, transportation.type, transportation.origin_id, transportation.destination_id, transportation.departure_time, transportation.arrival_time, transportation.price,
        origin.id, origin.latitude, origin.longitude,
@@ -150,24 +168,6 @@ func (q *Queries) GetTransportationByID(ctx context.Context, arg GetTransportati
 	return i, err
 }
 
-const insertGeoJson = `-- name: InsertGeoJson :exec
-INSERT INTO transportation_geojson (transportation_id, geojson)
-VALUES ($1, $2)
-    ON CONFLICT(transportation_id)
-DO UPDATE SET
-    geojson = $2
-`
-
-type InsertGeoJsonParams struct {
-	TransportationID int32
-	Geojson          []byte
-}
-
-func (q *Queries) InsertGeoJson(ctx context.Context, arg InsertGeoJsonParams) error {
-	_, err := q.db.Exec(ctx, insertGeoJson, arg.TransportationID, arg.Geojson)
-	return err
-}
-
 const insertTransportation = `-- name: InsertTransportation :one
 INSERT INTO transportation (trip_id, type, origin_id, destination_id, departure_time, arrival_time, price)
 VALUES ($1, $2, $3, $4, $5, $6, $7)
@@ -197,4 +197,81 @@ func (q *Queries) InsertTransportation(ctx context.Context, arg InsertTransporta
 	var id int32
 	err := row.Scan(&id)
 	return id, err
+}
+
+const updateTransportation = `-- name: UpdateTransportation :exec
+UPDATE transportation
+SET type           = $2,
+    origin_id      = $3,
+    destination_id = $4,
+    departure_time = $5,
+    arrival_time   = $6,
+    price          = $7
+WHERE id = $1
+`
+
+type UpdateTransportationParams struct {
+	ID            int32
+	Type          string
+	OriginID      int32
+	DestinationID int32
+	DepartureTime civil.DateTime
+	ArrivalTime   civil.DateTime
+	Price         *int32
+}
+
+func (q *Queries) UpdateTransportation(ctx context.Context, arg UpdateTransportationParams) error {
+	_, err := q.db.Exec(ctx, updateTransportation,
+		arg.ID,
+		arg.Type,
+		arg.OriginID,
+		arg.DestinationID,
+		arg.DepartureTime,
+		arg.ArrivalTime,
+		arg.Price,
+	)
+	return err
+}
+
+const upsertGenericTransportationDetail = `-- name: UpsertGenericTransportationDetail :exec
+INSERT INTO transportation_generic (transportation_id, name, origin_address, destination_address)
+VALUES ($1, $2, $3, $4)
+ON CONFLICT(transportation_id) DO UPDATE SET
+    name = $2,
+    origin_address = $3,
+    destination_address = $4
+`
+
+type UpsertGenericTransportationDetailParams struct {
+	TransportationID   int32
+	Name               string
+	OriginAddress      *string
+	DestinationAddress *string
+}
+
+func (q *Queries) UpsertGenericTransportationDetail(ctx context.Context, arg UpsertGenericTransportationDetailParams) error {
+	_, err := q.db.Exec(ctx, upsertGenericTransportationDetail,
+		arg.TransportationID,
+		arg.Name,
+		arg.OriginAddress,
+		arg.DestinationAddress,
+	)
+	return err
+}
+
+const upsertGeoJson = `-- name: UpsertGeoJson :exec
+INSERT INTO transportation_geojson (transportation_id, geojson)
+VALUES ($1, $2)
+ON CONFLICT(transportation_id) DO UPDATE SET
+    geojson = $2
+`
+
+type UpsertGeoJsonParams struct {
+	TransportationID int32
+	Geojson          []byte
+}
+
+func (q *Queries) UpsertGeoJson(ctx context.Context, arg UpsertGeoJsonParams) error {
+	_, err := q.db.Exec(ctx, upsertGeoJson, arg.TransportationID, arg.Geojson)
+	return err
 }

@@ -51,7 +51,7 @@ export default function DateInput({
             name={name}
             variant="secondary"
             className={cn(
-                "col-span-3 justify-start text-left font-normal disabled:opacity-1 w-full focus:ring-2",
+                "col-span-3 justify-start text-left font-normal w-full focus:ring-2 disabled:opacity-100 disabled:cursor-not-allowed disabled:pointer-events-auto",
                 !value && "text-muted-foreground"
             )}
             disabled={disabled}

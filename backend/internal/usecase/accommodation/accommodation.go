@@ -34,7 +34,7 @@ func (uc *UseCase) CreateAccommodation(ctx context.Context, tripID int32, accomm
 		return entity.Accommodation{}, fmt.Errorf("invalid date: %w", err)
 	}
 
-	return uc.repo.SaveAccommodation(ctx, entity.Accommodation{
+	return uc.repo.CreateAccommodation(ctx, entity.Accommodation{
 		TripID:        tripID,
 		Name:          accommodation.Name,
 		ArrivalDate:   accommodation.ArrivalDate,

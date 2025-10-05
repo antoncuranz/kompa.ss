@@ -65,6 +65,7 @@ func NewTransportationRoutes(tripsV1Group fiber.Router, uc usecase.Transportatio
 		transportationV1Group.Get("", r.getAllTransportation)
 		transportationV1Group.Get("/geojson", r.getGeoJson)
 		transportationV1Group.Get("/:transportation_id", r.getTransportation)
+		transportationV1Group.Put("/:transportation_id", r.putTransportation)
 		transportationV1Group.Delete("/:transportation_id", r.deleteTransportation)
 	}
 }

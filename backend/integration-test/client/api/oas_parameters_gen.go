@@ -186,6 +186,14 @@ type PutFlightParams struct {
 	FlightID int
 }
 
+// PutTransportationParams is parameters of putTransportation operation.
+type PutTransportationParams struct {
+	// Trip ID.
+	TripID int
+	// Transportation ID.
+	TransportationID int
+}
+
 // PutTripParams is parameters of putTrip operation.
 type PutTripParams struct {
 	// Trip ID.

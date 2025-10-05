@@ -3,6 +3,12 @@ INSERT INTO location (latitude, longitude)
 VALUES ($1, $2)
 RETURNING id;
 
+-- name: UpdateLocation :exec
+UPDATE location
+SET latitude  = $2,
+    longitude = $3
+WHERE id = $1;
+
 -- name: GetLocationIDByActivityID :one
 SELECT l.id
 FROM location l
@@ -19,8 +25,3 @@ WHERE a.id = $1;
 DELETE FROM location
 WHERE id = $1;
 
--- name: UpdateLocation :exec
-UPDATE location
-SET latitude  = $2,
-    longitude = $3
-WHERE id = $1;

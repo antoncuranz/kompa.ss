@@ -6,10 +6,10 @@ import type {Feature, FeatureCollection, GeoJsonProperties} from 'geojson';
 import {Accommodation, Activity, GeoJsonFlight, GeoJsonTrain, GeoJsonTransportation} from "@/types.ts";
 import {LngLat, MapMouseEvent} from "mapbox-gl";
 import {formatDateShort, formatTime} from "@/components/util.ts";
-import TrainPopup from "@/components/popup/TrainPopup.tsx";
-import FlightPopup from "@/components/popup/FlightPopup.tsx";
+import TrainPopup from "@/components/map/popup/TrainPopup.tsx";
+import FlightPopup from "@/components/map/popup/FlightPopup.tsx";
 import BaseMap from "@/components/map/BaseMap.tsx";
-import TransportationPopup from "../popup/TransportationPopup";
+import TransportationPopup from "@/components/map/popup/TransportationPopup";
 
 export default function HeroMap({
   activities, accommodation, geojson

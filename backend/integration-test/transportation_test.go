@@ -31,7 +31,9 @@ func (suite *IntegrationTestSuite) TestCrudFlight() {
 	suite.True(ok)
 	suite.Len(flightDetail.Legs, 1)
 	suite.Equal("Boeing 747-400", updatedDetail.Legs[0].Aircraft.Value)
+	suite.Equal("2026-02-01T12:40:00", updatedFlight.DepartureDateTime)
 	suite.Equal("2026-02-01T12:40:00", updatedDetail.Legs[0].DepartureDateTime)
+	suite.Equal("2026-02-01T19:15:00", updatedFlight.ArrivalDateTime)
 	suite.Equal("2026-02-01T19:15:00", updatedDetail.Legs[0].ArrivalDateTime)
 
 	// when (forbiddenUser)
