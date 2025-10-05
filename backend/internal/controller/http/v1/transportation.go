@@ -144,6 +144,7 @@ func (r *TransportationV1) getTransportation(ctx *fiber.Ctx) error {
 // @Param       transportation_id path int true "Transportation ID"
 // @Success     204
 // @Failure     403 {object} response.Error
+// @Failure     404 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
 // @Router      /trips/{trip_id}/transportation/{transportation_id} [delete]

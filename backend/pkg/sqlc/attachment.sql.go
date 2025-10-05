@@ -9,11 +9,12 @@ import (
 	"context"
 )
 
-const deleteAttachmentByID = `-- name: DeleteAttachmentByID :exec
+const deleteAttachmentByID = `-- name: DeleteAttachmentByID :one
 DELETE
 FROM attachment
 WHERE trip_id = $1
   AND id = $2
+RETURNING id
 `
 
 type DeleteAttachmentByIDParams struct {
@@ -21,9 +22,11 @@ type DeleteAttachmentByIDParams struct {
 	ID     int32
 }
 
-func (q *Queries) DeleteAttachmentByID(ctx context.Context, arg DeleteAttachmentByIDParams) error {
-	_, err := q.db.Exec(ctx, deleteAttachmentByID, arg.TripID, arg.ID)
-	return err
+func (q *Queries) DeleteAttachmentByID(ctx context.Context, arg DeleteAttachmentByIDParams) (int32, error) {
+	row := q.db.QueryRow(ctx, deleteAttachmentByID, arg.TripID, arg.ID)
+	var id int32
+	err := row.Scan(&id)
+	return id, err
 }
 
 const getAttachmentByID = `-- name: GetAttachmentByID :one

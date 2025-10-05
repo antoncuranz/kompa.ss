@@ -23,6 +23,7 @@ type AccommodationV1 struct {
 // @Produce     json
 // @Param       trip_id path int true "Trip ID"
 // @Success     200 {object} []entity.Accommodation
+// @Failure     400 {object} response.Error
 // @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
@@ -48,7 +49,9 @@ func (r *AccommodationV1) getAllAccommodation(ctx *fiber.Ctx) error {
 // @Param       trip_id path int true "Trip ID"
 // @Param       accommodation_id path int true "Accommodation ID"
 // @Success     200 {object} entity.Accommodation
+// @Failure     400 {object} response.Error
 // @Failure     403 {object} response.Error
+// @Failure     404 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
 // @Router      /trips/{trip_id}/accommodation/{accommodation_id} [get]
@@ -78,6 +81,7 @@ func (r *AccommodationV1) getAccommodationByID(ctx *fiber.Ctx) error {
 // @Param       trip_id path int true "Trip ID"
 // @Param       request body request.Accommodation true "accommodation"
 // @Success     204
+// @Failure     400 {object} response.Error
 // @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
@@ -110,7 +114,9 @@ func (r *AccommodationV1) postAccommodation(ctx *fiber.Ctx) error {
 // @Param       accommodation_id path int true "Accommodation ID"
 // @Param       request body request.Accommodation true "accommodation"
 // @Success     204
+// @Failure     400 {object} response.Error
 // @Failure     403 {object} response.Error
+// @Failure     404 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
 // @Router      /trips/{trip_id}/accommodation/{accommodation_id} [put]
@@ -142,7 +148,9 @@ func (r *AccommodationV1) putAccommodation(ctx *fiber.Ctx) error {
 // @Param       trip_id path int true "Trip ID"
 // @Param       accommodation_id path int true "Accommodation ID"
 // @Success     204
+// @Failure     400 {object} response.Error
 // @Failure     403 {object} response.Error
+// @Failure     404 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
 // @Router      /trips/{trip_id}/accommodation/{accommodation_id} [delete]

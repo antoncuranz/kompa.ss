@@ -11,15 +11,17 @@ import (
 	"cloud.google.com/go/civil"
 )
 
-const deleteTripByID = `-- name: DeleteTripByID :exec
+const deleteTripByID = `-- name: DeleteTripByID :one
 DELETE
 FROM trip
 WHERE id = $1
+RETURNING id
 `
 
-func (q *Queries) DeleteTripByID(ctx context.Context, id int32) error {
-	_, err := q.db.Exec(ctx, deleteTripByID, id)
-	return err
+func (q *Queries) DeleteTripByID(ctx context.Context, id int32) (int32, error) {
+	row := q.db.QueryRow(ctx, deleteTripByID, id)
+	err := row.Scan(&id)
+	return id, err
 }
 
 const getTripByID = `-- name: GetTripByID :one

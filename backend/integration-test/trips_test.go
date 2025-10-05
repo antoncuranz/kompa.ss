@@ -19,8 +19,7 @@ func (suite *IntegrationTestSuite) TestGetTripsOK() {
 	trips := getAll.(*api.GetTripsOKApplicationJSON)
 	suite.Len(*trips, 1)
 
-	_, ok := getByID.(*api.EntityTrip)
-	suite.True(ok)
+	suite.IsType(&api.EntityTrip{}, getByID)
 
 	// when (forbiddenUser)
 	getAll, _ = suite.userApi(ForbiddenUser).GetTrips(suite.T().Context())
@@ -30,11 +29,10 @@ func (suite *IntegrationTestSuite) TestGetTripsOK() {
 	trips = getAll.(*api.GetTripsOKApplicationJSON)
 	suite.Empty(*trips)
 
-	_, ok = getByID.(*api.EntityTrip)
-	suite.False(ok)
+	suite.IsNotType(&api.EntityTrip{}, getByID)
 }
 
-func (suite *IntegrationTestSuite) TestGetTripNotFound() {
+func (suite *IntegrationTestSuite) TestGetTripForbidden() {
 	// given
 
 	// when
@@ -42,6 +40,5 @@ func (suite *IntegrationTestSuite) TestGetTripNotFound() {
 	suite.NoError(err)
 
 	// then
-	_, ok := res.(*api.GetTripForbidden)
-	suite.True(ok)
+	suite.IsType(&api.GetTripForbidden{}, res)
 }

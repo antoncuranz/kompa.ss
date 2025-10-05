@@ -11,11 +11,12 @@ import (
 	"cloud.google.com/go/civil"
 )
 
-const deleteTransportationByID = `-- name: DeleteTransportationByID :exec
+const deleteTransportationByID = `-- name: DeleteTransportationByID :one
 DELETE
 FROM transportation
 WHERE trip_id = $1
-  AND transportation.id = $2
+  AND id = $2
+RETURNING id
 `
 
 type DeleteTransportationByIDParams struct {
@@ -23,9 +24,11 @@ type DeleteTransportationByIDParams struct {
 	ID     int32
 }
 
-func (q *Queries) DeleteTransportationByID(ctx context.Context, arg DeleteTransportationByIDParams) error {
-	_, err := q.db.Exec(ctx, deleteTransportationByID, arg.TripID, arg.ID)
-	return err
+func (q *Queries) DeleteTransportationByID(ctx context.Context, arg DeleteTransportationByIDParams) (int32, error) {
+	row := q.db.QueryRow(ctx, deleteTransportationByID, arg.TripID, arg.ID)
+	var id int32
+	err := row.Scan(&id)
+	return id, err
 }
 
 const getAllGeoJson = `-- name: GetAllGeoJson :many

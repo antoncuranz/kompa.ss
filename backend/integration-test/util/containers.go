@@ -106,6 +106,7 @@ func startApplicationContainer(t testing.TB, dbConnectionString string, port str
 			"AUTH_JWKS_URL": wiremockUrl + "/auth/jwks.json",
 			"AEDBX_URL":     wiremockUrl + "/aedbx",
 			"DBVENDO_URL":   wiremockUrl + "/dbvendo",
+			"ORS_URL":       wiremockUrl + "/ors",
 		},
 		Networks: []string{net.Name},
 		LogConsumerCfg: &testcontainers.LogConsumerConfig{

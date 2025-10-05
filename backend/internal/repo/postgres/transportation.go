@@ -88,6 +88,9 @@ func (r *TransportationRepo) SaveTransportation(ctx context.Context, transportat
 
 	transportationID, err := r.saveTransportation(ctx, qtx, transportation, originId, destinationId)
 	if err != nil {
+		if errors.Is(pgx.ErrNoRows, err) {
+			return entity.Transportation{}, fiber.NewError(http.StatusNotFound, "transportation not found")
+		}
 		return entity.Transportation{}, fmt.Errorf("save transportation: %w", err)
 	}
 
@@ -119,7 +122,15 @@ func (r *TransportationRepo) SaveTransportation(ctx context.Context, transportat
 }
 
 func (r *TransportationRepo) DeleteTransportation(ctx context.Context, tripID int32, transportationID int32) error {
-	return r.Queries.DeleteTransportationByID(ctx, sqlc.DeleteTransportationByIDParams{TripID: tripID, ID: transportationID})
+	_, err := r.Queries.DeleteTransportationByID(ctx, sqlc.DeleteTransportationByIDParams{TripID: tripID, ID: transportationID})
+	if err != nil {
+		if errors.Is(pgx.ErrNoRows, err) {
+			return fiber.NewError(http.StatusNotFound, "transportation not found")
+		}
+		return fmt.Errorf("delete transportation [id=%d]: %w", transportationID, err)
+	}
+
+	return nil
 }
 
 func (r *TransportationRepo) GetAllGeoJson(ctx context.Context, tripID int32) ([]geojson.FeatureCollection, error) {

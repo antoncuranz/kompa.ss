@@ -55,6 +55,7 @@ func (r *FlightsV1) postFlight(ctx *fiber.Ctx) error {
 // @Param       flight_id path int true "Flight ID"
 // @Success     204
 // @Failure     403 {object} response.Error
+// @Failure     404 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
 // @Router      /trips/{trip_id}/flights/{flight_id} [put]

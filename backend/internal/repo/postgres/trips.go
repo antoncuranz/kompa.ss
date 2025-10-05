@@ -2,7 +2,10 @@ package postgres
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"github.com/gofiber/fiber/v2"
+	"github.com/jackc/pgx/v5"
 	"kompass/internal/entity"
 	"kompass/pkg/postgres"
 	"kompass/pkg/sqlc"
@@ -28,6 +31,9 @@ func (r *TripsRepo) GetTrips(ctx context.Context, userID int32) ([]entity.Trip, 
 func (r *TripsRepo) GetTripByID(ctx context.Context, tripID int32) (entity.Trip, error) {
 	trip, err := r.Queries.GetTripByID(ctx, tripID)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return entity.Trip{}, fiber.NewError(fiber.StatusNotFound, "trip not found")
+		}
 		return entity.Trip{}, fmt.Errorf("get trip [tripID=%d]: %w", tripID, err)
 	}
 
@@ -60,6 +66,9 @@ func (r *TripsRepo) UpdateTrip(ctx context.Context, trip entity.Trip) error {
 		ImageUrl:    trip.ImageUrl,
 	})
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return fiber.NewError(fiber.StatusNotFound, "trip not found")
+		}
 		return fmt.Errorf("update trip: %w", err)
 	}
 
@@ -67,11 +76,13 @@ func (r *TripsRepo) UpdateTrip(ctx context.Context, trip entity.Trip) error {
 }
 
 func (r *TripsRepo) DeleteTrip(ctx context.Context, tripID int32) error {
-	err := r.Queries.DeleteTripByID(ctx, tripID)
+	_, err := r.Queries.DeleteTripByID(ctx, tripID)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return fiber.NewError(fiber.StatusNotFound, "trip not found")
+		}
 		return fmt.Errorf("delete trip: %w", err)
 	}
-
 	return nil
 }
 

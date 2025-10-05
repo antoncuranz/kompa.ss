@@ -23,7 +23,8 @@ SET name        = $2,
     image_url   = $6
 WHERE id = $1;
 
--- name: DeleteTripByID :exec
+-- name: DeleteTripByID :one
 DELETE
 FROM trip
-WHERE id = $1;
+WHERE id = $1
+RETURNING id;

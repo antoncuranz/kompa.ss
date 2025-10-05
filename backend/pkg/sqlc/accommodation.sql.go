@@ -11,11 +11,12 @@ import (
 	"cloud.google.com/go/civil"
 )
 
-const deleteAccommodationByID = `-- name: DeleteAccommodationByID :exec
+const deleteAccommodationByID = `-- name: DeleteAccommodationByID :one
 DELETE
 FROM accommodation
 WHERE trip_id = $1
   AND accommodation.id = $2
+RETURNING id
 `
 
 type DeleteAccommodationByIDParams struct {
@@ -23,9 +24,11 @@ type DeleteAccommodationByIDParams struct {
 	ID     int32
 }
 
-func (q *Queries) DeleteAccommodationByID(ctx context.Context, arg DeleteAccommodationByIDParams) error {
-	_, err := q.db.Exec(ctx, deleteAccommodationByID, arg.TripID, arg.ID)
-	return err
+func (q *Queries) DeleteAccommodationByID(ctx context.Context, arg DeleteAccommodationByIDParams) (int32, error) {
+	row := q.db.QueryRow(ctx, deleteAccommodationByID, arg.TripID, arg.ID)
+	var id int32
+	err := row.Scan(&id)
+	return id, err
 }
 
 const getAccommodationByID = `-- name: GetAccommodationByID :one

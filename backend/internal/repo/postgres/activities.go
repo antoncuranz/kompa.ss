@@ -2,7 +2,10 @@ package postgres
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"github.com/gofiber/fiber/v2"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"kompass/internal/entity"
 	"kompass/pkg/postgres"
@@ -33,6 +36,9 @@ func (r *ActivitiesRepo) GetActivities(ctx context.Context, tripID int32) ([]ent
 func (r *ActivitiesRepo) GetActivityByID(ctx context.Context, tripID int32, activityID int32) (entity.Activity, error) {
 	row, err := r.Queries.GetActivityByID(ctx, sqlc.GetActivityByIDParams{TripID: tripID, ID: activityID})
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return entity.Activity{}, fiber.NewError(fiber.StatusNotFound, "activity not found")
+		}
 		return entity.Activity{}, fmt.Errorf("get activity [id=%d]: %w", activityID, err)
 	}
 
@@ -107,6 +113,9 @@ func (r *ActivitiesRepo) UpdateActivity(ctx context.Context, activity entity.Act
 		Price:       activity.Price,
 	})
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return fiber.NewError(fiber.StatusNotFound, "activity not found")
+		}
 		return fmt.Errorf("update activity [id=%d]: %w", activity.ID, err)
 	}
 
@@ -119,7 +128,14 @@ func (r *ActivitiesRepo) UpdateActivity(ctx context.Context, activity entity.Act
 }
 
 func (r *ActivitiesRepo) DeleteActivity(ctx context.Context, tripID int32, activityID int32) error {
-	return r.Queries.DeleteActivityByID(ctx, sqlc.DeleteActivityByIDParams{TripID: tripID, ID: activityID})
+	_, err := r.Queries.DeleteActivityByID(ctx, sqlc.DeleteActivityByIDParams{TripID: tripID, ID: activityID})
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return fiber.NewError(fiber.StatusNotFound, "activity not found")
+		}
+		return fmt.Errorf("delete activity: %w", err)
+	}
+	return nil
 }
 
 func mapActivities(rows []sqlc.GetActivitiesRow) []entity.Activity {

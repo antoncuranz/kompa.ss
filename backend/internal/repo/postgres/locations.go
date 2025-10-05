@@ -2,9 +2,10 @@ package postgres
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"fmt"
+	"github.com/gofiber/fiber/v2"
+	"github.com/jackc/pgx/v5"
 	"kompass/internal/entity"
 	"kompass/pkg/sqlc"
 )
@@ -26,7 +27,7 @@ func SaveLocation(ctx context.Context, queries *sqlc.Queries, location entity.Lo
 
 func GetLocationIDOrNilByActivityID(ctx context.Context, queries *sqlc.Queries, activityID int32) (*int32, error) {
 	id, err := queries.GetLocationIDByActivityID(ctx, activityID)
-	if errors.Is(err, sql.ErrNoRows) {
+	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
 	}
 	return &id, err
@@ -34,7 +35,7 @@ func GetLocationIDOrNilByActivityID(ctx context.Context, queries *sqlc.Queries, 
 
 func GetLocationIDOrNilByAccommodationID(ctx context.Context, queries *sqlc.Queries, accommodationID int32) (*int32, error) {
 	id, err := queries.GetLocationIDByAccommodationID(ctx, accommodationID)
-	if errors.Is(err, sql.ErrNoRows) {
+	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
 	}
 	return &id, err
@@ -57,24 +58,15 @@ func UpsertOrDeleteLocation(ctx context.Context, queries *sqlc.Queries, existing
 	return nil, nil
 }
 
-func UpdateLocation(ctx context.Context, queries *sqlc.Queries, locationID int32, location entity.Location) error {
-	return queries.UpdateLocation(ctx, sqlc.UpdateLocationParams{
-		ID:        locationID,
-		Latitude:  location.Latitude,
-		Longitude: location.Longitude,
-	})
-}
-
 func DeleteLocation(ctx context.Context, queries *sqlc.Queries, locationID int32) error {
-	return queries.DeleteLocation(ctx, locationID)
-}
-
-func mapLocation(location sqlc.Location) entity.Location {
-	return entity.Location{
-		ID:        location.ID,
-		Latitude:  location.Latitude,
-		Longitude: location.Longitude,
+	_, err := queries.DeleteLocation(ctx, locationID)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return fiber.NewError(fiber.StatusNotFound, "location not found")
+		}
+		return fmt.Errorf("delete location: %w", err)
 	}
+	return nil
 }
 
 func mapLocationLeftJoin(id *int32, latitude *float32, longitude *float32) *entity.Location {

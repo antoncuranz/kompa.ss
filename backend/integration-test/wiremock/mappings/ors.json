@@ -1,0 +1,22 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "GET",
+        "urlPath": "/ors/v2/directions/driving-car",
+        "queryParameters": {
+          "start": {
+            "equalTo": "174.006699,-41.294392"
+          },
+          "end": {
+            "equalTo": "174.779190,-41.299793"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "bodyFileName": "ors_directions_ferry.json"
+      }
+    }
+  ]
+}

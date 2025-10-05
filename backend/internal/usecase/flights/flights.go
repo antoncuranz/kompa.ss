@@ -53,6 +53,7 @@ func (uc *UseCase) CreateFlight(ctx context.Context, tripID int32, flight reques
 }
 
 func (uc *UseCase) UpdateFlight(ctx context.Context, tripID int32, flightID int32) error {
+	// FIXME: use tripID in query!
 	flightDetail, err := uc.flightsRepo.GetFlightDetail(ctx, flightID)
 	if err != nil {
 		return fmt.Errorf("get flight detail [id=%d]: %w", flightID, err)

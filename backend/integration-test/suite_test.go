@@ -36,6 +36,11 @@ func (suite *IntegrationTestSuite) SetupSuite() {
 	suite.api = suite.userApi(DefaultUser)
 }
 
+func (suite *IntegrationTestSuite) SetupTest() {
+	err := suite.wiremock.Reset()
+	suite.NoError(err)
+}
+
 func (suite *IntegrationTestSuite) userApi(user util.UserName) *api.Client {
 	app, err := api.NewClient(suite.server, util.GenerateJwtForUser(suite.T(), user, suite.privateKey))
 	suite.NoError(err)

@@ -46,11 +46,12 @@ SELECT *
 FROM transportation_generic
 WHERE transportation_id = $1;
 
--- name: DeleteTransportationByID :exec
+-- name: DeleteTransportationByID :one
 DELETE
 FROM transportation
 WHERE trip_id = $1
-  AND transportation.id = $2;
+  AND id = $2
+RETURNING id;
 
 -- name: GetAllGeoJson :many
 SELECT transportation_geojson.geojson

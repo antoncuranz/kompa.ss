@@ -2,7 +2,10 @@ package postgres
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"github.com/gofiber/fiber/v2"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"kompass/internal/entity"
 	"kompass/pkg/postgres"
@@ -33,6 +36,9 @@ func (r *AccommodationRepo) GetAllAccommodation(ctx context.Context, tripID int3
 func (r *AccommodationRepo) GetAccommodationByID(ctx context.Context, tripID int32, accommodationID int32) (entity.Accommodation, error) {
 	row, err := r.Queries.GetAccommodationByID(ctx, sqlc.GetAccommodationByIDParams{TripID: tripID, ID: accommodationID})
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return entity.Accommodation{}, fiber.NewError(fiber.StatusNotFound, "accommodation not found")
+		}
 		return entity.Accommodation{}, fmt.Errorf("get accommodation [accommodationID=%d]: %w", accommodationID, err)
 	}
 
@@ -111,6 +117,9 @@ func (r *AccommodationRepo) UpdateAccommodation(ctx context.Context, accommodati
 		Price:         accommodation.Price,
 	})
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return fiber.NewError(fiber.StatusNotFound, "accommodation not found")
+		}
 		return fmt.Errorf("update accommodation [id=%d]: %w", accommodation.ID, err)
 	}
 
@@ -123,7 +132,14 @@ func (r *AccommodationRepo) UpdateAccommodation(ctx context.Context, accommodati
 }
 
 func (r *AccommodationRepo) DeleteAccommodation(ctx context.Context, tripID int32, accommodationID int32) error {
-	return r.Queries.DeleteAccommodationByID(ctx, sqlc.DeleteAccommodationByIDParams{TripID: tripID, ID: accommodationID})
+	_, err := r.Queries.DeleteAccommodationByID(ctx, sqlc.DeleteAccommodationByIDParams{TripID: tripID, ID: accommodationID})
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return fiber.NewError(fiber.StatusNotFound, "accommodation not found")
+		}
+		return fmt.Errorf("delete accommodation: %w", err)
+	}
+	return nil
 }
 
 func mapAllAccommodation(accommodation []sqlc.GetAllAccommodationRow) []entity.Accommodation {

@@ -31,6 +31,10 @@ func (s *Bearerauth) SetRoles(val []string) {
 	s.Roles = val
 }
 
+type DeleteAccommodationBadRequest ResponseError
+
+func (*DeleteAccommodationBadRequest) deleteAccommodationRes() {}
+
 type DeleteAccommodationForbidden ResponseError
 
 func (*DeleteAccommodationForbidden) deleteAccommodationRes() {}
@@ -43,6 +47,14 @@ func (*DeleteAccommodationInternalServerError) deleteAccommodationRes() {}
 type DeleteAccommodationNoContent struct{}
 
 func (*DeleteAccommodationNoContent) deleteAccommodationRes() {}
+
+type DeleteAccommodationNotFound ResponseError
+
+func (*DeleteAccommodationNotFound) deleteAccommodationRes() {}
+
+type DeleteActivityBadRequest ResponseError
+
+func (*DeleteActivityBadRequest) deleteActivityRes() {}
 
 type DeleteActivityForbidden ResponseError
 
@@ -82,6 +94,10 @@ func (*DeleteTransportationInternalServerError) deleteTransportationRes() {}
 type DeleteTransportationNoContent struct{}
 
 func (*DeleteTransportationNoContent) deleteTransportationRes() {}
+
+type DeleteTransportationNotFound ResponseError
+
+func (*DeleteTransportationNotFound) deleteTransportationRes() {}
 
 type DeleteTripBadRequest ResponseError
 
@@ -1088,6 +1104,10 @@ func (s *EntityUser) SetName(val string) {
 
 func (*EntityUser) getUserRes() {}
 
+type GetAccommodationByIDBadRequest ResponseError
+
+func (*GetAccommodationByIDBadRequest) getAccommodationByIDRes() {}
+
 type GetAccommodationByIDForbidden ResponseError
 
 func (*GetAccommodationByIDForbidden) getAccommodationByIDRes() {}
@@ -1095,6 +1115,14 @@ func (*GetAccommodationByIDForbidden) getAccommodationByIDRes() {}
 type GetAccommodationByIDInternalServerError ResponseError
 
 func (*GetAccommodationByIDInternalServerError) getAccommodationByIDRes() {}
+
+type GetAccommodationByIDNotFound ResponseError
+
+func (*GetAccommodationByIDNotFound) getAccommodationByIDRes() {}
+
+type GetActivitiesBadRequest ResponseError
+
+func (*GetActivitiesBadRequest) getActivitiesRes() {}
 
 type GetActivitiesForbidden ResponseError
 
@@ -1108,6 +1136,10 @@ type GetActivitiesOKApplicationJSON []EntityActivity
 
 func (*GetActivitiesOKApplicationJSON) getActivitiesRes() {}
 
+type GetActivityBadRequest ResponseError
+
+func (*GetActivityBadRequest) getActivityRes() {}
+
 type GetActivityForbidden ResponseError
 
 func (*GetActivityForbidden) getActivityRes() {}
@@ -1115,6 +1147,14 @@ func (*GetActivityForbidden) getActivityRes() {}
 type GetActivityInternalServerError ResponseError
 
 func (*GetActivityInternalServerError) getActivityRes() {}
+
+type GetActivityNotFound ResponseError
+
+func (*GetActivityNotFound) getActivityRes() {}
+
+type GetAllAccommodationBadRequest ResponseError
+
+func (*GetAllAccommodationBadRequest) getAllAccommodationRes() {}
 
 type GetAllAccommodationForbidden ResponseError
 
@@ -1585,6 +1625,10 @@ func (o OptNilString) Or(d string) string {
 	return d
 }
 
+type PostAccommodationBadRequest ResponseError
+
+func (*PostAccommodationBadRequest) postAccommodationRes() {}
+
 type PostAccommodationForbidden ResponseError
 
 func (*PostAccommodationForbidden) postAccommodationRes() {}
@@ -1597,6 +1641,10 @@ func (*PostAccommodationInternalServerError) postAccommodationRes() {}
 type PostAccommodationNoContent struct{}
 
 func (*PostAccommodationNoContent) postAccommodationRes() {}
+
+type PostActivityBadRequest ResponseError
+
+func (*PostActivityBadRequest) postActivityRes() {}
 
 type PostActivityForbidden ResponseError
 
@@ -1666,6 +1714,10 @@ type PostTripInternalServerError ResponseError
 
 func (*PostTripInternalServerError) postTripRes() {}
 
+type PutAccommodationBadRequest ResponseError
+
+func (*PutAccommodationBadRequest) putAccommodationRes() {}
+
 type PutAccommodationForbidden ResponseError
 
 func (*PutAccommodationForbidden) putAccommodationRes() {}
@@ -1678,6 +1730,14 @@ func (*PutAccommodationInternalServerError) putAccommodationRes() {}
 type PutAccommodationNoContent struct{}
 
 func (*PutAccommodationNoContent) putAccommodationRes() {}
+
+type PutAccommodationNotFound ResponseError
+
+func (*PutAccommodationNotFound) putAccommodationRes() {}
+
+type PutActivityBadRequest ResponseError
+
+func (*PutActivityBadRequest) putActivityRes() {}
 
 type PutActivityForbidden ResponseError
 
@@ -1704,6 +1764,10 @@ func (*PutFlightInternalServerError) putFlightRes() {}
 type PutFlightNoContent struct{}
 
 func (*PutFlightNoContent) putFlightRes() {}
+
+type PutFlightNotFound ResponseError
+
+func (*PutFlightNotFound) putFlightRes() {}
 
 type PutTransportationForbidden ResponseError
 
@@ -2073,7 +2137,6 @@ type RequestTransportation struct {
 	Origin             NilEntityLocation `json:"origin"`
 	OriginAddress      NilString         `json:"originAddress"`
 	Price              NilInt            `json:"price"`
-	TripId             int               `json:"tripId"`
 	Type               string            `json:"type"`
 }
 
@@ -2115,11 +2178,6 @@ func (s *RequestTransportation) GetOriginAddress() NilString {
 // GetPrice returns the value of Price.
 func (s *RequestTransportation) GetPrice() NilInt {
 	return s.Price
-}
-
-// GetTripId returns the value of TripId.
-func (s *RequestTransportation) GetTripId() int {
-	return s.TripId
 }
 
 // GetType returns the value of Type.
@@ -2165,11 +2223,6 @@ func (s *RequestTransportation) SetOriginAddress(val NilString) {
 // SetPrice sets the value of Price.
 func (s *RequestTransportation) SetPrice(val NilInt) {
 	s.Price = val
-}
-
-// SetTripId sets the value of TripId.
-func (s *RequestTransportation) SetTripId(val int) {
-	s.TripId = val
 }
 
 // SetType sets the value of Type.

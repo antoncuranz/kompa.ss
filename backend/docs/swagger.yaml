@@ -504,8 +504,6 @@ components:
         price:
           nullable: true
           type: integer
-        tripId:
-          type: integer
         type:
           type: string
           x-enum-varnames:
@@ -527,7 +525,6 @@ components:
       - origin
       - originAddress
       - price
-      - tripId
       - type
       type: object
     request.Trip:
@@ -834,6 +831,12 @@ paths:
                   $ref: '#/components/schemas/entity.Accommodation'
                 type: array
           description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Bad Request
         "403":
           content:
             application/json:
@@ -870,6 +873,12 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Bad Request
         "403":
           content:
             application/json:
@@ -906,12 +915,24 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Bad Request
         "403":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Not Found
         "500":
           content:
             application/json:
@@ -945,12 +966,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/entity.Accommodation'
           description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Bad Request
         "403":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Not Found
         "500":
           content:
             application/json:
@@ -987,12 +1020,24 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Bad Request
         "403":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Not Found
         "500":
           content:
             application/json:
@@ -1023,6 +1068,12 @@ paths:
                   $ref: '#/components/schemas/entity.Activity'
                 type: array
           description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Bad Request
         "403":
           content:
             application/json:
@@ -1059,6 +1110,12 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Bad Request
         "403":
           content:
             application/json:
@@ -1095,6 +1152,12 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Bad Request
         "403":
           content:
             application/json:
@@ -1134,12 +1197,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/entity.Activity'
           description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Bad Request
         "403":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Not Found
         "500":
           content:
             application/json:
@@ -1176,6 +1251,12 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Bad Request
         "403":
           content:
             application/json:
@@ -1402,6 +1483,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Not Found
         "500":
           content:
             application/json:
@@ -1551,6 +1638,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Error'
+          description: Not Found
         "500":
           content:
             application/json:

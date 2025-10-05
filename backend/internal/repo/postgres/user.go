@@ -2,8 +2,11 @@ package postgres
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 	"kompass/internal/entity"
 	"kompass/pkg/postgres"
 	"kompass/pkg/sqlc"
@@ -29,6 +32,9 @@ func (r *UserRepo) GetUsers(ctx context.Context) ([]entity.User, error) {
 func (r *UserRepo) GetUserByID(ctx context.Context, id int32) (entity.User, error) {
 	user, err := r.Queries.GetUserByID(ctx, id)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return entity.User{}, fiber.NewError(fiber.StatusNotFound, "user not found")
+		}
 		return entity.User{}, fmt.Errorf("get user [id=%d]: %w", id, err)
 	}
 
@@ -38,6 +44,9 @@ func (r *UserRepo) GetUserByID(ctx context.Context, id int32) (entity.User, erro
 func (r *UserRepo) GetUserByJwtSub(ctx context.Context, sub uuid.UUID) (entity.User, error) {
 	user, err := r.Queries.GetUserByJwtSub(ctx, sub)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return entity.User{}, fiber.NewError(fiber.StatusNotFound, "user not found")
+		}
 		return entity.User{}, fmt.Errorf("get user [sub=%s]: %w", sub.String(), err)
 	}
 

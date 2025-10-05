@@ -2,7 +2,7 @@ package accommodation
 
 import (
 	"context"
-	"fmt"
+	"github.com/gofiber/fiber/v2"
 	"kompass/internal/controller/http/v1/request"
 	"kompass/internal/entity"
 	"kompass/internal/repo"
@@ -31,7 +31,7 @@ func (uc *UseCase) GetAllAccommodation(ctx context.Context, tripID int32) ([]ent
 
 func (uc *UseCase) CreateAccommodation(ctx context.Context, tripID int32, accommodation request.Accommodation) (entity.Accommodation, error) {
 	if err := uc.trips.VerifyDatesInBounds(ctx, tripID, accommodation.DepartureDate, accommodation.ArrivalDate); err != nil {
-		return entity.Accommodation{}, fmt.Errorf("invalid date: %w", err)
+		return entity.Accommodation{}, fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
 	return uc.repo.CreateAccommodation(ctx, entity.Accommodation{
@@ -49,6 +49,10 @@ func (uc *UseCase) CreateAccommodation(ctx context.Context, tripID int32, accomm
 }
 
 func (uc *UseCase) UpdateAccommodation(ctx context.Context, tripID int32, accommodationID int32, accommodation request.Accommodation) error {
+	if err := uc.trips.VerifyDatesInBounds(ctx, tripID, accommodation.DepartureDate, accommodation.ArrivalDate); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
 	return uc.repo.UpdateAccommodation(ctx, entity.Accommodation{
 		ID:            accommodationID,
 		TripID:        tripID,

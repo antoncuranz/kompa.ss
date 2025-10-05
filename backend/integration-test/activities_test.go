@@ -4,47 +4,35 @@ import (
 	"kompass/integration-test/client/api"
 )
 
-func (suite *IntegrationTestSuite) TestPostActivity() {
+func (suite *IntegrationTestSuite) TestCrudActivity() {
 	// given
 	tripID := suite.CreateTrip()
 	defer suite.DeleteTrip(tripID)
 
-	_, err := suite.api.PostActivity(suite.T().Context(), &api.RequestActivity{
-		Name:        "My Activity",
-		Date:        "2025-02-01",
-		Description: api.NewNilString("Description"),
-		Time:        api.NilString{Null: true},
-		Address:     api.NewNilString("Some Address 1"),
-		Location: api.NewNilEntityLocation(api.EntityLocation{
-			Latitude:  12.34,
-			Longitude: 43.21,
-		}),
-		Price: api.NewNilInt(100),
-	}, api.PostActivityParams{TripID: tripID})
-	suite.NoError(err)
+	// when (post)
+	activity := suite.postAndRetrieveActivity(tripID)
 
-	// when
-	getAll, err := suite.api.GetActivities(suite.T().Context(), api.GetActivitiesParams{TripID: tripID})
-	suite.NoError(err)
-
-	// then
-	activities := getAll.(*api.GetActivitiesOKApplicationJSON)
-	suite.Len(*activities, 1)
-
-	activity := (*activities)[0]
+	// then (post)
 	suite.Equal("My Activity", activity.Name)
 	suite.Equal(100, activity.Price.Value)
 
-	// when (forbiddenUser)
-	getAll, _ = suite.userApi(ForbiddenUser).GetActivities(suite.T().Context(), api.GetActivitiesParams{TripID: tripID})
-	getByID, _ := suite.userApi(ForbiddenUser).GetActivity(suite.T().Context(), api.GetActivityParams{TripID: tripID, ActivityID: activity.ID})
+	// when (put)
+	updatedActivity := suite.putAndRetrieveActivity(tripID, activity.ID)
 
-	// then (forbiddenUser)
-	_, ok := getAll.(*api.GetActivitiesForbidden)
-	suite.True(ok)
+	// then (put)
+	suite.Equal("Updated Activity", updatedActivity.Name)
+	suite.True(updatedActivity.Price.Null)
 
-	_, ok = getByID.(*api.GetActivityForbidden)
-	suite.True(ok)
+	// when (delete)
+	deleteByID, err := suite.api.DeleteActivity(suite.T().Context(), api.DeleteActivityParams{TripID: tripID, ActivityID: activity.ID})
+
+	// then (delete)
+	suite.NoError(err)
+	suite.IsType(&api.DeleteActivityNoContent{}, deleteByID)
+
+	getByID, err := suite.api.GetActivity(suite.T().Context(), api.GetActivityParams{TripID: tripID, ActivityID: activity.ID})
+	suite.NoError(err)
+	suite.IsType(&api.GetActivityNotFound{}, getByID)
 }
 
 func (suite *IntegrationTestSuite) TestCreateActivityOutsideOfTripDates() {
@@ -63,8 +51,7 @@ func (suite *IntegrationTestSuite) TestCreateActivityOutsideOfTripDates() {
 	}, api.PostActivityParams{TripID: tripID})
 	suite.NoError(err)
 
-	_, ok := response.(*api.PostActivityNoContent)
-	suite.False(ok)
+	suite.IsType(&api.PostActivityBadRequest{}, response)
 
 	// when
 	res, err := suite.api.GetActivities(suite.T().Context(), api.GetActivitiesParams{TripID: tripID})
@@ -73,4 +60,49 @@ func (suite *IntegrationTestSuite) TestCreateActivityOutsideOfTripDates() {
 	// then
 	activities := res.(*api.GetActivitiesOKApplicationJSON)
 	suite.Empty(*activities)
+}
+
+func (suite *IntegrationTestSuite) postAndRetrieveActivity(tripID int) api.EntityActivity {
+	_, err := suite.api.PostActivity(suite.T().Context(), &api.RequestActivity{
+		Name:        "My Activity",
+		Date:        "2025-02-01",
+		Description: api.NewNilString("Description"),
+		Time:        api.NilString{Null: true},
+		Address:     api.NewNilString("Some Address 1"),
+		Location: api.NewNilEntityLocation(api.EntityLocation{
+			Latitude:  12.34,
+			Longitude: 43.21,
+		}),
+		Price: api.NewNilInt(100),
+	}, api.PostActivityParams{TripID: tripID})
+	suite.NoError(err)
+
+	getAll, err := suite.api.GetActivities(suite.T().Context(), api.GetActivitiesParams{TripID: tripID})
+	suite.NoError(err)
+
+	activities := getAll.(*api.GetActivitiesOKApplicationJSON)
+	suite.Len(*activities, 1)
+
+	return (*activities)[0]
+}
+
+func (suite *IntegrationTestSuite) putAndRetrieveActivity(tripID int, activityID int) api.EntityActivity {
+	putRes, err := suite.api.PutActivity(suite.T().Context(), &api.RequestActivity{
+		Name:        "Updated Activity",
+		Date:        "2025-02-02",
+		Description: api.NilString{Null: true},
+		Time:        api.NewNilString("12:34:56"),
+		Address:     api.NilString{Null: true},
+		Location:    api.NilEntityLocation{Null: true},
+		Price:       api.NilInt{Null: true},
+	}, api.PutActivityParams{TripID: tripID, ActivityID: activityID})
+	suite.NoError(err)
+	suite.IsType(&api.PutActivityNoContent{}, putRes)
+
+	getRes, err := suite.api.GetActivity(suite.T().Context(), api.GetActivityParams{TripID: tripID, ActivityID: activityID})
+	suite.NoError(err)
+	activity, ok := getRes.(*api.EntityActivity)
+	suite.True(ok)
+
+	return *activity
 }

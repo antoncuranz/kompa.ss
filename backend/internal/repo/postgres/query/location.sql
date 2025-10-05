@@ -21,7 +21,8 @@ FROM location l
          JOIN accommodation a on a.location_id = l.id
 WHERE a.id = $1;
 
--- name: DeleteLocation :exec
+-- name: DeleteLocation :one
 DELETE FROM location
-WHERE id = $1;
+WHERE id = $1
+RETURNING id;
 

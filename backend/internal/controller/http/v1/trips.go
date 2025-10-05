@@ -52,9 +52,8 @@ func (r *TripsV1) getTrip(ctx *fiber.Ctx) error {
 	}
 
 	trip, err := r.uc.GetTripByID(ctx.UserContext(), int32(tripID))
-	if err != nil { // TODO: differ between 404 and 500
+	if err != nil {
 		return fmt.Errorf("get trip [id=%d]: %w", tripID, err)
-		//return ErrorResponseWithStatus(ctx, http.StatusNotFound, fmt.Errorf("get trip [id=%d]: %w", tripID, err))
 	}
 
 	return ctx.Status(http.StatusOK).JSON(trip)
@@ -108,7 +107,7 @@ func (r *TripsV1) putTrip(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "invalid request body")
 	}
 
-	if err := r.uc.UpdateTrip(ctx.UserContext(), int32(tripID), *body); err != nil { // TODO: 404
+	if err := r.uc.UpdateTrip(ctx.UserContext(), int32(tripID), *body); err != nil {
 		return fmt.Errorf("update trip with id %d: %w", tripID, err)
 	}
 
@@ -131,7 +130,7 @@ func (r *TripsV1) deleteTrip(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "parse trip_id")
 	}
 
-	if err := r.uc.DeleteTrip(ctx.UserContext(), int32(tripID)); err != nil { // TODO: 404
+	if err := r.uc.DeleteTrip(ctx.UserContext(), int32(tripID)); err != nil {
 		return fmt.Errorf("delete trip with id %d: %w", tripID, err)
 	}
 

@@ -1,4 +1,3 @@
-// Package v1 implements routing paths. Each services in own file.
 package http
 
 import (
@@ -25,7 +24,7 @@ import (
 // @securitydefinitions.bearerauth
 func NewRouter(app *fiber.App, cfg *config.Config, useCases usecase.UseCases, log logger.Interface) {
 	// Options
-	app.Use(middleware.Logger(log))
+	app.Use(middleware.Logger())
 	app.Use(middleware.Recovery(log))
 
 	// Prometheus metrics

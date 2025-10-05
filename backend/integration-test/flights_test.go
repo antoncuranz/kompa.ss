@@ -46,8 +46,7 @@ func (suite *IntegrationTestSuite) postAndRetrieveFlight(tripID int) api.EntityT
 		}},
 	}, api.PostFlightParams{TripID: tripID})
 	suite.NoError(err)
-	_, ok := postRes.(*api.PostFlightNoContent)
-	suite.True(ok)
+	suite.IsType(&api.PostFlightNoContent{}, postRes)
 
 	getRes, err := suite.api.GetAllTransportation(suite.T().Context(), api.GetAllTransportationParams{TripID: tripID})
 	suite.NoError(err)
@@ -60,8 +59,7 @@ func (suite *IntegrationTestSuite) postAndRetrieveFlight(tripID int) api.EntityT
 func (suite *IntegrationTestSuite) putAndRetrieveFlight(tripID int, flightID int) api.EntityTransportation {
 	putRes, err := suite.api.PutFlight(suite.T().Context(), api.PutFlightParams{TripID: tripID, FlightID: flightID})
 	suite.NoError(err)
-	_, ok := putRes.(*api.PutFlightNoContent)
-	suite.True(ok)
+	suite.IsType(&api.PutFlightNoContent{}, putRes)
 
 	getRes, err := suite.api.GetTransportation(suite.T().Context(), api.GetTransportationParams{TripID: tripID, TransportationID: flightID})
 	suite.NoError(err)

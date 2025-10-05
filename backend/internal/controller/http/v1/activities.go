@@ -22,6 +22,7 @@ type ActivitiesV1 struct {
 // @Produce     json
 // @Param       trip_id path int true "Trip ID"
 // @Success     200 {object} []entity.Activity
+// @Failure     400 {object} response.Error
 // @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
@@ -47,7 +48,9 @@ func (r *ActivitiesV1) getActivities(ctx *fiber.Ctx) error {
 // @Param       trip_id path int true "Trip ID"
 // @Param       activity_id path int true "Activity ID"
 // @Success     200 {object} entity.Activity
+// @Failure     400 {object} response.Error
 // @Failure     403 {object} response.Error
+// @Failure     404 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
 // @Router      /trips/{trip_id}/activities/{activity_id} [get]
@@ -77,6 +80,7 @@ func (r *ActivitiesV1) getActivity(ctx *fiber.Ctx) error {
 // @Param       trip_id path int true "Trip ID"
 // @Param       request body request.Activity true "activity"
 // @Success     204
+// @Failure     400 {object} response.Error
 // @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
@@ -109,6 +113,7 @@ func (r *ActivitiesV1) postActivity(ctx *fiber.Ctx) error {
 // @Param       activity_id path int true "Activity ID"
 // @Param       request body request.Activity true "activity"
 // @Success     204
+// @Failure     400 {object} response.Error
 // @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
@@ -141,6 +146,7 @@ func (r *ActivitiesV1) putActivity(ctx *fiber.Ctx) error {
 // @Param       trip_id path int true "Trip ID"
 // @Param       activity_id path int true "Activity ID"
 // @Success     204
+// @Failure     400 {object} response.Error
 // @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth

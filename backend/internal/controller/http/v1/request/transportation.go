@@ -7,7 +7,6 @@ import (
 
 type Transportation struct {
 	Name               string                    `json:"name"`
-	TripID             int32                     `json:"tripId"`
 	Type               entity.TransportationType `json:"type"`
 	Origin             entity.Location           `json:"origin"`
 	Destination        entity.Location           `json:"destination"`

@@ -30,8 +30,9 @@ SET location_id    = $2,
     price          = $10
 WHERE id = $1;
 
--- name: DeleteAccommodationByID :exec
+-- name: DeleteAccommodationByID :one
 DELETE
 FROM accommodation
 WHERE trip_id = $1
-  AND accommodation.id = $2;
+  AND accommodation.id = $2
+RETURNING id;

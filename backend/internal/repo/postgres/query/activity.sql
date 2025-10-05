@@ -27,8 +27,9 @@ SET location_id = $2,
     price       = $8
 WHERE id = $1;
 
--- name: DeleteActivityByID :exec
+-- name: DeleteActivityByID :one
 DELETE
 FROM activity
 WHERE trip_id = $1
-  AND activity.id = $2;
+  AND activity.id = $2
+RETURNING id;

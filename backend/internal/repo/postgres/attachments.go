@@ -2,7 +2,10 @@ package postgres
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"github.com/gofiber/fiber/v2"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"kompass/internal/entity"
 	"kompass/pkg/postgres"
@@ -33,6 +36,9 @@ func (r *AttachmentsRepo) GetAttachments(ctx context.Context, tripID int32) ([]e
 func (r *AttachmentsRepo) GetAttachmentByID(ctx context.Context, tripID int32, attachmentID int32) (entity.Attachment, error) {
 	attachment, err := r.Queries.GetAttachmentByID(ctx, sqlc.GetAttachmentByIDParams{TripID: tripID, ID: attachmentID})
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return entity.Attachment{}, fiber.NewError(fiber.StatusNotFound, "attachment not found")
+		}
 		return entity.Attachment{}, fmt.Errorf("get attachment [id=%d]: %w", attachmentID, err)
 	}
 
@@ -53,7 +59,14 @@ func (r *AttachmentsRepo) CreateAttachment(ctx context.Context, attachment entit
 }
 
 func (r *AttachmentsRepo) DeleteAttachment(ctx context.Context, tripID int32, attachmentID int32) error {
-	return r.Queries.DeleteAttachmentByID(ctx, sqlc.DeleteAttachmentByIDParams{TripID: tripID, ID: attachmentID})
+	_, err := r.Queries.DeleteAttachmentByID(ctx, sqlc.DeleteAttachmentByIDParams{TripID: tripID, ID: attachmentID})
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return fiber.NewError(fiber.StatusNotFound, "attachment not found")
+		}
+		return fmt.Errorf("delete attachment: %w", err)
+	}
+	return nil
 }
 
 func mapAttachments(attachments []sqlc.Attachment) []entity.Attachment {
