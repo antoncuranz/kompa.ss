@@ -3,7 +3,14 @@
 import React, {useState} from "react";
 import {Layer, Popup, Source} from "react-map-gl/mapbox";
 import type {Feature, FeatureCollection, GeoJsonProperties} from 'geojson';
-import {Accommodation, Activity, GeoJsonFlight, GeoJsonTrain, GeoJsonTransportation} from "@/types.ts";
+import {
+  Accommodation,
+  Activity,
+  GeoJsonFlight,
+  GeoJsonTrain,
+  GeoJsonTransportation,
+  TransportationType
+} from "@/types.ts";
 import {LngLat, MapMouseEvent} from "mapbox-gl";
 import {formatDateShort, formatTime} from "@/components/util.ts";
 import TrainPopup from "@/components/map/popup/TrainPopup.tsx";
@@ -113,20 +120,45 @@ export default function HeroMap({
 
   function getColorByType(fc: FeatureCollection) {
     // @ts-expect-error custom property
-    const type = fc["transportationType"] as string
+    const type = fc["transportationType"] as TransportationType
 
     switch (type) {
-      case "PLANE": // deprecated
-      case "FLIGHT":
+      case TransportationType.Plane: // deprecated
+      case TransportationType.Flight:
         return "#007cbf"
-      case "TRAIN":
+      case TransportationType.Train:
         return "#ec0016"
-      case "FERRY":
-      case "BOAT":
+      case TransportationType.Ferry:
+      case TransportationType.Boat:
         return "#01428c"
       default:
         return "purple"
     }
+  }
+
+  function typeRank(type: TransportationType): number {
+    switch (type) {
+      case TransportationType.Plane: // deprecated
+      case TransportationType.Flight:
+        return 4
+      case TransportationType.Train:
+        return 3
+      case TransportationType.Ferry:
+      case TransportationType.Boat:
+        return 2
+      case TransportationType.Bus:
+      case TransportationType.Car:
+        return 1
+      default:
+        return 0
+    }
+  }
+
+  function sortedGeojson() {
+    return geojson.sort((a, b) => {
+      // @ts-expect-error custom property
+      return typeRank(a["transportationType"]) - typeRank(b["transportationType"])
+    })
   }
 
   return (
@@ -136,7 +168,19 @@ export default function HeroMap({
         onMouseMove={onMouseEnter}
         onMouseLeave={() => setPopupInfo(null)}
     >
-      {geojson.map((fc, idx) =>
+      <Source type="geojson" data={getActivityGeoJson()}>
+        <Layer id="activity"
+               type="circle"
+               paint={{"circle-color": "#59B900", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
+        />
+      </Source>
+      <Source type="geojson" data={getAccommodationGeoJson()}>
+        <Layer id="accommodation"
+               type="circle"
+               paint={{"circle-color": "#f4b682", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
+        />
+      </Source>
+      {sortedGeojson().map((fc, idx) =>
           <Source key={idx} type="geojson" data={fc}>
             <Layer type="line"
                    paint={{"line-color": getColorByType(fc), "line-width": 5, "line-emissive-strength": 1}}
@@ -148,18 +192,6 @@ export default function HeroMap({
             />
           </Source>
       )}
-      <Source type="geojson" data={getAccommodationGeoJson()}>
-        <Layer id="accommodation"
-               type="circle"
-               paint={{"circle-color": "#f4b682", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
-        />
-      </Source>
-      <Source type="geojson" data={getActivityGeoJson()}>
-        <Layer id="activity"
-               type="circle"
-               paint={{"circle-color": "#59B900", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
-        />
-      </Source>
       {popupInfo && (
           <Popup offset={10}
                  closeButton={false}
