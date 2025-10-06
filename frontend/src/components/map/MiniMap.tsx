@@ -1,8 +1,8 @@
 "use client"
 
 import React from "react";
-import {Marker} from "react-map-gl/mapbox";
-import {MapMouseEvent} from "mapbox-gl";
+import {Marker, useMap} from "react-map-gl/mapbox";
+import {LngLat, MapMouseEvent} from "mapbox-gl";
 import {Coordinates} from "@/types.ts";
 import BaseMap from "@/components/map/BaseMap.tsx";
 
@@ -13,16 +13,31 @@ export default function MiniMap({
   value: Coordinates|undefined,
   onChange: (newLocation: Coordinates) => void,
 }) {
+  const {heroMap} = useMap();
+
+  function getInitialCoordinates() {
+    if (value) {
+      return value
+    } else if (heroMap) {
+      return lngLatToCoordinates(heroMap.getCenter())
+    } else {
+      return undefined
+    }
+  }
 
   function onClick(event: MapMouseEvent) {
-    onChange({
-      latitude: event.lngLat.lat,
-      longitude: event.lngLat.lng,
-    })
+    onChange(lngLatToCoordinates(event.lngLat))
+  }
+
+  function lngLatToCoordinates(lngLat: LngLat) {
+    return {
+      latitude: lngLat.lat,
+      longitude: lngLat.lng,
+    }
   }
 
   return (
-    <BaseMap initialCoordinates={value} onClick={onClick}>
+    <BaseMap initialCoordinates={getInitialCoordinates()} onClick={onClick}>
       {value && <Marker longitude={value.longitude} latitude={value.latitude}/>}
       {children}
     </BaseMap>

@@ -163,6 +163,7 @@ export default function HeroMap({
 
   return (
     <BaseMap
+        id="heroMap"
         interactiveLayerIds={geojson.map((_, idx) => "geojson" + idx).concat(["activity", "accommodation", "flight"])}
         onMouseEnter={onMouseEnter}
         onMouseMove={onMouseEnter}

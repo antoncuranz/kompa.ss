@@ -57,7 +57,7 @@ export default function Itinerary({
   }
 
   return (
-    <>
+    <div className="mb-4">
       {dataByDays.map((dayData, idx) =>
         <Day key={dayData.day} dayData={dayData} nextDay={dataByDays[idx+1]?.day}
              onActivityClick={onActivityClick}
@@ -82,6 +82,6 @@ export default function Itinerary({
       <Dialog open={transportationDialogOpen} setOpen={setTransportationDialogOpen}>
         <TransportationDialogContent trip={trip} transportation={dialogTransportation}/>
       </Dialog>
-    </>
+    </div>
   )
 }

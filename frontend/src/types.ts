@@ -109,11 +109,6 @@ export type PNR = {
   pnr: string;
 };
 
-export type AddPNR = {
-  airline: string;
-  pnr: string;
-};
-
 export type FlightLeg = {
   id: number;
   origin: Airport;
@@ -124,12 +119,6 @@ export type FlightLeg = {
   arrivalDateTime: string;
   durationInMinutes: number;
   aircraft: string | null;
-};
-
-export type AddFlightLeg = {
-  date: string;
-  flightNumber: string;
-  originAirport: string | null;
 };
 
 export type Airport = {
@@ -157,6 +146,7 @@ export type TrainLeg = {
 export type TrainStation = {
   id: string;
   name: string;
+  location: Location;
 }
 
 export type GenericDetail = {

@@ -2,12 +2,13 @@
 
 import {Button} from "@/components/ui/button.tsx";
 import {Collapsible} from "@/components/ui/collapsible.tsx";
-import {ChevronDown, ChevronUp, SquarePen} from "lucide-react";
+import {ChevronDown, ChevronRight, ChevronUp, SquarePen} from "lucide-react";
 import {CollapsibleContent, CollapsibleTrigger} from "@radix-ui/react-collapsible";
 import {cn} from "@/lib/utils.ts";
 import {TrainLeg} from "@/types.ts";
 import {formatDurationMinutes, formatTime} from "@/components/util.ts";
-import React, {MouseEventHandler, useState} from "react";
+import React, {MouseEvent, MouseEventHandler, useState} from "react";
+import {useMap} from "react-map-gl/mapbox";
 
 export default function TrainEntry({
   trainLeg, className, onInfoBtnClick
@@ -17,6 +18,12 @@ export default function TrainEntry({
   onInfoBtnClick?: MouseEventHandler<HTMLButtonElement> | undefined
 }){
   const [open, setOpen] = useState<boolean>(false)
+  const {heroMap} = useMap();
+
+  function onChevronClick(e: MouseEvent<SVGSVGElement>) {
+    e.stopPropagation()
+    heroMap?.flyTo({center: [trainLeg.origin.location.longitude, trainLeg.origin.location.latitude]})
+  }
 
   function logoFromOperatorName(operatorName: string): string {
     const lowerOperatorName = operatorName.toLowerCase()
@@ -35,7 +42,7 @@ export default function TrainEntry({
     <Collapsible
       open={open}
       onOpenChange={setOpen}
-      className={cn("rounded-xl border mx-3 p-2 pl-4 pr-4 grid bg-background z-10 relative", className)}
+      className={cn("rounded-xl border mx-3 p-2 pl-4 pr-4 grid bg-background z-10 relative group/flyto", className)}
     >
       <CollapsibleTrigger asChild>
         <div className="grid grid-cols-[1.5rem_1fr] gap-2 cursor-pointer w-full">
@@ -54,6 +61,9 @@ export default function TrainEntry({
               <ChevronDown className="float-right text-muted-foreground"/>
             }
           </div>
+          {heroMap &&
+              <ChevronRight className="text-muted-foreground absolute top-2 -right-3 bg-background rounded-xl border hidden group-hover/flyto:block" onClick={onChevronClick}/>
+          }
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent>
