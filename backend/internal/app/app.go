@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"kompass/internal/controller/http/v1/response"
 	"kompass/internal/repo/webapi"
+	"kompass/internal/repo/webapi/amadeus"
 	"kompass/internal/usecase"
 	"kompass/internal/usecase/accommodation"
 	"kompass/internal/usecase/activities"
@@ -79,7 +80,7 @@ func createUseCases(cfg *config.Config, pg *postgres.Postgres) usecase.UseCases 
 	usersUseCase := users.New(persistent.NewUserRepo(pg))
 	tripsUseCase := trips.New(persistent.NewTripsRepo(pg))
 	transportationUseCase := transportation.New(transportationRepo, ors)
-	flightsUseCase := flights.New(transportationRepo, flightsRepo, webapi.New(cfg.WebApi))
+	flightsUseCase := flights.New(transportationRepo, flightsRepo, amadeus.New(cfg.WebApi))
 	trainsUseCase := trains.New(transportationRepo, webapi.NewDbVendoWebAPI(cfg.WebApi))
 	activitiesUseCase := activities.New(persistent.NewActivitiesRepo(pg), tripsUseCase)
 	accommodationUseCase := accommodation.New(persistent.NewAccommodationRepo(pg), tripsUseCase)

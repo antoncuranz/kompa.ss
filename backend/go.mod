@@ -1,8 +1,6 @@
 module kompass
 
-go 1.24.0
-
-toolchain go1.24.5
+go 1.24.5
 
 tool (
 	github.com/jmattheis/goverter/cmd/goverter
@@ -162,6 +160,7 @@ require (
 	github.com/valyala/fasthttp v1.66.0 // indirect
 	github.com/wasilibs/go-pgquery v0.0.0-20250409022910-10ac41983c07 // indirect
 	github.com/wasilibs/wazero-helpers v0.0.0-20250123031827-cd30c44769bb // indirect
+	github.com/xnacly/go-iso8601-duration v1.1.0 // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
 	go.mongodb.org/mongo-driver v1.11.4 // indirect
