@@ -70,7 +70,7 @@ type (
 		DeleteAttachment(ctx context.Context, tripID int32, attachmentID int32) error
 	}
 
-	AerodataboxWebAPI interface {
+	FlightInformationWebAPI interface {
 		RetrieveFlightLeg(ctx context.Context, date civil.Date, flightNumber string, origin *string) (entity.FlightLeg, error)
 	}
 

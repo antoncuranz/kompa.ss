@@ -12,14 +12,14 @@ import (
 type UseCase struct {
 	transportationRepo repo.TransportationRepo
 	flightsRepo        repo.FlightsRepo
-	aerodatabox        repo.AerodataboxWebAPI
+	flightsApi         repo.FlightInformationWebAPI
 }
 
-func New(transportationRepo repo.TransportationRepo, flightsRepo repo.FlightsRepo, a repo.AerodataboxWebAPI) *UseCase {
+func New(transportationRepo repo.TransportationRepo, flightsRepo repo.FlightsRepo, a repo.FlightInformationWebAPI) *UseCase {
 	return &UseCase{
 		transportationRepo: transportationRepo,
 		flightsRepo:        flightsRepo,
-		aerodatabox:        a,
+		flightsApi:         a,
 	}
 }
 
@@ -82,7 +82,7 @@ func (uc *UseCase) UpdateFlight(ctx context.Context, tripID int32, flightID int3
 func (uc *UseCase) retrieveFlightLegs(ctx context.Context, flight request.Flight) ([]entity.FlightLeg, error) {
 	legs := []entity.FlightLeg{}
 	for _, leg := range flight.Legs {
-		flightLeg, err := uc.aerodatabox.RetrieveFlightLeg(ctx, leg.Date, leg.FlightNumber, leg.OriginAirport)
+		flightLeg, err := uc.flightsApi.RetrieveFlightLeg(ctx, leg.Date, leg.FlightNumber, leg.OriginAirport)
 		if err != nil {
 			return []entity.FlightLeg{}, err
 		}
@@ -96,7 +96,7 @@ func (uc *UseCase) retrieveFlightLegsUpdate(ctx context.Context, flight entity.F
 	legs := []entity.FlightLeg{}
 	for _, leg := range flight.Legs {
 		flightNumber := strings.ReplaceAll(leg.FlightNumber, " ", "")
-		flightLeg, err := uc.aerodatabox.RetrieveFlightLeg(ctx, leg.DepartureDateTime.Date, flightNumber, &leg.Origin.Iata)
+		flightLeg, err := uc.flightsApi.RetrieveFlightLeg(ctx, leg.DepartureDateTime.Date, flightNumber, &leg.Origin.Iata)
 		if err != nil {
 			return []entity.FlightLeg{}, err
 		}
