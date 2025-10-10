@@ -3,3 +3,5 @@
 /kompass.iml
 /frontend/.env
 /frontend/.next
+/pmtiles/**
+/versatiles-style/**
