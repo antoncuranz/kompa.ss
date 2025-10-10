@@ -1,10 +1,9 @@
 "use client"
 
 import React from "react";
-import {Marker} from "react-map-gl/maplibre";
-import {MapMouseEvent} from "maplibre-gl";
 import {Coordinates} from "@/types.ts";
 import BaseMap from "@/components/map/BaseMap.tsx";
+import {MapMouseEvent, Marker} from "@/components/map/common.tsx";
 
 export default function MiniMap({
   children, value, onChange

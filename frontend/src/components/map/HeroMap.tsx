@@ -1,7 +1,6 @@
 "use client"
 
 import React, {useState} from "react";
-import {Layer, Popup, Source} from "react-map-gl/maplibre";
 import type {Feature, FeatureCollection, GeoJsonProperties} from 'geojson';
 import {
   Accommodation,
@@ -11,12 +10,16 @@ import {
   GeoJsonTransportation,
   TransportationType
 } from "@/types.ts";
-import {LngLat, MapMouseEvent} from "mapbox-gl";
+import {LngLat as MapboxLngLat} from "mapbox-gl";
+import {LngLat as MaplibreLngLat} from "maplibre-gl";
 import {formatDateShort, formatTime} from "@/components/util.ts";
 import TrainPopup from "@/components/map/popup/TrainPopup.tsx";
 import FlightPopup from "@/components/map/popup/FlightPopup.tsx";
 import BaseMap from "@/components/map/BaseMap.tsx";
 import TransportationPopup from "@/components/map/popup/TransportationPopup";
+import {Layer, MapMouseEvent, Popup, Source} from "@/components/map/common.tsx";
+
+type LngLat = MapboxLngLat|MaplibreLngLat
 
 export default function HeroMap({
   activities, accommodation, geojson
@@ -78,7 +81,7 @@ export default function HeroMap({
     }
   }
 
-  function onMouseEnter(event: MapLayerMouseEvent) {
+  function onMouseEnter(event: MapMouseEvent) {
     if (!event.features || event.features.length == 0)
       return
 
