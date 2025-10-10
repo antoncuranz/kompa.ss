@@ -2,7 +2,7 @@ import {Activity} from "@/types.ts";
 import {formatTime} from "@/components/util.ts";
 import React, {MouseEventHandler, MouseEvent} from "react";
 import {ChevronRight} from "lucide-react";
-import { useMap } from "react-map-gl/mapbox";
+import {useMap} from "@/components/map/common.tsx";
 
 export default function ActivityEnty({
   activity, onClick

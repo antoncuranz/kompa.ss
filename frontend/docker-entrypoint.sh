@@ -4,6 +4,7 @@
 find /app/.next -type f -name "*.js" -print0 | while read -d $'\0' file
 do
   sed -i "s|NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN_PLACEHOLDER|${MAPBOX_ACCESS_TOKEN}|g" $file
+  sed -i "s|NEXT_PUBLIC_MAP_STYLE_PLACEHOLDER|${MAP_STYLE}|g" $file
   sed -i "s|BACKEND_URL_PLACEHOLDER|${BACKEND_URL}|g" $file # not in use
 done
 

@@ -3,7 +3,7 @@
 import React from "react";
 import {Coordinates} from "@/types.ts";
 import BaseMap from "@/components/map/BaseMap.tsx";
-import {MapMouseEvent, Marker} from "@/components/map/common.tsx";
+import {LngLat, MapMouseEvent, Marker, useMap} from "@/components/map/common.tsx";
 
 export default function MiniMap({
   children, value, onChange
@@ -12,7 +12,7 @@ export default function MiniMap({
   value: Coordinates|undefined,
   onChange: (newLocation: Coordinates) => void,
 }) {
-  const {heroMap} = useMap();
+  const {heroMap} = useMap()
 
   function getInitialCoordinates() {
     if (value) {

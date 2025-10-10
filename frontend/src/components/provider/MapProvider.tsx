@@ -1,11 +1,15 @@
 "use client"
 
 import * as React from "react"
-import { MapProvider as MapGlMapProvider } from "react-map-gl/mapbox"
+import { MapProvider as MapboxMapProvider } from "react-map-gl/mapbox"
+import { MapProvider as MaplibreMapProvider } from "react-map-gl/maplibre"
+import {isMapbox} from "@/components/map/common.tsx";
+import {ReactNode} from "react";
 
 export function MapProvider({
-  children,
   ...props
-}: React.ComponentProps<typeof MapGlMapProvider>) {
-  return <MapGlMapProvider {...props}>{children}</MapGlMapProvider>
+}: {
+  children: ReactNode | ReactNode[]
+}) {
+  return isMapbox ? <MapboxMapProvider {...props}/> : <MaplibreMapProvider {...props}/>
 }

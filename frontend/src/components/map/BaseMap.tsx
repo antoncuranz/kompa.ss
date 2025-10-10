@@ -5,7 +5,7 @@ import {Map as MaplibreMap} from "react-map-gl/maplibre";
 import {Map as MapboxMap} from "react-map-gl/mapbox";
 import {useTheme} from "next-themes";
 import {Coordinates} from "@/types.ts";
-import RenderAfterMap from "@/components/card/RenderAfterMap.tsx";
+import RenderAfterMap from "@/components/map/RenderAfterMap.tsx";
 import {isMapbox, mapboxToken, MapProps, mapStyle} from "@/components/map/common.tsx";
 
 // TODO: make dynamic:

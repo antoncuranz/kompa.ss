@@ -8,7 +8,7 @@ import {cn} from "@/lib/utils.ts";
 import {FlightDetail, FlightLeg} from "@/types.ts";
 import {formatDurationMinutes, formatTime} from "@/components/util.ts";
 import React, {MouseEvent, MouseEventHandler, useState} from "react";
-import {useMap} from "react-map-gl/mapbox";
+import {useMap} from "@/components/map/common.tsx";
 
 export default function FlightEntry({
   flight, flightLeg, className, onInfoBtnClick

@@ -10,16 +10,13 @@ import {
   GeoJsonTransportation,
   TransportationType
 } from "@/types.ts";
-import {LngLat as MapboxLngLat} from "mapbox-gl";
-import {LngLat as MaplibreLngLat} from "maplibre-gl";
 import {formatDateShort, formatTime} from "@/components/util.ts";
 import TrainPopup from "@/components/map/popup/TrainPopup.tsx";
 import FlightPopup from "@/components/map/popup/FlightPopup.tsx";
 import BaseMap from "@/components/map/BaseMap.tsx";
 import TransportationPopup from "@/components/map/popup/TransportationPopup";
-import {Layer, MapMouseEvent, Popup, Source} from "@/components/map/common.tsx";
+import {Layer, LngLat, MapMouseEvent, Popup, Source} from "@/components/map/common.tsx";
 
-type LngLat = MapboxLngLat|MaplibreLngLat
 
 export default function HeroMap({
   activities, accommodation, geojson
@@ -175,24 +172,24 @@ export default function HeroMap({
       <Source type="geojson" data={getActivityGeoJson()}>
         <Layer id="activity"
                type="circle"
-               paint={{"circle-color": "#59B900", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
+               paint={{"circle-color": "#59B900", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3}}
         />
       </Source>
       <Source type="geojson" data={getAccommodationGeoJson()}>
         <Layer id="accommodation"
                type="circle"
-               paint={{"circle-color": "#f4b682", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
+               paint={{"circle-color": "#f4b682", "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3}}
         />
       </Source>
       {sortedGeojson().map((fc, idx) =>
           <Source key={idx} type="geojson" data={fc}>
             <Layer type="line"
-                   paint={{"line-color": getColorByType(fc), "line-width": 5, "line-emissive-strength": 1}}
+                   paint={{"line-color": getColorByType(fc), "line-width": 5}}
                    layout={{"line-cap": "round"}}
             />
             <Layer type="circle" id={"geojson" + idx}
                    filter={["==", ["geometry-type"], "Point"]}
-                   paint={{"circle-color": getColorByType(fc), "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3, "circle-emissive-strength": 1}}
+                   paint={{"circle-color": getColorByType(fc), "circle-radius": 5, "circle-stroke-color": "white", "circle-stroke-width": 3}}
             />
           </Source>
       )}
