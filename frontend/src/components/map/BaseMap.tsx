@@ -26,7 +26,9 @@ export default function BaseMap({
 
   const commonOptions = {
     initialViewState: {latitude: initialCoordinates?.latitude ?? 52.520007, longitude: initialCoordinates?.longitude ?? 13.404954, zoom: 10},
-    style: {background: "#04162a"}
+    style: {background: "#04162a"},
+    workerCount: 2,
+    maxParallelImageRequests: 32
   }
 
   return (
@@ -45,7 +47,7 @@ export default function BaseMap({
       </MapboxMap>
     :
       <MaplibreMap
-          mapStyle={mapStyle ?? "https://tiles.versatiles.org/assets/styles/colorful/style.json"}
+          mapStyle={mapStyle ?? "https://antoncuranz.github.io/basemaps-assets/streets.json"}
           projection="globe"
           {...commonOptions}
           {...props}
