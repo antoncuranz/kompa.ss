@@ -35,8 +35,8 @@ func StartBackendSubprocess(t testing.TB, dbConnectionString string, wiremockURL
 		fmt.Sprintf("ORS_URL=%s/ors", wiremockURL),
 	)
 
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+	cmd.Stdout = NewSubprocessLogger("kompass", ansiGreen, false)
+	cmd.Stderr = NewSubprocessLogger("kompass", ansiGreen, true)
 
 	err = cmd.Start()
 	require.NoErrorf(t, err, "Failed to start backend subprocess")

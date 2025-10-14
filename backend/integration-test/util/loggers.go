@@ -25,29 +25,53 @@ type ContainerLogger struct {
 	colorPrefix   string
 }
 
+func (c *ContainerLogger) Accept(log testcontainers.Log) {
+	content := string(log.Content)
+	isStderr := strings.ToUpper(log.LogType) == "STDERR"
+	writeLogWithPrefix(content, c.containerName, c.colorPrefix, isStderr)
+}
+
 type TcLogger struct {
 	testing.TB
 }
 
 func (t TcLogger) Printf(format string, v ...any) {
 	t.Helper()
-	prefix := fmt.Sprintf("%s[%s]%s", ansiCyan, "testcontainers", ansiReset)
 	line := fmt.Sprintf(format, v...)
-	fmt.Fprintf(os.Stdout, "%s %s\n", prefix, line)
+	writeLogWithPrefix(line, "testcontainers", ansiCyan, false)
 }
 
-func (c *ContainerLogger) Accept(log testcontainers.Log) {
-	content := string(log.Content)
+type SubprocessLogger struct {
+	name        string
+	colorPrefix string
+	isStderr    bool
+}
+
+func NewSubprocessLogger(name, colorPrefix string, isStderr bool) *SubprocessLogger {
+	return &SubprocessLogger{
+		name:        name,
+		colorPrefix: colorPrefix,
+		isStderr:    isStderr,
+	}
+}
+
+func (s *SubprocessLogger) Write(p []byte) (n int, err error) {
+	content := string(p)
+	writeLogWithPrefix(content, s.name, s.colorPrefix, s.isStderr)
+	return len(p), nil
+}
+
+func writeLogWithPrefix(content, name, colorPrefix string, isStderr bool) {
 	lines := strings.Split(content, "\n")
 
-	prefix := fmt.Sprintf("%s[%s]%s", c.colorPrefix, c.containerName, ansiReset)
+	prefix := fmt.Sprintf("%s[%s]%s", colorPrefix, name, ansiReset)
 	for i, line := range lines {
 		// Skip final empty slice element caused by trailing newline to avoid double blank line
 		if i == len(lines)-1 && line == "" {
 			continue
 		}
 
-		if strings.ToUpper(log.LogType) == "STDERR" {
+		if isStderr {
 			fmt.Fprintf(os.Stdout, "%s %s%s%s\n", prefix, ansiBold+ansiRed, line, ansiReset)
 		} else {
 			fmt.Fprintf(os.Stdout, "%s %s\n", prefix, line)
