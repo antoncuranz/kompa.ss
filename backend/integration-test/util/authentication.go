@@ -5,14 +5,16 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"encoding/base64"
-	"github.com/golang-jwt/jwt/v5"
-	"github.com/google/uuid"
-	"github.com/stretchr/testify/assert"
-	"github.com/wiremock/go-wiremock"
 	"kompass/integration-test/client/api"
 	"math/big"
 	"net/http"
 	"testing"
+
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"github.com/wiremock/go-wiremock"
 )
 
 type UserToken string
@@ -28,7 +30,7 @@ func GeneratePrivateKeyAndJwkStub(t testing.TB) (*rsa.PrivateKey, *wiremock.Stub
 	t.Helper()
 
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	stubRule := wiremock.Get(wiremock.URLPathEqualTo("/auth/jwks.json")).
 		WillReturnResponse(

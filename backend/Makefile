@@ -37,5 +37,21 @@ build-image: ### build container image
 	docker build -t kompa.ss/backend:latest .
 .PHONY: bin-deps
 
+test: ### run unit tests
+	go test ./...
+.PHONY: test
+
+integration-test: ### run integration tests
+	go test -v ./integration-test/...
+.PHONY: integration-test
+
+format: ### format code
+	gofmt -s -w .
+.PHONY: format
+
+linter-golangci: ### run golangci-lint
+	$(LOCAL_BIN)/golangci-lint run
+.PHONY: linter-golangci
+
 pre-commit: openapi mock format linter-golangci test ### run pre-commit
 .PHONY: pre-commit

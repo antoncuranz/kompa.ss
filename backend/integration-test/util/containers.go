@@ -4,42 +4,34 @@ import (
 	"context"
 	"fmt"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
-	"github.com/testcontainers/testcontainers-go/network"
-	"github.com/testcontainers/testcontainers-go/wait"
 	"github.com/wiremock/go-wiremock"
 	wiremockTc "github.com/wiremock/wiremock-testcontainers-go"
 )
 
 const (
-	startupTimeout = 5 * time.Second
-	wiremockAlias  = "wiremock"
-	postgresAlias  = "postgres"
-	dbName         = "postgres"
-	dbUser         = "postgres"
-	dbPassword     = "postgres"
+	dbName     = "postgres"
+	dbUser     = "postgres"
+	dbPassword = "postgres"
 )
 
-func StartAllContainers(t testing.TB, applicationPort string, wiremockRule *wiremock.StubRule) *wiremock.Client {
+func StartAllContainers(t testing.TB, wiremockRule *wiremock.StubRule) (*wiremock.Client, string, string) {
 	t.Helper()
 
-	net, err := network.New(t.Context())
+	wiremockClient, wiremockUrl := startWiremockContainer(t)
+	err := wiremockClient.StubFor(wiremockRule)
 	assert.NoError(t, err)
 
-	wiremockClient := startWiremockContainer(t, net)
-	err = wiremockClient.StubFor(wiremockRule)
-	assert.NoError(t, err)
-
-	dbConnectionString := startPostgresContainer(t, net)
-	startApplicationContainer(t, dbConnectionString, applicationPort, net)
-	return wiremockClient
+	dbConnectionString := startPostgresContainer(t)
+	return wiremockClient, wiremockUrl, dbConnectionString
 }
 
-func startPostgresContainer(t testing.TB, net *testcontainers.DockerNetwork) string {
+func startPostgresContainer(t testing.TB) string {
+	t.Helper()
+
 	tcLogger := TcLogger{t}
 	//containerLogger := ContainerLogger{
 	//	containerName: "postgres",
@@ -51,17 +43,22 @@ func startPostgresContainer(t testing.TB, net *testcontainers.DockerNetwork) str
 		postgres.WithUsername(dbUser),
 		postgres.WithPassword(dbPassword),
 		postgres.BasicWaitStrategies(),
-		network.WithNetwork([]string{postgresAlias}, net),
 		testcontainers.WithLogger(tcLogger),
 		//testcontainers.WithLogConsumers(testcontainers.LogConsumer(&containerLogger)),
 	)
-	assert.NoError(t, err)
+	assert.NoErrorf(t, err, "Failed to start postgres container: %v", err)
 
 	cleanupContainer(t, postgresContainer)
-	return fmt.Sprintf("postgres://%s:%s@%s:5432/%s", dbUser, dbPassword, postgresAlias, dbName)
+
+	mappedPort, err := postgresContainer.MappedPort(t.Context(), "5432")
+	assert.NoError(t, err, "Failed to get postgres mapped port: %v", err)
+
+	return fmt.Sprintf("postgres://postgres:postgres@localhost:%s/postgres", mappedPort.Port())
 }
 
-func startWiremockContainer(t testing.TB, net *testcontainers.DockerNetwork) *wiremock.Client {
+func startWiremockContainer(t testing.TB) (*wiremock.Client, string) {
+	t.Helper()
+
 	tcLogger := TcLogger{t}
 	containerLogger := ContainerLogger{
 		containerName: "wiremock",
@@ -69,7 +66,6 @@ func startWiremockContainer(t testing.TB, net *testcontainers.DockerNetwork) *wi
 	}
 
 	wiremockContainer, err := wiremockTc.RunContainer(t.Context(),
-		network.WithNetwork([]string{wiremockAlias}, net),
 		testcontainers.WithImage("docker.io/wiremock/wiremock:3.13.1"),
 		testcontainers.WithLogger(tcLogger),
 		testcontainers.WithLogConsumers(testcontainers.LogConsumer(&containerLogger)),
@@ -85,42 +81,12 @@ func startWiremockContainer(t testing.TB, net *testcontainers.DockerNetwork) *wi
 	assert.NoError(t, err)
 
 	cleanupContainer(t, wiremockContainer)
-	return wiremockContainer.Client
-}
 
-func startApplicationContainer(t testing.TB, dbConnectionString string, port string, net *testcontainers.DockerNetwork) {
-	tcLogger := TcLogger{t}
-	containerLogger := ContainerLogger{
-		containerName: "kompass",
-		colorPrefix:   ansiGreen,
-	}
-
-	wiremockUrl := "http://" + wiremockAlias + ":8080"
-
-	req := testcontainers.ContainerRequest{
-		Image:        "kompa.ss/backend:latest",
-		ExposedPorts: []string{fmt.Sprintf("%s:%s", port, "8080")},
-		WaitingFor:   wait.ForListeningPort("8080").WithStartupTimeout(startupTimeout),
-		Env: map[string]string{
-			"PG_URL":        dbConnectionString,
-			"AUTH_JWKS_URL": wiremockUrl + "/auth/jwks.json",
-			"AEDBX_URL":     wiremockUrl + "/aedbx",
-			"DBVENDO_URL":   wiremockUrl + "/dbvendo",
-			"ORS_URL":       wiremockUrl + "/ors",
-		},
-		Networks: []string{net.Name},
-		LogConsumerCfg: &testcontainers.LogConsumerConfig{
-			Consumers: []testcontainers.LogConsumer{&containerLogger},
-		},
-	}
-	applicationContainer, err := testcontainers.GenericContainer(t.Context(), testcontainers.GenericContainerRequest{
-		ContainerRequest: req,
-		Started:          true,
-		Logger:           tcLogger,
-	})
+	mappedPort, err := wiremockContainer.MappedPort(t.Context(), "8080")
 	assert.NoError(t, err)
 
-	cleanupContainer(t, applicationContainer)
+	wiremockURL := fmt.Sprintf("http://localhost:%s", mappedPort.Port())
+	return wiremockContainer.Client, wiremockURL
 }
 
 func cleanupContainer(t testing.TB, container testcontainers.Container) {

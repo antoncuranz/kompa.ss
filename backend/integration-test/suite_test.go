@@ -29,7 +29,8 @@ func (suite *IntegrationTestSuite) SetupSuite() {
 	suite.privateKey = privateKey
 
 	port := "8081"
-	wiremockClient := util.StartAllContainers(suite.T(), port, jwkSetRule)
+	wiremockClient, wiremockUrl, dbConnectionString := util.StartAllContainers(suite.T(), jwkSetRule)
+	util.StartBackendSubprocess(suite.T(), dbConnectionString, wiremockUrl, port)
 	suite.wiremock = wiremockClient
 
 	suite.server = fmt.Sprintf("http://127.0.0.1:%s/api/v1", port)
@@ -43,7 +44,7 @@ func (suite *IntegrationTestSuite) SetupTest() {
 
 func (suite *IntegrationTestSuite) userApi(user util.UserName) *api.Client {
 	app, err := api.NewClient(suite.server, util.GenerateJwtForUser(suite.T(), user, suite.privateKey))
-	suite.NoError(err)
+	suite.Require().NoError(err)
 	return app
 }
 
