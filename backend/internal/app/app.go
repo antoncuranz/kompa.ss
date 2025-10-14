@@ -4,8 +4,9 @@ package app
 import (
 	"fmt"
 	"kompass/internal/controller/http/v1/response"
+	"kompass/internal/repo/amadeus"
+	"kompass/internal/repo/opentraveldata"
 	"kompass/internal/repo/webapi"
-	"kompass/internal/repo/webapi/amadeus"
 	"kompass/internal/usecase"
 	"kompass/internal/usecase/accommodation"
 	"kompass/internal/usecase/activities"
@@ -76,11 +77,12 @@ func createUseCases(cfg *config.Config, pg *postgres.Postgres) usecase.UseCases 
 	flightsRepo := persistent.NewFlightsRepo(pg)
 	transportationRepo := persistent.NewTransportationRepo(pg, flightsRepo, persistent.NewTrainsRepo(pg))
 	ors := webapi.NewOpenRouteServiceWebAPI(cfg.WebApi)
+	optd := opentraveldata.New(cfg.WebApi)
 
 	usersUseCase := users.New(persistent.NewUserRepo(pg))
 	tripsUseCase := trips.New(persistent.NewTripsRepo(pg))
 	transportationUseCase := transportation.New(transportationRepo, ors)
-	flightsUseCase := flights.New(transportationRepo, flightsRepo, amadeus.New(cfg.WebApi))
+	flightsUseCase := flights.New(transportationRepo, flightsRepo, amadeus.New(cfg.WebApi, optd))
 	trainsUseCase := trains.New(transportationRepo, webapi.NewDbVendoWebAPI(cfg.WebApi))
 	activitiesUseCase := activities.New(persistent.NewActivitiesRepo(pg), tripsUseCase)
 	accommodationUseCase := accommodation.New(persistent.NewAccommodationRepo(pg), tripsUseCase)

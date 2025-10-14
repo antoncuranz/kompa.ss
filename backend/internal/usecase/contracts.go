@@ -10,6 +10,7 @@ import (
 	"github.com/valyala/fasthttp"
 	"kompass/internal/controller/http/v1/request"
 	"kompass/internal/entity"
+	"kompass/internal/repo/opentraveldata"
 	"mime/multipart"
 )
 
@@ -26,6 +27,7 @@ type (
 		Activities     Activities
 		Accommodation  Accommodation
 		Attachments    Attachments
+		OPTD           opentraveldata.OpenTravelData
 	}
 
 	Users interface {

@@ -84,4 +84,10 @@ type (
 		LookupLocation(ctx context.Context, query string) (entity.GeocodeLocation, error)
 		LookupDirections(ctx context.Context, start entity.Location, end entity.Location, transportatinoType entity.TransportationType) (*geojson.FeatureCollection, error)
 	}
+
+	IataLookup interface {
+		LookupAirport(iata string) (entity.AirportWithTimezone, error)
+		LookupAircraftName(iata string) (string, error)
+		LookupAirlineName(iata string) (string, error)
+	}
 )

@@ -45,12 +45,11 @@ type (
 	}
 
 	WebApi struct {
-		AerodataboxBaseURL      string `env:"AEDBX_URL" envDefault:"https://aerodatabox.p.rapidapi.com"`
-		AerodataboxApiKey       string `env:"AEDBX_APIKEY"`
 		AmadeusBaseURL          string `env:"AMADEUS_URL" envDefault:"https://api.amadeus.com"`
 		AmadeusApiKey           string `env:"AMADEUS_APIKEY"`
 		AmadeusApiSecret        string `env:"AMADEUS_APISECRET"`
 		DbVendoBaseURL          string `env:"DBVENDO_URL"`
+		OpenTravelDataBaseURL   string `env:"OPTD_URL" envDefault:"https://raw.githubusercontent.com/opentraveldata/opentraveldata/refs/heads/master/opentraveldata"`
 		OpenRouteServiceBaseURL string `env:"ORS_URL" envDefault:"https://api.openrouteservice.org"`
 		OpenRouteServiceApiKey  string `env:"ORS_APIKEY"`
 	}

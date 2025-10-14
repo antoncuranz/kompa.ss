@@ -16,6 +16,11 @@ type Airport struct {
 	Location     Location `json:"location"`
 }
 
+type AirportWithTimezone struct {
+	Airport
+	Timezone string `json:"timezone"`
+}
+
 type FlightLeg struct {
 	ID                int32          `json:"id"`
 	Origin            Airport        `json:"origin"`
