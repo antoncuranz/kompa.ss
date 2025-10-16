@@ -24,7 +24,7 @@ type TransportationV1 struct {
 // @Produce     json
 // @Param       trip_id path int true "Trip ID"
 // @Param       request body request.Transportation true "transportation"
-// @Success     204
+// @Success     200 {object} entity.Transportation
 // @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
@@ -40,12 +40,12 @@ func (r *TransportationV1) postTransportation(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "invalid request body")
 	}
 
-	_, err = r.uc.CreateTransportation(ctx.UserContext(), int32(tripID), *body)
+	transportation, err := r.uc.CreateTransportation(ctx.UserContext(), int32(tripID), *body)
 	if err != nil {
 		return fmt.Errorf("create transportation: %w", err)
 	}
 
-	return ctx.SendStatus(http.StatusNoContent)
+	return ctx.Status(http.StatusOK).JSON(transportation)
 }
 
 // @Summary     Update transportation

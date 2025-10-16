@@ -2,6 +2,7 @@ package entity
 
 import (
 	"cloud.google.com/go/civil"
+	"fmt"
 )
 
 type FlightDetail struct {
@@ -37,4 +38,16 @@ type PNR struct {
 	ID      int32  `json:"id"`
 	Airline string `json:"airline" example:"LH"`
 	PNR     string `json:"pnr"     example:"123456"`
+}
+
+type ErrAmbiguousFlightRequest map[string][]AmbiguousFlightChoice
+
+type AmbiguousFlightChoice struct {
+	OriginIata        string         `json:"originIata"`
+	DestinationIata   string         `json:"destinationIata"`
+	DepartureDateTime civil.DateTime `json:"departureDateTime"`
+}
+
+func (e ErrAmbiguousFlightRequest) Error() string {
+	return fmt.Sprint(e)
 }

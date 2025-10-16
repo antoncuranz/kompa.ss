@@ -93,6 +93,19 @@ components:
       - municipality
       - name
       type: object
+    entity.AmbiguousFlightChoice:
+      properties:
+        departureDateTime:
+          type: string
+        destinationIata:
+          type: string
+        originIata:
+          type: string
+      required:
+      - departureDateTime
+      - destinationIata
+      - originIata
+      type: object
     entity.Attachment:
       properties:
         blob:
@@ -111,6 +124,12 @@ components:
       - id
       - name
       - tripId
+      type: object
+    entity.ErrAmbiguousFlightRequest:
+      additionalProperties:
+        items:
+          $ref: '#/components/schemas/entity.AmbiguousFlightChoice'
+        type: array
       type: object
     entity.FlightDetail:
       nullable: true
@@ -871,8 +890,12 @@ paths:
         description: accommodation
         required: true
       responses:
-        "204":
-          description: No Content
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entity.Accommodation'
+          description: OK
         "400":
           content:
             application/json:
@@ -1108,8 +1131,12 @@ paths:
         description: activity
         required: true
       responses:
-        "204":
-          description: No Content
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entity.Activity'
+          description: OK
         "400":
           content:
             application/json:
@@ -1439,14 +1466,24 @@ paths:
         description: flight
         required: true
       responses:
-        "204":
-          description: No Content
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entity.Transportation'
+          description: OK
         "403":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/response.Error'
           description: Forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entity.ErrAmbiguousFlightRequest'
+          description: Unprocessable Entity
         "500":
           content:
             application/json:
@@ -1594,8 +1631,12 @@ paths:
         description: transportation
         required: true
       responses:
-        "204":
-          description: No Content
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entity.Transportation'
+          description: OK
         "403":
           content:
             application/json:

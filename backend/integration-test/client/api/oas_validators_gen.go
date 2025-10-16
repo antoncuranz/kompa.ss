@@ -123,6 +123,28 @@ func (s *EntityAttachment) Validate() error {
 	return nil
 }
 
+func (s EntityErrAmbiguousFlightRequest) Validate() error {
+	var failures []validate.FieldError
+	for key, elem := range s {
+		if err := func() error {
+			if elem == nil {
+				return errors.New("nil is invalid value")
+			}
+			return nil
+		}(); err != nil {
+			failures = append(failures, validate.FieldError{
+				Name:  key,
+				Error: err,
+			})
+		}
+	}
+
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+
 func (s *EntityFlightDetail) Validate() error {
 	if s == nil {
 		return validate.ErrNilPointer

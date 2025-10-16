@@ -40,7 +40,7 @@ func (suite *IntegrationTestSuite) TestForbiddenUserPermissions() {
 	// given
 	actualTripID := suite.CreateTrip()
 	defer suite.DeleteTrip(actualTripID)
-	flight := suite.postAndRetrieveFlight(actualTripID)
+	flight := suite.postAndRetrieveFlightDetail(actualTripID, "2026-02-01", "LH717", api.NilString{Null: true})
 
 	otherTripID := suite.CreateTripUser(ForbiddenUser)
 	defer suite.DeleteTripUser(ForbiddenUser, otherTripID)

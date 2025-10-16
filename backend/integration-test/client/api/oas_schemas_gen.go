@@ -250,6 +250,7 @@ func (s *EntityAccommodation) SetTripId(val int) {
 }
 
 func (*EntityAccommodation) getAccommodationByIDRes() {}
+func (*EntityAccommodation) postAccommodationRes()    {}
 
 // Ref: #/components/schemas/entity.Activity
 type EntityActivity struct {
@@ -354,7 +355,8 @@ func (s *EntityActivity) SetTripId(val int) {
 	s.TripId = val
 }
 
-func (*EntityActivity) getActivityRes() {}
+func (*EntityActivity) getActivityRes()  {}
+func (*EntityActivity) postActivityRes() {}
 
 // Ref: #/components/schemas/entity.Airport
 type EntityAirport struct {
@@ -402,6 +404,43 @@ func (s *EntityAirport) SetMunicipality(val string) {
 // SetName sets the value of Name.
 func (s *EntityAirport) SetName(val string) {
 	s.Name = val
+}
+
+// Ref: #/components/schemas/entity.AmbiguousFlightChoice
+type EntityAmbiguousFlightChoice struct {
+	DepartureDateTime string `json:"departureDateTime"`
+	DestinationIata   string `json:"destinationIata"`
+	OriginIata        string `json:"originIata"`
+}
+
+// GetDepartureDateTime returns the value of DepartureDateTime.
+func (s *EntityAmbiguousFlightChoice) GetDepartureDateTime() string {
+	return s.DepartureDateTime
+}
+
+// GetDestinationIata returns the value of DestinationIata.
+func (s *EntityAmbiguousFlightChoice) GetDestinationIata() string {
+	return s.DestinationIata
+}
+
+// GetOriginIata returns the value of OriginIata.
+func (s *EntityAmbiguousFlightChoice) GetOriginIata() string {
+	return s.OriginIata
+}
+
+// SetDepartureDateTime sets the value of DepartureDateTime.
+func (s *EntityAmbiguousFlightChoice) SetDepartureDateTime(val string) {
+	s.DepartureDateTime = val
+}
+
+// SetDestinationIata sets the value of DestinationIata.
+func (s *EntityAmbiguousFlightChoice) SetDestinationIata(val string) {
+	s.DestinationIata = val
+}
+
+// SetOriginIata sets the value of OriginIata.
+func (s *EntityAmbiguousFlightChoice) SetOriginIata(val string) {
+	s.OriginIata = val
 }
 
 // Ref: #/components/schemas/entity.Attachment
@@ -453,6 +492,20 @@ func (s *EntityAttachment) SetTripId(val int) {
 }
 
 func (*EntityAttachment) downloadAttachmentRes() {}
+
+// Ref: #/components/schemas/entity.ErrAmbiguousFlightRequest
+type EntityErrAmbiguousFlightRequest map[string][]EntityAmbiguousFlightChoice
+
+func (s *EntityErrAmbiguousFlightRequest) init() EntityErrAmbiguousFlightRequest {
+	m := *s
+	if m == nil {
+		m = map[string][]EntityAmbiguousFlightChoice{}
+		*s = m
+	}
+	return m
+}
+
+func (*EntityErrAmbiguousFlightRequest) postFlightRes() {}
 
 // Ref: #/components/schemas/entity.FlightDetail
 type EntityFlightDetail struct {
@@ -976,8 +1029,10 @@ func (s *EntityTransportation) SetType(val EntityTransportationType) {
 	s.Type = val
 }
 
-func (*EntityTransportation) getTransportationRes() {}
-func (*EntityTransportation) postTrainJourneyRes()  {}
+func (*EntityTransportation) getTransportationRes()  {}
+func (*EntityTransportation) postFlightRes()         {}
+func (*EntityTransportation) postTrainJourneyRes()   {}
+func (*EntityTransportation) postTransportationRes() {}
 
 type EntityTransportationType string
 
@@ -1637,11 +1692,6 @@ type PostAccommodationInternalServerError ResponseError
 
 func (*PostAccommodationInternalServerError) postAccommodationRes() {}
 
-// PostAccommodationNoContent is response for PostAccommodation operation.
-type PostAccommodationNoContent struct{}
-
-func (*PostAccommodationNoContent) postAccommodationRes() {}
-
 type PostActivityBadRequest ResponseError
 
 func (*PostActivityBadRequest) postActivityRes() {}
@@ -1653,11 +1703,6 @@ func (*PostActivityForbidden) postActivityRes() {}
 type PostActivityInternalServerError ResponseError
 
 func (*PostActivityInternalServerError) postActivityRes() {}
-
-// PostActivityNoContent is response for PostActivity operation.
-type PostActivityNoContent struct{}
-
-func (*PostActivityNoContent) postActivityRes() {}
 
 type PostAttachmentForbidden ResponseError
 
@@ -1680,11 +1725,6 @@ type PostFlightInternalServerError ResponseError
 
 func (*PostFlightInternalServerError) postFlightRes() {}
 
-// PostFlightNoContent is response for PostFlight operation.
-type PostFlightNoContent struct{}
-
-func (*PostFlightNoContent) postFlightRes() {}
-
 type PostTrainJourneyForbidden ResponseError
 
 func (*PostTrainJourneyForbidden) postTrainJourneyRes() {}
@@ -1700,11 +1740,6 @@ func (*PostTransportationForbidden) postTransportationRes() {}
 type PostTransportationInternalServerError ResponseError
 
 func (*PostTransportationInternalServerError) postTransportationRes() {}
-
-// PostTransportationNoContent is response for PostTransportation operation.
-type PostTransportationNoContent struct{}
-
-func (*PostTransportationNoContent) postTransportationRes() {}
 
 type PostTripBadRequest ResponseError
 

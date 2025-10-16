@@ -1,14 +1,15 @@
 package v1
 
 import (
+	"errors"
 	"fmt"
+	"github.com/go-playground/validator/v10"
+	"github.com/gofiber/fiber/v2"
 	"kompass/internal/controller/http/v1/request"
+	"kompass/internal/entity"
 	"kompass/internal/usecase"
 	"kompass/pkg/logger"
 	"net/http"
-
-	"github.com/go-playground/validator/v10"
-	"github.com/gofiber/fiber/v2"
 )
 
 type FlightsV1 struct {
@@ -24,8 +25,9 @@ type FlightsV1 struct {
 // @Produce     json
 // @Param       trip_id path int true "Trip ID"
 // @Param       request body request.Flight true "flight"
-// @Success     204
+// @Success     200 {object} entity.Transportation
 // @Failure     403 {object} response.Error
+// @Failure     422 {object} entity.ErrAmbiguousFlightRequest
 // @Failure     500 {object} response.Error
 // @Security    bearerauth
 // @Router      /trips/{trip_id}/flights [post]
@@ -40,12 +42,16 @@ func (r *FlightsV1) postFlight(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "invalid request body")
 	}
 
-	_, err = r.uc.CreateFlight(ctx.UserContext(), int32(tripID), *body)
+	transportation, err := r.uc.CreateFlight(ctx.UserContext(), int32(tripID), *body)
 	if err != nil {
+		var ambiguousError entity.ErrAmbiguousFlightRequest
+		if errors.As(err, &ambiguousError) {
+			return ctx.Status(http.StatusUnprocessableEntity).JSON(ambiguousError)
+		}
 		return fmt.Errorf("create flight: %w", err)
 	}
 
-	return ctx.SendStatus(http.StatusNoContent)
+	return ctx.Status(http.StatusOK).JSON(transportation)
 }
 
 // @Summary     Update flight

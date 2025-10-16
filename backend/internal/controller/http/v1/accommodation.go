@@ -80,7 +80,7 @@ func (r *AccommodationV1) getAccommodationByID(ctx *fiber.Ctx) error {
 // @Produce     json
 // @Param       trip_id path int true "Trip ID"
 // @Param       request body request.Accommodation true "accommodation"
-// @Success     204
+// @Success     200 {object} entity.Accommodation
 // @Failure     400 {object} response.Error
 // @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
@@ -97,12 +97,12 @@ func (r *AccommodationV1) postAccommodation(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "invalid request body")
 	}
 
-	_, err = r.uc.CreateAccommodation(ctx.UserContext(), int32(tripID), *body)
+	accommodation, err := r.uc.CreateAccommodation(ctx.UserContext(), int32(tripID), *body)
 	if err != nil {
 		return fmt.Errorf("create accommodation: %w", err)
 	}
 
-	return ctx.SendStatus(http.StatusNoContent)
+	return ctx.Status(http.StatusOK).JSON(accommodation)
 }
 
 // @Summary     Update accommodation

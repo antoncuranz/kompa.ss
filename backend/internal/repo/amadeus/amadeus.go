@@ -3,17 +3,13 @@ package amadeus
 import (
 	"cloud.google.com/go/civil"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/gofiber/fiber/v2"
 	goiso8601duration "github.com/xnacly/go-iso8601-duration"
-	"io"
 	"kompass/config"
 	"kompass/internal/entity"
 	"kompass/internal/repo"
-	"net/http"
-	"net/url"
-	"strings"
 	"time"
 )
 
@@ -34,135 +30,149 @@ func New(config config.WebApi, iataLookup repo.IataLookup) *AmadeusWebAPI {
 }
 
 func (a *AmadeusWebAPI) RetrieveFlightLeg(ctx context.Context, date civil.Date, flightNumber string, requestedOrigin *string) (entity.FlightLeg, error) {
-	urlFormat := "%s/v2/schedule/flights?carrierCode=%s&flightNumber=%s&scheduledDepartureDate=%s"
-	scheduleUrl := fmt.Sprintf(urlFormat, a.baseURL, flightNumber[:2], strings.TrimSpace(flightNumber[2:]), date.String())
-
-	req, err := http.NewRequestWithContext(ctx, "GET", scheduleUrl, nil)
+	flightStatusResponse, err := a.requestFlights(ctx, date, flightNumber)
 	if err != nil {
-		return entity.FlightLeg{}, fmt.Errorf("create http request: %w", err)
+		return entity.FlightLeg{}, fmt.Errorf("request flights: %w", err)
 	}
 
-	accessToken, err := a.getAccessToken(ctx)
-	if err != nil {
-		return entity.FlightLeg{}, fmt.Errorf("get access token: %w", err)
+	joinedFlightLegs := joinFlightLegs(flightStatusResponse.Data)
+	if len(joinedFlightLegs) > 1 && requestedOrigin == nil {
+		choices, err := a.convertChoices(joinedFlightLegs)
+		if err != nil {
+			return entity.FlightLeg{}, fmt.Errorf("convert choices: %w", err)
+		}
+
+		return entity.FlightLeg{}, entity.ErrAmbiguousFlightRequest{flightNumber: choices}
 	}
 
-	req.Header.Set("Authorization", "Bearer "+accessToken.AccessToken)
-
-	res, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return entity.FlightLeg{}, fmt.Errorf("do http request: %w", err)
-	} else if res.StatusCode != 200 {
-		return entity.FlightLeg{}, fmt.Errorf("http status code %d: %w", res.StatusCode, err)
+	for _, flightLeg := range joinedFlightLegs {
+		if requestedOrigin == nil || flightLeg.BoardPointIataCode == *requestedOrigin {
+			return a.mapDatedFlight(flightLeg)
+		}
 	}
 
-	defer res.Body.Close()
-	body, err := io.ReadAll(res.Body)
-	if err != nil {
-		return entity.FlightLeg{}, fmt.Errorf("read response body: %w", err)
-	}
-
-	var flightStatusResponse FlightStatusResponse
-	if err := json.Unmarshal(body, &flightStatusResponse); err != nil {
-		return entity.FlightLeg{}, fmt.Errorf("unmarshall JSON: %w", err)
-	}
-
-	if len(flightStatusResponse.Data) != 1 || len(flightStatusResponse.Data[0].Legs) > 2 {
-		return entity.FlightLeg{}, fmt.Errorf("not found or too complex")
-	}
-
-	return a.mapDatedFlight(flightStatusResponse.Data[0], requestedOrigin)
+	return entity.FlightLeg{}, fiber.NewError(fiber.StatusNotFound, "no matching flight found")
 }
 
-func (a *AmadeusWebAPI) mapDatedFlight(datedFlight DatedFlight, requestedOrigin *string) (entity.FlightLeg, error) {
-	leg, err := findLeg(datedFlight.Legs, requestedOrigin)
-	if err != nil {
-		return entity.FlightLeg{}, fmt.Errorf("find leg: %w", err)
-	}
+type legOfDatedFlight struct {
+	Leg
+	DatedFlight
+}
 
-	originAirport, err1 := a.iataLookup.LookupAirport(leg.BoardPointIataCode)
-	destinationAirport, err2 := a.iataLookup.LookupAirport(leg.OffPointIataCode)
-	if err := errors.Join(err1, err2); err != nil {
+func (a *AmadeusWebAPI) mapDatedFlight(flightLeg legOfDatedFlight) (entity.FlightLeg, error) {
+	originAirport, destinationAirport, err := a.lookupAirports(flightLeg.Leg)
+	if err != nil {
 		return entity.FlightLeg{}, fmt.Errorf("lookup airports: %w", err)
 	}
 
-	duration, err := goiso8601duration.From(leg.ScheduledLegDuration)
+	duration, err := goiso8601duration.From(flightLeg.Leg.ScheduledLegDuration)
 	if err != nil {
 		return entity.FlightLeg{}, fmt.Errorf("parse duration: %w", err)
 	}
 
-	origin, originFound := findFlightPointByIata(datedFlight, leg.BoardPointIataCode)
-	destination, destinationFound := findFlightPointByIata(datedFlight, leg.OffPointIataCode)
-	if !originFound && !destinationFound {
-		return entity.FlightLeg{}, fmt.Errorf("no flight point found")
-	}
-
-	originTz, err1 := time.LoadLocation(originAirport.Timezone)
-	destinationTz, err2 := time.LoadLocation(destinationAirport.Timezone)
-	if err := errors.Join(err1, err2); err != nil {
-		return entity.FlightLeg{}, fmt.Errorf("load timezones: %w", err)
-	}
-
-	var departureDateTime time.Time
-	if originFound {
-		parsed, err := findAndParseTimestampInLocation(origin.Departure.Timings, "STD", originTz)
-		if err != nil {
-			return entity.FlightLeg{}, fmt.Errorf("parse timestamp: %w", err)
-		}
-		departureDateTime = parsed
-	}
-
-	var arrivalDateTime time.Time
-	if destinationFound {
-		parsed, err := findAndParseTimestampInLocation(destination.Arrival.Timings, "STA", destinationTz)
-		if err != nil {
-			return entity.FlightLeg{}, fmt.Errorf("parse timestamp: %w", err)
-		}
-		arrivalDateTime = parsed
-	}
-
-	if !originFound {
-		departureDateTime = arrivalDateTime.Add(-duration.Duration()).In(originTz)
-	}
-
-	if !destinationFound {
-		arrivalDateTime = departureDateTime.Add(duration.Duration()).In(destinationTz)
-	}
-
-	aircraftName, err := a.iataLookup.LookupAircraftName(leg.AircraftEquipment.AircraftType)
+	departureDateTime, arrivalDateTime, err := determineTimestamps(flightLeg, originAirport, destinationAirport, duration)
 	if err != nil {
-		return entity.FlightLeg{}, fmt.Errorf("lookup aircraft name: %w", err)
+		return entity.FlightLeg{}, fmt.Errorf("determine timestamps: %w", err)
 	}
 
-	airlineName, err := a.iataLookup.LookupAirlineName(datedFlight.FlightDesignator.CarrierCode)
+	aircraftName, err := a.iataLookup.LookupAircraftName(flightLeg.Leg.AircraftEquipment.AircraftType)
 	if err != nil {
-		return entity.FlightLeg{}, fmt.Errorf("lookup airline name: %w", err)
+		return entity.FlightLeg{}, fmt.Errorf("lookup aircraft: %w", err)
 	}
+
+	airlineName, err := a.iataLookup.LookupAirlineName(flightLeg.DatedFlight.FlightDesignator.CarrierCode)
+	if err != nil {
+		return entity.FlightLeg{}, fmt.Errorf("lookup airline: %w", err)
+	}
+
+	flightNumber := fmt.Sprintf("%s %d",
+		flightLeg.DatedFlight.FlightDesignator.CarrierCode,
+		flightLeg.DatedFlight.FlightDesignator.FlightNumber,
+	)
 
 	return entity.FlightLeg{
 		Origin:            originAirport.Airport,
 		Destination:       destinationAirport.Airport,
 		Airline:           airlineName,
-		FlightNumber:      fmt.Sprintf("%s %d", datedFlight.FlightDesignator.CarrierCode, datedFlight.FlightDesignator.FlightNumber),
-		DepartureDateTime: civil.DateTimeOf(departureDateTime),
-		ArrivalDateTime:   civil.DateTimeOf(arrivalDateTime),
+		FlightNumber:      flightNumber,
+		DepartureDateTime: departureDateTime,
+		ArrivalDateTime:   arrivalDateTime,
 		DurationInMinutes: int32(duration.Duration().Minutes()),
 		Aircraft:          &aircraftName,
 	}, nil
 }
 
-func findLeg(legs []Leg, requestedOrigin *string) (Leg, error) {
-	if requestedOrigin == nil {
-		return legs[0], nil
+func (a *AmadeusWebAPI) lookupAirports(leg Leg) (entity.AirportWithTimezone, entity.AirportWithTimezone, error) {
+	originAirport, err := a.iataLookup.LookupAirport(leg.BoardPointIataCode)
+	if err != nil {
+		return entity.AirportWithTimezone{}, entity.AirportWithTimezone{}, fmt.Errorf("lookup origin airport: %w", err)
 	}
 
-	for _, leg := range legs {
-		if leg.BoardPointIataCode == *requestedOrigin {
-			return leg, nil
+	destinationAirport, err := a.iataLookup.LookupAirport(leg.OffPointIataCode)
+	if err != nil {
+		return entity.AirportWithTimezone{}, entity.AirportWithTimezone{}, fmt.Errorf("lookup destination airport: %w", err)
+	}
+
+	return originAirport, destinationAirport, nil
+}
+
+func determineTimestamps(
+	flightLeg legOfDatedFlight, originAirport entity.AirportWithTimezone, destinationAirport entity.AirportWithTimezone, duration goiso8601duration.Duration,
+) (civil.DateTime, civil.DateTime, error) {
+
+	origin, originFound := findFlightPointByIata(flightLeg.DatedFlight, flightLeg.Leg.BoardPointIataCode)
+	destination, destinationFound := findFlightPointByIata(flightLeg.DatedFlight, flightLeg.Leg.OffPointIataCode)
+	if !originFound && !destinationFound {
+		return civil.DateTime{}, civil.DateTime{}, fmt.Errorf("no flight point found")
+	}
+
+	var departureDateTime civil.DateTime
+	if originFound {
+		parsed, err := findAndParseTimestamp(origin.Departure.Timings, "STD")
+		if err != nil {
+			return civil.DateTime{}, civil.DateTime{}, fmt.Errorf("parse timestamp: %w", err)
 		}
+		departureDateTime = parsed
 	}
 
-	return legs[0], nil
+	var arrivalDateTime civil.DateTime
+	if destinationFound {
+		parsed, err := findAndParseTimestamp(destination.Arrival.Timings, "STA")
+		if err != nil {
+			return civil.DateTime{}, civil.DateTime{}, fmt.Errorf("parse timestamp: %w", err)
+		}
+		arrivalDateTime = parsed
+	}
+
+	if !originFound {
+		offset, err := offsetTimestamp(arrivalDateTime, destinationAirport.Timezone, -duration.Duration(), originAirport.Timezone)
+		if err != nil {
+			return civil.DateTime{}, civil.DateTime{}, fmt.Errorf("calculate timestamp: %w", err)
+		}
+
+		departureDateTime = offset
+	}
+
+	if !destinationFound {
+		offset, err := offsetTimestamp(departureDateTime, originAirport.Timezone, duration.Duration(), destinationAirport.Timezone)
+		if err != nil {
+			return civil.DateTime{}, civil.DateTime{}, fmt.Errorf("calculate timestamp: %w", err)
+		}
+
+		arrivalDateTime = offset
+	}
+
+	return departureDateTime, arrivalDateTime, nil
+}
+
+func offsetTimestamp(sourceTime civil.DateTime, sourceTimezone string, offset time.Duration, targetTimezone string) (civil.DateTime, error) {
+	sourceLocation, err1 := time.LoadLocation(sourceTimezone)
+	targetLocation, err2 := time.LoadLocation(targetTimezone)
+	if err := errors.Join(err1, err2); err != nil {
+		return civil.DateTime{}, fmt.Errorf("load locations: %w", err)
+	}
+
+	return civil.DateTimeOf(sourceTime.In(sourceLocation).Add(offset).In(targetLocation)), nil
 }
 
 func findFlightPointByIata(flightContract DatedFlight, iata string) (FlightPoint, bool) {
@@ -174,53 +184,61 @@ func findFlightPointByIata(flightContract DatedFlight, iata string) (FlightPoint
 	return FlightPoint{}, false
 }
 
-func findAndParseTimestampInLocation(timings []Timing, preferredQualifier string, loc *time.Location) (time.Time, error) {
+func findAndParseTimestamp(timings []Timing, preferredQualifier string) (civil.DateTime, error) {
 	if len(timings) == 0 {
-		return time.Time{}, fmt.Errorf("timings empty")
+		return civil.DateTime{}, fmt.Errorf("timings empty")
 	}
 
-	layout := "2006-01-02T15:04-07:00"
 	for _, x := range timings {
 		if x.Qualifier == preferredQualifier {
-			return time.ParseInLocation(layout, x.Value, loc)
+			return parseLocalDateTime(x.Value)
 		}
 	}
 
-	return time.ParseInLocation(layout, timings[0].Value, loc)
+	return parseLocalDateTime(timings[0].Value)
 }
 
-func (a *AmadeusWebAPI) getAccessToken(ctx context.Context) (AccessTokenResponse, error) {
-	endpoint := fmt.Sprintf("%s/v1/security/oauth2/token", a.baseURL)
+func parseLocalDateTime(timestamp string) (civil.DateTime, error) {
+	// Remove timezone and add missing seconds
+	return civil.ParseDateTime(timestamp[0:16] + ":00")
+}
 
-	form := url.Values{
-		"grant_type":    {"client_credentials"},
-		"client_id":     {a.apiKey},
-		"client_secret": {a.apiSecret},
+func joinFlightLegs(flights []DatedFlight) []legOfDatedFlight {
+	var joinedFlights []legOfDatedFlight
+	for _, df := range flights {
+		for _, leg := range df.Legs {
+			joinedFlights = append(joinedFlights, legOfDatedFlight{
+				DatedFlight: df,
+				Leg:         leg,
+			})
+		}
 	}
+	return joinedFlights
+}
 
-	req, err := http.NewRequestWithContext(ctx, "POST", endpoint, strings.NewReader(form.Encode()))
-	if err != nil {
-		return AccessTokenResponse{}, err
+func (a *AmadeusWebAPI) convertChoices(flightLegs []legOfDatedFlight) ([]entity.AmbiguousFlightChoice, error) {
+	var choices []entity.AmbiguousFlightChoice
+	for _, flightLeg := range flightLegs {
+		originAirport, destinationAirport, err := a.lookupAirports(flightLeg.Leg)
+		if err != nil {
+			return nil, fmt.Errorf("lookup airports: %w", err)
+		}
+
+		duration, err := goiso8601duration.From(flightLeg.Leg.ScheduledLegDuration)
+		if err != nil {
+			return nil, fmt.Errorf("parse duration: %w", err)
+		}
+
+		departureDateTime, _, err := determineTimestamps(flightLeg, originAirport, destinationAirport, duration)
+		if err != nil {
+			return nil, fmt.Errorf("determine timestamps: %w", err)
+		}
+
+		choices = append(choices, entity.AmbiguousFlightChoice{
+			OriginIata:        flightLeg.BoardPointIataCode,
+			DestinationIata:   flightLeg.OffPointIataCode,
+			DepartureDateTime: departureDateTime,
+		})
 	}
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	res, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return AccessTokenResponse{}, fmt.Errorf("do http request: %w", err)
-	} else if res.StatusCode != 200 {
-		return AccessTokenResponse{}, fmt.Errorf("http status code %d: %w", res.StatusCode, err)
-	}
-
-	defer res.Body.Close()
-	body, err := io.ReadAll(res.Body)
-	if err != nil {
-		return AccessTokenResponse{}, fmt.Errorf("read response body: %w", err)
-	}
-
-	var respData AccessTokenResponse
-	if err := json.Unmarshal(body, &respData); err != nil {
-		return AccessTokenResponse{}, fmt.Errorf("unmarshal JSON: %w", err)
-	}
-
-	return respData, nil
+	return choices, nil
 }

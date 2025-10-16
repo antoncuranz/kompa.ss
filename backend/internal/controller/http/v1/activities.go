@@ -79,7 +79,7 @@ func (r *ActivitiesV1) getActivity(ctx *fiber.Ctx) error {
 // @Produce     json
 // @Param       trip_id path int true "Trip ID"
 // @Param       request body request.Activity true "activity"
-// @Success     204
+// @Success     200 {object} entity.Activity
 // @Failure     400 {object} response.Error
 // @Failure     403 {object} response.Error
 // @Failure     500 {object} response.Error
@@ -96,12 +96,12 @@ func (r *ActivitiesV1) postActivity(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "invalid request body")
 	}
 
-	_, err = r.uc.CreateActivity(ctx.UserContext(), int32(tripID), *body)
+	activity, err := r.uc.CreateActivity(ctx.UserContext(), int32(tripID), *body)
 	if err != nil {
 		return fmt.Errorf("create activity: %w", err)
 	}
 
-	return ctx.SendStatus(http.StatusNoContent)
+	return ctx.Status(http.StatusOK).JSON(activity)
 }
 
 // @Summary     Update activity

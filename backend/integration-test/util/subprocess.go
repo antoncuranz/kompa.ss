@@ -30,7 +30,7 @@ func StartBackendSubprocess(t testing.TB, dbConnectionString string, wiremockURL
 		fmt.Sprintf("HTTP_PORT=%s", port),
 		fmt.Sprintf("PG_URL=%s", dbConnectionString),
 		fmt.Sprintf("AUTH_JWKS_URL=%s/auth/jwks.json", wiremockURL),
-		fmt.Sprintf("AEDBX_URL=%s/aedbx", wiremockURL),
+		fmt.Sprintf("AMADEUS_URL=%s/amadeus", wiremockURL),
 		fmt.Sprintf("DBVENDO_URL=%s/dbvendo", wiremockURL),
 		fmt.Sprintf("ORS_URL=%s/ors", wiremockURL),
 	)
@@ -47,8 +47,7 @@ func StartBackendSubprocess(t testing.TB, dbConnectionString string, wiremockURL
 	t.Cleanup(func() {
 		err := cmd.Process.Kill()
 		assert.NoError(t, err)
-		err = cmd.Wait()
-		assert.NoError(t, err)
+		cmd.Wait()
 	})
 
 	return cmd
