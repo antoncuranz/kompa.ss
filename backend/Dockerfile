@@ -1,5 +1,5 @@
 # Step 1: Modules caching
-FROM golang:1.25-alpine3 as modules
+FROM golang:1.25-alpine as modules
 
 COPY go.mod go.sum /modules/
 
