@@ -126,6 +126,12 @@ export type FlightLeg = {
   aircraft: string | null;
 };
 
+export type AmbiguousFlightChoice = {
+  departureDateTime: string;
+  destinationIata: string;
+  originIata: string;
+}
+
 export type Airport = {
   iata: string;
   name: string;

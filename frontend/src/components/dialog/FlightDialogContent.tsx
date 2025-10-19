@@ -3,11 +3,11 @@ import {DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog.ts
 import {Minus, Plus} from "lucide-react";
 import {useState} from "react";
 import {Input} from "@/components/ui/input.tsx";
-import {Transportation, FlightLeg, Trip} from "@/types.ts";
-import {RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
-import { toast } from "sonner";
+import {Transportation, FlightLeg, Trip, AmbiguousFlightChoice} from "@/types.ts";
+import {Dialog, RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
+import {toast} from "sonner";
 import {z} from "zod"
-import {isoDate} from "@/schemas.ts";
+import {isoDate, optionalString} from "@/schemas.ts";
 import {useFieldArray, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {dateFromString} from "@/components/util.ts";
@@ -15,11 +15,13 @@ import {Form, FormField} from "@/components/ui/form.tsx";
 import AmountInput from "@/components/dialog/AmountInput.tsx";
 import DateInput from "@/components/dialog/DateInput.tsx";
 import {Spinner} from "@/components/ui/shadcn-io/spinner";
+import {AmbiguousFlightDialogContent} from "@/components/dialog/AmbiguousFlightDialog.tsx";
 
 const formSchema = z.object({
   legs: z.array(z.object({
     date: isoDate("Required"),
     flightNumber: z.string().nonempty("Required"),
+    originAirport: optionalString(),
   })),
   pnrs: z.array(z.object({
     airline: z.string().nonempty("Required"),
@@ -28,6 +30,11 @@ const formSchema = z.object({
   price: z.number().optional()
 })
 
+type AmbiguousDialogData = {
+  legs: { date: string; flightNumber: string }[];
+  choices: { [flightNumber: string]: AmbiguousFlightChoice[] };
+}
+
 export default function FlightDialogContent({
   trip, flight
 }: {
@@ -35,6 +42,8 @@ export default function FlightDialogContent({
   flight?: Transportation | null
 }) {
   const [edit] = useState<boolean>(flight == null)
+  const [ambiguousDialogOpen, setAmbiguousDialogOpen] = useState(false)
+  const [ambiguousDialogData, setAmbiguousDialogData] = useState<AmbiguousDialogData>({ legs: [], choices: {} })
   const {onClose} = useDialogContext()
 
   function mapLegsOrDefault(flightLegs: FlightLeg[]|undefined) {
@@ -76,6 +85,7 @@ export default function FlightDialogContent({
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log("onSubmit", JSON.stringify(values))
     let response
     if (flight != null) {
       response = await fetch("/api/v1/trips/" + trip.id + "/flights/" + flight?.id, {
@@ -91,11 +101,34 @@ export default function FlightDialogContent({
       })
     }
 
-    if (response.ok)
+    if (response.ok) {
       onClose(true)
-    else toast("Error upserting Flight", {
-      description: await response.text()
-    })
+    } else if (response.status === 422 && flight == null) {
+      try {
+        const ambiguousChoices = await response.json() as Record<string, AmbiguousFlightChoice[]>
+        setAmbiguousDialogData({ legs: values.legs, choices: ambiguousChoices })
+        setAmbiguousDialogOpen(true)
+      } catch (error) {
+        toast("Error parsing ambiguous flight response", {
+          description: "Unable to parse flight choices"
+        })
+      }
+    } else {
+      toast("Error upserting Flight", {
+        description: await response.text()
+      })
+    }
+  }
+
+  function handleAmbiguousFlightSelection(selectedFlights: Map<number, AmbiguousFlightChoice>) {
+    setAmbiguousDialogOpen(false)
+    setAmbiguousDialogData({ legs: [], choices: {} })
+
+    for (const [legId, flight] of selectedFlights) {
+      form.setValue(`legs.${legId}.originAirport`, flight.originIata)
+    }
+
+    form.handleSubmit(onSubmit)()
   }
 
   async function onDeleteButtonClick() {
@@ -224,6 +257,13 @@ export default function FlightDialogContent({
                    }
         />
       </Form>
+      <Dialog open={ambiguousDialogOpen} setOpen={setAmbiguousDialogOpen}>
+        <AmbiguousFlightDialogContent
+            flightLegs={ambiguousDialogData.legs}
+            flightChoices={ambiguousDialogData.choices}
+            onSelection={handleAmbiguousFlightSelection}
+        />
+      </Dialog>
       <DialogFooter>
         {edit ?
           <Button form="flight-form" type="submit" className="w-full text-base" disabled={isSubmitting}>

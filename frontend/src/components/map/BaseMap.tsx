@@ -27,8 +27,6 @@ export default function BaseMap({
   const commonOptions = {
     initialViewState: {latitude: initialCoordinates?.latitude ?? 52.520007, longitude: initialCoordinates?.longitude ?? 13.404954, zoom: 10},
     style: {background: "#04162a"},
-    workerCount: 2,
-    maxParallelImageRequests: 32
   }
 
   return (
@@ -49,6 +47,8 @@ export default function BaseMap({
       <MaplibreMap
           mapStyle={mapStyle ?? "https://antoncuranz.github.io/basemaps-assets/streets.json"}
           projection="globe"
+          workerCount={2}
+          maxParallelImageRequests={32}
           {...commonOptions}
           {...props}
       >

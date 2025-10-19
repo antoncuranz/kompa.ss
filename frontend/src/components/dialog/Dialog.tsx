@@ -4,7 +4,7 @@ import {useRouter} from "next/navigation";
 import {DialogContent} from "@/components/ui/dialog.tsx"
 
 interface DialogContextType {
-  onClose: (needsUpdate: boolean) => void;
+  onClose: (needsUpdate?: boolean) => void;
 }
 
 const DialogContext = createContext<DialogContextType | undefined>(undefined);
@@ -12,7 +12,7 @@ const DialogContext = createContext<DialogContextType | undefined>(undefined);
 export function DialogContextProvider({
   children, onClose
 }: {
-  onClose: (needsUpdate: boolean) => void
+  onClose: (needsUpdate?: boolean) => void
   children: ReactNode
 }) {
 
@@ -40,7 +40,7 @@ export function Dialog({
 }) {
   const router = useRouter()
 
-  function onClose(needsUpdate: boolean) {
+  function onClose(needsUpdate?: boolean) {
     setOpen(false)
     if (needsUpdate)
       router.refresh()

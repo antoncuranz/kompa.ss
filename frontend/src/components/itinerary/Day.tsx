@@ -29,8 +29,23 @@ export default function Day({
 
   const collapsedDays = nextDay ? getDaysBetween(dayData.day, nextDay).length-2 : 0
 
-  const hasNightTransportation = dayData.transportation
-    .find(t => !isSameDay(t.arrivalDateTime, dayData.day)) != undefined
+  const hasNightTransportation = dayData.transportation.find(isOvernight) != undefined
+
+  function isOvernight(transportation: Transportation): boolean {
+    switch (transportation.type) {
+      case TransportationType.Plane: // deprecated
+      case TransportationType.Flight:
+        return transportation.flightDetail?.legs.find(leg =>
+          isSameDay(leg.departureDateTime, dayData.day) && !isSameDay(leg.arrivalDateTime, dayData.day)
+        ) != undefined
+      case TransportationType.Train:
+        return transportation.trainDetail?.legs.find(leg =>
+            isSameDay(leg.departureDateTime, dayData.day) && !isSameDay(leg.arrivalDateTime, dayData.day)
+        ) != undefined
+      default:
+        return !isSameDay(transportation.arrivalDateTime, dayData.day)
+    }
+  }
 
   function renderTransportation(transportation: Transportation) {
     switch (transportation.type) {
