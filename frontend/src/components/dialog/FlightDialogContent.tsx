@@ -7,13 +7,13 @@ import {Transportation, FlightLeg, Trip, AmbiguousFlightChoice} from "@/types.ts
 import {Dialog, RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
 import {toast} from "sonner";
 import {z} from "zod"
-import {isoDate, optionalString} from "@/schemas.ts";
+import {isoDate, optionalString} from "@/schema.ts";
 import {useFieldArray, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {dateFromString} from "@/components/util.ts";
 import {Form, FormField} from "@/components/ui/form.tsx";
-import AmountInput from "@/components/dialog/AmountInput.tsx";
-import DateInput from "@/components/dialog/DateInput.tsx";
+import AmountInput from "@/components/dialog/input/AmountInput.tsx";
+import DateInput from "@/components/dialog/input/DateInput.tsx";
 import {Spinner} from "@/components/ui/shadcn-io/spinner";
 import {AmbiguousFlightDialogContent} from "@/components/dialog/AmbiguousFlightDialog.tsx";
 

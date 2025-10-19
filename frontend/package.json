@@ -30,6 +30,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "jazz-tools": "^0.18.27",
     "lucide-react": "^0.544.0",
     "mapbox-gl": "^3.15.0",
     "maplibre-gl": "^5.8.0",
@@ -50,13 +51,13 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
-    "@typescript/native-preview": "^7.0.0-dev.20251019.1",
     "@tailwindcss/postcss": "^4.1.14",
     "@types/node": "^24.6.2",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@typescript-eslint/eslint-plugin": "^8.45.0",
     "@typescript-eslint/parser": "^8.45.0",
+    "@typescript/native-preview": "^7.0.0-dev.20251019.1",
     "@vitejs/plugin-react": "^5.0.4",
     "eslint": "^9.37.0",
     "eslint-plugin-react-hooks": "^6.1.1",

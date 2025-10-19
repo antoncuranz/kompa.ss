@@ -9,14 +9,14 @@ import {Form, FormField} from "@/components/ui/form"
 import {z} from "zod"
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import DateInput from "@/components/dialog/DateInput.tsx";
-import AmountInput from "@/components/dialog/AmountInput.tsx";
-import AddressInput from "@/components/dialog/AddressInput.tsx";
+import DateInput from "@/components/dialog/input/DateInput.tsx";
+import AmountInput from "@/components/dialog/input/AmountInput.tsx";
+import AddressInput from "@/components/dialog/input/AddressInput.tsx";
 import {dateFromString} from "@/components/util.ts";
 import {RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
-import {isoDate, location, optionalString} from "@/schemas";
+import {isoDate, location, optionalString} from "@/schema";
 import {toast} from "sonner";
-import LocationInput from "@/components/dialog/LocationInput.tsx";
+import LocationInput from "@/components/dialog/input/LocationInput.tsx";
 import {Spinner} from "@/components/ui/shadcn-io/spinner";
 
 const formSchema = z.object({

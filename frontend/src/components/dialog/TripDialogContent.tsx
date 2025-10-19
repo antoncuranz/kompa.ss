@@ -9,10 +9,10 @@ import {RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
 import {toast} from "sonner";
 import {Form, FormField} from "@/components/ui/form.tsx";
 import {z} from "zod"
-import {isoDate, optionalString} from "@/schemas.ts";
+import {isoDate, optionalString} from "@/schema.ts";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import DateInput from "@/components/dialog/DateInput.tsx";
+import DateInput from "@/components/dialog/input/DateInput.tsx";
 import {Spinner} from "@/components/ui/shadcn-io/spinner";
 
 const formSchema = z.object({

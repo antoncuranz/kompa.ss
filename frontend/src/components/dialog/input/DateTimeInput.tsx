@@ -1,5 +1,5 @@
 import {ControllerRenderProps, FieldValues} from "react-hook-form";
-import DateInput from "@/components/dialog/DateInput.tsx";
+import DateInput from "@/components/dialog/input/DateInput.tsx";
 import {ChangeEventHandler, useState} from "react";
 import { setHours, setMinutes } from "date-fns";
 import {Input} from "@/components/ui/input.tsx";

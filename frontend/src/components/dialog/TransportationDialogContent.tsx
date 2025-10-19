@@ -7,17 +7,17 @@ import {Form, FormField} from "@/components/ui/form"
 import {z} from "zod"
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import AmountInput from "@/components/dialog/AmountInput.tsx";
-import AddressInput from "@/components/dialog/AddressInput.tsx";
+import AmountInput from "@/components/dialog/input/AmountInput.tsx";
+import AddressInput from "@/components/dialog/input/AddressInput.tsx";
 import {dateFromString, titleCase} from "@/components/util.ts";
 import {RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
-import {isoDateTime, location, optionalString} from "@/schemas";
+import {isoDateTime, location, optionalString} from "@/schema";
 import {toast} from "sonner";
-import LocationInput from "@/components/dialog/LocationInput.tsx";
+import LocationInput from "@/components/dialog/input/LocationInput.tsx";
 import {Spinner} from "@/components/ui/shadcn-io/spinner";
 import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select"
 import {Separator} from "@/components/ui/separator.tsx";
-import DateTimeInput from "@/components/dialog/DateTimeInput.tsx";
+import DateTimeInput from "@/components/dialog/input/DateTimeInput.tsx";
 
 const formSchema = z.object({
   name: z.string().nonempty("Required"),
