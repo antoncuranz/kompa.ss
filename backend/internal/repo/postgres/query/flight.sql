@@ -18,8 +18,8 @@ FROM flight_pnr
 WHERE transportation_id = $1;
 
 -- name: InsertFlightLeg :one
-INSERT INTO flight_leg (transportation_id, origin, destination, airline, flight_number, departure_time, arrival_time, duration_in_minutes, aircraft)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+INSERT INTO flight_leg (transportation_id, origin, destination, airline, flight_number, departure_time, arrival_time, amadeus_date, duration_in_minutes, aircraft)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
 RETURNING id;
 
 -- name: UpdateFlightLeg :exec
@@ -30,8 +30,9 @@ SET origin              = $2,
     flight_number       = $5,
     departure_time      = $6,
     arrival_time        = $7,
-    duration_in_minutes = $8,
-    aircraft            = $9
+    amadeus_date        = $8,
+    duration_in_minutes = $9,
+    aircraft            = $10
 WHERE id = $1;
 
 -- name: AirportExists :one

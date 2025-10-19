@@ -49,6 +49,7 @@ func ConvertFlightLeg(c FlightConverter, leg sqlc.GetFlightLegsByTransportationI
 		FlightNumber:      leg.FlightLeg.FlightNumber,
 		DepartureDateTime: leg.FlightLeg.DepartureTime,
 		ArrivalDateTime:   leg.FlightLeg.ArrivalTime,
+		AmadeusFlightDate: leg.FlightLeg.AmadeusDate,
 		DurationInMinutes: leg.FlightLeg.DurationInMinutes,
 		Aircraft:          leg.FlightLeg.Aircraft,
 	}

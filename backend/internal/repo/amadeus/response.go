@@ -1,5 +1,7 @@
 package amadeus
 
+import "cloud.google.com/go/civil"
+
 type AccessTokenResponse struct {
 	AccessToken string `json:"access_token"`
 	Expiry      int    `json:"expires_in"`
@@ -10,9 +12,10 @@ type FlightStatusResponse struct {
 }
 
 type DatedFlight struct {
-	FlightDesignator FlightDesignator `json:"flightDesignator"`
-	FlightPoints     []FlightPoint    `json:"flightPoints"`
-	Legs             []Leg            `json:"legs"`
+	ScheduledDepartureDate civil.Date       `json:"scheduledDepartureDate"`
+	FlightDesignator       FlightDesignator `json:"flightDesignator"`
+	FlightPoints           []FlightPoint    `json:"flightPoints"`
+	Legs                   []Leg            `json:"legs"`
 }
 
 type FlightDesignator struct {

@@ -1,8 +1,9 @@
 package entity
 
 import (
-	"cloud.google.com/go/civil"
 	"fmt"
+
+	"cloud.google.com/go/civil"
 )
 
 type FlightDetail struct {
@@ -30,6 +31,7 @@ type FlightLeg struct {
 	FlightNumber      string         `json:"flightNumber"`
 	DepartureDateTime civil.DateTime `json:"departureDateTime"`
 	ArrivalDateTime   civil.DateTime `json:"arrivalDateTime"`
+	AmadeusFlightDate *civil.Date    `json:"amadeusFlightDate" extensions:"nullable"`
 	DurationInMinutes int32          `json:"durationInMinutes"`
 	Aircraft          *string        `json:"aircraft" extensions:"nullable"`
 }

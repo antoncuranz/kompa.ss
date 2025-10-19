@@ -6,7 +6,10 @@ import (
 	"kompass/internal/controller/http/v1/request"
 	"kompass/internal/entity"
 	"kompass/internal/repo"
+	"sort"
 	"strings"
+
+	"cloud.google.com/go/civil"
 )
 
 type UseCase struct {
@@ -29,6 +32,7 @@ func (uc *UseCase) CreateFlight(ctx context.Context, tripID int32, flight reques
 		return entity.Transportation{}, err
 	}
 
+	sortByDepartureDate(flightLegs)
 	firstLeg := flightLegs[0]
 	lastLeg := flightLegs[len(flightLegs)-1]
 
@@ -74,9 +78,21 @@ func (uc *UseCase) UpdateFlight(ctx context.Context, tripID int32, flightID int3
 		return err
 	}
 
-	// TODO: update PNRs and transportation base properties (locations, times, price)
+	sortByDepartureDate(flightLegs)
+	firstLeg := flightLegs[0]
+	lastLeg := flightLegs[len(flightLegs)-1]
+	transportation.DepartureDateTime = firstLeg.DepartureDateTime
+	transportation.ArrivalDateTime = lastLeg.ArrivalDateTime
+	transportation.Origin = firstLeg.Origin.Location
+	transportation.Destination = lastLeg.Destination.Location
+	// TODO: update PNRs and price
 
-	return uc.saveGeoJson(ctx, transportation)
+	updated, err := uc.transportationRepo.SaveTransportation(ctx, transportation)
+	if err != nil {
+		return fmt.Errorf("update transportation: %w", err)
+	}
+
+	return uc.saveGeoJson(ctx, updated)
 }
 
 func (uc *UseCase) retrieveFlightLegs(ctx context.Context, flight request.Flight) ([]entity.FlightLeg, error) {
@@ -96,7 +112,7 @@ func (uc *UseCase) retrieveFlightLegsUpdate(ctx context.Context, flight entity.F
 	legs := []entity.FlightLeg{}
 	for _, leg := range flight.Legs {
 		flightNumber := strings.ReplaceAll(leg.FlightNumber, " ", "")
-		flightLeg, err := uc.flightsApi.RetrieveFlightLeg(ctx, leg.DepartureDateTime.Date, flightNumber, &leg.Origin.Iata)
+		flightLeg, err := uc.flightsApi.RetrieveFlightLeg(ctx, getFlightDate(leg), flightNumber, &leg.Origin.Iata)
 		if err != nil {
 			return []entity.FlightLeg{}, err
 		}
@@ -105,4 +121,17 @@ func (uc *UseCase) retrieveFlightLegsUpdate(ctx context.Context, flight entity.F
 	}
 
 	return legs, nil
+}
+
+func sortByDepartureDate(legs []entity.FlightLeg) {
+	sort.Slice(legs, func(i, j int) bool {
+		return legs[i].DepartureDateTime.Compare(legs[j].DepartureDateTime) < 0
+	})
+}
+
+func getFlightDate(leg entity.FlightLeg) civil.Date {
+	if leg.AmadeusFlightDate != nil {
+		return *leg.AmadeusFlightDate
+	}
+	return leg.DepartureDateTime.Date
 }

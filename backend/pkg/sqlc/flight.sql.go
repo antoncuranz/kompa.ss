@@ -27,7 +27,7 @@ func (q *Queries) AirportExists(ctx context.Context, iata string) (bool, error) 
 }
 
 const getFlightLegsByTransportationID = `-- name: GetFlightLegsByTransportationID :many
-SELECT flight_leg.id, flight_leg.transportation_id, flight_leg.origin, flight_leg.destination, flight_leg.airline, flight_leg.flight_number, flight_leg.departure_time, flight_leg.arrival_time, flight_leg.duration_in_minutes, flight_leg.aircraft,
+SELECT flight_leg.id, flight_leg.transportation_id, flight_leg.origin, flight_leg.destination, flight_leg.airline, flight_leg.flight_number, flight_leg.departure_time, flight_leg.arrival_time, flight_leg.duration_in_minutes, flight_leg.aircraft, flight_leg.amadeus_date,
        origin.iata, origin.name, origin.municipality, origin.location_id,
        destination.iata, destination.name, destination.municipality, destination.location_id,
        origin_location.id, origin_location.latitude, origin_location.longitude,
@@ -69,6 +69,7 @@ func (q *Queries) GetFlightLegsByTransportationID(ctx context.Context, transport
 			&i.FlightLeg.ArrivalTime,
 			&i.FlightLeg.DurationInMinutes,
 			&i.FlightLeg.Aircraft,
+			&i.FlightLeg.AmadeusDate,
 			&i.Airport.Iata,
 			&i.Airport.Name,
 			&i.Airport.Municipality,
@@ -148,8 +149,8 @@ func (q *Queries) InsertAirport(ctx context.Context, arg InsertAirportParams) er
 }
 
 const insertFlightLeg = `-- name: InsertFlightLeg :one
-INSERT INTO flight_leg (transportation_id, origin, destination, airline, flight_number, departure_time, arrival_time, duration_in_minutes, aircraft)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+INSERT INTO flight_leg (transportation_id, origin, destination, airline, flight_number, departure_time, arrival_time, amadeus_date, duration_in_minutes, aircraft)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
 RETURNING id
 `
 
@@ -161,6 +162,7 @@ type InsertFlightLegParams struct {
 	FlightNumber      string
 	DepartureTime     civil.DateTime
 	ArrivalTime       civil.DateTime
+	AmadeusDate       *civil.Date
 	DurationInMinutes int32
 	Aircraft          *string
 }
@@ -174,6 +176,7 @@ func (q *Queries) InsertFlightLeg(ctx context.Context, arg InsertFlightLegParams
 		arg.FlightNumber,
 		arg.DepartureTime,
 		arg.ArrivalTime,
+		arg.AmadeusDate,
 		arg.DurationInMinutes,
 		arg.Aircraft,
 	)
@@ -209,8 +212,9 @@ SET origin              = $2,
     flight_number       = $5,
     departure_time      = $6,
     arrival_time        = $7,
-    duration_in_minutes = $8,
-    aircraft            = $9
+    amadeus_date        = $8,
+    duration_in_minutes = $9,
+    aircraft            = $10
 WHERE id = $1
 `
 
@@ -222,6 +226,7 @@ type UpdateFlightLegParams struct {
 	FlightNumber      string
 	DepartureTime     civil.DateTime
 	ArrivalTime       civil.DateTime
+	AmadeusDate       *civil.Date
 	DurationInMinutes int32
 	Aircraft          *string
 }
@@ -235,6 +240,7 @@ func (q *Queries) UpdateFlightLeg(ctx context.Context, arg UpdateFlightLegParams
 		arg.FlightNumber,
 		arg.DepartureTime,
 		arg.ArrivalTime,
+		arg.AmadeusDate,
 		arg.DurationInMinutes,
 		arg.Aircraft,
 	)

@@ -75,6 +75,7 @@ type FlightLeg struct {
 	ArrivalTime       civil.DateTime
 	DurationInMinutes int32
 	Aircraft          *string
+	AmadeusDate       *civil.Date
 }
 
 type FlightPnr struct {

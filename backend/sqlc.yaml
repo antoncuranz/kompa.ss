@@ -15,6 +15,12 @@ sql:
             go_type:
               import: "cloud.google.com/go/civil"
               type: "Date"
+          - db_type: "date"
+            nullable: true
+            go_type:
+              import: "cloud.google.com/go/civil"
+              type: "Date"
+              pointer: true
           - db_type: "time"
             go_type:
               import: "cloud.google.com/go/civil"

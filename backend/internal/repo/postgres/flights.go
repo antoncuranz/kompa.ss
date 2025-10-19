@@ -82,6 +82,7 @@ func (r *FlightsRepo) UpdateFlightLegs(ctx context.Context, flightLegs []entity.
 			Airline:           leg.Airline,
 			FlightNumber:      leg.FlightNumber,
 			DepartureTime:     leg.DepartureDateTime,
+			AmadeusDate:       leg.AmadeusFlightDate,
 			ArrivalTime:       leg.ArrivalDateTime,
 			DurationInMinutes: leg.DurationInMinutes,
 			Aircraft:          leg.Aircraft,
@@ -145,6 +146,7 @@ func (r *FlightsRepo) createFlightLegs(ctx context.Context, qtx *sqlc.Queries, t
 			FlightNumber:      leg.FlightNumber,
 			DepartureTime:     leg.DepartureDateTime,
 			ArrivalTime:       leg.ArrivalDateTime,
+			AmadeusDate:       leg.AmadeusFlightDate,
 			DurationInMinutes: leg.DurationInMinutes,
 			Aircraft:          leg.Aircraft,
 		})

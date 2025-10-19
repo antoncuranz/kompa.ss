@@ -155,6 +155,9 @@ components:
           type: string
         airline:
           type: string
+        amadeusFlightDate:
+          nullable: true
+          type: string
         arrivalDateTime:
           type: string
         departureDateTime:
@@ -172,6 +175,7 @@ components:
       required:
       - aircraft
       - airline
+      - amadeusFlightDate
       - arrivalDateTime
       - departureDateTime
       - destination

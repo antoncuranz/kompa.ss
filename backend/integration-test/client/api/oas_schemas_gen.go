@@ -537,6 +537,7 @@ func (s *EntityFlightDetail) SetPnrs(val []EntityPNR) {
 type EntityFlightLeg struct {
 	Aircraft          NilString     `json:"aircraft"`
 	Airline           string        `json:"airline"`
+	AmadeusFlightDate NilString     `json:"amadeusFlightDate"`
 	ArrivalDateTime   string        `json:"arrivalDateTime"`
 	DepartureDateTime string        `json:"departureDateTime"`
 	Destination       EntityAirport `json:"destination"`
@@ -554,6 +555,11 @@ func (s *EntityFlightLeg) GetAircraft() NilString {
 // GetAirline returns the value of Airline.
 func (s *EntityFlightLeg) GetAirline() string {
 	return s.Airline
+}
+
+// GetAmadeusFlightDate returns the value of AmadeusFlightDate.
+func (s *EntityFlightLeg) GetAmadeusFlightDate() NilString {
+	return s.AmadeusFlightDate
 }
 
 // GetArrivalDateTime returns the value of ArrivalDateTime.
@@ -599,6 +605,11 @@ func (s *EntityFlightLeg) SetAircraft(val NilString) {
 // SetAirline sets the value of Airline.
 func (s *EntityFlightLeg) SetAirline(val string) {
 	s.Airline = val
+}
+
+// SetAmadeusFlightDate sets the value of AmadeusFlightDate.
+func (s *EntityFlightLeg) SetAmadeusFlightDate(val NilString) {
+	s.AmadeusFlightDate = val
 }
 
 // SetArrivalDateTime sets the value of ArrivalDateTime.

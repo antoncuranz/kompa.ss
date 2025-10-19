@@ -1,16 +1,17 @@
 package amadeus
 
 import (
-	"cloud.google.com/go/civil"
 	"context"
 	"errors"
 	"fmt"
-	"github.com/gofiber/fiber/v2"
-	goiso8601duration "github.com/xnacly/go-iso8601-duration"
 	"kompass/config"
 	"kompass/internal/entity"
 	"kompass/internal/repo"
 	"time"
+
+	"cloud.google.com/go/civil"
+	"github.com/gofiber/fiber/v2"
+	goiso8601duration "github.com/xnacly/go-iso8601-duration"
 )
 
 type AmadeusWebAPI struct {
@@ -97,6 +98,7 @@ func (a *AmadeusWebAPI) mapDatedFlight(flightLeg legOfDatedFlight) (entity.Fligh
 		FlightNumber:      flightNumber,
 		DepartureDateTime: departureDateTime,
 		ArrivalDateTime:   arrivalDateTime,
+		AmadeusFlightDate: &flightLeg.ScheduledDepartureDate,
 		DurationInMinutes: int32(duration.Duration().Minutes()),
 		Aircraft:          &aircraftName,
 	}, nil

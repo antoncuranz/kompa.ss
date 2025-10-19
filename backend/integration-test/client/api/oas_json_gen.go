@@ -1787,6 +1787,10 @@ func (s *EntityFlightLeg) encodeFields(e *jx.Encoder) {
 		e.Str(s.Airline)
 	}
 	{
+		e.FieldStart("amadeusFlightDate")
+		s.AmadeusFlightDate.Encode(e)
+	}
+	{
 		e.FieldStart("arrivalDateTime")
 		e.Str(s.ArrivalDateTime)
 	}
@@ -1816,16 +1820,17 @@ func (s *EntityFlightLeg) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfEntityFlightLeg = [9]string{
+var jsonFieldsNameOfEntityFlightLeg = [10]string{
 	0: "aircraft",
 	1: "airline",
-	2: "arrivalDateTime",
-	3: "departureDateTime",
-	4: "destination",
-	5: "durationInMinutes",
-	6: "flightNumber",
-	7: "id",
-	8: "origin",
+	2: "amadeusFlightDate",
+	3: "arrivalDateTime",
+	4: "departureDateTime",
+	5: "destination",
+	6: "durationInMinutes",
+	7: "flightNumber",
+	8: "id",
+	9: "origin",
 }
 
 // Decode decodes EntityFlightLeg from json.
@@ -1859,8 +1864,18 @@ func (s *EntityFlightLeg) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"airline\"")
 			}
-		case "arrivalDateTime":
+		case "amadeusFlightDate":
 			requiredBitSet[0] |= 1 << 2
+			if err := func() error {
+				if err := s.AmadeusFlightDate.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"amadeusFlightDate\"")
+			}
+		case "arrivalDateTime":
+			requiredBitSet[0] |= 1 << 3
 			if err := func() error {
 				v, err := d.Str()
 				s.ArrivalDateTime = string(v)
@@ -1872,7 +1887,7 @@ func (s *EntityFlightLeg) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"arrivalDateTime\"")
 			}
 		case "departureDateTime":
-			requiredBitSet[0] |= 1 << 3
+			requiredBitSet[0] |= 1 << 4
 			if err := func() error {
 				v, err := d.Str()
 				s.DepartureDateTime = string(v)
@@ -1884,7 +1899,7 @@ func (s *EntityFlightLeg) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"departureDateTime\"")
 			}
 		case "destination":
-			requiredBitSet[0] |= 1 << 4
+			requiredBitSet[0] |= 1 << 5
 			if err := func() error {
 				if err := s.Destination.Decode(d); err != nil {
 					return err
@@ -1894,7 +1909,7 @@ func (s *EntityFlightLeg) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"destination\"")
 			}
 		case "durationInMinutes":
-			requiredBitSet[0] |= 1 << 5
+			requiredBitSet[0] |= 1 << 6
 			if err := func() error {
 				v, err := d.Int()
 				s.DurationInMinutes = int(v)
@@ -1906,7 +1921,7 @@ func (s *EntityFlightLeg) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"durationInMinutes\"")
 			}
 		case "flightNumber":
-			requiredBitSet[0] |= 1 << 6
+			requiredBitSet[0] |= 1 << 7
 			if err := func() error {
 				v, err := d.Str()
 				s.FlightNumber = string(v)
@@ -1918,7 +1933,7 @@ func (s *EntityFlightLeg) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"flightNumber\"")
 			}
 		case "id":
-			requiredBitSet[0] |= 1 << 7
+			requiredBitSet[1] |= 1 << 0
 			if err := func() error {
 				v, err := d.Int()
 				s.ID = int(v)
@@ -1930,7 +1945,7 @@ func (s *EntityFlightLeg) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"id\"")
 			}
 		case "origin":
-			requiredBitSet[1] |= 1 << 0
+			requiredBitSet[1] |= 1 << 1
 			if err := func() error {
 				if err := s.Origin.Decode(d); err != nil {
 					return err
@@ -1950,7 +1965,7 @@ func (s *EntityFlightLeg) Decode(d *jx.Decoder) error {
 	var failures []validate.FieldError
 	for i, mask := range [2]uint8{
 		0b11111111,
-		0b00000001,
+		0b00000011,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
