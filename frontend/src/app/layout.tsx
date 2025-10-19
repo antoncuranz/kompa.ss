@@ -2,6 +2,8 @@ import type {Metadata, Viewport} from 'next'
 import '../index.css'
 import {Toaster} from "@/components/ui/sonner.tsx";
 import {ThemeProvider} from "@/components/provider/ThemeProvider.tsx";
+import {JazzProvider} from "@/components/provider/JazzProvider.tsx";
+import {JazzProvider} from "@/components/provider/JazzProvider.tsx";
 
 export const metadata: Metadata = {
   title: "kompa.ss",
@@ -26,14 +28,16 @@ export default async function RootLayout({
     <html lang="de" suppressHydrationWarning>
     <body>
       <div className="root">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        <JazzProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </JazzProvider>
         <Toaster/>
       </div>
       <script>{`

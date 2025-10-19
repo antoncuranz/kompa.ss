@@ -1,6 +1,6 @@
 import * as core from "zod/v4/core";
-import {z} from "zod"
 import {dateTimeToString, dateToString} from "@/components/util.ts";
+import {co, z} from "jazz-tools";
 
 export function optionalString(params?: string | core.$ZodStringParams) {
   return z.string(params).trim().transform(x => x || undefined).optional()
@@ -32,3 +32,25 @@ export function trainStation(params?: string | core.$ZodObjectParams) {
   }, params).transform(station => station.id)
 }
 
+export const Band = co.map({
+  name: z.string(), // Zod primitive type
+});
+
+export const Festival = co.list(Band);
+
+export const JazzFestAccountRoot = co.map({
+  myFestival: Festival,
+});
+
+export const JazzFestAccount = co
+    .account({
+      root: JazzFestAccountRoot,
+      profile: co.profile(),
+    })
+    .withMigration((account) => {
+      if (!account.$jazz.has('root')) {
+        account.$jazz.set('root', {
+          myFestival: [],
+        });
+      }
+    });
