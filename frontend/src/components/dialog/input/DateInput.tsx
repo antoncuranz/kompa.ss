@@ -1,12 +1,12 @@
 import {Button} from "@/components/ui/button.tsx";
 import {CalendarIcon} from "lucide-react";
-import {cn} from "@/lib/utils.ts";
-import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
+import {Popover, PopoverContent, PopoverPositioner, PopoverTrigger} from "@/components/ui/popover.tsx";
 import {format} from "date-fns";
 import {Calendar} from "@/components/ui/calendar.tsx";
 import {Matcher} from "react-day-picker";
 import {dateFromString, getNextDay} from "@/components/util.ts";
 import {ControllerRenderProps, FieldValues} from "react-hook-form";
+import {cn} from "@/lib/utils.ts";
 
 export default function DateInput({
   onChange, onBlur, value, disabled, name, ref,
@@ -45,33 +45,36 @@ export default function DateInput({
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger render={
         <Button
             ref={ref}
             name={name}
             variant="secondary"
             className={cn(
-                "col-span-3 justify-start text-left font-normal w-full focus:ring-2 disabled:opacity-100 disabled:cursor-not-allowed disabled:pointer-events-auto",
+            //     "col-span-3 justify-start text-left font-normal w-full focus:ring-2 disabled:opacity-100 disabled:cursor-not-allowed disabled:pointer-events-auto",
+                "w-full justify-start disabled:opacity-100 disabled:cursor-not-allowed disabled:pointer-events-auto text-sm",
                 !value && "text-muted-foreground"
             )}
             disabled={disabled}
-        >
+        />
+      }>
           <CalendarIcon className="mr-2 h-4 w-4"/>
           {value ? format(value, "PP") : <span>Pick a date</span>}
-        </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0 rounded-2xl overflow-hidden shadow-lg">
-        <Calendar
-            ISOWeek
-            mode="single"
-            selected={value}
-            onSelect={onSelect}
-            startMonth={startDate ? dateFromString(getAdjustedStartDate()!) : undefined}
-            endMonth={endDate ? dateFromString(endDate) : undefined}
-            disabled={getMatcher()}
-            required={true}
-        />
-      </PopoverContent>
+      <PopoverPositioner>
+        <PopoverContent>
+          <Calendar
+              ISOWeek
+              mode="single"
+              selected={value}
+              onSelect={onSelect}
+              startMonth={startDate ? dateFromString(getAdjustedStartDate()!) : undefined}
+              endMonth={endDate ? dateFromString(endDate) : undefined}
+              disabled={getMatcher()}
+              required={true}
+          />
+        </PopoverContent>
+      </PopoverPositioner>
     </Popover>
   )
 }

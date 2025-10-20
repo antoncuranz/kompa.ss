@@ -266,15 +266,15 @@ export default function FlightDialogContent({
       </Dialog>
       <DialogFooter>
         {edit ?
-          <Button form="flight-form" type="submit" className="w-full text-base" disabled={isSubmitting}>
+          <Button form="flight-form" type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? <Spinner variant="pinwheel"/> : "Save"}
           </Button>
         :
           <>
-            <Button variant="destructive" className="w-full text-base" onClick={onDeleteButtonClick}>
+            <Button variant="destructive" className="w-full" onClick={onDeleteButtonClick}>
               Delete
             </Button>
-            <Button variant="secondary" className="w-full text-base" onClick={onUpdateButtonClick}>
+            <Button variant="secondary" className="w-full" onClick={onUpdateButtonClick}>
               Refresh Data
             </Button>
           </>

@@ -188,15 +188,15 @@ export default function TrainDialogContent({
       </Form>
       <DialogFooter>
         {edit ?
-          <Button form="train-form" type="submit" className="w-full text-base" disabled={isSubmitting}>
+          <Button form="train-form" type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? <Spinner variant="pinwheel"/> : "Save"}
           </Button>
         :
           <>
-            <Button variant="destructive" className="w-full text-base" onClick={onDeleteButtonClick}>
+            <Button variant="destructive" className="w-full" onClick={onDeleteButtonClick}>
               Delete
             </Button>
-            <Button variant="secondary" className="w-full text-base" disabled onClick={() => setEdit(true)}>
+            <Button variant="secondary" className="w-full" disabled onClick={() => setEdit(true)}>
               Edit
             </Button>
           </>

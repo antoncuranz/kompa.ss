@@ -1,6 +1,5 @@
 import React, {MouseEventHandler} from "react";
 import {cn} from "@/lib/utils.ts";
-import {GlowContainer} from "@/components/ui/glow-container.tsx";
 
 export default function Card({
   title,
@@ -19,8 +18,8 @@ export default function Card({
 }) {
 
   return (
-    <div className={cn("w-full rounded-2xl sm:rounded-3xl shadow-xl shadow-black/10 dark:shadow-white/5", className)} onClick={onClick}>
-      <GlowContainer className="flex flex-col h-full sm:p-2 rounded-2xl sm:rounded-3xl">
+    <div className={cn("w-full sm:rounded-3xl shadow-xl shadow-black/10 dark:shadow-white/5", className)} onClick={onClick}>
+      <div className="flex flex-col h-full sm:p-2 sm:rounded-3xl sm:border">
         {(title || headerSlot) &&
           <div className="flex flex-row p-3 sm:pb-5 border-b">
             <div className="grow text-xl/[2rem] sm:text-2xl">
@@ -30,10 +29,10 @@ export default function Card({
             {headerSlot}
           </div>
         }
-        <div className="h-full rounded-2xl no-scrollbar overflow-hidden overflow-y-scroll ">
+        <div className="h-full sm:rounded-2xl no-scrollbar overflow-hidden overflow-y-scroll ">
           {children}
         </div>
-      </GlowContainer>
+      </div>
     </div>
   )
 }

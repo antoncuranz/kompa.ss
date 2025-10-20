@@ -22,17 +22,19 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
     <body>
-      <JazzProvider>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Toaster/>
-        </ThemeProvider>
-      </JazzProvider>
+      <div className="root">
+        <JazzProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster/>
+          </ThemeProvider>
+        </JazzProvider>
+      </div>
     </body>
     </html>
   )

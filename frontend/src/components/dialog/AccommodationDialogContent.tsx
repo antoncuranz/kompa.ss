@@ -136,15 +136,15 @@ export default function AccommodationDialogContent({
       </Form>
       <DialogFooter>
         {edit ?
-          <Button form="accommodation-form" type="submit" className="w-full text-base" disabled={isSubmitting}>
+          <Button form="accommodation-form" type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? <Spinner variant="pinwheel"/> : "Save"}
           </Button>
         :
           <>
-            <Button variant="destructive" className="w-full text-base" onClick={onDeleteButtonClick}>
+            <Button variant="destructive" className="w-full" onClick={onDeleteButtonClick}>
               Delete
             </Button>
-            <Button variant="secondary" className="w-full text-base" onClick={() => setEdit(true)}>
+            <Button variant="secondary" className="w-full" onClick={() => setEdit(true)}>
               Edit
             </Button>
           </>
