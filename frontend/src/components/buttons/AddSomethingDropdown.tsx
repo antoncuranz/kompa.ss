@@ -2,7 +2,13 @@
 
 import React, {useState} from "react";
 import {Trip} from "@/types.ts";
-import {DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigger} from "@/components/ui/dropdown-menu.tsx";
+import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuPositioner
+} from "@/components/ui/dropdown-menu.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {PlaneTakeoff} from "lucide-react";
 import AccommodationDialogContent from "@/components/dialog/AccommodationDialogContent.tsx";
@@ -22,31 +28,31 @@ export default function AddSomethingDropdown({trip}: {trip: Trip}) {
   return (
     <div>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button size="sm" className="h-8 gap-1 mt-0 ml-1 self-end">
-            <PlaneTakeoff className="h-3.5 w-3.5"/>
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Add Something
-            </span>
-          </Button>
+        <DropdownMenuTrigger render={<Button size="sm" className="h-8 gap-1 mt-0 ml-1 self-end"/>}>
+          <PlaneTakeoff className="h-3.5 w-3.5"/>
+          <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+            Add Something
+          </span>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => setActivityDialogOpen(true)}>
-            Add Activity
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setAccommodationDialogOpen(true)}>
-            Add Accommodation
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setFlightDialogOpen(true)}>
-            Add Flight
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setTrainDialogOpen(true)}>
-            Add Train
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setTransportationDialogOpen(true)}>
-            Add Transportation
-          </DropdownMenuItem>
-        </DropdownMenuContent>
+        <DropdownMenuPositioner align="end">
+          <DropdownMenuContent>
+            <DropdownMenuItem onClick={() => setActivityDialogOpen(true)}>
+              Add Activity
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setAccommodationDialogOpen(true)}>
+              Add Accommodation
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setFlightDialogOpen(true)}>
+              Add Flight
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTrainDialogOpen(true)}>
+              Add Train
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTransportationDialogOpen(true)}>
+              Add Transportation
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenuPositioner>
       </DropdownMenu>
       <Dialog open={activityDialogOpen} setOpen={setActivityDialogOpen}>
         <ActivityDialogContent trip={trip}/>

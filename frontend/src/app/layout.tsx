@@ -21,15 +21,17 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
     <body>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
-        {children}
-        <Toaster/>
-      </ThemeProvider>
+      <div className="root">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Toaster/>
+        </ThemeProvider>
+      </div>
     </body>
     </html>
   )

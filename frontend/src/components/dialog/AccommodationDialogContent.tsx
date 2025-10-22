@@ -7,15 +7,15 @@ import {Textarea} from "@/components/ui/textarea.tsx";
 import {RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
 import {toast} from "sonner";
 import {z} from "zod"
-import {isoDate, location, optionalString} from "@/schemas.ts";
+import {isoDate, location, optionalString} from "@/schema.ts";
 import {Form, FormField} from "@/components/ui/form"
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {dateFromString} from "@/components/util.ts";
-import AmountInput from "@/components/dialog/AmountInput.tsx";
-import AddressInput from "@/components/dialog/AddressInput.tsx";
-import DateInput from "@/components/dialog/DateInput.tsx";
-import LocationInput from "@/components/dialog/LocationInput.tsx";
+import AmountInput from "@/components/dialog/input/AmountInput.tsx";
+import AddressInput from "@/components/dialog/input/AddressInput.tsx";
+import DateInput from "@/components/dialog/input/DateInput.tsx";
+import LocationInput from "@/components/dialog/input/LocationInput.tsx";
 import {Spinner} from "@/components/ui/shadcn-io/spinner";
 
 const formSchema = z.object({
@@ -136,15 +136,15 @@ export default function AccommodationDialogContent({
       </Form>
       <DialogFooter>
         {edit ?
-          <Button form="accommodation-form" type="submit" className="w-full text-base" disabled={isSubmitting}>
+          <Button form="accommodation-form" type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? <Spinner variant="pinwheel"/> : "Save"}
           </Button>
         :
           <>
-            <Button variant="destructive" className="w-full text-base" onClick={onDeleteButtonClick}>
+            <Button variant="destructive" className="w-full" onClick={onDeleteButtonClick}>
               Delete
             </Button>
-            <Button variant="secondary" className="w-full text-base" onClick={() => setEdit(true)}>
+            <Button variant="secondary" className="w-full" onClick={() => setEdit(true)}>
               Edit
             </Button>
           </>

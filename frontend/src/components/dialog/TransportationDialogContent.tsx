@@ -7,17 +7,24 @@ import {Form, FormField} from "@/components/ui/form"
 import {z} from "zod"
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import AmountInput from "@/components/dialog/AmountInput.tsx";
-import AddressInput from "@/components/dialog/AddressInput.tsx";
+import AmountInput from "@/components/dialog/input/AmountInput.tsx";
+import AddressInput from "@/components/dialog/input/AddressInput.tsx";
 import {dateFromString, titleCase} from "@/components/util.ts";
 import {RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
-import {isoDateTime, location, optionalString} from "@/schemas";
+import {isoDateTime, location, optionalString} from "@/schema";
 import {toast} from "sonner";
-import LocationInput from "@/components/dialog/LocationInput.tsx";
+import LocationInput from "@/components/dialog/input/LocationInput.tsx";
 import {Spinner} from "@/components/ui/shadcn-io/spinner";
-import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectPositioner,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select"
 import {Separator} from "@/components/ui/separator.tsx";
-import DateTimeInput from "@/components/dialog/DateTimeInput.tsx";
+import DateTimeInput from "@/components/dialog/input/DateTimeInput.tsx";
 
 const formSchema = z.object({
   name: z.string().nonempty("Required"),
@@ -61,7 +68,6 @@ export default function TransportationDialogContent({
     console.log(values)
     console.log(JSON.stringify(values))
 
-    // return
     let response
     if (transportation != null) {
       response = await fetch("/api/v1/trips/" + trip.id + "/transportation/" + transportation?.id, {
@@ -110,20 +116,20 @@ export default function TransportationDialogContent({
         <RowContainer>
           <FormField control={form.control} name="type" label="Type"
                      render={({field}) =>
-                         <Select name={field.name} onValueChange={field.onChange} defaultValue={field.value} disabled={field.disabled}>
-                           <SelectTrigger className="disabled:opacity-100">
+                         <Select name={field.name} onValueChange={field.onChange} value={field.value ?? ""} disabled={field.disabled}>
+                           <SelectTrigger className="w-full">
                              <SelectValue placeholder="Select type"/>
                            </SelectTrigger>
-                           <SelectContent>
-                             <SelectGroup>
+                           <SelectPositioner>
+                             <SelectContent>
                                {[TransportationType.Bus, TransportationType.Ferry, TransportationType.Boat, TransportationType.Bike,
                                  TransportationType.Car, TransportationType.Hike, TransportationType.Other].map(type =>
                                  <SelectItem key={type} value={type}>
                                    {getTransportationTypeEmoji(type)} {titleCase(type)}
                                  </SelectItem>
                                )}
-                             </SelectGroup>
-                           </SelectContent>
+                             </SelectContent>
+                           </SelectPositioner>
                          </Select>
                      }
           />
@@ -174,15 +180,15 @@ export default function TransportationDialogContent({
       </Form>
       <DialogFooter>
         {edit ?
-          <Button form="transportation-form" type="submit" className="w-full text-base" disabled={isSubmitting}>
+          <Button form="transportation-form" type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? <Spinner variant="pinwheel"/> : "Save"}
           </Button>
         :
           <>
-            <Button variant="destructive" className="w-full text-base" onClick={onDeleteButtonClick}>
+            <Button variant="destructive" className="w-full" onClick={onDeleteButtonClick}>
               Delete
             </Button>
-            <Button variant="secondary" className="w-full text-base" onClick={() => setEdit(true)}>
+            <Button variant="secondary" className="w-full" onClick={() => setEdit(true)}>
               Edit
             </Button>
           </>

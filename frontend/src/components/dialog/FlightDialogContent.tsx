@@ -7,13 +7,13 @@ import {Transportation, FlightLeg, Trip, AmbiguousFlightChoice} from "@/types.ts
 import {Dialog, RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
 import {toast} from "sonner";
 import {z} from "zod"
-import {isoDate, optionalString} from "@/schemas.ts";
+import {isoDate, optionalString} from "@/schema.ts";
 import {useFieldArray, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {dateFromString} from "@/components/util.ts";
 import {Form, FormField} from "@/components/ui/form.tsx";
-import AmountInput from "@/components/dialog/AmountInput.tsx";
-import DateInput from "@/components/dialog/DateInput.tsx";
+import AmountInput from "@/components/dialog/input/AmountInput.tsx";
+import DateInput from "@/components/dialog/input/DateInput.tsx";
 import {Spinner} from "@/components/ui/shadcn-io/spinner";
 import {AmbiguousFlightDialogContent} from "@/components/dialog/AmbiguousFlightDialog.tsx";
 
@@ -266,15 +266,15 @@ export default function FlightDialogContent({
       </Dialog>
       <DialogFooter>
         {edit ?
-          <Button form="flight-form" type="submit" className="w-full text-base" disabled={isSubmitting}>
+          <Button form="flight-form" type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? <Spinner variant="pinwheel"/> : "Save"}
           </Button>
         :
           <>
-            <Button variant="destructive" className="w-full text-base" onClick={onDeleteButtonClick}>
+            <Button variant="destructive" className="w-full" onClick={onDeleteButtonClick}>
               Delete
             </Button>
-            <Button variant="secondary" className="w-full text-base" onClick={onUpdateButtonClick}>
+            <Button variant="secondary" className="w-full" onClick={onUpdateButtonClick}>
               Refresh Data
             </Button>
           </>

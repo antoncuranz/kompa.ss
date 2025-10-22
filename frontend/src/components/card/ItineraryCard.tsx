@@ -1,7 +1,7 @@
 import {DayRenderData} from "@/types.ts";
 import {dayIsBetween, getDaysBetween, isSameDay} from "@/components/util.ts";
 import React from "react";
-import AddSomethingDropdown from "@/components/dialog/AddSomethingDropdown.tsx";
+import AddSomethingDropdown from "@/components/buttons/AddSomethingDropdown.tsx";
 import Card from "@/components/card/Card.tsx";
 import {fetchAccommodation, fetchActivities, fetchTransportation, fetchTrip} from "@/requests.ts";
 import Itinerary from "@/components/itinerary/Itinerary.tsx";
@@ -49,7 +49,7 @@ export default async function ItineraryCard({
   }
 
   return (
-    <Card title={trip.name} subtitle="Itinerary" headerSlot={<AddSomethingDropdown trip={trip}/>} className={className}>
+    <Card title="Itinerary" headerSlot={<AddSomethingDropdown trip={trip}/>} className={className}>
       <Itinerary trip={trip} dataByDays={processDataAndGroupByDays()}/>
     </Card>
   )

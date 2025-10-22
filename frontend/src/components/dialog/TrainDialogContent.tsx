@@ -7,13 +7,13 @@ import {TrainLeg, Transportation, Trip} from "@/types.ts";
 import {RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
 import {toast} from "sonner";
 import {z} from "zod";
-import {isoDate, trainStation} from "@/schemas.ts";
+import {isoDate, trainStation} from "@/schema.ts";
 import {useFieldArray, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Form, FormField} from "@/components/ui/form";
-import DateInput from "@/components/dialog/DateInput.tsx";
-import AmountInput from "@/components/dialog/AmountInput.tsx";
-import TrainStationInput from "@/components/dialog/TrainStationInput.tsx";
+import DateInput from "@/components/dialog/input/DateInput.tsx";
+import AmountInput from "@/components/dialog/input/AmountInput.tsx";
+import TrainStationInput from "@/components/dialog/input/TrainStationInput.tsx";
 import {dateFromString} from "@/components/util.ts";
 import {Spinner} from "@/components/ui/shadcn-io/spinner";
 
@@ -188,15 +188,15 @@ export default function TrainDialogContent({
       </Form>
       <DialogFooter>
         {edit ?
-          <Button form="train-form" type="submit" className="w-full text-base" disabled={isSubmitting}>
+          <Button form="train-form" type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? <Spinner variant="pinwheel"/> : "Save"}
           </Button>
         :
           <>
-            <Button variant="destructive" className="w-full text-base" onClick={onDeleteButtonClick}>
+            <Button variant="destructive" className="w-full" onClick={onDeleteButtonClick}>
               Delete
             </Button>
-            <Button variant="secondary" className="w-full text-base" disabled onClick={() => setEdit(true)}>
+            <Button variant="secondary" className="w-full" disabled onClick={() => setEdit(true)}>
               Edit
             </Button>
           </>

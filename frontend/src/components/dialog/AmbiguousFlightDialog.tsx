@@ -1,4 +1,4 @@
-import {DialogHeader, DialogTitle, DialogFooter} from "@/components/ui/dialog.tsx";
+import {DialogHeader, DialogTitle, DialogFooter, DialogDescription} from "@/components/ui/dialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group.tsx";
 import {Field, FieldLabel} from "@/components/ui/field.tsx";
@@ -15,21 +15,20 @@ export function AmbiguousFlightDialogContent({
   flightLegs: { date: string; flightNumber: string }[];
   onSelection: (selectedFlights: Map<number, AmbiguousFlightChoice>) => void;
 }) {
-  const [selectedChoices, setSelectedChoices] = useState(new Map<number, string>())
+  const [selectedChoices, setSelectedChoices] = useState(new Map<number, number>())
 
   const ambiguousFlightLegs = flightLegs
     .map((leg, idx) => ({ ...leg, legIdx: idx }))
     .filter(leg => flightChoices[leg.flightNumber])
 
-  const handleSelectionChange = (legId: number, choiceIdxStr: string) => {
-    setSelectedChoices(prev => new Map(prev).set(legId, choiceIdxStr))
+  const handleSelectionChange = (legId: number, choiceIdx: number) => {
+    setSelectedChoices(prev => new Map(prev).set(legId, choiceIdx))
   }
 
   const handleConfirm = () => {
     const finalChoices = new Map<number, AmbiguousFlightChoice>()
 
-    selectedChoices.forEach((choiceIdxStr, legIdx) => {
-      const choiceIdx = parseInt(choiceIdxStr)
+    selectedChoices.forEach((choiceIdx, legIdx) => {
       const flightNumber = flightLegs[legIdx].flightNumber
       finalChoices.set(legIdx, flightChoices[flightNumber][choiceIdx])
     })
@@ -50,9 +49,9 @@ export function AmbiguousFlightDialogContent({
     <>
       <DialogHeader>
         <DialogTitle>Multiple Flights Found</DialogTitle>
-        <p className="text-sm text-muted-foreground">
+        <DialogDescription>
           Multiple flights were found for the flight numbers you entered. Please select the specific flight for each leg.
-        </p>
+        </DialogDescription>
       </DialogHeader>
 
       <div className="py-4 overflow-y-auto space-y-2 [&>div]:px-4">
@@ -67,16 +66,16 @@ export function AmbiguousFlightDialogContent({
               
               <Field>
                 <RadioGroup
-                  value={selectedChoices.get(legIdx) ?? ""}
-                  onValueChange={(value) => handleSelectionChange(legIdx, value)}
+                  value={selectedChoices.get(legIdx) ?? -1}
+                  onValueChange={(value) => handleSelectionChange(legIdx, value as number)}
                 >
                   {choices.map((choice, idx) => (
                     <div key={idx} className="flex items-center space-x-3">
-                      <RadioGroupItem value={idx.toString()} id={`${legIdx}-choice-${idx}`} />
                       <FieldLabel
                         htmlFor={`${legIdx}-choice-${idx}`}
                         className="flex flex-1 cursor-pointer rounded-md border p-3 hover:bg-muted/50"
                       >
+                        <RadioGroupItem value={idx.toString()} id={`${legIdx}-choice-${idx}`} />
                         <div className="flex-1">
                           <div className="flex items-center justify-between">
                             <span className="font-medium">

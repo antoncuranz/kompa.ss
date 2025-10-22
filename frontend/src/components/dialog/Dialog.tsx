@@ -1,7 +1,7 @@
 import React, { createContext, useContext, ReactNode } from 'react';
-import * as DialogPrimitive from "@radix-ui/react-dialog"
 import {useRouter} from "next/navigation";
 import {DialogContent} from "@/components/ui/dialog.tsx"
+import { Dialog as BaseDialog } from '@base-ui-components/react/dialog';
 
 interface DialogContextType {
   onClose: (needsUpdate?: boolean) => void;
@@ -47,16 +47,16 @@ export function Dialog({
   }
 
   return (
-      <DialogPrimitive.Root open={open} onOpenChange={open => open || onClose(false)}>
+      <BaseDialog.Root open={open} onOpenChange={open => open || onClose(false)}>
         <DialogContent>
           <DialogContextProvider onClose={onClose}>
             {children}
           </DialogContextProvider>
         </DialogContent>
-      </DialogPrimitive.Root>
+      </BaseDialog.Root>
   )
 }
-Dialog.displayName = DialogPrimitive.Root.displayName
+Dialog.displayName = BaseDialog.Root.displayName
 
 export const RowContainer = ({
   children

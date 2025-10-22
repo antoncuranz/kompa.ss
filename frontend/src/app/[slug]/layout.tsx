@@ -21,11 +21,12 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const tripId = parseInt((await params).slug)
+  const trip = await fetchTrip(tripId)
 
   return (
       <>
-        <Navigation tripId={tripId}/>
-        <main id="root" className="w-full p-2 pt-0 sm:px-6 md:gap-2 relative z-1" style={{height: "calc(100dvh - 4rem)"}}>
+        <Navigation trip={trip}/>
+        <main id="root" className="w-full sm:px-4 md:px-6 md:gap-2 relative z-1 h-[calc(100dvh-5.5rem)] sm:h-[calc(100dvh-4.5rem)]">
           {children}
         </main>
       </>

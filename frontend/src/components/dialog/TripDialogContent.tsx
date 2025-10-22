@@ -9,10 +9,10 @@ import {RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
 import {toast} from "sonner";
 import {Form, FormField} from "@/components/ui/form.tsx";
 import {z} from "zod"
-import {isoDate, optionalString} from "@/schemas.ts";
+import {isoDate, optionalString} from "@/schema.ts";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import DateInput from "@/components/dialog/DateInput.tsx";
+import DateInput from "@/components/dialog/input/DateInput.tsx";
 import {Spinner} from "@/components/ui/shadcn-io/spinner";
 
 const formSchema = z.object({
@@ -115,15 +115,15 @@ export default function TripDialogContent({
       </Form>
       <DialogFooter>
         {edit ?
-          <Button form="trip-form" type="submit" className="w-full text-base" disabled={isSubmitting}>
+          <Button form="trip-form" type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? <Spinner variant="pinwheel"/> : "Save"}
           </Button>
         :
           <>
-            <Button variant="destructive" className="w-full text-base" onClick={onDeleteButtonClick}>
+            <Button variant="destructive" className="w-full" onClick={onDeleteButtonClick}>
               Delete
             </Button>
-            <Button variant="secondary" className="w-full text-base" onClick={() => setEdit(true)}>
+            <Button variant="secondary" className="w-full" onClick={() => setEdit(true)}>
               Edit
             </Button>
           </>

@@ -50,29 +50,9 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
 
-  --animate-accordion-down: accordion-down 0.2s ease-out;
-  --animate-accordion-up: accordion-up 0.2s ease-out;
-
   --shadow-input:
-    0px 2px 3px -1px rgba(0, 0, 0, 0.1), 0px 1px 0px 0px rgba(25, 28, 33, 0.02),
-    0px 0px 0px 1px rgba(25, 28, 33, 0.08);
-
-  @keyframes accordion-down {
-    from {
-      height: 0;
-    }
-    to {
-      height: var(--radix-accordion-content-height);
-    }
-  }
-  @keyframes accordion-up {
-    from {
-      height: var(--radix-accordion-content-height);
-    }
-    to {
-      height: 0;
-    }
-  }
+          0px 2px 3px -1px rgba(0, 0, 0, 0.1), 0px 1px 0px 0px rgba(25, 28, 33, 0.02),
+          0px 0px 0px 1px rgba(25, 28, 33, 0.08);
 }
 
 /*
@@ -124,6 +104,8 @@
       --ring: 240 10% 3.9%;
 
       --radius: 0.5rem;
+
+      --nested-dialogs: 1;
     }
 
     .dark {
@@ -227,3 +209,13 @@ body {
 .dark .glow-container:before {
   background:radial-gradient(700px circle at var(--x) var(--y),#dd7bbb 0,#d79f1e 10%,#5a922c 25%,#4c7894 35%,rgb(255 255 255 / 0.2) 80%);
 }
+
+/* base-ui */
+.root {
+  isolation: isolate;
+}
+
+body {
+  position: relative;
+}
+/* /base-ui */
