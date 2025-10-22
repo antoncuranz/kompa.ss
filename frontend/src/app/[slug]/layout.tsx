@@ -26,7 +26,7 @@ export default async function RootLayout({
   return (
       <>
         <Navigation trip={trip}/>
-        <main id="root" className="w-full sm:px-4 md:px-6 md:gap-2 relative z-1 h-[calc(100dvh-5.5rem)] sm:h-[calc(100dvh-4.5rem)]">
+        <main className="w-full sm:px-4 md:px-6 md:gap-2 relative z-1 sm:h-[calc(100dvh-4.5rem)]">
           {children}
         </main>
       </>

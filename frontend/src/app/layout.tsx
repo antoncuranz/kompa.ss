@@ -19,7 +19,7 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="de" suppressHydrationWarning>
     <body>
       <div className="root">
         <ThemeProvider
@@ -29,8 +29,8 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           {children}
-          <Toaster/>
         </ThemeProvider>
+        <Toaster/>
       </div>
     </body>
     </html>
