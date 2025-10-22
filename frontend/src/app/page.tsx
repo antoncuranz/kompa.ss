@@ -3,8 +3,8 @@ import {fetchTrips} from "@/requests.ts";
 import {Carousel} from "@/components/ui/cards-carousel.tsx";
 import Link from "next/link";
 import Card from "@/components/card/Card.tsx";
-import Navigation from "@/components/navigation/Navigation.tsx";
 import NewTripCard from "@/components/card/NewTripCard.tsx";
+import {ModeToggle} from "@/components/buttons/ModeToggle.tsx";
 
 export default async function Page() {
 
@@ -36,7 +36,14 @@ export default async function Page() {
 
   return (
     <>
-      <Navigation/>
+      <header className="sticky top-0 pt-0 h-14 sm:px-4 md:px-6">
+        <nav className="font-medium flex flex-row justify-between items-center sm:gap-2 text-sm w-full h-full">
+          <Link href="/">
+            <strong>🧭 kompa.ss</strong>
+          </Link>
+          <ModeToggle/>
+        </nav>
+      </header>
       <main id="root" className="w-full relative z-1" style={{height: "calc(100dvh - 4rem)"}}>
         <div className="flex h-full gap-4">
           <div className="w-full h-full py-6">
