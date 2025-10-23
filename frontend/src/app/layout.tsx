@@ -36,6 +36,23 @@ export default async function RootLayout({
         </ThemeProvider>
         <Toaster/>
       </div>
+      <script>{`
+        function updateThemeColor() {
+          const meta = document.querySelector("meta[name=theme-color]")
+          if (!meta) return
+          const bg = document.querySelector("html").classList.contains("dark") ? "black" : "white"
+          meta.setAttribute("content", bg)
+        }
+        updateThemeColor()
+        const observer = new MutationObserver(mutations => {
+          for (const m of mutations) {
+            if (m.type === "attributes" && m.attributeName === "class") {
+              updateThemeColor()
+            }
+          }
+        })
+        observer.observe(document.documentElement, { attributes: true })
+      `}</script>
     </body>
     </html>
   )
