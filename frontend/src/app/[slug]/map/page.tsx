@@ -11,7 +11,7 @@ export default async function Page( {
   const tripId = parseInt((await params).slug)
 
   return (
-    <div className="flex min-h-[calc(100dvh-5.5rem)] gap-4">
+    <div className="flex min-h-[calc(100dvh-5.5rem)] sm:min-h-[calc(100dvh-4.5rem)] gap-4">
       <Suspense fallback={<SkeletonCard/>}>
         <ErrorBoundary fallback={<SkeletonCard title="Error loading Map"/>}>
           <MapCard tripId={tripId}/>
