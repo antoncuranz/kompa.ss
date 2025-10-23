@@ -5,12 +5,16 @@ import {ThemeProvider} from "@/components/provider/ThemeProvider.tsx";
 
 export const metadata: Metadata = {
   title: "kompa.ss",
+  appleWebApp: {
+    title: "kompa.ss",
+  }
 }
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1.0,
-  maximumScale: 1.0
+  maximumScale: 1.0,
+  themeColor: "white",
 }
 
 export default async function RootLayout({

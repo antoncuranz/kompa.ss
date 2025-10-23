@@ -150,11 +150,6 @@
 
 /* custom css */
 
-body {
-  /* disable zooming */
-  touch-action: pan-x pan-y;
-}
-
 .redacted:not(:hover) {
   font-family: "Redacted Script";
 }

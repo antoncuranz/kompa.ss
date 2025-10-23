@@ -9,10 +9,11 @@ import {ModeToggle} from "@/components/buttons/ModeToggle.tsx";
 export default async function Page() {
 
   const fallbackColors = ["#0081A7", "#459f00", "#FED9B7", "#F07167"]
+  const cardClasses = "aspect-3/5 min-h-[20rem] sm:min-h-[26rem] h-[calc(100vh-20rem)] md:h-[calc(100vh-26rem)] max-h-160"
 
   const cards = (await fetchTrips()).map((trip, idx) => (
       <Link key={trip.id} href={"/" + trip.id + "/itinerary"}>
-        <Card className="h-80 w-56 md:h-160 md:w-96">
+        <Card className={cardClasses} onSmallDevices>
           <div className="relative h-full w-full">
             {trip.imageUrl &&
               <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-full bg-linear-to-b from-black/50 via-transparent to-transparent" />
@@ -32,11 +33,11 @@ export default async function Page() {
       </Link>
   ));
 
-  cards.push(<NewTripCard/>)
+  cards.push(<NewTripCard className={cardClasses}/>)
 
   return (
     <>
-      <header className="sticky top-0 pt-0 h-14 sm:px-4 md:px-6">
+      <header className="h-14 px-3 sm:px-4 md:px-6">
         <nav className="font-medium flex flex-row justify-between items-center sm:gap-2 text-sm w-full h-full">
           <Link href="/">
             <strong>🧭 kompa.ss</strong>
@@ -47,10 +48,10 @@ export default async function Page() {
       <main id="root" className="w-full relative z-1" style={{height: "calc(100dvh - 4rem)"}}>
         <div className="flex h-full gap-4">
           <div className="w-full h-full py-6">
-            <h2 className="max-w-7xl pl-4 mx-auto text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
-              Hello! Let's manage your trips
+            <h2 className="max-w-7xl pl-4 mx-auto text-3xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
+              Hello!<br/>Let's manage your trips
             </h2>
-            <Carousel items={cards} />
+            <Carousel items={cards}/>
           </div>
         </div>
       </main>

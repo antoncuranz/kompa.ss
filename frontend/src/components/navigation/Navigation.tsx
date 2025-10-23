@@ -17,7 +17,7 @@ export default function Navigation({
 }) {
   const pathname = usePathname(); // TODO: can this be a server component?
 
-  const commonStyle = "inline-block h-10 sm:h-14 leading-10 sm:leading-14 border-[chocolate]"
+  const commonStyle = "inline-block h-10 sm:h-14 leading-9 sm:leading-14 border-[chocolate]"
   const activeStyle = cn(commonStyle, "text-foreground border-b-3")
   const inactiveStyle = cn(commonStyle, "text-muted-foreground transition-colors hover:text-foreground")
 
@@ -35,7 +35,7 @@ export default function Navigation({
           </ButtonGroup>
           <ModeToggle className="sm:hidden"/>
         </div>
-        <div className="flex gap-4 lg:gap-6 overflow-x-auto w-full no-scrollbar items-center pl-5 md:pl-6 pr-10"
+        <div className="flex gap-6 lg:gap-8 overflow-x-auto w-full no-scrollbar items-center pl-5 md:pl-6 pr-10"
              style={{maskImage: "linear-gradient(to right, transparent .0em, black 1em calc(100% - 3em), transparent calc(100% - .0em))"}}
         >
           { ["Itinerary", "Map"].map(page =>
