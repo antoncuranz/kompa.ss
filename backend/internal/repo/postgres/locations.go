@@ -43,7 +43,9 @@ func GetLocationIDOrNilByAccommodationID(ctx context.Context, queries *sqlc.Quer
 
 func UpsertOrDeleteLocation(ctx context.Context, queries *sqlc.Queries, existingLocationId *int32, location *entity.Location) (*int32, error) {
 	if location != nil {
-		location.ID = *existingLocationId
+		if existingLocationId != nil {
+			location.ID = *existingLocationId
+		}
 		savedLocationID, err := SaveLocation(ctx, queries, *location)
 		if err != nil {
 			return nil, fmt.Errorf("save location: %w", err)
