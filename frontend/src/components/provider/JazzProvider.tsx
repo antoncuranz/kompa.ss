@@ -1,7 +1,7 @@
 "use client";
 
 import {JazzReactProvider} from "jazz-tools/react";
-import {JazzFestAccount} from "@/schema";
+import {JazzAccount} from "@/schema";
 import {Auth} from "@/components/Auth.tsx";
 import {JazzInspector} from "jazz-tools/inspector";
 
@@ -14,7 +14,7 @@ export function JazzProvider({children}: {
         peer: "ws://127.0.0.1:4200"
       }}
       guestMode={false}
-      AccountSchema={JazzFestAccount}
+      AccountSchema={JazzAccount}
     >
       <JazzInspector/>
       <Auth/>

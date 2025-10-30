@@ -2,12 +2,10 @@ import {Button} from "@/components/ui/button.tsx";
 import {DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog.tsx";
 import {useState} from "react";
 import {Input} from "@/components/ui/input.tsx";
-import {Accommodation, Trip} from "@/types.ts";
 import {Textarea} from "@/components/ui/textarea.tsx";
 import {RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
-import {toast} from "sonner";
 import {z} from "zod"
-import {isoDate, location, optionalString} from "@/schema.ts";
+import {Accommodation, Trip, isoDate, optionalLocation, optionalString} from "@/schema.ts";
 import {Form, FormField} from "@/components/ui/form"
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -25,14 +23,14 @@ const formSchema = z.object({
   departureDate: isoDate("Required"),
   price: z.number().optional(),
   address: optionalString(),
-  location: location().optional()
+  location: optionalLocation()
 })
 
 export default function AccommodationDialogContent({
   trip, accommodation
 }: {
   trip: Trip,
-  accommodation?: Accommodation | null
+  accommodation?: Accommodation
 }) {
   const [edit, setEdit] = useState<boolean>(accommodation == null)
   const {onClose} = useDialogContext()
@@ -53,36 +51,24 @@ export default function AccommodationDialogContent({
   const { isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    let response
-    if (accommodation != null) {
-      response = await fetch("/api/v1/trips/" + trip.id + "/accommodation/" + accommodation?.id, {
-        method: "PUT",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(values)
-      })
+    if (accommodation) {
+      accommodation.$jazz.applyDiff(values)
+      if (!accommodation.location) {
+        accommodation.$jazz.set("location", values.location)
+      }
     } else {
-      response = await fetch("/api/v1/trips/" + trip.id + "/accommodation", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(values)
-      })
+      trip.accommodation.$jazz.push(values)
     }
-
-    if (response.ok)
-      onClose(true)
-    else toast("Error upserting Accommodation", {
-      description: await response.text()
-    })
+    onClose()
   }
 
   async function onDeleteButtonClick() {
-    const response = await fetch("/api/v1/trips/" + trip.id + "/accommodation/" + accommodation!.id, {method: "DELETE"})
+    if (accommodation === undefined) {
+      return
+    }
 
-    if (response.ok)
-      onClose(true)
-    else toast("Error deleting Accommodation", {
-      description: await response.text()
-    })
+    trip.accommodation.$jazz.remove(a => a?.$jazz.id == accommodation.$jazz.id)
+    onClose()
   }
 
   return (

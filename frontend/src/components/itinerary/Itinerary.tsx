@@ -1,7 +1,7 @@
 "use client"
 
 import React, {useState} from "react";
-import {Accommodation, Activity, DayRenderData, Transportation, Trip} from "@/types.ts";
+import {DayRenderData, Flight, GenericTransportation, Train} from "@/schema.ts";
 import Day from "@/components/itinerary/Day.tsx";
 import AccommodationDialogContent from "@/components/dialog/AccommodationDialogContent.tsx";
 import FlightDialogContent from "@/components/dialog/FlightDialogContent.tsx";
@@ -9,6 +9,7 @@ import ActivityDialogContent from "@/components/dialog/ActivityDialogContent.tsx
 import {Dialog} from "@/components/dialog/Dialog.tsx";
 import TrainDialogContent from "@/components/dialog/TrainDialogContent.tsx";
 import TransportationDialogContent from "@/components/dialog/TransportationDialogContent.tsx";
+import {Trip, Accommodation, Activity} from "@/schema.ts";
 
 export default function Itinerary({
   trip, dataByDays
@@ -17,19 +18,19 @@ export default function Itinerary({
   dataByDays: DayRenderData[]
 }) {
   const [activityDialogOpen, setActivityDialogOpen] = useState(false)
-  const [dialogActivity, setDialogActivity] = useState<Activity|null>()
+  const [dialogActivity, setDialogActivity] = useState<Activity|undefined>()
 
   const [accommodationDialogOpen, setAccommodationDialogOpen] = useState(false)
-  const [dialogAccommodation, setDialogAccommodation] = useState<Accommodation|null>()
+  const [dialogAccommodation, setDialogAccommodation] = useState<Accommodation|undefined>()
 
   const [flightDialogOpen, setFlightDialogOpen] = useState(false)
-  const [dialogFlight, setDialogFlight] = useState<Transportation|null>()
+  const [dialogFlight, setDialogFlight] = useState<Flight|undefined>()
 
   const [trainDialogOpen, setTrainDialogOpen] = useState(false)
-  const [dialogTrain, setDialogTrain] = useState<Transportation|null>()
+  const [dialogTrain, setDialogTrain] = useState<Train|undefined>()
 
   const [transportationDialogOpen, setTransportationDialogOpen] = useState(false)
-  const [dialogTransportation, setDialogTransportation] = useState<Transportation|null>()
+  const [dialogTransportation, setDialogTransportation] = useState<GenericTransportation|undefined>()
 
   function onActivityClick(activity: Activity) {
     setDialogActivity(activity)
@@ -41,17 +42,17 @@ export default function Itinerary({
     setAccommodationDialogOpen(true)
   }
 
-  function onFlightClick(flight: Transportation) {
+  function onFlightClick(flight: Flight) {
     setDialogFlight(flight)
     setFlightDialogOpen(true)
   }
 
-  function onTrainClick(train: Transportation) {
+  function onTrainClick(train: Train) {
     setDialogTrain(train)
     setTrainDialogOpen(true)
   }
 
-  function onTransportationClick(transportation: Transportation) {
+  function onTransportationClick(transportation: GenericTransportation) {
     setDialogTransportation(transportation)
     setTransportationDialogOpen(true)
   }

@@ -8,7 +8,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import {cn} from "@/lib/utils.ts";
-import {FlightDetail, FlightLeg} from "@/types.ts";
+import {FlightDetail, FlightLeg} from "@/schema.ts";
 import {formatDurationMinutes, formatTime} from "@/components/util.ts";
 import React, {MouseEvent, MouseEventHandler, useState} from "react";
 import {useMap} from "@/components/map/common.tsx";
@@ -74,7 +74,7 @@ export default function FlightEntry({
             <span className="text-sm text-muted-foreground">{flightLeg.airline} - {flightLeg.flightNumber} - {flightLeg.aircraft}</span>
             <div className="flex float-right">
               {flight.pnrs.map(pnr =>
-                <Button key={pnr.id} size="sm" variant="secondary" className="ml-2 p-2 h-6">
+                <Button key={pnr.$jazz.id} size="sm" variant="secondary" className="ml-2 p-2 h-6">
                   {pnr.airline} {pnr.pnr}
                 </Button>
               )}

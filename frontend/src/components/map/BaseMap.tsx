@@ -4,7 +4,7 @@ import React from "react";
 import {Map as MaplibreMap} from "react-map-gl/maplibre";
 import {Map as MapboxMap} from "react-map-gl/mapbox";
 import {useTheme} from "next-themes";
-import {Coordinates} from "@/types.ts";
+import {Coordinates} from "@/schema.ts";
 import RenderAfterMap from "@/components/map/RenderAfterMap.tsx";
 import {isMapbox, mapboxToken, MapProps, mapStyle} from "@/components/map/common.tsx";
 

@@ -8,7 +8,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import {cn} from "@/lib/utils.ts";
-import {TrainLeg} from "@/types.ts";
+import {TrainLeg} from "@/schema.ts";
 import {formatDurationMinutes, formatTime} from "@/components/util.ts";
 import React, {MouseEvent, MouseEventHandler, useState} from "react";
 import {useMap} from "@/components/map/common.tsx";

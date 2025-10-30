@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react";
-import {Coordinates} from "@/types.ts";
+import {Coordinates} from "@/schema.ts";
 import BaseMap from "@/components/map/BaseMap.tsx";
 import {LngLat, MapMouseEvent, Marker, useMap} from "@/components/map/common.tsx";
 

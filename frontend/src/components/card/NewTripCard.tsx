@@ -6,10 +6,12 @@ import {CirclePlus} from "lucide-react";
 import TripDialogContent from "@/components/dialog/TripDialogContent.tsx";
 import {Dialog} from "@/components/dialog/Dialog.tsx";
 import {cn} from "@/lib/utils.ts";
+import {JazzAccount} from "@/schema";
 
 export default function NewTripCard({
-  className
+  account, className
 }: {
+  account: JazzAccount,
   className?: string
 }) {
   const [tripDialogOpen, setTripDialogOpen] = useState(false)
@@ -23,7 +25,7 @@ export default function NewTripCard({
         </div>
       </Card>
       <Dialog open={tripDialogOpen} setOpen={setTripDialogOpen}>
-        <TripDialogContent/>
+        <TripDialogContent account={account}/>
       </Dialog>
     </>
   )

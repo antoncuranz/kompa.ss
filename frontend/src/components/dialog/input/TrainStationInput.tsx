@@ -3,7 +3,7 @@ import {Button} from "@/components/ui/button.tsx";
 import {Pencil, Search} from "lucide-react";
 import {cn} from "@/lib/utils.ts";
 import {useState, useTransition} from "react";
-import {TrainStation} from "@/types.ts";
+import {TrainStation} from "@/schema.ts";
 import {toast} from "sonner";
 import {ControllerRenderProps, FieldValues} from "react-hook-form";
 import {Spinner} from "@/components/ui/shadcn-io/spinner";

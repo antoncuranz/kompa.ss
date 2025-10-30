@@ -9,8 +9,8 @@ import {
   GeoJsonTrain,
   GeoJsonTransportation,
   TransportationType
-} from "@/types.ts";
-import {formatDateShort, formatTime} from "@/components/util.ts";
+} from "@/schema.ts";
+import {formatDateShort} from "@/components/util.ts";
 import TrainPopup from "@/components/map/popup/TrainPopup.tsx";
 import FlightPopup from "@/components/map/popup/FlightPopup.tsx";
 import BaseMap from "@/components/map/BaseMap.tsx";
@@ -50,7 +50,8 @@ export default function HeroMap({
       properties: {
         "type": "ACTIVITY",
         "popupTitle": activity.name,
-        "popupBody": formatDateShort(activity.date) + (activity.time ? " " + formatTime(activity.time) : "")
+        "popupBody": formatDateShort(activity.date) // TODO: show time again!
+        // "popupBody": formatDateShort(activity.date) + (activity.time ? " " + formatTime(activity.time) : "")
       }
     }
   }
@@ -108,7 +109,6 @@ export default function HeroMap({
               </div>
             </div>
         )
-      case "PLANE": // deprecated
       case "FLIGHT":
         return <FlightPopup properties={props as GeoJsonFlight}/>
       case "TRAIN":
@@ -123,7 +123,6 @@ export default function HeroMap({
     const type = fc["transportationType"] as TransportationType
 
     switch (type) {
-      case TransportationType.Plane: // deprecated
       case TransportationType.Flight:
         return "#007cbf"
       case TransportationType.Train:
@@ -138,7 +137,6 @@ export default function HeroMap({
 
   function typeRank(type: TransportationType): number {
     switch (type) {
-      case TransportationType.Plane: // deprecated
       case TransportationType.Flight:
         return 4
       case TransportationType.Train:

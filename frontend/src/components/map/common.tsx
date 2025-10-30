@@ -22,7 +22,7 @@ import {
   Source as MapboxSource,
   useMap as useMapboxMap
 } from "react-map-gl/mapbox";
-import {SharedProperties} from "@/types.ts";
+import {SharedProperties} from "@/schema.ts";
 import type {FeatureCollection} from "geojson";
 import React, {ReactNode} from "react";
 import {LngLat as MapboxLngLat} from "mapbox-gl";

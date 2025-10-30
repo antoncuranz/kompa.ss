@@ -14,7 +14,7 @@ export default function RenderAfterMap({
   const [canRender, setCanRender] = useState(false)
 
   if (isMapbox) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // x-eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       if (!map.current || !theme)
         return

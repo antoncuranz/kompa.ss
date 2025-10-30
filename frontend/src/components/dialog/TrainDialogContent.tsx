@@ -3,9 +3,8 @@ import {DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog.ts
 import {Minus, Plus} from "lucide-react";
 import {useState} from "react";
 import {Input} from "@/components/ui/input.tsx";
-import {TrainLeg, Transportation, Trip} from "@/types.ts";
+import {Train, TrainLeg, Trip} from "@/schema.ts";
 import {RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
-import {toast} from "sonner";
 import {z} from "zod";
 import {isoDate, trainStation} from "@/schema.ts";
 import {useFieldArray, useForm} from "react-hook-form";
@@ -32,7 +31,7 @@ export default function TrainDialogContent({
   trip, train
 }: {
   trip: Trip
-  train?: Transportation | null
+  train?: Train
 }) {
   const [edit, setEdit] = useState<boolean>(train == null)
   const {onClose} = useDialogContext()
@@ -40,11 +39,11 @@ export default function TrainDialogContent({
   const form = useForm<z.input<typeof formSchema>, unknown, z.output<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      departureDate: train ? dateFromString(train.departureDateTime) : undefined,
-      fromStationId: getDefaultFromStation(train?.trainDetail?.legs),
-      toStationId: getDefaultToStation(train?.trainDetail?.legs),
+      departureDate: train ? dateFromString(train?.legs[0].departureDateTime) : undefined,
+      fromStationId: getDefaultFromStation(train?.legs.filter(leg => leg !== null)),
+      toStationId: getDefaultToStation(train?.legs.filter(leg => leg !== null)),
       viaStationId: undefined,
-      trainNumbers: mapLegsOrDefault(train?.trainDetail?.legs),
+      trainNumbers: mapLegsOrDefault(train?.legs.filter(leg => leg !== null)),
       price: train?.price ?? undefined
     },
     disabled: !edit
@@ -52,21 +51,21 @@ export default function TrainDialogContent({
   const { isSubmitting } = form.formState;
 
   function getDefaultFromStation(trainLegs: TrainLeg[]|undefined) {
-    if (trainLegs != null) {
+    if (trainLegs !== undefined) {
       return trainLegs[0].origin
     }
     return undefined
   }
 
   function getDefaultToStation(trainLegs: TrainLeg[]|undefined) {
-    if (trainLegs != null) {
+    if (trainLegs !== undefined) {
       return trainLegs[trainLegs.length-1].destination
     }
     return undefined
   }
 
   function mapLegsOrDefault(trainLegs: TrainLeg[]|undefined) {
-    if (trainLegs != null) {
+    if (trainLegs !== undefined) {
       return trainLegs.map(leg => ({
         value: leg.lineName,
       }))
@@ -83,36 +82,18 @@ export default function TrainDialogContent({
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    let response
-    if (train != null) {
-      response = await fetch("/api/v1/trips/" + trip.id + "/trains/" + train?.id, {
-        method: "PUT",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(values)
-      })
-    } else {
-      response = await fetch("/api/v1/trips/" + trip.id + "/trains", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(values)
-      })
-    }
-
-    if (response.ok)
-      onClose(true)
-    else toast("Error upserting Train", {
-      description: await response.text()
-    })
+    console.log(values)
+    // TODO!
+    onClose()
   }
 
   async function onDeleteButtonClick() {
-    const response = await fetch("/api/v1/trips/" + trip.id + "/transportation/" + train!.id, {method: "DELETE"})
+    if (train === undefined) {
+      return
+    }
 
-    if (response.ok)
-      onClose(true)
-    else toast("Error deleting Train", {
-      description: await response.text()
-    })
+    trip.transportation.$jazz.remove(t => t && t.$jazz.id == train.$jazz.id)
+    onClose()
   }
 
   function addLeg() {

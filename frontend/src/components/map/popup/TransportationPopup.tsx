@@ -1,6 +1,6 @@
 import React from "react";
 import {formatDateShort, formatTime, isSameDay} from "@/components/util.ts";
-import {GeoJsonTransportation, getTransportationTypeEmoji} from "@/types.ts";
+import {GeoJsonTransportation, getTransportationTypeEmoji} from "@/schema.ts";
 
 export default function TransportationPopup({
   properties

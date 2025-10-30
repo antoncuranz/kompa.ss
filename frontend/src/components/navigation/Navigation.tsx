@@ -6,16 +6,18 @@ import {Button} from "@/components/ui/button.tsx";
 import * as React from "react";
 import {GalleryHorizontalEnd} from "lucide-react";
 import {ButtonGroup} from "../ui/button-group";
-import {Trip} from "@/types.ts";
 import {cn} from "@/lib/utils.ts";
 import {usePathname} from "next/navigation";
+import {useCoState} from "jazz-tools/react-core";
+import {Trip} from "@/schema.ts";
 
 export default function Navigation({
-  trip
+  tripId
 }: {
-  trip: Trip
+  tripId: string
 }) {
-  const pathname = usePathname(); // TODO: can this be a server component?
+  const pathname = usePathname();
+  const trip = useCoState(Trip, tripId);
 
   const commonStyle = "inline-block h-10 sm:h-14 leading-9 sm:leading-14 border-[chocolate]"
   const activeStyle = cn(commonStyle, "text-foreground border-b-3")
@@ -31,7 +33,7 @@ export default function Navigation({
                 <GalleryHorizontalEnd/>
               </Button>
             </Link>
-            <Button size="sm" variant="outline" className="rounded-r-full pointer-events-none text-base pr-4">{trip.name}</Button>
+            <Button size="sm" variant="outline" className="rounded-r-full pointer-events-none text-base pr-4">{trip?.name}</Button>
           </ButtonGroup>
           <ModeToggle className="sm:hidden"/>
         </div>
@@ -40,7 +42,7 @@ export default function Navigation({
         >
           { ["Itinerary", "Map"].map(page =>
             <Link key={page.toLowerCase()}
-                  href={"/" + trip.id + "/" + page.toLowerCase()}
+                  href={"/" + trip?.$jazz.id + "/" + page.toLowerCase()}
                   className={pathname.endsWith("/" + page.toLowerCase()) ? activeStyle : inactiveStyle}
             >
               {page}

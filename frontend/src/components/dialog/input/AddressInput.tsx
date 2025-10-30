@@ -4,7 +4,7 @@ import {Search} from "lucide-react";
 import {cn} from "@/lib/utils.ts";
 import {ControllerRenderProps, FieldValues} from "react-hook-form";
 import {toast} from "sonner";
-import {Coordinates} from "@/types.ts";
+import {Coordinates} from "@/schema.ts";
 import {Spinner} from "@/components/ui/shadcn-io/spinner";
 import {useTransition} from "react";
 

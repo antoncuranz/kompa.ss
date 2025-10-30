@@ -2,7 +2,6 @@ import {Button} from "@/components/ui/button.tsx";
 import {DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog.tsx";
 import {useState} from "react";
 import {Input} from "@/components/ui/input.tsx";
-import {Activity, Trip} from "@/types.ts";
 import {Textarea} from "@/components/ui/textarea.tsx";
 
 import {Form, FormField} from "@/components/ui/form"
@@ -14,8 +13,7 @@ import AmountInput from "@/components/dialog/input/AmountInput.tsx";
 import AddressInput from "@/components/dialog/input/AddressInput.tsx";
 import {dateFromString} from "@/components/util.ts";
 import {RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
-import {isoDate, location, optionalString} from "@/schema";
-import {toast} from "sonner";
+import {Activity, isoDate, optionalLocation, optionalString, Trip} from "@/schema";
 import LocationInput from "@/components/dialog/input/LocationInput.tsx";
 import {Spinner} from "@/components/ui/shadcn-io/spinner";
 
@@ -25,14 +23,14 @@ const formSchema = z.object({
   date: isoDate("Required"),
   price: z.number().optional(),
   address: optionalString(),
-  location: location().optional()
+  location: optionalLocation()
 })
 
 export default function ActivityDialogContent({
   trip, activity
 }: {
   trip: Trip
-  activity?: Activity | null
+  activity?: Activity
 }) {
   const [edit, setEdit] = useState<boolean>(activity == null)
   const {onClose} = useDialogContext()
@@ -52,36 +50,24 @@ export default function ActivityDialogContent({
   const { isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    let response
-    if (activity != null) {
-      response = await fetch("/api/v1/trips/" + trip.id + "/activities/" + activity?.id, {
-        method: "PUT",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(values)
-      })
+    if (activity) {
+      activity.$jazz.applyDiff(values)
+      if (!activity.location) {
+        activity.$jazz.set("location", values.location)
+      }
     } else {
-      response = await fetch("/api/v1/trips/" + trip.id + "/activities", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(values)
-      })
+      trip.activities.$jazz.push(values)
     }
-
-    if (response.ok)
-      onClose(true)
-    else toast("Error upserting Activity", {
-      description: await response.text()
-    })
+    onClose()
   }
 
   async function onDeleteButtonClick() {
-    const response = await fetch("/api/v1/trips/" + trip.id + "/activities/" + activity!.id, {method: "DELETE"})
+    if (activity === undefined) {
+      return
+    }
 
-    if (response.ok)
-      onClose(true)
-    else toast("Error deleting Activity", {
-      description: await response.text()
-    })
+    trip.activities.$jazz.remove(a => a && a.$jazz.id == activity.$jazz.id)
+    onClose()
   }
 
   return (

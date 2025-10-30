@@ -2,7 +2,7 @@ import {Button} from "@/components/ui/button.tsx";
 import {DialogTitle} from "@/components/ui/dialog.tsx";
 import {useDialogContext} from "@/components/dialog/Dialog.tsx";
 import MiniMap from "@/components/map/MiniMap.tsx";
-import {Coordinates} from "@/types.ts";
+import {Coordinates} from "@/schema.ts";
 import React, {useState} from "react";
 
 export default function MapDialogContent({

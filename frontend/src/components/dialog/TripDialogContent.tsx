@@ -2,14 +2,12 @@ import {Button} from "@/components/ui/button.tsx";
 import {DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog.tsx";
 import {useState} from "react";
 import {Input} from "@/components/ui/input.tsx";
-import {Trip} from "@/types.ts";
 import {Textarea} from "@/components/ui/textarea.tsx";
 import {dateFromString} from "@/components/util.ts";
 import {RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
-import {toast} from "sonner";
 import {Form, FormField} from "@/components/ui/form.tsx";
 import {z} from "zod"
-import {isoDate, optionalString} from "@/schema.ts";
+import {isoDate, JazzAccount, optionalString, Trip} from "@/schema.ts";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import DateInput from "@/components/dialog/input/DateInput.tsx";
@@ -17,18 +15,19 @@ import {Spinner} from "@/components/ui/shadcn-io/spinner";
 
 const formSchema = z.object({
   name: z.string().nonempty("Required"),
-  description: optionalString(),
   startDate: isoDate("Required"),
   endDate: isoDate("Required"),
+  description: optionalString(),
   imageUrl: optionalString()
 })
 
 export default function TripDialogContent({
-  trip
+  account, trip
 }: {
-  trip?: Trip | null
+  account: JazzAccount,
+  trip?: Trip
 }) {
-  const [edit, setEdit] = useState<boolean>(trip == null)
+  const [edit, setEdit] = useState<boolean>(trip == undefined)
   const {onClose} = useDialogContext()
 
   const form = useForm<z.input<typeof formSchema>, unknown, z.output<typeof formSchema>>({
@@ -45,36 +44,25 @@ export default function TripDialogContent({
   const { isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    let response
-    if (trip != null) {
-      response = await fetch("/api/v1/trips/" + trip.id, {
-        method: "PUT",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(values)
-      })
+    if (trip) {
+      trip.$jazz.applyDiff(values)
     } else {
-      response = await fetch("/api/v1/trips", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(values)
+      account.root.trips.$jazz.push({...values,
+        activities: [],
+        accommodation: [],
+        transportation: []
       })
     }
-
-    if (response.ok)
-      onClose(true)
-    else toast("Error upserting Trip", {
-      description: await response.text()
-    })
+    onClose()
   }
 
   async function onDeleteButtonClick() {
-    const response = await fetch("/api/v1/trips/" + trip!.id, {method: "DELETE"})
-
-    if (response.ok)
-      onClose(true)
-    else toast("Error deleting Trip", {
-      description: await response.text()
-    })
+    if (trip === undefined) {
+      return
+    }
+    
+    account.root.trips.$jazz.remove(t => t?.$jazz.id == trip.$jazz.id)
+    onClose()
   }
 
   return (

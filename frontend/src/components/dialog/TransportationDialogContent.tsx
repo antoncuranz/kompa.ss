@@ -2,7 +2,7 @@ import {Button} from "@/components/ui/button.tsx";
 import {DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog.tsx";
 import {useState} from "react";
 import {Input} from "@/components/ui/input.tsx";
-import {getTransportationTypeEmoji, Transportation, TransportationType, Trip} from "@/types.ts";
+import {GenericTransportation, getTransportationTypeEmoji, TransportationType} from "@/schema.ts";
 import {Form, FormField} from "@/components/ui/form"
 import {z} from "zod"
 import {useForm} from "react-hook-form";
@@ -11,8 +11,7 @@ import AmountInput from "@/components/dialog/input/AmountInput.tsx";
 import AddressInput from "@/components/dialog/input/AddressInput.tsx";
 import {dateFromString, titleCase} from "@/components/util.ts";
 import {RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
-import {isoDateTime, location, optionalString} from "@/schema";
-import {toast} from "sonner";
+import {Trip, isoDateTime, location, optionalString} from "@/schema";
 import LocationInput from "@/components/dialog/input/LocationInput.tsx";
 import {Spinner} from "@/components/ui/shadcn-io/spinner";
 import {
@@ -28,7 +27,7 @@ import DateTimeInput from "@/components/dialog/input/DateTimeInput.tsx";
 
 const formSchema = z.object({
   name: z.string().nonempty("Required"),
-  type: z.string().nonempty("Required"),
+  genericType: z.string().nonempty("Required"),
   price: z.number().optional(),
   departureDateTime: isoDateTime("Required"),
   arrivalDateTime: isoDateTime("Required"),
@@ -42,7 +41,7 @@ export default function TransportationDialogContent({
   trip, transportation
 }: {
   trip: Trip
-  transportation?: Transportation | null
+  transportation?: GenericTransportation
 }) {
   const [edit, setEdit] = useState<boolean>(transportation == null)
   const {onClose} = useDialogContext()
@@ -50,54 +49,45 @@ export default function TransportationDialogContent({
   const form = useForm<z.input<typeof formSchema>, unknown, z.output<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: transportation?.genericDetail?.name ?? "",
-      type: transportation?.type ?? "",
+      name: transportation?.name ?? "",
+      genericType: transportation?.genericType ?? "",
       price: transportation?.price ?? undefined,
       departureDateTime: transportation?.departureDateTime ? dateFromString(transportation.departureDateTime) : undefined,
       arrivalDateTime: transportation?.arrivalDateTime ? dateFromString(transportation.arrivalDateTime) : undefined,
       origin: transportation?.origin ?? undefined,
       destination: transportation?.destination ?? undefined,
-      originAddress: transportation?.genericDetail?.originAddress ?? "",
-      destinationAddress: transportation?.genericDetail?.destinationAddress ?? "",
+      originAddress: transportation?.originAddress ?? "",
+      destinationAddress: transportation?.destinationAddress ?? "",
     },
     disabled: !edit
   })
   const { isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-    console.log(JSON.stringify(values))
-
-    let response
-    if (transportation != null) {
-      response = await fetch("/api/v1/trips/" + trip.id + "/transportation/" + transportation?.id, {
-        method: "PUT",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(values)
-      })
+    if (transportation) {
+      transportation.$jazz.applyDiff(values)
+      if (!transportation.origin) {
+        transportation.$jazz.set("origin", values.origin)
+      }
+      if (!transportation.destination) {
+        transportation.$jazz.set("destination", values.destination)
+      }
     } else {
-      response = await fetch("/api/v1/trips/" + trip.id + "/transportation", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(values)
+      trip.transportation.$jazz.push({
+        type: "generic",
+        ...values
       })
     }
-
-    if (response.ok)
-      onClose(true)
-    else toast("Error upserting Transportation", {
-      description: await response.text()
-    })
+    onClose()
   }
 
   async function onDeleteButtonClick() {
-    const response = await fetch("/api/v1/trips/" + trip.id + "/transportation/" + transportation!.id, {method: "DELETE"})
+    if (transportation === undefined) {
+      return
+    }
 
-    if (response.ok)
-      onClose(true)
-    else toast("Error deleting Transportation", {
-      description: await response.text()
-    })
+    trip.transportation.$jazz.remove(a => a?.$jazz.id == transportation.$jazz.id)
+    onClose()
   }
 
   return (
@@ -114,7 +104,7 @@ export default function TransportationDialogContent({
                    }
         />
         <RowContainer>
-          <FormField control={form.control} name="type" label="Type"
+          <FormField control={form.control} name="genericType" label="Type"
                      render={({field}) =>
                          <Select name={field.name} onValueChange={field.onChange} value={field.value ?? ""} disabled={field.disabled}>
                            <SelectTrigger className="w-full">

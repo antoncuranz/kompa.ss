@@ -1,7 +1,6 @@
 "use client"
 
 import React, {useState} from "react";
-import {Trip} from "@/types.ts";
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -17,6 +16,7 @@ import TrainDialogContent from "@/components/dialog/TrainDialogContent.tsx";
 import ActivityDialogContent from "@/components/dialog/ActivityDialogContent.tsx";
 import {Dialog} from "@/components/dialog/Dialog.tsx";
 import TransportationDialogContent from "@/components/dialog/TransportationDialogContent.tsx";
+import {Trip} from "@/schema.ts";
 
 export default function AddSomethingDropdown({trip}: {trip: Trip}) {
   const [activityDialogOpen, setActivityDialogOpen] = useState(false)

@@ -12,7 +12,7 @@ const DialogContext = createContext<DialogContextType | undefined>(undefined);
 export function DialogContextProvider({
   children, onClose
 }: {
-  onClose: (needsUpdate?: boolean) => void
+  onClose: () => void
   children: ReactNode
 }) {
 

@@ -1,18 +1,27 @@
+"use client"
+
 import React from "react";
-import {fetchTrips} from "@/requests.ts";
 import {Carousel} from "@/components/ui/cards-carousel.tsx";
 import Link from "next/link";
 import Card from "@/components/card/Card.tsx";
 import NewTripCard from "@/components/card/NewTripCard.tsx";
 import {ModeToggle} from "@/components/buttons/ModeToggle.tsx";
+import {JazzAccount, RESOLVE_ACCOUNT} from "@/schema.ts";
+import {useAccount} from "jazz-tools/react-core";
 
-export default async function Page() {
+export default function Page() {
+
+  const {me: account} = useAccount(JazzAccount, {resolve: RESOLVE_ACCOUNT});
+
+  if (!account) {
+    return <>Error loading data</>;
+  }
 
   const fallbackColors = ["#0081A7", "#459f00", "#FED9B7", "#F07167"]
   const cardClasses = "aspect-3/5 min-h-[20rem] sm:min-h-[26rem] h-[calc(100vh-20rem)] md:h-[calc(100vh-26rem)] max-h-160"
 
-  const cards = (await fetchTrips()).map((trip, idx) => (
-      <Link key={trip.id} href={"/" + trip.id + "/itinerary"}>
+  const cards = account.root.trips.map((trip, idx) => (
+      <Link key={trip.$jazz.id} href={"/" + trip.$jazz.id + "/itinerary"}>
         <Card className={cardClasses} onSmallDevices>
           <div className="relative h-full w-full">
             {trip.imageUrl &&
@@ -33,7 +42,7 @@ export default async function Page() {
       </Link>
   ));
 
-  cards.push(<NewTripCard className={cardClasses}/>)
+  cards.push(<NewTripCard account={account} className={cardClasses}/>)
 
   return (
     <>
@@ -49,7 +58,7 @@ export default async function Page() {
         <div className="flex h-full gap-4">
           <div className="w-full h-full py-6">
             <h2 className="max-w-7xl pl-4 mx-auto text-3xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
-              Hello!<br/>Let's manage your trips
+              Hello {account.profile.name}!<br/>Let's manage your trips
             </h2>
             <Carousel items={cards}/>
           </div>
