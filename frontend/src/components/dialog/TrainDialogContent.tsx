@@ -15,6 +15,7 @@ import AmountInput from "@/components/dialog/input/AmountInput.tsx";
 import TrainStationInput from "@/components/dialog/input/TrainStationInput.tsx";
 import {dateFromString} from "@/components/util.ts";
 import {Spinner} from "@/components/ui/shadcn-io/spinner";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   departureDate: isoDate("Required"),
@@ -82,9 +83,33 @@ export default function TrainDialogContent({
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-    // TODO!
-    onClose()
+    const response = await fetch("/api/v1/trains", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(values)
+    })
+
+    if (response.ok) {
+      const responseJson = await response.json()
+      console.log(responseJson)
+      if (train) {
+        train.$jazz.applyDiff({
+          ...responseJson,
+          price: values.price
+        })
+      } else {
+        trip.transportation.$jazz.push({
+          type: "train",
+          ...responseJson,
+          price: values.price
+        })
+      }
+      onClose()
+    } else {
+      toast("Error looking up Train", {
+        description: await response.text()
+      })
+    }
   }
 
   async function onDeleteButtonClick() {
@@ -177,7 +202,7 @@ export default function TrainDialogContent({
             <Button variant="destructive" className="w-full" onClick={onDeleteButtonClick}>
               Delete
             </Button>
-            <Button variant="secondary" className="w-full" disabled onClick={() => setEdit(true)}>
+            <Button variant="secondary" className="w-full" onClick={() => setEdit(true)}>
               Edit
             </Button>
           </>

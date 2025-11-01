@@ -98,6 +98,7 @@ export const FlightLeg = co.map({
   flightNumber: z.string(),
   departureDateTime: z.iso.datetime(),
   arrivalDateTime: z.iso.datetime(),
+  amadeusFlightDate: z.iso.date().optional(),
   durationInMinutes: z.number(),
   aircraft: z.string().optional()
 })
@@ -124,6 +125,7 @@ export const RESOLVE_FLIGHT_DETAIL = {
 export type FlightDetail = co.loaded<typeof FlightDetail, typeof RESOLVE_FLIGHT_DETAIL>;
 
 export const TrainStation = co.map({
+  id: z.string(),
   name: z.string(),
   location: Location
 })
@@ -180,6 +182,7 @@ export type Flight = co.loaded<typeof Flight, typeof RESOLVE_FLIGHT>;
 export const Train = co.map({
   type: z.literal("train"),
   legs: co.list(TrainLeg),
+  refreshToken: z.string().optional(),
   price: z.number().optional()
 })
 export const RESOLVE_TRAIN = {

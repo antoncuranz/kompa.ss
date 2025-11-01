@@ -24,7 +24,7 @@ const loginFormSchema = z.object({
 export function Auth() {
   const passphraseAuth = usePassphraseAuth({ wordlist })
   const passkeyAuth = usePasskeyAuth({
-    appName: "kompa.ss",
+    appName: "kompass",
   });
 
   const [passphraseFormShown, setPassphraseFormShown] = useState<boolean>(false)
@@ -58,7 +58,7 @@ export function Auth() {
       <Dialog open={true} setOpen={() => {}}>
         <DialogHeader>
           <DialogTitle>
-            Welcome to kompa.ss!
+            Welcome to kompass!
           </DialogTitle>
         </DialogHeader>
         <div className="px-4 pt-4">

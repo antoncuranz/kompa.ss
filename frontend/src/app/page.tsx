@@ -49,7 +49,7 @@ export default function Page() {
       <header className="h-14 px-3 sm:px-4 md:px-6">
         <nav className="font-medium flex flex-row justify-between items-center sm:gap-2 text-sm w-full h-full">
           <Link href="/">
-            <strong>🧭 kompa.ss</strong>
+            <strong>🧭 kompass</strong>
           </Link>
           <ModeToggle/>
         </nav>

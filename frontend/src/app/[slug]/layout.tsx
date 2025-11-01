@@ -9,7 +9,7 @@ import Navigation from "@/components/navigation/Navigation.tsx";
 //   // const trip = await fetchTrip(tripId)
 //
 //   return {
-//     title: "kompa.ss - " // + trip.name
+//     title: "kompass - " // + trip.name
 //   };
 // }
 

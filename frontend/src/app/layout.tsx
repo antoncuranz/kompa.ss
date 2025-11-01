@@ -5,9 +5,9 @@ import {ThemeProvider} from "@/components/provider/ThemeProvider.tsx";
 import {JazzProvider} from "@/components/provider/JazzProvider.tsx";
 
 export const metadata: Metadata = {
-  title: "kompa.ss",
+  title: "kompass",
   appleWebApp: {
-    title: "kompa.ss",
+    title: "kompass",
   }
 }
 

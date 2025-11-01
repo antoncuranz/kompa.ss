@@ -12,6 +12,7 @@ import {
   Trip,
   AmbiguousFlightChoice,
   Flight,
+  PNR,
 } from "@/schema.ts";
 import {
   Dialog,
@@ -28,6 +29,7 @@ import AmountInput from "@/components/dialog/input/AmountInput.tsx";
 import DateInput from "@/components/dialog/input/DateInput.tsx";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { AmbiguousFlightDialogContent } from "@/components/dialog/AmbiguousFlightDialogContent.tsx";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   legs: z.array(z.object({
@@ -54,14 +56,14 @@ export default function FlightDialogContent({
   trip: Trip
   flight?: Flight
 }) {
-  const [edit] = useState<boolean>(flight == undefined);
+  const [edit, setEdit] = useState<boolean>(flight == undefined);
   const [ambiguousDialogOpen, setAmbiguousDialogOpen] = useState(false);
   const [ambiguousDialogData, setAmbiguousDialogData] = useState<AmbiguousDialogData>({ legs: [], choices: {} });
   const { onClose } = useDialogContext();
 
   function mapLegsOrDefault(flightLegs: FlightLeg[]|undefined) {
     if (flightLegs) {
-      return flightLegs.map((leg) => ({
+      return flightLegs.map(leg => ({
         date: dateFromString(trip.startDate),
         flightNumber: leg.flightNumber
       }))
@@ -73,6 +75,17 @@ export default function FlightDialogContent({
     }]
   }
 
+  function mapPnrsOrDefault(pnrs: PNR[]|undefined) {
+    if (pnrs) {
+      return pnrs.map(pnr => ({
+        airline: pnr.airline,
+        pnr: pnr.pnr
+      }))
+    }
+
+    return []
+  }
+
   const form = useForm<
     z.input<typeof formSchema>,
     unknown,
@@ -81,7 +94,7 @@ export default function FlightDialogContent({
     resolver: zodResolver(formSchema),
     defaultValues: {
       legs: mapLegsOrDefault(flight?.legs.filter(leg => leg !== null)),
-      pnrs: flight?.pnrs.filter(pnr => pnr !== null) ?? [],
+      pnrs: mapPnrsOrDefault(flight?.pnrs.filter(pnr => pnr !== null)),
       price: flight?.price ?? undefined
     },
     disabled: !edit
@@ -102,33 +115,42 @@ export default function FlightDialogContent({
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-    // if (flight) {
-    //   flight.$jazz.applyDiff({ price: values.price })
+    const response = await fetch("/api/v1/flights", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({legs: values.legs})
+    })
 
-    //   for (let i = 0; i < values.legs.length; i++) {
-    //     if (flight.legs.length > i) {
-    //       flight.legs[i].$jazz.applyDiff(values.legs[i])
-    //     } else {
-    //       flight.legs.$jazz.push(values.legs[i])
-    //     }
-    //   }
-    //   while (flight.legs.length > values.legs.length) {
-    //     flight.legs.$jazz.pop()
-    //   }
-
-    //   while (flight.pnrs.length > values.pnrs.length) {
-    //     flight.pnrs.$jazz.pop()
-    //   }
-    // } else {
-    //   trip.transportation.$jazz.push({
-    //     type: "flight",
-    //     legs: [],
-    //     pnrs: [],
-    //     price: values.price
-    //   })
-    // }
-    onClose()
+    if (response.ok) {
+      const responseJson = await response.json()
+      if (flight) {
+        flight.$jazz.applyDiff({
+          ...values,
+          legs: responseJson.legs
+        })
+      } else {
+        trip.transportation.$jazz.push({
+          type: "flight",
+          ...values,
+          legs: responseJson.legs
+        })
+      }
+      onClose()
+    } else if (response.status === 422) {
+      try {
+        const ambiguousChoices = await response.json() as Record<string, AmbiguousFlightChoice[]>
+        setAmbiguousDialogData({ legs: values.legs, choices: ambiguousChoices })
+        setAmbiguousDialogOpen(true)
+      } catch {
+        toast("Error parsing ambiguous flight response", {
+          description: "Unable to parse flight choices"
+        })
+      }
+    } else {
+      toast("Error looking up Flight", {
+        description: await response.text()
+      })
+    }
   }
 
   function handleAmbiguousFlightSelection(selectedFlights: Map<number, AmbiguousFlightChoice>) {
@@ -149,14 +171,6 @@ export default function FlightDialogContent({
 
     trip.transportation.$jazz.remove(t => t && t.$jazz.id == flight.$jazz.id)
     onClose()
-  }
-
-  async function onUpdateButtonClick() {
-    if (flight === undefined) {
-      return
-    }
-
-    // TODO!
   }
 
   function addLeg() {
@@ -308,8 +322,8 @@ export default function FlightDialogContent({
             <Button variant="destructive" className="w-full" onClick={onDeleteButtonClick}>
               Delete
             </Button>
-            <Button variant="secondary" className="w-full" onClick={onUpdateButtonClick}>
-              Refresh Data
+            <Button variant="secondary" className="w-full" onClick={() => setEdit(true)}>
+              Edit
             </Button>
           </>
         }
