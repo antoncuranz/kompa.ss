@@ -1,8 +1,8 @@
 "use client"
-import React, { useEffect, useState, createContext, JSX } from "react"
-import { IconArrowNarrowLeft, IconArrowNarrowRight } from "@tabler/icons-react"
 import { cn } from "@/lib/utils"
+import { IconArrowNarrowLeft, IconArrowNarrowRight } from "@tabler/icons-react"
 import { motion } from "motion/react"
+import React, { createContext, JSX, useEffect, useState } from "react"
 
 interface CarouselProps {
   items: JSX.Element[]

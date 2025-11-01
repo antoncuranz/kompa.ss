@@ -1,11 +1,10 @@
 "use client"
 
-import React from "react"
 import Card from "@/components/card/Card.tsx"
-import HeroMap from "@/components/map/HeroMap.tsx"
-import { useCoState } from "jazz-tools/react-core"
-import { RESOLVE_TRIP, Trip } from "@/schema.ts"
 import SkeletonCard from "@/components/card/SkeletonCard.tsx"
+import HeroMap from "@/components/map/HeroMap.tsx"
+import { RESOLVE_TRIP, Trip } from "@/schema.ts"
+import { useCoState } from "jazz-tools/react-core"
 
 export default function MapCard({
   tripId,

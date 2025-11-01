@@ -1,22 +1,22 @@
 "use client"
 
-import React, { useState } from "react"
-import {
-  DropdownMenu,
-  DropdownMenuItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-  DropdownMenuPositioner,
-} from "@/components/ui/dropdown-menu.tsx"
-import { Button } from "@/components/ui/button.tsx"
-import { PlaneTakeoff } from "lucide-react"
 import AccommodationDialogContent from "@/components/dialog/AccommodationDialogContent.tsx"
-import FlightDialogContent from "@/components/dialog/FlightDialogContent.tsx"
-import TrainDialogContent from "@/components/dialog/TrainDialogContent.tsx"
 import ActivityDialogContent from "@/components/dialog/ActivityDialogContent.tsx"
 import { Dialog } from "@/components/dialog/Dialog.tsx"
+import FlightDialogContent from "@/components/dialog/FlightDialogContent.tsx"
+import TrainDialogContent from "@/components/dialog/TrainDialogContent.tsx"
 import TransportationDialogContent from "@/components/dialog/TransportationDialogContent.tsx"
+import { Button } from "@/components/ui/button.tsx"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuPositioner,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu.tsx"
 import { Trip } from "@/schema.ts"
+import { PlaneTakeoff } from "lucide-react"
+import { useState } from "react"
 
 export default function AddSomethingDropdown({ trip }: { trip: Trip }) {
   const [activityDialogOpen, setActivityDialogOpen] = useState(false)

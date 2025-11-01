@@ -1,6 +1,6 @@
-import * as React from "react"
 import { Menu as MenuPrimitive } from "@base-ui-components/react/menu"
 import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react"
+import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
@@ -241,19 +241,19 @@ function DropdownMenuSubContent({
 
 export {
   DropdownMenu,
-  DropdownMenuPortal,
-  DropdownMenuTrigger,
-  DropdownMenuPositioner,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuGroup,
-  DropdownMenuLabel,
   DropdownMenuItem,
-  DropdownMenuCheckboxItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuPositioner,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuSub,
-  DropdownMenuSubTrigger,
   DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
 }

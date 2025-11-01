@@ -1,21 +1,20 @@
-import FlightEntry from "@/components/itinerary/FlightEntry.tsx"
-import DaySeparator from "@/components/itinerary/DaySeparator.tsx"
-import { formatDuration, getDaysBetween, isSameDay } from "@/components/util.ts"
-import DayLabel from "@/components/itinerary/DayLabel.tsx"
-import React from "react"
 import ActivityEntry from "@/components/itinerary/ActivityEntry.tsx"
+import DayLabel from "@/components/itinerary/DayLabel.tsx"
+import DaySeparator from "@/components/itinerary/DaySeparator.tsx"
+import FlightEntry from "@/components/itinerary/FlightEntry.tsx"
+import TrainEntry from "@/components/itinerary/TrainEntry.tsx"
+import TransportationEntry from "@/components/itinerary/TransportationEntry.tsx"
+import { Separator } from "@/components/ui/separator.tsx"
+import { formatDuration, getDaysBetween, isSameDay } from "@/components/util.ts"
 import {
   Accommodation,
   Activity,
   Flight,
-  Train,
   GenericTransportation,
   LoadedTransportation,
+  Train,
 } from "@/schema.ts"
 import { DayRenderData } from "@/types"
-import { Separator } from "@/components/ui/separator.tsx"
-import TrainEntry from "@/components/itinerary/TrainEntry.tsx"
-import TransportationEntry from "@/components/itinerary/TransportationEntry.tsx"
 
 export default function Day({
   dayData,

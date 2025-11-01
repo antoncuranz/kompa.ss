@@ -1,4 +1,3 @@
-import React from "react"
 import ItineraryCard from "@/components/card/ItineraryCard.tsx"
 import MapCard from "@/components/card/MapCard.tsx"
 import { MapProvider } from "@/components/provider/MapProvider.tsx"

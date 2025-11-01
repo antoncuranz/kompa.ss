@@ -1,6 +1,6 @@
 import { Separator } from "@/components/ui/separator.tsx"
-import { Accommodation } from "@/schema.ts"
 import { cn } from "@/lib/utils.ts"
+import { Accommodation } from "@/schema.ts"
 
 export default function DaySeparator({
   collapsedDays,

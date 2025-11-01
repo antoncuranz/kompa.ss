@@ -1,25 +1,25 @@
+import { RowContainer, useDialogContext } from "@/components/dialog/Dialog.tsx"
+import AmountInput from "@/components/dialog/input/AmountInput.tsx"
+import DateInput from "@/components/dialog/input/DateInput.tsx"
+import TrainStationInput from "@/components/dialog/input/TrainStationInput.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog.tsx"
+import { Form, FormField } from "@/components/ui/form"
+import { Input } from "@/components/ui/input.tsx"
+import { Spinner } from "@/components/ui/shadcn-io/spinner"
+import { dateFromString } from "@/components/util.ts"
+import { isoDate, trainStation } from "@/formschema"
+import { Train, TrainLeg, Trip } from "@/schema.ts"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Minus, Plus } from "lucide-react"
 import { useState } from "react"
-import { Input } from "@/components/ui/input.tsx"
-import { Train, TrainLeg, Trip } from "@/schema.ts"
-import { RowContainer, useDialogContext } from "@/components/dialog/Dialog.tsx"
-import { z } from "zod"
-import { isoDate, trainStation } from "@/formschema"
 import { useFieldArray, useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Form, FormField } from "@/components/ui/form"
-import DateInput from "@/components/dialog/input/DateInput.tsx"
-import AmountInput from "@/components/dialog/input/AmountInput.tsx"
-import TrainStationInput from "@/components/dialog/input/TrainStationInput.tsx"
-import { dateFromString } from "@/components/util.ts"
-import { Spinner } from "@/components/ui/shadcn-io/spinner"
 import { toast } from "sonner"
+import { z } from "zod"
 
 const formSchema = z.object({
   departureDate: isoDate("Required"),

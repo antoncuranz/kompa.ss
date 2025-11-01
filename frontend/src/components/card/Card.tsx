@@ -1,5 +1,5 @@
-import React, { MouseEventHandler } from "react"
 import { cn } from "@/lib/utils.ts"
+import React, { MouseEventHandler } from "react"
 
 export default function Card({
   title,

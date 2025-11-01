@@ -5,3 +5,6 @@
 /frontend/.next
 /pmtiles/**
 /versatiles-style/**
+backend/optd_aircraft.csv
+backend/optd_airline_best_known_so_far.csv
+backend/optd_por_public.csv

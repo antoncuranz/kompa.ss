@@ -1,7 +1,5 @@
 "use client"
 
-import React from "react"
-import { Coordinates } from "@/types.ts"
 import BaseMap from "@/components/map/BaseMap.tsx"
 import {
   LngLat,
@@ -9,6 +7,8 @@ import {
   Marker,
   useMap,
 } from "@/components/map/common.tsx"
+import { Coordinates } from "@/types.ts"
+import React from "react"
 
 export default function MiniMap({
   children,

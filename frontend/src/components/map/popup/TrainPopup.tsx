@@ -1,4 +1,3 @@
-import React from "react"
 import { formatTimePadded } from "@/components/util.ts"
 import { GeoJsonTrain, GeoJsonTrainLeg } from "@/types.ts"
 

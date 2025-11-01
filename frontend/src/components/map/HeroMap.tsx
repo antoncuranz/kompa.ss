@@ -1,19 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
-import type { Feature, FeatureCollection, GeoJsonProperties } from "geojson"
-import { Accommodation, Activity } from "@/schema.ts"
-import {
-  GeoJsonFlight,
-  GeoJsonTrain,
-  GeoJsonTransportation,
-  TransportationType,
-} from "@/types.ts"
-import { formatDateShort } from "@/components/util.ts"
-import TrainPopup from "@/components/map/popup/TrainPopup.tsx"
-import FlightPopup from "@/components/map/popup/FlightPopup.tsx"
 import BaseMap from "@/components/map/BaseMap.tsx"
-import TransportationPopup from "@/components/map/popup/TransportationPopup"
 import {
   Layer,
   LngLat,
@@ -21,6 +8,19 @@ import {
   Popup,
   Source,
 } from "@/components/map/common.tsx"
+import FlightPopup from "@/components/map/popup/FlightPopup.tsx"
+import TrainPopup from "@/components/map/popup/TrainPopup.tsx"
+import TransportationPopup from "@/components/map/popup/TransportationPopup"
+import { formatDateShort } from "@/components/util.ts"
+import { Accommodation, Activity } from "@/schema.ts"
+import {
+  GeoJsonFlight,
+  GeoJsonTrain,
+  GeoJsonTransportation,
+  TransportationType,
+} from "@/types.ts"
+import type { Feature, FeatureCollection, GeoJsonProperties } from "geojson"
+import React, { useState } from "react"
 
 export default function HeroMap({
   activities,
@@ -164,8 +164,8 @@ export default function HeroMap({
 
   function sortedGeojson() {
     return geojson.sort((a, b) => {
-      // @ts-expect-error custom property
       return (
+        // @ts-expect-error custom property
         typeRank(a["transportationType"]) - typeRank(b["transportationType"])
       )
     })

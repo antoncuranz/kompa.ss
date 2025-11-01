@@ -1,12 +1,12 @@
-import { Input } from "@/components/ui/input.tsx"
-import { Button } from "@/components/ui/button.tsx"
-import { Map } from "lucide-react"
-import { cn } from "@/lib/utils.ts"
-import { ControllerRenderProps, FieldValues } from "react-hook-form"
 import { Dialog } from "@/components/dialog/Dialog.tsx"
-import React, { useState } from "react"
 import MapDialogContent from "@/components/dialog/MapDialogContent.tsx"
+import { Button } from "@/components/ui/button.tsx"
+import { Input } from "@/components/ui/input.tsx"
+import { cn } from "@/lib/utils.ts"
 import { Coordinates } from "@/types.ts"
+import { Map } from "lucide-react"
+import { useState } from "react"
+import { ControllerRenderProps, FieldValues } from "react-hook-form"
 
 export default function LocationInput({
   onChange,

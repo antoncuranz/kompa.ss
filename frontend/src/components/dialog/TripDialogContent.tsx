@@ -1,22 +1,22 @@
+import { RowContainer, useDialogContext } from "@/components/dialog/Dialog.tsx"
+import DateInput from "@/components/dialog/input/DateInput.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog.tsx"
-import { useState } from "react"
+import { Form, FormField } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
+import { Spinner } from "@/components/ui/shadcn-io/spinner"
 import { Textarea } from "@/components/ui/textarea.tsx"
 import { dateFromString } from "@/components/util.ts"
-import { RowContainer, useDialogContext } from "@/components/dialog/Dialog.tsx"
-import { Form, FormField } from "@/components/ui/form.tsx"
-import { z } from "zod"
-import { JazzAccount, Trip } from "@/schema.ts"
 import { isoDate, optionalString } from "@/formschema.ts"
-import { useForm } from "react-hook-form"
+import { JazzAccount, Trip } from "@/schema.ts"
 import { zodResolver } from "@hookform/resolvers/zod"
-import DateInput from "@/components/dialog/input/DateInput.tsx"
-import { Spinner } from "@/components/ui/shadcn-io/spinner"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
 const formSchema = z.object({
   name: z.string().nonempty("Required"),

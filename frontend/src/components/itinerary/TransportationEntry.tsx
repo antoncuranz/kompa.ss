@@ -1,9 +1,9 @@
+import { useMap } from "@/components/map/common.tsx"
 import { GenericTransportation } from "@/schema.ts"
 import { getTransportationTypeEmoji } from "@/types.ts"
-import React, { MouseEvent, MouseEventHandler } from "react"
-import { formatTime } from "../util"
 import { ChevronRight } from "lucide-react"
-import { useMap } from "@/components/map/common.tsx"
+import { MouseEvent, MouseEventHandler } from "react"
+import { formatTime } from "../util"
 
 export default function TransportationEntry({
   transportation,

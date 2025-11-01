@@ -1,24 +1,16 @@
+import { RowContainer, useDialogContext } from "@/components/dialog/Dialog.tsx"
+import AddressInput from "@/components/dialog/input/AddressInput.tsx"
+import AmountInput from "@/components/dialog/input/AmountInput.tsx"
+import DateTimeInput from "@/components/dialog/input/DateTimeInput.tsx"
+import LocationInput from "@/components/dialog/input/LocationInput.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog.tsx"
-import { useState } from "react"
-import { Input } from "@/components/ui/input.tsx"
-import { getTransportationTypeEmoji, TransportationType } from "@/types.ts"
 import { Form, FormField } from "@/components/ui/form"
-import { z } from "zod"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import AmountInput from "@/components/dialog/input/AmountInput.tsx"
-import AddressInput from "@/components/dialog/input/AddressInput.tsx"
-import { dateFromString, titleCase } from "@/components/util.ts"
-import { RowContainer, useDialogContext } from "@/components/dialog/Dialog.tsx"
-import { GenericTransportation, Trip } from "@/schema"
-import { isoDateTime, location, optionalString } from "@/formschema"
-import LocationInput from "@/components/dialog/input/LocationInput.tsx"
-import { Spinner } from "@/components/ui/shadcn-io/spinner"
+import { Input } from "@/components/ui/input.tsx"
 import {
   Select,
   SelectContent,
@@ -28,7 +20,15 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator.tsx"
-import DateTimeInput from "@/components/dialog/input/DateTimeInput.tsx"
+import { Spinner } from "@/components/ui/shadcn-io/spinner"
+import { dateFromString, titleCase } from "@/components/util.ts"
+import { isoDateTime, location, optionalString } from "@/formschema"
+import { GenericTransportation, Trip } from "@/schema"
+import { getTransportationTypeEmoji, TransportationType } from "@/types.ts"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
 const formSchema = z.object({
   name: z.string().nonempty("Required"),

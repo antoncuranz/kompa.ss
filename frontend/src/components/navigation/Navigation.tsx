@@ -1,15 +1,14 @@
 "use client"
 
-import Link from "next/link"
 import { ModeToggle } from "@/components/buttons/ModeToggle.tsx"
 import { Button } from "@/components/ui/button.tsx"
-import * as React from "react"
-import { GalleryHorizontalEnd } from "lucide-react"
-import { ButtonGroup } from "../ui/button-group"
 import { cn } from "@/lib/utils.ts"
-import { usePathname } from "next/navigation"
-import { useCoState } from "jazz-tools/react-core"
 import { Trip } from "@/schema.ts"
+import { useCoState } from "jazz-tools/react-core"
+import { GalleryHorizontalEnd } from "lucide-react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { ButtonGroup } from "../ui/button-group"
 
 export default function Navigation({ tripId }: { tripId: string }) {
   const pathname = usePathname()

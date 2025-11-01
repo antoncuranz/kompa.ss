@@ -1,21 +1,21 @@
 "use client"
 
+import AddSomethingDropdown from "@/components/buttons/AddSomethingDropdown.tsx"
+import Card from "@/components/card/Card.tsx"
+import SkeletonCard from "@/components/card/SkeletonCard.tsx"
+import Itinerary from "@/components/itinerary/Itinerary.tsx"
+import { dayIsBetween, getDaysBetween, isSameDay } from "@/components/util.ts"
 import {
   LoadedTransportation,
   RESOLVE_FLIGHT,
   RESOLVE_GENERIC_TRANSPORTATION,
   RESOLVE_TRAIN,
   RESOLVE_TRIP,
+  Trip,
 } from "@/schema.ts"
 import { DayRenderData } from "@/types.ts"
-import { dayIsBetween, getDaysBetween, isSameDay } from "@/components/util.ts"
-import React, { useEffect, useState } from "react"
-import AddSomethingDropdown from "@/components/buttons/AddSomethingDropdown.tsx"
-import Card from "@/components/card/Card.tsx"
-import Itinerary from "@/components/itinerary/Itinerary.tsx"
 import { useCoState } from "jazz-tools/react-core"
-import { Trip } from "@/schema.ts"
-import SkeletonCard from "@/components/card/SkeletonCard.tsx"
+import { useEffect, useState } from "react"
 
 export default function ItineraryCard({
   tripId,

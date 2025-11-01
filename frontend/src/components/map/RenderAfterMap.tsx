@@ -1,8 +1,8 @@
 "use client"
 
+import { isMapbox, useMap } from "@/components/map/common.tsx"
 import React, { useEffect, useState } from "react"
 import { MapRef as MapboxRef } from "react-map-gl/mapbox"
-import { isMapbox, useMap } from "@/components/map/common.tsx"
 
 export default function RenderAfterMap({
   children,

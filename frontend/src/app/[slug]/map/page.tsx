@@ -1,4 +1,3 @@
-import React from "react"
 import MapCard from "@/components/card/MapCard.tsx"
 
 export default async function Page({

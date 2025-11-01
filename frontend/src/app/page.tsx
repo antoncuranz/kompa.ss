@@ -1,13 +1,12 @@
 "use client"
 
-import React from "react"
-import { Carousel } from "@/components/ui/cards-carousel.tsx"
-import Link from "next/link"
+import { ModeToggle } from "@/components/buttons/ModeToggle.tsx"
 import Card from "@/components/card/Card.tsx"
 import NewTripCard from "@/components/card/NewTripCard.tsx"
-import { ModeToggle } from "@/components/buttons/ModeToggle.tsx"
+import { Carousel } from "@/components/ui/cards-carousel.tsx"
 import { JazzAccount, RESOLVE_ACCOUNT } from "@/schema.ts"
 import { useAccount } from "jazz-tools/react-core"
+import Link from "next/link"
 
 export default function Page() {
   const { me: account } = useAccount(JazzAccount, { resolve: RESOLVE_ACCOUNT })

@@ -1,17 +1,17 @@
-import { usePasskeyAuth, usePassphraseAuth } from "jazz-tools/react"
 import { Dialog } from "@/components/dialog/Dialog.tsx"
+import { Button } from "@/components/ui/button.tsx"
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog.tsx"
 import { Form, FormField } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
-import { Button } from "@/components/ui/button.tsx"
+import { Separator } from "@/components/ui/separator.tsx"
 import { Spinner } from "@/components/ui/shadcn-io/spinner"
+import { cn } from "@/lib/utils.ts"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { usePasskeyAuth, usePassphraseAuth } from "jazz-tools/react"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
 import wordlist from "../lib/wordlist.ts"
-import { Separator } from "@/components/ui/separator.tsx"
-import { useState } from "react"
-import { cn } from "@/lib/utils.ts"
 
 const signupFormSchema = z.object({
   name: z.string().nonempty("Required"),

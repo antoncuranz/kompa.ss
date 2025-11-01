@@ -1,4 +1,3 @@
-import React from "react"
 import ItineraryCard from "@/components/card/ItineraryCard.tsx"
 
 export default async function Page({

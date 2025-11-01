@@ -1,8 +1,8 @@
 "use client"
 
-import React, { CSSProperties, MouseEventHandler } from "react"
-import { useStore } from "@/store.ts"
 import { cn } from "@/lib/utils.ts"
+import { useStore } from "@/store.ts"
+import React, { CSSProperties, MouseEventHandler } from "react"
 
 export default function PrivacyFilter({
   children,

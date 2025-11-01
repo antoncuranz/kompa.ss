@@ -1,17 +1,17 @@
 "use client"
 
+import { useMap } from "@/components/map/common.tsx"
 import { Button } from "@/components/ui/button.tsx"
-import { ChevronDown, ChevronRight, ChevronUp, SquarePen } from "lucide-react"
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
+import { formatDurationMinutes, formatTime } from "@/components/util.ts"
 import { cn } from "@/lib/utils.ts"
 import { TrainLeg } from "@/schema.ts"
-import { formatDurationMinutes, formatTime } from "@/components/util.ts"
-import React, { MouseEvent, MouseEventHandler, useState } from "react"
-import { useMap } from "@/components/map/common.tsx"
+import { ChevronDown, ChevronRight, ChevronUp, SquarePen } from "lucide-react"
+import { MouseEvent, MouseEventHandler, useState } from "react"
 
 export default function TrainEntry({
   trainLeg,

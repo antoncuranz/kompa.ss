@@ -1,6 +1,5 @@
-import { cn } from "@/lib/utils.ts"
-import React from "react"
 import { Skeleton } from "@/components/ui/skeleton.tsx"
+import { cn } from "@/lib/utils.ts"
 
 export default function SkeletonCard({
   title,

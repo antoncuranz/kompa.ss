@@ -1,12 +1,12 @@
-import { Input } from "@/components/ui/input.tsx"
 import { Button } from "@/components/ui/button.tsx"
-import { Search } from "lucide-react"
+import { Input } from "@/components/ui/input.tsx"
+import { Spinner } from "@/components/ui/shadcn-io/spinner"
 import { cn } from "@/lib/utils.ts"
+import { Coordinates } from "@/types.ts"
+import { Search } from "lucide-react"
+import { useTransition } from "react"
 import { ControllerRenderProps, FieldValues } from "react-hook-form"
 import { toast } from "sonner"
-import { Coordinates } from "@/types.ts"
-import { Spinner } from "@/components/ui/shadcn-io/spinner"
-import { useTransition } from "react"
 
 export default function AddressInput({
   onChange,

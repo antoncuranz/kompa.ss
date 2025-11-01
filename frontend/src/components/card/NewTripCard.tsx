@@ -1,12 +1,12 @@
 "use client"
 
-import React, { useState } from "react"
 import Card from "@/components/card/Card.tsx"
-import { CirclePlus } from "lucide-react"
-import TripDialogContent from "@/components/dialog/TripDialogContent.tsx"
 import { Dialog } from "@/components/dialog/Dialog.tsx"
+import TripDialogContent from "@/components/dialog/TripDialogContent.tsx"
 import { cn } from "@/lib/utils.ts"
 import { JazzAccount } from "@/schema"
+import { CirclePlus } from "lucide-react"
+import { useState } from "react"
 
 export default function NewTripCard({
   account,

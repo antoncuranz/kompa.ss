@@ -1,5 +1,5 @@
-import * as React from "react"
 import { Popover as PopoverPrimitive } from "@base-ui-components/react/popover"
+import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
@@ -56,8 +56,8 @@ function PopoverAnchor({
 
 export {
   Popover,
-  PopoverTrigger,
-  PopoverContent,
   PopoverAnchor,
+  PopoverContent,
   PopoverPositioner,
+  PopoverTrigger,
 }

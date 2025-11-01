@@ -1,15 +1,15 @@
+import { Button } from "@/components/ui/button.tsx"
 import {
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
-  DialogDescription,
 } from "@/components/ui/dialog.tsx"
-import { Button } from "@/components/ui/button.tsx"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx"
 import { Field, FieldLabel } from "@/components/ui/field.tsx"
-import { useState } from "react"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx"
 import { formatDateShort } from "@/components/util.ts"
 import { AmbiguousFlightChoice } from "@/types.ts"
+import { useState } from "react"
 
 export function AmbiguousFlightDialogContent({
   flightChoices,

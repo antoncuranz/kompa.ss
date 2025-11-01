@@ -1,16 +1,22 @@
 "use client"
 
-import React, { useState } from "react"
-import { Flight, GenericTransportation, Train } from "@/schema.ts"
-import { DayRenderData } from "@/types.ts"
-import Day from "@/components/itinerary/Day.tsx"
 import AccommodationDialogContent from "@/components/dialog/AccommodationDialogContent.tsx"
-import FlightDialogContent from "@/components/dialog/FlightDialogContent.tsx"
 import ActivityDialogContent from "@/components/dialog/ActivityDialogContent.tsx"
 import { Dialog } from "@/components/dialog/Dialog.tsx"
+import FlightDialogContent from "@/components/dialog/FlightDialogContent.tsx"
 import TrainDialogContent from "@/components/dialog/TrainDialogContent.tsx"
 import TransportationDialogContent from "@/components/dialog/TransportationDialogContent.tsx"
-import { Trip, Accommodation, Activity } from "@/schema.ts"
+import Day from "@/components/itinerary/Day.tsx"
+import {
+  Accommodation,
+  Activity,
+  Flight,
+  GenericTransportation,
+  Train,
+  Trip,
+} from "@/schema.ts"
+import { DayRenderData } from "@/types.ts"
+import { useState } from "react"
 
 export default function Itinerary({
   trip,

@@ -1,7 +1,7 @@
-import { Activity } from "@/schema.ts"
-import React, { MouseEventHandler, MouseEvent } from "react"
-import { ChevronRight } from "lucide-react"
 import { useMap } from "@/components/map/common.tsx"
+import { Activity } from "@/schema.ts"
+import { ChevronRight } from "lucide-react"
+import { MouseEvent, MouseEventHandler } from "react"
 
 export default function ActivityEnty({
   activity,

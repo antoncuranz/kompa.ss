@@ -1,25 +1,25 @@
+import { RowContainer, useDialogContext } from "@/components/dialog/Dialog.tsx"
+import AddressInput from "@/components/dialog/input/AddressInput.tsx"
+import AmountInput from "@/components/dialog/input/AmountInput.tsx"
+import DateInput from "@/components/dialog/input/DateInput.tsx"
+import LocationInput from "@/components/dialog/input/LocationInput.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog.tsx"
-import { useState } from "react"
-import { Input } from "@/components/ui/input.tsx"
-import { Textarea } from "@/components/ui/textarea.tsx"
-import { RowContainer, useDialogContext } from "@/components/dialog/Dialog.tsx"
-import { z } from "zod"
-import { Accommodation, Trip } from "@/schema.ts"
-import { isoDate, optionalLocation, optionalString } from "@/formschema.ts"
 import { Form, FormField } from "@/components/ui/form"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { dateFromString } from "@/components/util.ts"
-import AmountInput from "@/components/dialog/input/AmountInput.tsx"
-import AddressInput from "@/components/dialog/input/AddressInput.tsx"
-import DateInput from "@/components/dialog/input/DateInput.tsx"
-import LocationInput from "@/components/dialog/input/LocationInput.tsx"
+import { Input } from "@/components/ui/input.tsx"
 import { Spinner } from "@/components/ui/shadcn-io/spinner"
+import { Textarea } from "@/components/ui/textarea.tsx"
+import { dateFromString } from "@/components/util.ts"
+import { isoDate, optionalLocation, optionalString } from "@/formschema.ts"
+import { Accommodation, Trip } from "@/schema.ts"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
 const formSchema = z.object({
   name: z.string().nonempty("Required"),

@@ -1,10 +1,5 @@
 "use client"
 
-import React from "react"
-import { Map as MaplibreMap } from "react-map-gl/maplibre"
-import { Map as MapboxMap } from "react-map-gl/mapbox"
-import { useTheme } from "next-themes"
-import { Coordinates } from "@/types.ts"
 import RenderAfterMap from "@/components/map/RenderAfterMap.tsx"
 import {
   isMapbox,
@@ -12,6 +7,11 @@ import {
   MapProps,
   mapStyle,
 } from "@/components/map/common.tsx"
+import { Coordinates } from "@/types.ts"
+import { useTheme } from "next-themes"
+import React from "react"
+import { Map as MapboxMap } from "react-map-gl/mapbox"
+import { Map as MaplibreMap } from "react-map-gl/maplibre"
 
 // TODO: make dynamic:
 import "mapbox-gl/dist/mapbox-gl.css"
