@@ -80,7 +80,7 @@ export function Auth() {
         </div>
         <Separator/>
         <Form form={signupForm} onSubmit={signupForm.handleSubmit(async values => await passkeyAuth.signUp(values.name))}>
-          <h3 className="mx-4 text-lg font-semibold leading-none tracking-tight">Don't have an account yet?</h3>
+          <h3 className="mx-4 text-lg font-semibold leading-none tracking-tight">Don&apos;t have an account yet?</h3>
           <FormField control={signupForm.control} name="name" label="Name"
                      render={({field}) =>
                        <Input data-1p-ignore placeholder="" {...field} />

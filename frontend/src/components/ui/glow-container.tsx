@@ -80,6 +80,7 @@ export function useIsMobile() {
     // if (isDev) setIsMobile(isSmall || isMobile)
     //
     // setIsMobile(isSmall && isMobile)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMobile(isSmall || isMobile)
   }, [])
 

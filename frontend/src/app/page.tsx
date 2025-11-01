@@ -58,7 +58,7 @@ export default function Page() {
         <div className="flex h-full gap-4">
           <div className="w-full h-full py-6">
             <h2 className="max-w-7xl pl-4 mx-auto text-3xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
-              Hello {account.profile.name}!<br/>Let's manage your trips
+              Hello {account.profile.name}!<br/>Let&apos;s manage your trips
             </h2>
             <Carousel items={cards}/>
           </div>

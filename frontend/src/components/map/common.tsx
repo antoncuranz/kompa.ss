@@ -59,7 +59,6 @@ export function Layer(props: {
     "line-color"?: string
     "line-width"?: number
   }
-  /* eslint-disable @typescript-eslint/no-explicit-any */
   layout?: any
   filter?: any
 }) {
@@ -78,5 +77,6 @@ export type MapCollection = {
 };
 
 export function useMap(): MapCollection {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   return isMapbox ? useMapboxMap() as MapCollection : useMaplibreMap() as MapCollection
 }
