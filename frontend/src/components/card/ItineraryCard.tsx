@@ -15,7 +15,7 @@ import {
 } from "@/schema.ts"
 import { DayRenderData } from "@/types.ts"
 import { useCoState } from "jazz-tools/react-core"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 export default function ItineraryCard({
   tripId,
@@ -53,44 +53,47 @@ export default function ItineraryCard({
     }
   }
 
-  function processDataAndGroupByDays(transportation: LoadedTransportation[]) {
-    const grouped: DayRenderData[] = []
+  const processDataAndGroupByDays = useCallback(
+    (transportation: LoadedTransportation[]) => {
+      const grouped: DayRenderData[] = []
 
-    for (const day of getDaysBetween(trip!.startDate, trip!.endDate)) {
-      const filteredActivities = trip!.activities.filter(act =>
-        isSameDay(day, act.date),
-      )
-
-      const relevantTransportation = transportation.filter(t =>
-        dayIsBetween(day, getDepartureDateTime(t), getArrivalDateTime(t)),
-      )
-
-      const relevantAccommodation = trip!.accommodation.find(
-        acc => acc.arrivalDate <= day && acc.departureDate > day,
-      )
-
-      // TODO: also push if day is today!
-      if (
-        isSameDay(day, trip!.endDate) ||
-        grouped.length == 0 ||
-        relevantTransportation.length != 0 ||
-        filteredActivities.length != 0 ||
-        relevantAccommodation != grouped[grouped.length - 1].accommodation ||
-        grouped[grouped.length - 1].transportation.find(t =>
-          isSameDay(getArrivalDateTime(t), day),
+      for (const day of getDaysBetween(trip!.startDate, trip!.endDate)) {
+        const filteredActivities = trip!.activities.filter(act =>
+          isSameDay(day, act.date),
         )
-      ) {
-        grouped.push({
-          day: day,
-          transportation: relevantTransportation,
-          activities: filteredActivities,
-          accommodation: relevantAccommodation,
-        })
-      }
-    }
 
-    setDataByDays(grouped)
-  }
+        const relevantTransportation = transportation.filter(t =>
+          dayIsBetween(day, getDepartureDateTime(t), getArrivalDateTime(t)),
+        )
+
+        const relevantAccommodation = trip!.accommodation.find(
+          acc => acc.arrivalDate <= day && acc.departureDate > day,
+        )
+
+        // TODO: also push if day is today!
+        if (
+          isSameDay(day, trip!.endDate) ||
+          grouped.length == 0 ||
+          relevantTransportation.length != 0 ||
+          filteredActivities.length != 0 ||
+          relevantAccommodation != grouped[grouped.length - 1].accommodation ||
+          grouped[grouped.length - 1].transportation.find(t =>
+            isSameDay(getArrivalDateTime(t), day),
+          )
+        ) {
+          grouped.push({
+            day: day,
+            transportation: relevantTransportation,
+            activities: filteredActivities,
+            accommodation: relevantAccommodation,
+          })
+        }
+      }
+
+      setDataByDays(grouped)
+    },
+    [trip],
+  )
 
   useEffect(() => {
     async function loadAndProcessData() {
@@ -123,7 +126,7 @@ export default function ItineraryCard({
     }
 
     loadAndProcessData()
-  }, [trip])
+  }, [trip, processDataAndGroupByDays])
 
   if (!trip) {
     return (

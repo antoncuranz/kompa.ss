@@ -32,6 +32,7 @@ export default function Page() {
             </div>
           </div>
           {trip.imageUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               className="absolute inset-0 z-10 object-cover h-full max-w-none w-auto transition duration-300"
               src={trip.imageUrl}

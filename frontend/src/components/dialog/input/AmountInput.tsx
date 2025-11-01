@@ -25,11 +25,8 @@ export default function AmountInput({
   const [stringAmount, setStringAmount] = useState("")
 
   useEffect(() => {
-    updateAmountInternal()
-  }, [value])
-  function updateAmountInternal() {
     setStringAmount(formatAmount(value, decimals))
-  }
+  }, [value, decimals])
 
   function onBlurLocal(event: FocusEvent<HTMLInputElement>) {
     const newAmount = event.target.value
@@ -40,7 +37,7 @@ export default function AmountInput({
       setStringAmount(formatAmount(newValue, decimals))
     } catch {
       toast("Unable to parse amount")
-      updateAmountInternal()
+      setStringAmount(formatAmount(value, decimals))
     }
     onBlur()
   }

@@ -100,6 +100,7 @@ export default function TrainEntry({
             </p>
           </div>
           <div className="flex items-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={logoFromOperatorName(trainLeg.operatorName)}
               className="h-auto w-full"
