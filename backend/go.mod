@@ -5,7 +5,6 @@ go 1.24.5
 tool (
 	github.com/jmattheis/goverter/cmd/goverter
 	github.com/ogen-go/ogen/cmd/ogen
-	github.com/sqlc-dev/sqlc/cmd/sqlc
 	github.com/swaggo/swag/v2/cmd/swag
 	go.uber.org/mock/mockgen
 )
@@ -19,10 +18,8 @@ require (
 	github.com/go-playground/validator/v10 v10.27.0
 	github.com/goccy/go-json v0.10.5
 	github.com/gofiber/fiber/v2 v2.52.9
-	github.com/jackc/pgx/v5 v5.7.6
 	github.com/ogen-go/ogen v1.14.0
 	github.com/paulmach/orb v0.11.1
-	github.com/pressly/goose/v3 v3.25.0
 	github.com/rs/zerolog v1.34.0
 	github.com/stretchr/testify v1.11.1
 	github.com/swaggo/fiber-swagger v1.3.1-0.20250217163408-2de6d674e0ae

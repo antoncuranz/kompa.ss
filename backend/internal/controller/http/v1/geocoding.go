@@ -23,7 +23,6 @@ type GeocodingV1 struct {
 // @Param       query query string true "location query"
 // @Success     200 {object} entity.Location
 // @Failure     500 {object} response.Error
-// @Security    bearerauth
 // @Router      /geocoding/location [get]
 func (r *GeocodingV1) getLocation(ctx *fiber.Ctx) error {
 	query := ctx.Query("query")
@@ -42,7 +41,6 @@ func (r *GeocodingV1) getLocation(ctx *fiber.Ctx) error {
 // @Param       query query string true "station query"
 // @Success     200 {object} entity.TrainStation
 // @Failure     500 {object} response.Error
-// @Security    bearerauth
 // @Router      /geocoding/station [get]
 func (r *GeocodingV1) getTrainStation(ctx *fiber.Ctx) error {
 	query := ctx.Query("query")

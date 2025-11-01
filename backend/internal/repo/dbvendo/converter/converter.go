@@ -1,17 +1,17 @@
 package converter
 
 import (
-	"cloud.google.com/go/civil"
 	"kompass/internal/entity"
-	"kompass/internal/repo/webapi/response"
+	"kompass/internal/repo/dbvendo/response"
 	"strings"
+
+	"cloud.google.com/go/civil"
 )
 
 // goverter:converter
 // goverter:extend ParseTimestamp
 type TrainConverter interface {
 	ConvertJourney(source response.Journey) (entity.TrainDetail, error)
-	// goverter:ignore ID
 	// goverter:map PlannedDeparture DepartureDateTime
 	// goverter:map PlannedArrival ArrivalDateTime
 	// goverter:map Line.Name LineName
@@ -23,7 +23,6 @@ type TrainConverter interface {
 
 	ConvertStation(source response.StationOrStop) entity.TrainStation
 
-	// goverter:ignore ID
 	ConvertLocation(source response.Location) entity.Location
 }
 

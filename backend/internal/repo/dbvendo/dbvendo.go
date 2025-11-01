@@ -1,18 +1,20 @@
-package webapi
+package dbvendo
 
 import (
 	"context"
 	"fmt"
-	"github.com/paulmach/orb/geojson"
 	"kompass/config"
 	"kompass/internal/controller/http/v1/request"
 	"kompass/internal/entity"
-	"kompass/internal/repo/webapi/converter"
-	"kompass/internal/repo/webapi/response"
+	"kompass/internal/repo"
+	"kompass/internal/repo/dbvendo/converter"
+	"kompass/internal/repo/dbvendo/response"
 	"net/url"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/paulmach/orb/geojson"
 )
 
 type DbVendoWebAPI struct {
@@ -20,7 +22,7 @@ type DbVendoWebAPI struct {
 	c       converter.TrainConverter
 }
 
-func NewDbVendoWebAPI(config config.WebApi) *DbVendoWebAPI {
+func New(config config.WebApi) *DbVendoWebAPI {
 	return &DbVendoWebAPI{
 		baseURL: config.DbVendoBaseURL,
 		c:       &converter.TrainConverterImpl{},
@@ -31,7 +33,7 @@ func (a *DbVendoWebAPI) LookupTrainStation(ctx context.Context, query string) (e
 	urlFormat := "%s/locations?query=%s&poi=false"
 	locationsUrl := fmt.Sprintf(urlFormat, a.baseURL, url.QueryEscape(query))
 
-	results, err := RequestAndParseJsonBody[[]response.StationOrStop](ctx, "GET", locationsUrl, nil)
+	results, err := repo.RequestAndParseJsonBody[[]response.StationOrStop](ctx, "GET", locationsUrl, nil)
 	if err != nil {
 		return entity.TrainStation{}, fmt.Errorf("requestAndParseJsonBody: %w", err)
 	}
@@ -47,7 +49,7 @@ func (a *DbVendoWebAPI) RetrievePolylines(ctx context.Context, refreshToken stri
 	urlFormat := "%s/journeys/%s?polylines=true"
 	url := fmt.Sprintf(urlFormat, a.baseURL, refreshToken)
 
-	rsp, err := RequestAndParseJsonBody[response.JourneyResponse](ctx, "GET", url, nil)
+	rsp, err := repo.RequestAndParseJsonBody[response.JourneyResponse](ctx, "GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("requestAndParseJsonBody: %w", err)
 	}
@@ -66,7 +68,7 @@ func (a *DbVendoWebAPI) RetrievePolylines(ctx context.Context, refreshToken stri
 const MaxRetries = 10
 
 func (a *DbVendoWebAPI) RetrieveJourney(ctx context.Context, request request.TrainJourney) (entity.TrainDetail, error) {
-	journeys, err := RequestAndParseJsonBody[response.JourneysResponse](ctx, "GET", a.journeyUrl(request, nil), nil)
+	journeys, err := repo.RequestAndParseJsonBody[response.JourneysResponse](ctx, "GET", a.journeyUrl(request, nil), nil)
 	if err != nil {
 		return entity.TrainDetail{}, fmt.Errorf("retrieveJourneysInitial: %w", err)
 	}
@@ -77,7 +79,7 @@ func (a *DbVendoWebAPI) RetrieveJourney(ctx context.Context, request request.Tra
 	}
 
 	for range MaxRetries {
-		journeys, err = RequestAndParseJsonBody[response.JourneysResponse](ctx, "GET", a.journeyUrl(request, &journeys.LaterRef), nil)
+		journeys, err = repo.RequestAndParseJsonBody[response.JourneysResponse](ctx, "GET", a.journeyUrl(request, &journeys.LaterRef), nil)
 		if err != nil {
 			return entity.TrainDetail{}, fmt.Errorf("retrieveJourneysLaterThan: %w", err)
 		}

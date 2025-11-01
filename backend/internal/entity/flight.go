@@ -24,7 +24,6 @@ type AirportWithTimezone struct {
 }
 
 type FlightLeg struct {
-	ID                int32          `json:"id"`
 	Origin            Airport        `json:"origin"`
 	Destination       Airport        `json:"destination"`
 	Airline           string         `json:"airline"`
@@ -37,7 +36,6 @@ type FlightLeg struct {
 }
 
 type PNR struct {
-	ID      int32  `json:"id"`
 	Airline string `json:"airline" example:"LH"`
 	PNR     string `json:"pnr"     example:"123456"`
 }

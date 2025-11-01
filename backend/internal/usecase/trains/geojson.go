@@ -3,15 +3,16 @@ package trains
 import (
 	"context"
 	"fmt"
+	"kompass/internal/entity"
+
 	"github.com/paulmach/orb"
 	"github.com/paulmach/orb/geojson"
-	"kompass/internal/entity"
 )
 
-func (uc *UseCase) saveGeoJson(ctx context.Context, transportation entity.Transportation) (*geojson.FeatureCollection, error) {
-	legs := transportation.TrainDetail.Legs
+func (uc *UseCase) createGeoJson(ctx context.Context, trainDetail entity.TrainDetail) (*geojson.FeatureCollection, error) {
+	legs := trainDetail.Legs
 
-	polylines, err := uc.dbVendo.RetrievePolylines(ctx, transportation.TrainDetail.RefreshToken)
+	polylines, err := uc.dbVendo.RetrievePolylines(ctx, trainDetail.RefreshToken)
 	if err != nil {
 		return nil, fmt.Errorf("retrieve polyline: %w", err)
 	}
@@ -46,11 +47,6 @@ func (uc *UseCase) saveGeoJson(ctx context.Context, transportation entity.Transp
 	for stationID, legs := range legsByStation {
 		location := stationByID[stationID].Location
 		featureCollection.Append(featureWithProperties(from, to, location, legs))
-	}
-
-	err = uc.repo.SaveGeoJson(ctx, transportation.ID, featureCollection)
-	if err != nil {
-		return nil, fmt.Errorf("save geojson: %w", err)
 	}
 
 	return featureCollection, nil

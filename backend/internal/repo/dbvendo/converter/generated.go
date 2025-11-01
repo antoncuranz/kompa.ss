@@ -5,7 +5,7 @@ package converter
 
 import (
 	entity "kompass/internal/entity"
-	response "kompass/internal/repo/webapi/response"
+	response "kompass/internal/repo/dbvendo/response"
 )
 
 type TrainConverterImpl struct{}

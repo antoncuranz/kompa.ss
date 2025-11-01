@@ -2,7 +2,6 @@ package flights
 
 import (
 	"context"
-	"fmt"
 	"kompass/internal/controller/http/v1/request"
 	"kompass/internal/entity"
 	"kompass/internal/repo"
@@ -13,86 +12,31 @@ import (
 )
 
 type UseCase struct {
-	transportationRepo repo.TransportationRepo
-	flightsRepo        repo.FlightsRepo
-	flightsApi         repo.FlightInformationWebAPI
+	flightsApi repo.FlightInformationWebAPI
 }
 
-func New(transportationRepo repo.TransportationRepo, flightsRepo repo.FlightsRepo, a repo.FlightInformationWebAPI) *UseCase {
+func New(a repo.FlightInformationWebAPI) *UseCase {
 	return &UseCase{
-		transportationRepo: transportationRepo,
-		flightsRepo:        flightsRepo,
-		flightsApi:         a,
+		flightsApi: a,
 	}
 }
 
-func (uc *UseCase) CreateFlight(ctx context.Context, tripID int32, flight request.Flight) (entity.Transportation, error) {
+func (uc *UseCase) FindFlight(ctx context.Context, flight request.Flight) (entity.FlightDetail, error) {
 	flightLegs, err := uc.retrieveFlightLegs(ctx, flight)
 	if err != nil {
-		return entity.Transportation{}, err
+		return entity.FlightDetail{}, err
 	}
 
 	sortByDepartureDate(flightLegs)
-	firstLeg := flightLegs[0]
-	lastLeg := flightLegs[len(flightLegs)-1]
 
-	transportation, err := uc.transportationRepo.SaveTransportation(ctx, entity.Transportation{
-		TripID:            tripID,
-		Type:              entity.FLIGHT,
-		Origin:            firstLeg.Origin.Location,
-		Destination:       lastLeg.Destination.Location,
-		DepartureDateTime: firstLeg.DepartureDateTime,
-		ArrivalDateTime:   lastLeg.ArrivalDateTime,
-		Price:             flight.Price,
-		FlightDetail: &entity.FlightDetail{
-			Legs: flightLegs,
-			PNRs: flight.PNRs,
-		},
-	})
-	if err != nil {
-		return entity.Transportation{}, err
+	flightDetail := entity.FlightDetail{
+		Legs: flightLegs,
+		PNRs: flight.PNRs,
 	}
 
-	return transportation, uc.saveGeoJson(ctx, transportation)
-}
+	//uc.createGeoJson(flightDetail)
 
-func (uc *UseCase) UpdateFlight(ctx context.Context, tripID int32, flightID int32) error {
-	// FIXME: use tripID in query!
-	flightDetail, err := uc.flightsRepo.GetFlightDetail(ctx, flightID)
-	if err != nil {
-		return fmt.Errorf("get flight detail [id=%d]: %w", flightID, err)
-	}
-
-	flightLegs, err := uc.retrieveFlightLegsUpdate(ctx, flightDetail)
-	if err != nil {
-		return fmt.Errorf("retrieve flight leg information: %w", err)
-	}
-
-	err = uc.flightsRepo.UpdateFlightLegs(ctx, flightLegs)
-	if err != nil {
-		return fmt.Errorf("update flight leg [id=%d]: %w", flightID, err)
-	}
-
-	transportation, err := uc.transportationRepo.GetTransportationByID(ctx, tripID, flightID)
-	if err != nil {
-		return err
-	}
-
-	sortByDepartureDate(flightLegs)
-	firstLeg := flightLegs[0]
-	lastLeg := flightLegs[len(flightLegs)-1]
-	transportation.DepartureDateTime = firstLeg.DepartureDateTime
-	transportation.ArrivalDateTime = lastLeg.ArrivalDateTime
-	transportation.Origin = firstLeg.Origin.Location
-	transportation.Destination = lastLeg.Destination.Location
-	// TODO: update PNRs and price
-
-	updated, err := uc.transportationRepo.SaveTransportation(ctx, transportation)
-	if err != nil {
-		return fmt.Errorf("update transportation: %w", err)
-	}
-
-	return uc.saveGeoJson(ctx, updated)
+	return flightDetail, nil
 }
 
 func (uc *UseCase) retrieveFlightLegs(ctx context.Context, flight request.Flight) ([]entity.FlightLeg, error) {
@@ -116,7 +60,6 @@ func (uc *UseCase) retrieveFlightLegsUpdate(ctx context.Context, flight entity.F
 		if err != nil {
 			return []entity.FlightLeg{}, err
 		}
-		flightLeg.ID = leg.ID
 		legs = append(legs, flightLeg)
 	}
 

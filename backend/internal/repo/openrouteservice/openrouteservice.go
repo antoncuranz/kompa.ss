@@ -1,13 +1,15 @@
-package webapi
+package openrouteservice
 
 import (
 	"context"
 	"fmt"
-	"github.com/paulmach/orb"
-	"github.com/paulmach/orb/geojson"
 	"kompass/config"
 	"kompass/internal/entity"
+	"kompass/internal/repo"
 	"net/url"
+
+	"github.com/paulmach/orb"
+	"github.com/paulmach/orb/geojson"
 )
 
 type OpenRouteServiceWebAPI struct {
@@ -15,7 +17,7 @@ type OpenRouteServiceWebAPI struct {
 	apiKey  string
 }
 
-func NewOpenRouteServiceWebAPI(config config.WebApi) *OpenRouteServiceWebAPI {
+func New(config config.WebApi) *OpenRouteServiceWebAPI {
 	return &OpenRouteServiceWebAPI{
 		baseURL: config.OpenRouteServiceBaseURL,
 		apiKey:  config.OpenRouteServiceApiKey,
@@ -26,7 +28,7 @@ func (a *OpenRouteServiceWebAPI) LookupLocation(ctx context.Context, query strin
 	urlFormat := "%s/geocode/search?api_key=%s&size=1&text=%s"
 	searchUrl := fmt.Sprintf(urlFormat, a.baseURL, a.apiKey, url.QueryEscape(query))
 
-	result, err := RequestAndParseJsonBody[geojson.FeatureCollection](ctx, "GET", searchUrl, nil)
+	result, err := repo.RequestAndParseJsonBody[geojson.FeatureCollection](ctx, "GET", searchUrl, nil)
 	if err != nil {
 		return entity.GeocodeLocation{}, fmt.Errorf("requestAndParseJsonBody: %w", err)
 	}
@@ -49,7 +51,7 @@ func (a *OpenRouteServiceWebAPI) LookupDirections(ctx context.Context, start ent
 	urlFormat := "%s/v2/directions/%s?api_key=%s&start=%f,%f&end=%f,%f"
 	directionsUrl := fmt.Sprintf(urlFormat, a.baseURL, profile, a.apiKey, start.Longitude, start.Latitude, end.Longitude, end.Latitude)
 
-	featureCollection, err := RequestAndParseJsonBody[geojson.FeatureCollection](ctx, "GET", directionsUrl, nil)
+	featureCollection, err := repo.RequestAndParseJsonBody[geojson.FeatureCollection](ctx, "GET", directionsUrl, nil)
 	if err != nil {
 		return nil, fmt.Errorf("requestAndParseJsonBody: %w", err)
 	}
