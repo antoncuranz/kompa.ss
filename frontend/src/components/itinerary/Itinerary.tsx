@@ -1,7 +1,8 @@
 "use client"
 
 import React, {useState} from "react";
-import {DayRenderData, Flight, GenericTransportation, Train} from "@/schema.ts";
+import {Flight, GenericTransportation, Train} from "@/schema.ts";
+import {DayRenderData} from "@/types.ts";
 import Day from "@/components/itinerary/Day.tsx";
 import AccommodationDialogContent from "@/components/dialog/AccommodationDialogContent.tsx";
 import FlightDialogContent from "@/components/dialog/FlightDialogContent.tsx";

@@ -9,7 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
 import { Field, FieldLabel } from "@/components/ui/field.tsx";
 import { useState } from "react";
 import { formatDateShort } from "@/components/util.ts";
-import { AmbiguousFlightChoice } from "@/schema.ts";
+import { AmbiguousFlightChoice } from "@/types.ts";
 
 export function AmbiguousFlightDialogContent({
   flightChoices,

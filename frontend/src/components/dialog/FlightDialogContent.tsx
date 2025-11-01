@@ -10,17 +10,17 @@ import { Input } from "@/components/ui/input.tsx";
 import {
   FlightLeg,
   Trip,
-  AmbiguousFlightChoice,
   Flight,
   PNR,
 } from "@/schema.ts";
+import { AmbiguousFlightChoice } from "@/types";
 import {
   Dialog,
   RowContainer,
   useDialogContext,
 } from "@/components/dialog/Dialog.tsx";
 import { z } from "zod";
-import { isoDate, optionalString } from "@/schema.ts";
+import { isoDate, optionalString } from "@/formschema.ts";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { dateFromString } from "@/components/util.ts";

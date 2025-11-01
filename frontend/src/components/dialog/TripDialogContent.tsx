@@ -7,7 +7,8 @@ import {dateFromString} from "@/components/util.ts";
 import {RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
 import {Form, FormField} from "@/components/ui/form.tsx";
 import {z} from "zod"
-import {isoDate, JazzAccount, optionalString, Trip} from "@/schema.ts";
+import {JazzAccount, Trip} from "@/schema.ts";
+import {isoDate, optionalString} from "@/formschema.ts";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import DateInput from "@/components/dialog/input/DateInput.tsx";

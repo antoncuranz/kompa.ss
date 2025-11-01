@@ -1,4 +1,5 @@
-import {GenericTransportation, getTransportationTypeEmoji} from "@/schema.ts";
+import {GenericTransportation} from "@/schema.ts";
+import {getTransportationTypeEmoji} from "@/types.ts";
 import React, {MouseEvent, MouseEventHandler} from "react";
 import {formatTime} from "../util";
 import {ChevronRight} from "lucide-react";

@@ -5,11 +5,13 @@ import type {Feature, FeatureCollection, GeoJsonProperties} from 'geojson';
 import {
   Accommodation,
   Activity,
+} from "@/schema.ts";
+import {
   GeoJsonFlight,
   GeoJsonTrain,
   GeoJsonTransportation,
   TransportationType
-} from "@/schema.ts";
+} from "@/types.ts";
 import {formatDateShort} from "@/components/util.ts";
 import TrainPopup from "@/components/map/popup/TrainPopup.tsx";
 import FlightPopup from "@/components/map/popup/FlightPopup.tsx";

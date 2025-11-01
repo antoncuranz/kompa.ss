@@ -2,7 +2,7 @@ import {Button} from "@/components/ui/button.tsx";
 import {DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog.tsx";
 import {useState} from "react";
 import {Input} from "@/components/ui/input.tsx";
-import {GenericTransportation, getTransportationTypeEmoji, TransportationType} from "@/schema.ts";
+import {getTransportationTypeEmoji, TransportationType} from "@/types.ts";
 import {Form, FormField} from "@/components/ui/form"
 import {z} from "zod"
 import {useForm} from "react-hook-form";
@@ -11,7 +11,8 @@ import AmountInput from "@/components/dialog/input/AmountInput.tsx";
 import AddressInput from "@/components/dialog/input/AddressInput.tsx";
 import {dateFromString, titleCase} from "@/components/util.ts";
 import {RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
-import {Trip, isoDateTime, location, optionalString} from "@/schema";
+import {GenericTransportation, Trip} from "@/schema";
+import {isoDateTime, location, optionalString} from "@/formschema";
 import LocationInput from "@/components/dialog/input/LocationInput.tsx";
 import {Spinner} from "@/components/ui/shadcn-io/spinner";
 import {

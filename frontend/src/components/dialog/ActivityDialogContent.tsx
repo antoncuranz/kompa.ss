@@ -13,7 +13,8 @@ import AmountInput from "@/components/dialog/input/AmountInput.tsx";
 import AddressInput from "@/components/dialog/input/AddressInput.tsx";
 import {dateFromString} from "@/components/util.ts";
 import {RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
-import {Activity, isoDate, optionalLocation, optionalString, Trip} from "@/schema";
+import {Activity, Trip} from "@/schema";
+import {isoDate, optionalLocation, optionalString} from "@/formschema";
 import LocationInput from "@/components/dialog/input/LocationInput.tsx";
 import {Spinner} from "@/components/ui/shadcn-io/spinner";
 

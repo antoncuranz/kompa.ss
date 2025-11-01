@@ -6,7 +6,7 @@ import {Input} from "@/components/ui/input.tsx";
 import {Train, TrainLeg, Trip} from "@/schema.ts";
 import {RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
 import {z} from "zod";
-import {isoDate, trainStation} from "@/schema.ts";
+import {isoDate, trainStation} from "@/formschema";
 import {useFieldArray, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Form, FormField} from "@/components/ui/form";

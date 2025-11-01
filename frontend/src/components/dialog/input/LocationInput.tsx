@@ -6,7 +6,7 @@ import {ControllerRenderProps, FieldValues} from "react-hook-form";
 import {Dialog} from "@/components/dialog/Dialog.tsx";
 import React, {useState} from "react";
 import MapDialogContent from "@/components/dialog/MapDialogContent.tsx";
-import {Coordinates} from "@/schema.ts";
+import {Coordinates} from "@/types.ts";
 
 export default function LocationInput({
   onChange, onBlur, value, disabled,

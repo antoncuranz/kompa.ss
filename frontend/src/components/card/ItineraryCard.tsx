@@ -1,6 +1,7 @@
 "use client"
 
-import {DayRenderData, LoadedTransportation, RESOLVE_FLIGHT, RESOLVE_GENERIC_TRANSPORTATION, RESOLVE_TRAIN, RESOLVE_TRIP} from "@/schema.ts";
+import {LoadedTransportation, RESOLVE_FLIGHT, RESOLVE_GENERIC_TRANSPORTATION, RESOLVE_TRAIN, RESOLVE_TRIP} from "@/schema.ts";
+import {DayRenderData} from "@/types.ts";
 import {dayIsBetween, getDaysBetween, isSameDay} from "@/components/util.ts";
 import React, { useEffect, useState } from "react";
 import AddSomethingDropdown from "@/components/buttons/AddSomethingDropdown.tsx";
@@ -77,7 +78,7 @@ export default function ItineraryCard({
   }
 
   useEffect(() => {
-    async function todo() {
+    async function loadAndProcessData() {
       if (!trip) {
         return
       }
@@ -98,7 +99,7 @@ export default function ItineraryCard({
       processDataAndGroupByDays(loaded)
     }
 
-    todo();
+    loadAndProcessData();
   }, [trip]);
 
   if (!trip) {

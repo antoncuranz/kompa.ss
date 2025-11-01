@@ -5,7 +5,8 @@ import {Input} from "@/components/ui/input.tsx";
 import {Textarea} from "@/components/ui/textarea.tsx";
 import {RowContainer, useDialogContext} from "@/components/dialog/Dialog.tsx";
 import {z} from "zod"
-import {Accommodation, Trip, isoDate, optionalLocation, optionalString} from "@/schema.ts";
+import {Accommodation, Trip} from "@/schema.ts";
+import {isoDate, optionalLocation, optionalString} from "@/formschema.ts";
 import {Form, FormField} from "@/components/ui/form"
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
