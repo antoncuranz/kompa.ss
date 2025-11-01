@@ -93,6 +93,7 @@ export default function FlightEntry({
               {flightLeg.destination.name} ({flightLeg.destination.iata})
             </p>
           </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={"https://seats.aero/static/carriersng/" + iata + ".png"}
             className="h-4 mt-0 m-auto relative top-1"
@@ -105,7 +106,7 @@ export default function FlightEntry({
             </span>
             <div className="flex float-right">
               {flight.pnrs.map(pnr => (
-                <PrivacyFilter key={pnr.$jazz.id} className="flex">
+                <PrivacyFilter key={pnr.$jazz.id} className="flex" mode="hide">
                   <Button
                     size="sm"
                     variant="secondary"

@@ -9,13 +9,19 @@ export default function PrivacyFilter({
   className,
   onClick,
   style,
+  mode = "redact",
 }: {
   children: React.ReactNode
   className?: string
   onClick?: MouseEventHandler<HTMLDivElement>
   style?: CSSProperties
+  mode?: "redact" | "hide"
 }) {
   const { privacyMode } = usePrivacy()
+
+  if (privacyMode && mode === "hide") {
+    return null
+  }
 
   return (
     <div
