@@ -1,6 +1,7 @@
 "use client"
 
 import { useMap } from "@/components/map/common.tsx"
+import PrivacyFilter from "@/components/PrivacyFilter.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import {
   Collapsible,
@@ -104,14 +105,15 @@ export default function FlightEntry({
             </span>
             <div className="flex float-right">
               {flight.pnrs.map(pnr => (
-                <Button
-                  key={pnr.$jazz.id}
-                  size="sm"
-                  variant="secondary"
-                  className="ml-2 p-2 h-6"
-                >
-                  {pnr.airline} {pnr.pnr}
-                </Button>
+                <PrivacyFilter key={pnr.$jazz.id} className="flex">
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    className="ml-2 p-2 h-6"
+                  >
+                    {pnr.airline} {pnr.pnr}
+                  </Button>
+                </PrivacyFilter>
               ))}
               <Button
                 variant="secondary"

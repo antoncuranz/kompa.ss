@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils.ts"
-import { useStore } from "@/store.ts"
+import { usePrivacy } from "@/components/provider/PrivacyProvider.tsx"
 import React, { CSSProperties, MouseEventHandler } from "react"
 
 export default function PrivacyFilter({
@@ -15,7 +15,7 @@ export default function PrivacyFilter({
   onClick?: MouseEventHandler<HTMLDivElement>
   style?: CSSProperties
 }) {
-  const { privacyMode } = useStore()
+  const { privacyMode } = usePrivacy()
 
   return (
     <div

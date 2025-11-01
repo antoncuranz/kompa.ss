@@ -11,11 +11,11 @@ import {
   DropdownMenuPositioner,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useStore } from "@/store.ts"
+import { usePrivacy } from "@/components/provider/PrivacyProvider.tsx"
 
 export function ModeToggle({ className }: { className?: string }) {
   const { setTheme } = useTheme()
-  const { togglePrivacyMode } = useStore()
+  const { togglePrivacyMode } = usePrivacy()
 
   return (
     <DropdownMenu>

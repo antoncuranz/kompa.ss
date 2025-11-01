@@ -1,4 +1,5 @@
 import { JazzProvider } from "@/components/provider/JazzProvider.tsx"
+import { PrivacyProvider } from "@/components/provider/PrivacyProvider.tsx"
 import { ThemeProvider } from "@/components/provider/ThemeProvider.tsx"
 import { Toaster } from "@/components/ui/sonner.tsx"
 import type { Metadata, Viewport } from "next"
@@ -34,7 +35,7 @@ export default async function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              {children}
+              <PrivacyProvider>{children}</PrivacyProvider>
             </ThemeProvider>
           </JazzProvider>
           <Toaster />
