@@ -3,54 +3,54 @@ import {
   DialogTitle,
   DialogFooter,
   DialogDescription,
-} from "@/components/ui/dialog.tsx";
-import { Button } from "@/components/ui/button.tsx";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
-import { Field, FieldLabel } from "@/components/ui/field.tsx";
-import { useState } from "react";
-import { formatDateShort } from "@/components/util.ts";
-import { AmbiguousFlightChoice } from "@/types.ts";
+} from "@/components/ui/dialog.tsx"
+import { Button } from "@/components/ui/button.tsx"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx"
+import { Field, FieldLabel } from "@/components/ui/field.tsx"
+import { useState } from "react"
+import { formatDateShort } from "@/components/util.ts"
+import { AmbiguousFlightChoice } from "@/types.ts"
 
 export function AmbiguousFlightDialogContent({
   flightChoices,
   flightLegs,
   onSelection,
 }: {
-  flightChoices: { [flightNumber: string]: AmbiguousFlightChoice[] };
-  flightLegs: { date: string; flightNumber: string }[];
-  onSelection: (selectedFlights: Map<number, AmbiguousFlightChoice>) => void;
+  flightChoices: { [flightNumber: string]: AmbiguousFlightChoice[] }
+  flightLegs: { date: string; flightNumber: string }[]
+  onSelection: (selectedFlights: Map<number, AmbiguousFlightChoice>) => void
 }) {
   const [selectedChoices, setSelectedChoices] = useState(
     new Map<number, number>(),
-  );
+  )
 
   const ambiguousFlightLegs = flightLegs
     .map((leg, idx) => ({ ...leg, legIdx: idx }))
-    .filter((leg) => flightChoices[leg.flightNumber]);
+    .filter(leg => flightChoices[leg.flightNumber])
 
   const handleSelectionChange = (legId: number, choiceIdx: number) => {
-    setSelectedChoices((prev) => new Map(prev).set(legId, choiceIdx));
-  };
+    setSelectedChoices(prev => new Map(prev).set(legId, choiceIdx))
+  }
 
   const handleConfirm = () => {
-    const finalChoices = new Map<number, AmbiguousFlightChoice>();
+    const finalChoices = new Map<number, AmbiguousFlightChoice>()
 
     selectedChoices.forEach((choiceIdx, legIdx) => {
-      const flightNumber = flightLegs[legIdx].flightNumber;
-      finalChoices.set(legIdx, flightChoices[flightNumber][choiceIdx]);
-    });
+      const flightNumber = flightLegs[legIdx].flightNumber
+      finalChoices.set(legIdx, flightChoices[flightNumber][choiceIdx])
+    })
 
-    onSelection(finalChoices);
-  };
+    onSelection(finalChoices)
+  }
 
   const canConfirm = ambiguousFlightLegs.every(
-    (leg) => selectedChoices.get(leg.legIdx) !== undefined,
-  );
+    leg => selectedChoices.get(leg.legIdx) !== undefined,
+  )
 
   const formatDateTime = (dateTime: string) => {
-    const formatted = new Date(dateTime).toLocaleString();
-    return formatted.substring(0, formatted.length - 3); // remove seconds
-  };
+    const formatted = new Date(dateTime).toLocaleString()
+    return formatted.substring(0, formatted.length - 3) // remove seconds
+  }
 
   return (
     <>
@@ -64,8 +64,8 @@ export function AmbiguousFlightDialogContent({
 
       <div className="py-4 overflow-y-auto space-y-2 [&>div]:px-4">
         {ambiguousFlightLegs.map(({ legIdx, ...leg }) => {
-          const choices = flightChoices[leg.flightNumber];
-          const legLabel = flightLegs.length > 1 ? ` (Leg ${legIdx + 1})` : "";
+          const choices = flightChoices[leg.flightNumber]
+          const legLabel = flightLegs.length > 1 ? ` (Leg ${legIdx + 1})` : ""
 
           return (
             <div key={legIdx} className="space-y-3">
@@ -80,7 +80,7 @@ export function AmbiguousFlightDialogContent({
               <Field>
                 <RadioGroup
                   value={selectedChoices.get(legIdx) ?? -1}
-                  onValueChange={(value) =>
+                  onValueChange={value =>
                     handleSelectionChange(legIdx, value as number)
                   }
                 >
@@ -110,7 +110,7 @@ export function AmbiguousFlightDialogContent({
                 </RadioGroup>
               </Field>
             </div>
-          );
+          )
         })}
       </div>
 
@@ -124,5 +124,5 @@ export function AmbiguousFlightDialogContent({
         </Button>
       </DialogFooter>
     </>
-  );
+  )
 }

@@ -43,7 +43,10 @@ export function GlowContainer({
 
   return (
     <motion.div
-      className={cn("relative w-full h-full rounded-[16px]", !isMobile && "glow-container")}
+      className={cn(
+        "relative w-full h-full rounded-[16px]",
+        !isMobile && "glow-container",
+      )}
       onMouseMove={handleMouseMove}
       style={
         {
@@ -55,7 +58,7 @@ export function GlowContainer({
       <div
         className={cn(
           "group relative w-full overflow-hidden border border-black/10 dark:border-white/20 bg-background transition duration-300",
-          className
+          className,
         )}
       >
         {mounted ? children : null}
@@ -72,8 +75,8 @@ export function useIsMobile() {
     const isSmall = window.matchMedia("(max-width: 768px)").matches
     const isMobile = Boolean(
       /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.exec(
-        userAgent
-      )
+        userAgent,
+      ),
     )
 
     // const isDev = process.env.NODE_ENV !== "production"

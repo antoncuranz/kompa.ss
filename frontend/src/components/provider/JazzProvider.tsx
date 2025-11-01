@@ -1,24 +1,22 @@
-"use client";
+"use client"
 
-import {JazzReactProvider} from "jazz-tools/react";
-import {JazzAccount} from "@/schema";
-import {Auth} from "@/components/Auth.tsx";
-import {JazzInspector} from "jazz-tools/inspector";
+import { JazzReactProvider } from "jazz-tools/react"
+import { JazzAccount } from "@/schema"
+import { Auth } from "@/components/Auth.tsx"
+import { JazzInspector } from "jazz-tools/inspector"
 
-export function JazzProvider({children}: {
-  children: React.ReactNode
-}) {
+export function JazzProvider({ children }: { children: React.ReactNode }) {
   return (
     <JazzReactProvider
       sync={{
-        peer: "ws://127.0.0.1:4200"
+        peer: "ws://127.0.0.1:4200",
       }}
       guestMode={false}
       AccountSchema={JazzAccount}
     >
-      <JazzInspector/>
-      <Auth/>
+      <JazzInspector />
+      <Auth />
       {children}
     </JazzReactProvider>
-  );
+  )
 }

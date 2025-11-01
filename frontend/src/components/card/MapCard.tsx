@@ -1,22 +1,28 @@
 "use client"
 
-import React from "react";
-import Card from "@/components/card/Card.tsx";
-import HeroMap from "@/components/map/HeroMap.tsx";
-import {useCoState} from "jazz-tools/react-core";
-import {RESOLVE_TRIP, Trip} from "@/schema.ts";
-import SkeletonCard from "@/components/card/SkeletonCard.tsx";
+import React from "react"
+import Card from "@/components/card/Card.tsx"
+import HeroMap from "@/components/map/HeroMap.tsx"
+import { useCoState } from "jazz-tools/react-core"
+import { RESOLVE_TRIP, Trip } from "@/schema.ts"
+import SkeletonCard from "@/components/card/SkeletonCard.tsx"
 
 export default function MapCard({
-  tripId, className
+  tripId,
+  className,
 }: {
   tripId: string
   className?: string
 }) {
-  const trip = useCoState(Trip, tripId, {resolve: RESOLVE_TRIP});
+  const trip = useCoState(Trip, tripId, { resolve: RESOLVE_TRIP })
 
   if (!trip) {
-    return <SkeletonCard className={className} title={trip === null ? "Error loading Map" : undefined}/>;
+    return (
+      <SkeletonCard
+        className={className}
+        title={trip === null ? "Error loading Map" : undefined}
+      />
+    )
   }
 
   return (

@@ -1,16 +1,16 @@
-import {create, StateCreator} from 'zustand'
+import { create, StateCreator } from "zustand"
 
 type PrivacySlice = {
-  privacyMode: boolean;
-  togglePrivacyMode: () => void,
-};
+  privacyMode: boolean
+  togglePrivacyMode: () => void
+}
 
 const createPrivacySlice: StateCreator<
   PrivacySlice,
   [],
   [],
   PrivacySlice
-> = (set) => ({
+> = set => ({
   privacyMode: false,
   togglePrivacyMode: () => set(state => ({ privacyMode: !state.privacyMode })),
 })

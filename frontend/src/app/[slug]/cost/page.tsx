@@ -1,8 +1,8 @@
-import React from "react";
-import ItineraryCard from "@/components/card/ItineraryCard.tsx";
+import React from "react"
+import ItineraryCard from "@/components/card/ItineraryCard.tsx"
 
-export default async function Page( {
-  params
+export default async function Page({
+  params,
 }: {
   params: Promise<{ slug: string }>
 }) {
@@ -10,7 +10,7 @@ export default async function Page( {
 
   return (
     <div className="flex h-full gap-4">
-      <ItineraryCard tripId={tripId}/>
+      <ItineraryCard tripId={tripId} />
     </div>
   )
 }

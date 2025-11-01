@@ -1,17 +1,17 @@
-import {usePasskeyAuth, usePassphraseAuth} from 'jazz-tools/react';
-import {Dialog} from "@/components/dialog/Dialog.tsx";
-import {DialogHeader, DialogTitle} from "@/components/ui/dialog.tsx";
-import {Form, FormField} from "@/components/ui/form.tsx";
-import {Input} from "@/components/ui/input.tsx";
-import {Button} from "@/components/ui/button.tsx";
-import {Spinner} from "@/components/ui/shadcn-io/spinner";
-import {useForm} from "react-hook-form";
-import {z} from "zod";
-import {zodResolver} from "@hookform/resolvers/zod";
-import wordlist from "../lib/wordlist.ts";
-import {Separator} from "@/components/ui/separator.tsx";
-import {useState} from "react";
-import {cn} from "@/lib/utils.ts";
+import { usePasskeyAuth, usePassphraseAuth } from "jazz-tools/react"
+import { Dialog } from "@/components/dialog/Dialog.tsx"
+import { DialogHeader, DialogTitle } from "@/components/ui/dialog.tsx"
+import { Form, FormField } from "@/components/ui/form.tsx"
+import { Input } from "@/components/ui/input.tsx"
+import { Button } from "@/components/ui/button.tsx"
+import { Spinner } from "@/components/ui/shadcn-io/spinner"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import wordlist from "../lib/wordlist.ts"
+import { Separator } from "@/components/ui/separator.tsx"
+import { useState } from "react"
+import { cn } from "@/lib/utils.ts"
 
 const signupFormSchema = z.object({
   name: z.string().nonempty("Required"),
@@ -25,22 +25,30 @@ export function Auth() {
   const passphraseAuth = usePassphraseAuth({ wordlist })
   const passkeyAuth = usePasskeyAuth({
     appName: "kompass",
-  });
+  })
 
   const [passphraseFormShown, setPassphraseFormShown] = useState<boolean>(false)
 
-  const signupForm = useForm<z.input<typeof signupFormSchema>, unknown, z.output<typeof signupFormSchema>>({
+  const signupForm = useForm<
+    z.input<typeof signupFormSchema>,
+    unknown,
+    z.output<typeof signupFormSchema>
+  >({
     resolver: zodResolver(signupFormSchema),
     defaultValues: {
       name: "",
-    }
+    },
   })
 
-  const loginForm = useForm<z.input<typeof loginFormSchema>, unknown, z.output<typeof loginFormSchema>>({
+  const loginForm = useForm<
+    z.input<typeof loginFormSchema>,
+    unknown,
+    z.output<typeof loginFormSchema>
+  >({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
       passphrase: "",
-    }
+    },
   })
 
   const isSubmitting = false
@@ -50,48 +58,84 @@ export function Auth() {
       setPassphraseFormShown(true)
       return
     }
-    await loginForm.handleSubmit(async values => await passphraseAuth.logIn(values.passphrase))()
+    await loginForm.handleSubmit(
+      async values => await passphraseAuth.logIn(values.passphrase),
+    )()
   }
 
   return (
-    passkeyAuth.state !== "signedIn" &&
+    passkeyAuth.state !== "signedIn" && (
       <Dialog open={true} setOpen={() => {}}>
         <DialogHeader>
-          <DialogTitle>
-            Welcome to kompass!
-          </DialogTitle>
+          <DialogTitle>Welcome to kompass!</DialogTitle>
         </DialogHeader>
         <div className="px-4 pt-4">
-          <Button className="w-full text-base" disabled={isSubmitting} onClick={() => passkeyAuth.logIn()}>
-            {isSubmitting ? <Spinner variant="pinwheel"/> : "Log in"}
+          <Button
+            className="w-full text-base"
+            disabled={isSubmitting}
+            onClick={() => passkeyAuth.logIn()}
+          >
+            {isSubmitting ? <Spinner variant="pinwheel" /> : "Log in"}
           </Button>
         </div>
-        <Form className={cn("py-1", !passphraseFormShown && "hidden")} form={loginForm} onSubmit={() => {}}>
-          <FormField control={loginForm.control} name="passphrase" label="Passphrase"
-                     render={({field}) =>
-                       <Input data-1p-ignore placeholder="" {...field} />
-                     }
+        <Form
+          className={cn("py-1", !passphraseFormShown && "hidden")}
+          form={loginForm}
+          onSubmit={() => {}}
+        >
+          <FormField
+            control={loginForm.control}
+            name="passphrase"
+            label="Passphrase"
+            render={({ field }) => (
+              <Input data-1p-ignore placeholder="" {...field} />
+            )}
           />
         </Form>
         <div className="px-4 pb-4">
-          <Button type="submit" variant="secondary" className="w-full text-base" disabled={isSubmitting} onClick={onLoginWithPassphraseClick}>
-            {isSubmitting ? <Spinner variant="pinwheel"/> : "Log in with Passphrase"}
+          <Button
+            type="submit"
+            variant="secondary"
+            className="w-full text-base"
+            disabled={isSubmitting}
+            onClick={onLoginWithPassphraseClick}
+          >
+            {isSubmitting ? (
+              <Spinner variant="pinwheel" />
+            ) : (
+              "Log in with Passphrase"
+            )}
           </Button>
         </div>
-        <Separator/>
-        <Form form={signupForm} onSubmit={signupForm.handleSubmit(async values => await passkeyAuth.signUp(values.name))}>
-          <h3 className="mx-4 text-lg font-semibold leading-none tracking-tight">Don&apos;t have an account yet?</h3>
-          <FormField control={signupForm.control} name="name" label="Name"
-                     render={({field}) =>
-                       <Input data-1p-ignore placeholder="" {...field} />
-                     }
+        <Separator />
+        <Form
+          form={signupForm}
+          onSubmit={signupForm.handleSubmit(
+            async values => await passkeyAuth.signUp(values.name),
+          )}
+        >
+          <h3 className="mx-4 text-lg font-semibold leading-none tracking-tight">
+            Don&apos;t have an account yet?
+          </h3>
+          <FormField
+            control={signupForm.control}
+            name="name"
+            label="Name"
+            render={({ field }) => (
+              <Input data-1p-ignore placeholder="" {...field} />
+            )}
           />
           <div className="mt-4">
-            <Button type="submit" className="w-full text-base" disabled={isSubmitting}>
-              {isSubmitting ? <Spinner variant="pinwheel"/> : "Sign up"}
+            <Button
+              type="submit"
+              className="w-full text-base"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? <Spinner variant="pinwheel" /> : "Sign up"}
             </Button>
           </div>
         </Form>
       </Dialog>
-  );
+    )
+  )
 }

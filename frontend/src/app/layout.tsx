@@ -1,14 +1,14 @@
-import type {Metadata, Viewport} from 'next'
-import '../index.css'
-import {Toaster} from "@/components/ui/sonner.tsx";
-import {ThemeProvider} from "@/components/provider/ThemeProvider.tsx";
-import {JazzProvider} from "@/components/provider/JazzProvider.tsx";
+import type { Metadata, Viewport } from "next"
+import "../index.css"
+import { Toaster } from "@/components/ui/sonner.tsx"
+import { ThemeProvider } from "@/components/provider/ThemeProvider.tsx"
+import { JazzProvider } from "@/components/provider/JazzProvider.tsx"
 
 export const metadata: Metadata = {
   title: "kompass",
   appleWebApp: {
     title: "kompass",
-  }
+  },
 }
 
 export const viewport: Viewport = {
@@ -25,21 +25,21 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="de" suppressHydrationWarning>
-    <body>
-      <div className="root">
-        <JazzProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
-        </JazzProvider>
-        <Toaster/>
-      </div>
-      <script>{`
+      <body>
+        <div className="root">
+          <JazzProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+            </ThemeProvider>
+          </JazzProvider>
+          <Toaster />
+        </div>
+        <script>{`
         function updateThemeColor() {
           const meta = document.querySelector("meta[name=theme-color]")
           if (!meta) return
@@ -56,7 +56,7 @@ export default async function RootLayout({
         })
         observer.observe(document.documentElement, { attributes: true })
       `}</script>
-    </body>
+      </body>
     </html>
   )
 }

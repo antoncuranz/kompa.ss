@@ -1,19 +1,19 @@
-import { Accommodation, Activity, LoadedTransportation } from "./schema";
+import { Accommodation, Activity, LoadedTransportation } from "./schema"
 
 export type OmitNever<T extends Record<string, unknown>> = {
-  [K in keyof T as T[K] extends never ? never : K]: T[K];
-};
-export type SharedProperties<A, B> = OmitNever<Pick<A & B, keyof A & keyof B>>;
+  [K in keyof T as T[K] extends never ? never : K]: T[K]
+}
+export type SharedProperties<A, B> = OmitNever<Pick<A & B, keyof A & keyof B>>
 
 export enum TransportationType {
   Flight = "FLIGHT",
   Train = "TRAIN",
-  Bus   = "BUS",
+  Bus = "BUS",
   Ferry = "FERRY",
-  Boat  = "BOAT",
-  Bike  = "BIKE",
-  Car   = "CAR",
-  Hike  = "HIKE",
+  Boat = "BOAT",
+  Bike = "BIKE",
+  Car = "CAR",
+  Hike = "HIKE",
   Other = "OTHER",
 }
 
@@ -42,56 +42,56 @@ export function getTransportationTypeEmoji(type: string) {
 }
 
 export type AmbiguousFlightChoice = {
-  departureDateTime: string;
-  destinationIata: string;
-  originIata: string;
+  departureDateTime: string
+  destinationIata: string
+  originIata: string
 }
 
 export type DayRenderData = {
-  day: string;
-  transportation: LoadedTransportation[];
-  activities: Activity[];
-  accommodation: Accommodation | undefined;
-};
+  day: string
+  transportation: LoadedTransportation[]
+  activities: Activity[]
+  accommodation: Accommodation | undefined
+}
 
 export type GeoJsonFlight = {
-  type: TransportationType;
-  fromMunicipality: string;
-  toMunicipality: string;
-  legs: string;
+  type: TransportationType
+  fromMunicipality: string
+  toMunicipality: string
+  legs: string
 }
 
 export type GeoJsonFlightLeg = {
-  flightNumber: string;
-  departureDateTime: string;
-  arrivalDateTime: string;
-  fromIata: string;
-  toIata: string;
+  flightNumber: string
+  departureDateTime: string
+  arrivalDateTime: string
+  fromIata: string
+  toIata: string
 }
 
 export type GeoJsonTrain = {
-  type: TransportationType;
-  fromMunicipality: string;
-  toMunicipality: string;
-  legs: string;
+  type: TransportationType
+  fromMunicipality: string
+  toMunicipality: string
+  legs: string
 }
 
 export type GeoJsonTrainLeg = {
-  lineName: string;
-  departureDateTime: string;
-  arrivalDateTime: string;
-  fromStation: string;
-  toStation: string;
+  lineName: string
+  departureDateTime: string
+  arrivalDateTime: string
+  fromStation: string
+  toStation: string
 }
 
 export type GeoJsonTransportation = {
-  type: TransportationType;
-  name: string;
-  departureDateTime: string;
-  arrivalDateTime: string;
+  type: TransportationType
+  name: string
+  departureDateTime: string
+  arrivalDateTime: string
 }
 
 export type Coordinates = {
-  latitude: number;
-  longitude: number;
+  latitude: number
+  longitude: number
 }

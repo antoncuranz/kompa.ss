@@ -1,4 +1,4 @@
-import Navigation from "@/components/navigation/Navigation.tsx";
+import Navigation from "@/components/navigation/Navigation.tsx"
 
 // export async function generateMetadata({
 //   params
@@ -14,7 +14,8 @@ import Navigation from "@/components/navigation/Navigation.tsx";
 // }
 
 export default async function RootLayout({
-  params, children,
+  params,
+  children,
 }: {
   params: Promise<{ slug: string }>
   children: React.ReactNode
@@ -22,11 +23,11 @@ export default async function RootLayout({
   const tripId = (await params).slug
 
   return (
-      <>
-        <Navigation tripId={tripId}/>
-        <main className="w-full sm:px-4 md:px-6 md:gap-2 relative z-1 sm:h-[calc(100dvh-4.5rem)]">
-          {children}
-        </main>
-      </>
+    <>
+      <Navigation tripId={tripId} />
+      <main className="w-full sm:px-4 md:px-6 md:gap-2 relative z-1 sm:h-[calc(100dvh-4.5rem)]">
+        {children}
+      </main>
+    </>
   )
 }

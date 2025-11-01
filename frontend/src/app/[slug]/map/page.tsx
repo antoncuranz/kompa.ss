@@ -1,8 +1,8 @@
-import React from "react";
-import MapCard from "@/components/card/MapCard.tsx";
+import React from "react"
+import MapCard from "@/components/card/MapCard.tsx"
 
-export default async function Page( {
-  params
+export default async function Page({
+  params,
 }: {
   params: Promise<{ slug: string }>
 }) {
@@ -10,7 +10,7 @@ export default async function Page( {
 
   return (
     <div className="flex min-h-[calc(100dvh-5.5rem)] sm:min-h-[calc(100dvh-4.5rem)] gap-4">
-      <MapCard tripId={tripId}/>
+      <MapCard tripId={tripId} />
     </div>
   )
 }

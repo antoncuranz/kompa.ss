@@ -1,10 +1,10 @@
-import React from "react";
-import ItineraryCard from "@/components/card/ItineraryCard.tsx";
-import MapCard from "@/components/card/MapCard.tsx";
-import {MapProvider} from "@/components/provider/MapProvider.tsx";
+import React from "react"
+import ItineraryCard from "@/components/card/ItineraryCard.tsx"
+import MapCard from "@/components/card/MapCard.tsx"
+import { MapProvider } from "@/components/provider/MapProvider.tsx"
 
-export default async function Page( {
-  params
+export default async function Page({
+  params,
 }: {
   params: Promise<{ slug: string }>
 }) {
@@ -16,8 +16,8 @@ export default async function Page( {
   return (
     <div className="flex h-full gap-4">
       <MapProvider>
-        <ItineraryCard tripId={tripId} className={itineraryClasses}/>
-        <MapCard tripId={tripId} className={mapClasses}/>
+        <ItineraryCard tripId={tripId} className={itineraryClasses} />
+        <MapCard tripId={tripId} className={mapClasses} />
       </MapProvider>
     </div>
   )

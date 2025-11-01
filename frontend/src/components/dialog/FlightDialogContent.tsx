@@ -1,52 +1,51 @@
-import { Button } from "@/components/ui/button.tsx";
-import {
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog.tsx";
-import { Minus, Plus } from "lucide-react";
-import { useState } from "react";
-import { Input } from "@/components/ui/input.tsx";
-import {
-  FlightLeg,
-  Trip,
-  Flight,
-  PNR,
-} from "@/schema.ts";
-import { AmbiguousFlightChoice } from "@/types";
+import { AmbiguousFlightDialogContent } from "@/components/dialog/AmbiguousFlightDialogContent.tsx"
 import {
   Dialog,
   RowContainer,
   useDialogContext,
-} from "@/components/dialog/Dialog.tsx";
-import { z } from "zod";
-import { isoDate, optionalString } from "@/formschema.ts";
-import { useFieldArray, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { dateFromString } from "@/components/util.ts";
-import { Form, FormField } from "@/components/ui/form.tsx";
-import AmountInput from "@/components/dialog/input/AmountInput.tsx";
-import DateInput from "@/components/dialog/input/DateInput.tsx";
-import { Spinner } from "@/components/ui/shadcn-io/spinner";
-import { AmbiguousFlightDialogContent } from "@/components/dialog/AmbiguousFlightDialogContent.tsx";
-import { toast } from "sonner";
+} from "@/components/dialog/Dialog.tsx"
+import AmountInput from "@/components/dialog/input/AmountInput.tsx"
+import DateInput from "@/components/dialog/input/DateInput.tsx"
+import { Button } from "@/components/ui/button.tsx"
+import {
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog.tsx"
+import { Form, FormField } from "@/components/ui/form.tsx"
+import { Input } from "@/components/ui/input.tsx"
+import { Spinner } from "@/components/ui/shadcn-io/spinner"
+import { dateFromString } from "@/components/util.ts"
+import { isoDate, optionalString } from "@/formschema.ts"
+import { Flight, FlightLeg, PNR, Trip } from "@/schema.ts"
+import { AmbiguousFlightChoice } from "@/types"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Minus, Plus } from "lucide-react"
+import { useState } from "react"
+import { useFieldArray, useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
 
 const formSchema = z.object({
-  legs: z.array(z.object({
-    date: isoDate("Required"),
-    flightNumber: z.string().nonempty("Required"),
-    originAirport: optionalString(),
-  })),
-  pnrs: z.array(z.object({
-    airline: z.string().nonempty("Required"),
-    pnr: z.string().nonempty("Required"),
-  })),
-  price: z.number().optional()
+  legs: z.array(
+    z.object({
+      date: isoDate("Required"),
+      flightNumber: z.string().nonempty("Required"),
+      originAirport: optionalString(),
+    }),
+  ),
+  pnrs: z.array(
+    z.object({
+      airline: z.string().nonempty("Required"),
+      pnr: z.string().nonempty("Required"),
+    }),
+  ),
+  price: z.number().optional(),
 })
 
 type AmbiguousDialogData = {
-  legs: { date: string; flightNumber: string }[];
-  choices: { [flightNumber: string]: AmbiguousFlightChoice[] };
+  legs: { date: string; flightNumber: string }[]
+  choices: { [flightNumber: string]: AmbiguousFlightChoice[] }
 }
 
 export default function FlightDialogContent({
@@ -56,30 +55,33 @@ export default function FlightDialogContent({
   trip: Trip
   flight?: Flight
 }) {
-  const [edit, setEdit] = useState<boolean>(flight == undefined);
-  const [ambiguousDialogOpen, setAmbiguousDialogOpen] = useState(false);
-  const [ambiguousDialogData, setAmbiguousDialogData] = useState<AmbiguousDialogData>({ legs: [], choices: {} });
-  const { onClose } = useDialogContext();
+  const [edit, setEdit] = useState<boolean>(flight == undefined)
+  const [ambiguousDialogOpen, setAmbiguousDialogOpen] = useState(false)
+  const [ambiguousDialogData, setAmbiguousDialogData] =
+    useState<AmbiguousDialogData>({ legs: [], choices: {} })
+  const { onClose } = useDialogContext()
 
-  function mapLegsOrDefault(flightLegs: FlightLeg[]|undefined) {
+  function mapLegsOrDefault(flightLegs: FlightLeg[] | undefined) {
     if (flightLegs) {
       return flightLegs.map(leg => ({
         date: dateFromString(trip.startDate),
-        flightNumber: leg.flightNumber
+        flightNumber: leg.flightNumber,
       }))
     }
 
-    return [{
-      date: dateFromString(trip.startDate),
-      flightNumber: ""
-    }]
+    return [
+      {
+        date: dateFromString(trip.startDate),
+        flightNumber: "",
+      },
+    ]
   }
 
-  function mapPnrsOrDefault(pnrs: PNR[]|undefined) {
+  function mapPnrsOrDefault(pnrs: PNR[] | undefined) {
     if (pnrs) {
       return pnrs.map(pnr => ({
         airline: pnr.airline,
-        pnr: pnr.pnr
+        pnr: pnr.pnr,
       }))
     }
 
@@ -95,9 +97,9 @@ export default function FlightDialogContent({
     defaultValues: {
       legs: mapLegsOrDefault(flight?.legs.filter(leg => leg !== null)),
       pnrs: mapPnrsOrDefault(flight?.pnrs.filter(pnr => pnr !== null)),
-      price: flight?.price ?? undefined
+      price: flight?.price ?? undefined,
     },
-    disabled: !edit
+    disabled: !edit,
   })
   const { isSubmitting } = form.formState
 
@@ -105,20 +107,20 @@ export default function FlightDialogContent({
     control: form.control,
     name: "legs",
     rules: {
-      minLength: 1
-    }
+      minLength: 1,
+    },
   })
 
   const pnrsArray = useFieldArray({
     control: form.control,
-    name: "pnrs"
+    name: "pnrs",
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const response = await fetch("/api/v1/flights", {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({legs: values.legs})
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ legs: values.legs }),
     })
 
     if (response.ok) {
@@ -126,34 +128,42 @@ export default function FlightDialogContent({
       if (flight) {
         flight.$jazz.applyDiff({
           ...values,
-          legs: responseJson.legs
+          legs: responseJson.legs,
         })
       } else {
         trip.transportation.$jazz.push({
           type: "flight",
           ...values,
-          legs: responseJson.legs
+          legs: responseJson.legs,
         })
       }
       onClose()
     } else if (response.status === 422) {
       try {
-        const ambiguousChoices = await response.json() as Record<string, AmbiguousFlightChoice[]>
-        setAmbiguousDialogData({ legs: values.legs, choices: ambiguousChoices })
+        const ambiguousChoices = (await response.json()) as Record<
+          string,
+          AmbiguousFlightChoice[]
+        >
+        setAmbiguousDialogData({
+          legs: values.legs,
+          choices: ambiguousChoices,
+        })
         setAmbiguousDialogOpen(true)
       } catch {
         toast("Error parsing ambiguous flight response", {
-          description: "Unable to parse flight choices"
+          description: "Unable to parse flight choices",
         })
       }
     } else {
       toast("Error looking up Flight", {
-        description: await response.text()
+        description: await response.text(),
       })
     }
   }
 
-  function handleAmbiguousFlightSelection(selectedFlights: Map<number, AmbiguousFlightChoice>) {
+  function handleAmbiguousFlightSelection(
+    selectedFlights: Map<number, AmbiguousFlightChoice>,
+  ) {
     setAmbiguousDialogOpen(false)
     setAmbiguousDialogData({ legs: [], choices: {} })
 
@@ -176,7 +186,7 @@ export default function FlightDialogContent({
   function addLeg() {
     legsArray.append({
       date: legsArray.fields[legsArray.fields.length - 1].date,
-      flightNumber: ""
+      flightNumber: "",
     })
   }
 
@@ -313,20 +323,33 @@ export default function FlightDialogContent({
         />
       </Dialog>
       <DialogFooter>
-        {edit ?
-          <Button form="flight-form" type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? <Spinner variant="pinwheel"/> : "Save"}
+        {edit ? (
+          <Button
+            form="flight-form"
+            type="submit"
+            className="w-full"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? <Spinner variant="pinwheel" /> : "Save"}
           </Button>
-        :
+        ) : (
           <>
-            <Button variant="destructive" className="w-full" onClick={onDeleteButtonClick}>
+            <Button
+              variant="destructive"
+              className="w-full"
+              onClick={onDeleteButtonClick}
+            >
               Delete
             </Button>
-            <Button variant="secondary" className="w-full" onClick={() => setEdit(true)}>
+            <Button
+              variant="secondary"
+              className="w-full"
+              onClick={() => setEdit(true)}
+            >
               Edit
             </Button>
           </>
-        }
+        )}
       </DialogFooter>
     </>
   )
