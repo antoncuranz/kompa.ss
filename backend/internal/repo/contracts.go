@@ -16,7 +16,7 @@ type (
 
 	DbVendoWebAPI interface {
 		LookupTrainStation(ctx context.Context, query string) (entity.TrainStation, error)
-		RetrieveJourney(ctx context.Context, journey request.TrainJourney) (entity.TrainDetail, error)
+		RetrieveJourney(ctx context.Context, journey request.Train) (entity.Train, error)
 		RetrievePolylines(ctx context.Context, refreshToken string) ([]geojson.FeatureCollection, error)
 	}
 

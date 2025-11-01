@@ -22,12 +22,12 @@ type TrainsV1 struct {
 // @Tags  	    trains
 // @Accept      json
 // @Produce     json
-// @Param       request body request.TrainJourney true "train journey"
-// @Success     200 {object} entity.TrainDetail
+// @Param       request body request.Train true "train journey"
+// @Success     200 {object} entity.Train
 // @Failure     500 {object} response.Error
 // @Router      /trains [post]
 func (r *TrainsV1) postTrainJourney(ctx *fiber.Ctx) error {
-	body, err := ParseAndValidateRequestBody[request.TrainJourney](ctx, r.v)
+	body, err := ParseAndValidateRequestBody[request.Train](ctx, r.v)
 	if err != nil {
 		return fiber.NewError(http.StatusBadRequest, "parse request body")
 	}

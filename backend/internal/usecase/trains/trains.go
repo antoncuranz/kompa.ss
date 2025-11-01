@@ -22,12 +22,12 @@ func (uc *UseCase) LookupTrainStation(ctx context.Context, query string) (entity
 	return uc.dbVendo.LookupTrainStation(ctx, query)
 }
 
-func (uc *UseCase) FindTrainJourney(ctx context.Context, journeyRequest request.TrainJourney) (entity.TrainDetail, error) {
-	trainDetail, err := uc.dbVendo.RetrieveJourney(ctx, journeyRequest)
+func (uc *UseCase) FindTrainJourney(ctx context.Context, request request.Train) (entity.Train, error) {
+	train, err := uc.dbVendo.RetrieveJourney(ctx, request)
 	if err != nil {
-		return entity.TrainDetail{}, fmt.Errorf("failed to retrieve journey: %w", err)
+		return entity.Train{}, fmt.Errorf("failed to retrieve journey: %w", err)
 	}
 
-	return trainDetail, nil
-	//_, err = uc.createGeoJson(ctx, transportation)
+	return train, nil
+	//_, err = uc.createGeoJson(ctx, train)
 }

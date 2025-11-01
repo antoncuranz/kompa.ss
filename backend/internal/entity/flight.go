@@ -6,9 +6,8 @@ import (
 	"cloud.google.com/go/civil"
 )
 
-type FlightDetail struct {
+type Flight struct {
 	Legs []FlightLeg `json:"legs"`
-	PNRs []PNR       `json:"pnrs"`
 }
 
 type Airport struct {

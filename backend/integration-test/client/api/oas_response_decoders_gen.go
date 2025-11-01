@@ -200,7 +200,7 @@ func decodePostFlightResponse(resp *http.Response) (res PostFlightRes, _ error) 
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response EntityFlightDetail
+			var response EntityFlight
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -329,7 +329,7 @@ func decodePostTrainJourneyResponse(resp *http.Response) (res PostTrainJourneyRe
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response EntityTrainDetail
+			var response EntityTrain
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err

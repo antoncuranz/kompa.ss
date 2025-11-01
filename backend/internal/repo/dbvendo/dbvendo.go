@@ -67,10 +67,10 @@ func (a *DbVendoWebAPI) RetrievePolylines(ctx context.Context, refreshToken stri
 
 const MaxRetries = 10
 
-func (a *DbVendoWebAPI) RetrieveJourney(ctx context.Context, request request.TrainJourney) (entity.TrainDetail, error) {
+func (a *DbVendoWebAPI) RetrieveJourney(ctx context.Context, request request.Train) (entity.Train, error) {
 	journeys, err := repo.RequestAndParseJsonBody[response.JourneysResponse](ctx, "GET", a.journeyUrl(request, nil), nil)
 	if err != nil {
-		return entity.TrainDetail{}, fmt.Errorf("retrieveJourneysInitial: %w", err)
+		return entity.Train{}, fmt.Errorf("retrieveJourneysInitial: %w", err)
 	}
 
 	journey, ok := checkJourneys(journeys.Journeys, request)
@@ -81,7 +81,7 @@ func (a *DbVendoWebAPI) RetrieveJourney(ctx context.Context, request request.Tra
 	for range MaxRetries {
 		journeys, err = repo.RequestAndParseJsonBody[response.JourneysResponse](ctx, "GET", a.journeyUrl(request, &journeys.LaterRef), nil)
 		if err != nil {
-			return entity.TrainDetail{}, fmt.Errorf("retrieveJourneysLaterThan: %w", err)
+			return entity.Train{}, fmt.Errorf("retrieveJourneysLaterThan: %w", err)
 		}
 
 		journey, ok := checkJourneys(journeys.Journeys, request)
@@ -90,10 +90,10 @@ func (a *DbVendoWebAPI) RetrieveJourney(ctx context.Context, request request.Tra
 		}
 	}
 
-	return entity.TrainDetail{}, fmt.Errorf("no journeys found after %d tries", MaxRetries)
+	return entity.Train{}, fmt.Errorf("no journeys found after %d tries", MaxRetries)
 }
 
-func (a *DbVendoWebAPI) journeyUrl(journey request.TrainJourney, laterThan *string) string {
+func (a *DbVendoWebAPI) journeyUrl(journey request.Train, laterThan *string) string {
 	params := url.Values{
 		"from":      {journey.FromStationID},
 		"to":        {journey.ToStationID},
@@ -111,7 +111,7 @@ func (a *DbVendoWebAPI) journeyUrl(journey request.TrainJourney, laterThan *stri
 	return a.baseURL + "/journeys?" + params.Encode()
 }
 
-func (a *DbVendoWebAPI) convertJourney(source response.Journey) (entity.TrainDetail, error) {
+func (a *DbVendoWebAPI) convertJourney(source response.Journey) (entity.Train, error) {
 	legs := []entity.TrainLeg{}
 
 	for _, leg := range source.Legs {
@@ -121,7 +121,7 @@ func (a *DbVendoWebAPI) convertJourney(source response.Journey) (entity.TrainDet
 
 		convertedLeg, err := a.c.ConvertLeg(leg)
 		if err != nil {
-			return entity.TrainDetail{}, err
+			return entity.Train{}, err
 		}
 		from := convertedLeg.DepartureDateTime.In(time.UTC)
 		to := convertedLeg.ArrivalDateTime.In(time.UTC)
@@ -129,13 +129,13 @@ func (a *DbVendoWebAPI) convertJourney(source response.Journey) (entity.TrainDet
 		legs = append(legs, convertedLeg)
 	}
 
-	return entity.TrainDetail{
+	return entity.Train{
 		RefreshToken: source.RefreshToken,
 		Legs:         legs,
 	}, nil
 }
 
-func checkJourneys(journeys []response.Journey, request request.TrainJourney) (response.Journey, bool) {
+func checkJourneys(journeys []response.Journey, request request.Train) (response.Journey, bool) {
 journeyLoop:
 	for _, journey := range journeys {
 		requestLegIdx := 0

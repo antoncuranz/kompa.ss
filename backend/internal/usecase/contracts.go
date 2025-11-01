@@ -26,11 +26,11 @@ type (
 	}
 
 	Flights interface {
-		FindFlight(ctx context.Context, flight request.Flight) (entity.FlightDetail, error)
+		FindFlight(ctx context.Context, flight request.Flight) (entity.Flight, error)
 	}
 
 	Trains interface {
 		LookupTrainStation(ctx context.Context, query string) (entity.TrainStation, error)
-		FindTrainJourney(ctx context.Context, journey request.TrainJourney) (entity.TrainDetail, error)
+		FindTrainJourney(ctx context.Context, journey request.Train) (entity.Train, error)
 	}
 )

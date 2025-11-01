@@ -7,8 +7,8 @@ import (
 	"github.com/paulmach/orb/geojson"
 )
 
-func (uc *UseCase) createGeoJson(flightDetail entity.FlightDetail) *geojson.FeatureCollection {
-	legs := flightDetail.Legs
+func (uc *UseCase) createGeoJson(flight entity.Flight) *geojson.FeatureCollection {
+	legs := flight.Legs
 
 	featureCollection := geojson.NewFeatureCollection()
 	featureCollection.ExtraMembers = map[string]interface{}{"transportationType": "FLIGHT"}

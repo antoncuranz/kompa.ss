@@ -55,7 +55,7 @@ func (s EntityErrAmbiguousFlightRequest) Validate() error {
 	return nil
 }
 
-func (s *EntityFlightDetail) Validate() error {
+func (s *EntityFlight) Validate() error {
 	if s == nil {
 		return validate.ErrNilPointer
 	}
@@ -86,17 +86,6 @@ func (s *EntityFlightDetail) Validate() error {
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
 			Name:  "legs",
-			Error: err,
-		})
-	}
-	if err := func() error {
-		if s.Pnrs == nil {
-			return errors.New("nil is invalid value")
-		}
-		return nil
-	}(); err != nil {
-		failures = append(failures, validate.FieldError{
-			Name:  "pnrs",
 			Error: err,
 		})
 	}
@@ -174,7 +163,7 @@ func (s *EntityLocation) Validate() error {
 	return nil
 }
 
-func (s *EntityTrainDetail) Validate() error {
+func (s *EntityTrain) Validate() error {
 	if s == nil {
 		return validate.ErrNilPointer
 	}
@@ -288,24 +277,13 @@ func (s *RequestFlight) Validate() error {
 			Error: err,
 		})
 	}
-	if err := func() error {
-		if s.Pnrs == nil {
-			return errors.New("nil is invalid value")
-		}
-		return nil
-	}(); err != nil {
-		failures = append(failures, validate.FieldError{
-			Name:  "pnrs",
-			Error: err,
-		})
-	}
 	if len(failures) > 0 {
 		return &validate.Error{Fields: failures}
 	}
 	return nil
 }
 
-func (s *RequestTrainJourney) Validate() error {
+func (s *RequestTrain) Validate() error {
 	if s == nil {
 		return validate.ErrNilPointer
 	}

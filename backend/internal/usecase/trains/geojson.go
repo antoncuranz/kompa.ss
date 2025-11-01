@@ -9,10 +9,10 @@ import (
 	"github.com/paulmach/orb/geojson"
 )
 
-func (uc *UseCase) createGeoJson(ctx context.Context, trainDetail entity.TrainDetail) (*geojson.FeatureCollection, error) {
-	legs := trainDetail.Legs
+func (uc *UseCase) createGeoJson(ctx context.Context, train entity.Train) (*geojson.FeatureCollection, error) {
+	legs := train.Legs
 
-	polylines, err := uc.dbVendo.RetrievePolylines(ctx, trainDetail.RefreshToken)
+	polylines, err := uc.dbVendo.RetrievePolylines(ctx, train.RefreshToken)
 	if err != nil {
 		return nil, fmt.Errorf("retrieve polyline: %w", err)
 	}

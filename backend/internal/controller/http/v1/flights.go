@@ -25,7 +25,7 @@ type FlightsV1 struct {
 // @Accept      json
 // @Produce     json
 // @Param       request body request.Flight true "flight"
-// @Success     200 {object} entity.FlightDetail
+// @Success     200 {object} entity.Flight
 // @Failure     422 {object} entity.ErrAmbiguousFlightRequest
 // @Failure     500 {object} response.Error
 // @Router      /flights [post]

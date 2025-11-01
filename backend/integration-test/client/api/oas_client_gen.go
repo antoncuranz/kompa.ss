@@ -44,7 +44,7 @@ type Invoker interface {
 	// Find train journey.
 	//
 	// POST /trains
-	PostTrainJourney(ctx context.Context, request *RequestTrainJourney) (PostTrainJourneyRes, error)
+	PostTrainJourney(ctx context.Context, request *RequestTrain) (PostTrainJourneyRes, error)
 }
 
 // Client implements OAS client.
@@ -236,12 +236,12 @@ func (c *Client) sendPostFlight(ctx context.Context, request *RequestFlight) (re
 // Find train journey.
 //
 // POST /trains
-func (c *Client) PostTrainJourney(ctx context.Context, request *RequestTrainJourney) (PostTrainJourneyRes, error) {
+func (c *Client) PostTrainJourney(ctx context.Context, request *RequestTrain) (PostTrainJourneyRes, error) {
 	res, err := c.sendPostTrainJourney(ctx, request)
 	return res, err
 }
 
-func (c *Client) sendPostTrainJourney(ctx context.Context, request *RequestTrainJourney) (res PostTrainJourneyRes, err error) {
+func (c *Client) sendPostTrainJourney(ctx context.Context, request *RequestTrain) (res PostTrainJourneyRes, err error) {
 
 	u := uri.Clone(c.requestURL(ctx))
 	var pathParts [1]string

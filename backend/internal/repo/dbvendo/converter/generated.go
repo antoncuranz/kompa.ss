@@ -10,20 +10,20 @@ import (
 
 type TrainConverterImpl struct{}
 
-func (c *TrainConverterImpl) ConvertJourney(source response.Journey) (entity.TrainDetail, error) {
-	var entityTrainDetail entity.TrainDetail
-	entityTrainDetail.RefreshToken = source.RefreshToken
+func (c *TrainConverterImpl) ConvertJourney(source response.Journey) (entity.Train, error) {
+	var entityTrain entity.Train
+	entityTrain.RefreshToken = source.RefreshToken
 	if source.Legs != nil {
-		entityTrainDetail.Legs = make([]entity.TrainLeg, len(source.Legs))
+		entityTrain.Legs = make([]entity.TrainLeg, len(source.Legs))
 		for i := 0; i < len(source.Legs); i++ {
 			entityTrainLeg, err := c.ConvertLeg(source.Legs[i])
 			if err != nil {
-				return entityTrainDetail, err
+				return entityTrain, err
 			}
-			entityTrainDetail.Legs[i] = entityTrainLeg
+			entityTrain.Legs[i] = entityTrainLeg
 		}
 	}
-	return entityTrainDetail, nil
+	return entityTrain, nil
 }
 func (c *TrainConverterImpl) ConvertLeg(source response.Leg) (entity.TrainLeg, error) {
 	var entityTrainLeg entity.TrainLeg

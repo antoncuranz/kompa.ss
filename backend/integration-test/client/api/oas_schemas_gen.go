@@ -101,33 +101,22 @@ func (s *EntityErrAmbiguousFlightRequest) init() EntityErrAmbiguousFlightRequest
 
 func (*EntityErrAmbiguousFlightRequest) postFlightRes() {}
 
-// Ref: #/components/schemas/entity.FlightDetail
-type EntityFlightDetail struct {
+// Ref: #/components/schemas/entity.Flight
+type EntityFlight struct {
 	Legs []EntityFlightLeg `json:"legs"`
-	Pnrs []EntityPNR       `json:"pnrs"`
 }
 
 // GetLegs returns the value of Legs.
-func (s *EntityFlightDetail) GetLegs() []EntityFlightLeg {
+func (s *EntityFlight) GetLegs() []EntityFlightLeg {
 	return s.Legs
 }
 
-// GetPnrs returns the value of Pnrs.
-func (s *EntityFlightDetail) GetPnrs() []EntityPNR {
-	return s.Pnrs
-}
-
 // SetLegs sets the value of Legs.
-func (s *EntityFlightDetail) SetLegs(val []EntityFlightLeg) {
+func (s *EntityFlight) SetLegs(val []EntityFlightLeg) {
 	s.Legs = val
 }
 
-// SetPnrs sets the value of Pnrs.
-func (s *EntityFlightDetail) SetPnrs(val []EntityPNR) {
-	s.Pnrs = val
-}
-
-func (*EntityFlightDetail) postFlightRes() {}
+func (*EntityFlight) postFlightRes() {}
 
 // Ref: #/components/schemas/entity.FlightLeg
 type EntityFlightLeg struct {
@@ -260,59 +249,33 @@ func (s *EntityLocation) SetLongitude(val float64) {
 
 func (*EntityLocation) getLocationRes() {}
 
-// Ref: #/components/schemas/entity.PNR
-type EntityPNR struct {
-	Airline string `json:"airline"`
-	Pnr     string `json:"pnr"`
-}
-
-// GetAirline returns the value of Airline.
-func (s *EntityPNR) GetAirline() string {
-	return s.Airline
-}
-
-// GetPnr returns the value of Pnr.
-func (s *EntityPNR) GetPnr() string {
-	return s.Pnr
-}
-
-// SetAirline sets the value of Airline.
-func (s *EntityPNR) SetAirline(val string) {
-	s.Airline = val
-}
-
-// SetPnr sets the value of Pnr.
-func (s *EntityPNR) SetPnr(val string) {
-	s.Pnr = val
-}
-
-// Ref: #/components/schemas/entity.TrainDetail
-type EntityTrainDetail struct {
+// Ref: #/components/schemas/entity.Train
+type EntityTrain struct {
 	Legs         []EntityTrainLeg `json:"legs"`
 	RefreshToken string           `json:"refreshToken"`
 }
 
 // GetLegs returns the value of Legs.
-func (s *EntityTrainDetail) GetLegs() []EntityTrainLeg {
+func (s *EntityTrain) GetLegs() []EntityTrainLeg {
 	return s.Legs
 }
 
 // GetRefreshToken returns the value of RefreshToken.
-func (s *EntityTrainDetail) GetRefreshToken() string {
+func (s *EntityTrain) GetRefreshToken() string {
 	return s.RefreshToken
 }
 
 // SetLegs sets the value of Legs.
-func (s *EntityTrainDetail) SetLegs(val []EntityTrainLeg) {
+func (s *EntityTrain) SetLegs(val []EntityTrainLeg) {
 	s.Legs = val
 }
 
 // SetRefreshToken sets the value of RefreshToken.
-func (s *EntityTrainDetail) SetRefreshToken(val string) {
+func (s *EntityTrain) SetRefreshToken(val string) {
 	s.RefreshToken = val
 }
 
-func (*EntityTrainDetail) postTrainJourneyRes() {}
+func (*EntityTrain) postTrainJourneyRes() {}
 
 // Ref: #/components/schemas/entity.TrainLeg
 type EntityTrainLeg struct {
@@ -434,51 +397,6 @@ func (s *EntityTrainStation) SetName(val string) {
 
 func (*EntityTrainStation) getTrainStationRes() {}
 
-// NewNilInt returns new NilInt with value set to v.
-func NewNilInt(v int) NilInt {
-	return NilInt{
-		Value: v,
-	}
-}
-
-// NilInt is nullable int.
-type NilInt struct {
-	Value int
-	Null  bool
-}
-
-// SetTo sets value to v.
-func (o *NilInt) SetTo(v int) {
-	o.Null = false
-	o.Value = v
-}
-
-// IsNull returns true if value is Null.
-func (o NilInt) IsNull() bool { return o.Null }
-
-// SetToNull sets value to null.
-func (o *NilInt) SetToNull() {
-	o.Null = true
-	var v int
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o NilInt) Get() (v int, ok bool) {
-	if o.Null {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o NilInt) Or(d int) int {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
-}
-
 // NewNilString returns new NilString with value set to v.
 func NewNilString(v string) NilString {
 	return NilString{
@@ -589,9 +507,7 @@ func (o OptNilString) Or(d string) string {
 
 // Ref: #/components/schemas/request.Flight
 type RequestFlight struct {
-	Legs  []RequestFlightLeg `json:"legs"`
-	Pnrs  []EntityPNR        `json:"pnrs"`
-	Price NilInt             `json:"price"`
+	Legs []RequestFlightLeg `json:"legs"`
 }
 
 // GetLegs returns the value of Legs.
@@ -599,29 +515,9 @@ func (s *RequestFlight) GetLegs() []RequestFlightLeg {
 	return s.Legs
 }
 
-// GetPnrs returns the value of Pnrs.
-func (s *RequestFlight) GetPnrs() []EntityPNR {
-	return s.Pnrs
-}
-
-// GetPrice returns the value of Price.
-func (s *RequestFlight) GetPrice() NilInt {
-	return s.Price
-}
-
 // SetLegs sets the value of Legs.
 func (s *RequestFlight) SetLegs(val []RequestFlightLeg) {
 	s.Legs = val
-}
-
-// SetPnrs sets the value of Pnrs.
-func (s *RequestFlight) SetPnrs(val []EntityPNR) {
-	s.Pnrs = val
-}
-
-// SetPrice sets the value of Price.
-func (s *RequestFlight) SetPrice(val NilInt) {
-	s.Price = val
 }
 
 // Ref: #/components/schemas/request.FlightLeg
@@ -661,73 +557,62 @@ func (s *RequestFlightLeg) SetOriginAirport(val NilString) {
 	s.OriginAirport = val
 }
 
-// Ref: #/components/schemas/request.TrainJourney
-type RequestTrainJourney struct {
+// Ref: #/components/schemas/request.Train
+type RequestTrain struct {
 	DepartureDate string    `json:"departureDate"`
 	FromStationId string    `json:"fromStationId"`
-	Price         NilInt    `json:"price"`
 	ToStationId   string    `json:"toStationId"`
 	TrainNumbers  []string  `json:"trainNumbers"`
 	ViaStationId  NilString `json:"viaStationId"`
 }
 
 // GetDepartureDate returns the value of DepartureDate.
-func (s *RequestTrainJourney) GetDepartureDate() string {
+func (s *RequestTrain) GetDepartureDate() string {
 	return s.DepartureDate
 }
 
 // GetFromStationId returns the value of FromStationId.
-func (s *RequestTrainJourney) GetFromStationId() string {
+func (s *RequestTrain) GetFromStationId() string {
 	return s.FromStationId
 }
 
-// GetPrice returns the value of Price.
-func (s *RequestTrainJourney) GetPrice() NilInt {
-	return s.Price
-}
-
 // GetToStationId returns the value of ToStationId.
-func (s *RequestTrainJourney) GetToStationId() string {
+func (s *RequestTrain) GetToStationId() string {
 	return s.ToStationId
 }
 
 // GetTrainNumbers returns the value of TrainNumbers.
-func (s *RequestTrainJourney) GetTrainNumbers() []string {
+func (s *RequestTrain) GetTrainNumbers() []string {
 	return s.TrainNumbers
 }
 
 // GetViaStationId returns the value of ViaStationId.
-func (s *RequestTrainJourney) GetViaStationId() NilString {
+func (s *RequestTrain) GetViaStationId() NilString {
 	return s.ViaStationId
 }
 
 // SetDepartureDate sets the value of DepartureDate.
-func (s *RequestTrainJourney) SetDepartureDate(val string) {
+func (s *RequestTrain) SetDepartureDate(val string) {
 	s.DepartureDate = val
 }
 
 // SetFromStationId sets the value of FromStationId.
-func (s *RequestTrainJourney) SetFromStationId(val string) {
+func (s *RequestTrain) SetFromStationId(val string) {
 	s.FromStationId = val
 }
 
-// SetPrice sets the value of Price.
-func (s *RequestTrainJourney) SetPrice(val NilInt) {
-	s.Price = val
-}
-
 // SetToStationId sets the value of ToStationId.
-func (s *RequestTrainJourney) SetToStationId(val string) {
+func (s *RequestTrain) SetToStationId(val string) {
 	s.ToStationId = val
 }
 
 // SetTrainNumbers sets the value of TrainNumbers.
-func (s *RequestTrainJourney) SetTrainNumbers(val []string) {
+func (s *RequestTrain) SetTrainNumbers(val []string) {
 	s.TrainNumbers = val
 }
 
 // SetViaStationId sets the value of ViaStationId.
-func (s *RequestTrainJourney) SetViaStationId(val NilString) {
+func (s *RequestTrain) SetViaStationId(val NilString) {
 	s.ViaStationId = val
 }
 

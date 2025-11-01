@@ -18,7 +18,7 @@ type TrainLeg struct {
 	OperatorName      string         `json:"operatorName"`
 }
 
-type TrainDetail struct {
+type Train struct {
 	RefreshToken string     `json:"refreshToken"`
 	Legs         []TrainLeg `json:"legs"`
 }

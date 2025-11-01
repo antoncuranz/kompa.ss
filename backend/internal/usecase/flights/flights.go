@@ -21,22 +21,21 @@ func New(a repo.FlightInformationWebAPI) *UseCase {
 	}
 }
 
-func (uc *UseCase) FindFlight(ctx context.Context, flight request.Flight) (entity.FlightDetail, error) {
-	flightLegs, err := uc.retrieveFlightLegs(ctx, flight)
+func (uc *UseCase) FindFlight(ctx context.Context, request request.Flight) (entity.Flight, error) {
+	flightLegs, err := uc.retrieveFlightLegs(ctx, request)
 	if err != nil {
-		return entity.FlightDetail{}, err
+		return entity.Flight{}, err
 	}
 
 	sortByDepartureDate(flightLegs)
 
-	flightDetail := entity.FlightDetail{
+	flight := entity.Flight{
 		Legs: flightLegs,
-		PNRs: flight.PNRs,
 	}
 
-	//uc.createGeoJson(flightDetail)
+	//uc.createGeoJson(flight)
 
-	return flightDetail, nil
+	return flight, nil
 }
 
 func (uc *UseCase) retrieveFlightLegs(ctx context.Context, flight request.Flight) ([]entity.FlightLeg, error) {
@@ -52,7 +51,7 @@ func (uc *UseCase) retrieveFlightLegs(ctx context.Context, flight request.Flight
 	return legs, nil
 }
 
-func (uc *UseCase) retrieveFlightLegsUpdate(ctx context.Context, flight entity.FlightDetail) ([]entity.FlightLeg, error) {
+func (uc *UseCase) retrieveFlightLegsUpdate(ctx context.Context, flight entity.Flight) ([]entity.FlightLeg, error) {
 	legs := []entity.FlightLeg{}
 	for _, leg := range flight.Legs {
 		flightNumber := strings.ReplaceAll(leg.FlightNumber, " ", "")

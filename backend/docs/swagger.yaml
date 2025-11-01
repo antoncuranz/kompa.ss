@@ -35,21 +35,15 @@ components:
           $ref: '#/components/schemas/entity.AmbiguousFlightChoice'
         type: array
       type: object
-    entity.FlightDetail:
+    entity.Flight:
       properties:
         legs:
           items:
             $ref: '#/components/schemas/entity.FlightLeg'
           type: array
           uniqueItems: false
-        pnrs:
-          items:
-            $ref: '#/components/schemas/entity.PNR'
-          type: array
-          uniqueItems: false
       required:
       - legs
-      - pnrs
       type: object
     entity.FlightLeg:
       properties:
@@ -94,19 +88,7 @@ components:
       - latitude
       - longitude
       type: object
-    entity.PNR:
-      properties:
-        airline:
-          example: LH
-          type: string
-        pnr:
-          example: "123456"
-          type: string
-      required:
-      - airline
-      - pnr
-      type: object
-    entity.TrainDetail:
+    entity.Train:
       properties:
         legs:
           items:
@@ -164,18 +146,8 @@ components:
             $ref: '#/components/schemas/request.FlightLeg'
           type: array
           uniqueItems: false
-        pnrs:
-          items:
-            $ref: '#/components/schemas/entity.PNR'
-          type: array
-          uniqueItems: false
-        price:
-          nullable: true
-          type: integer
       required:
       - legs
-      - pnrs
-      - price
       type: object
     request.FlightLeg:
       properties:
@@ -194,7 +166,7 @@ components:
       - flightNumber
       - originAirport
       type: object
-    request.TrainJourney:
+    request.Train:
       properties:
         departureDate:
           example: "2025-09-20"
@@ -202,9 +174,6 @@ components:
         fromStationId:
           example: "8011113"
           type: string
-        price:
-          nullable: true
-          type: integer
         toStationId:
           example: "8000261"
           type: string
@@ -222,7 +191,6 @@ components:
       required:
       - departureDate
       - fromStationId
-      - price
       - toStationId
       - trainNumbers
       - viaStationId
@@ -260,7 +228,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/entity.FlightDetail'
+                $ref: '#/components/schemas/entity.Flight'
           description: OK
         "422":
           content:
@@ -336,7 +304,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/request.TrainJourney'
+              $ref: '#/components/schemas/request.Train'
         description: train journey
         required: true
       responses:
@@ -344,7 +312,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/entity.TrainDetail'
+                $ref: '#/components/schemas/entity.Train'
           description: OK
         "500":
           content:
